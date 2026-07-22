@@ -143,35 +143,59 @@
   }
 
   /* ---------------- Model calls ---------------- */
+  const NO_SERVER_MSG =
+    "There's no JARVIS server at this address — the app is running from static " +
+    "hosting (like GitHub Pages). Tap the settings gear at the top right, set " +
+    "Connection mode to Direct, paste your Anthropic API key, and save.";
+
   async function callModel(messages) {
     const mode = cfg.state.mode;
     if (mode === 'demo') return demoReply(messages);
+    if (mode === 'direct') return callDirect(messages);
 
-    if (mode === 'direct') {
-      return callDirect(messages);
+    // Server mode — but on static hosting (e.g. GitHub Pages) there is no
+    // backend, so POST /api/chat comes back 404/405 or fails outright. In that
+    // case, quietly use Direct mode if a key is available, otherwise explain.
+    let res;
+    try {
+      res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages,
+          userName: cfg.state.userName,
+          honorific: cfg.state.honorific,
+          model: cfg.state.model,
+        }),
+      });
+    } catch (e) {
+      if (cfg.state.apiKey) { cfg.set({ mode: 'direct' }); return callDirect(messages); }
+      throw new Error(NO_SERVER_MSG);
     }
 
-    // server mode
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages,
-        userName: cfg.state.userName,
-        honorific: cfg.state.honorific,
-        model: cfg.state.model,
-      }),
-    });
-    if (!res.ok) {
-      let info = {};
-      try { info = await res.json(); } catch {}
-      if (info.error === 'no_key') {
-        throw new Error('No API key on the server. Open Settings and either add a key there, or switch to Direct mode with your own key.');
-      }
-      throw new Error(info.message || info.error || `Server error (${res.status}).`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.text || '';
     }
-    const data = await res.json();
-    return data.text || '';
+
+    // Not OK. Our own server always answers with JSON; a non-JSON body (or a
+    // "method not supported" status) means there is no JARVIS backend here —
+    // i.e. we're on static hosting like GitHub Pages.
+    let info = null;
+    try { info = await res.json(); } catch { /* non-JSON => not our server */ }
+
+    if (info && info.error === 'no_key') {
+      if (cfg.state.apiKey) { cfg.set({ mode: 'direct' }); return callDirect(messages); }
+      throw new Error('This JARVIS server has no API key configured. Tap the settings gear, choose Direct mode, and paste your own Anthropic API key.');
+    }
+
+    const noBackend = !info || res.status === 404 || res.status === 405 || res.status === 501;
+    if (noBackend) {
+      if (cfg.state.apiKey) { cfg.set({ mode: 'direct' }); return callDirect(messages); }
+      throw new Error(NO_SERVER_MSG);
+    }
+
+    throw new Error(info.message || info.error || `Server error (${res.status}).`);
   }
 
   async function callDirect(messages) {
@@ -486,6 +510,7 @@ Only emit an action when the user asks you to do something on the device; for or
     el.hud.classList.remove('hidden');
     requestAnimationFrame(() => Core.resize());
     greet(true);
+    probeEnvironment();
   }
 
   function greet(first) {
@@ -501,6 +526,35 @@ Only emit an action when the user asks you to do something on the device; for or
     }
     addMessage('jarvis', line);
     speak(line);
+  }
+
+  /* Detect whether a usable backend exists. On static hosting (GitHub Pages)
+     there isn't one, so guide the user to set up Direct mode with a key. */
+  async function probeEnvironment() {
+    let health = null;
+    try {
+      const r = await fetch('/api/health', { cache: 'no-store' });
+      if (r.ok) health = await r.json();
+    } catch { /* no server reachable */ }
+
+    if (health && health.keyConfigured) return;          // server ready to chat
+    if (cfg.state.apiKey) {                                // we have our own key
+      if (cfg.state.mode === 'server') cfg.set({ mode: 'direct' });
+      return;
+    }
+    if (cfg.state.mode === 'demo') return;                // user deliberately offline
+
+    // No server and no key: JARVIS can't converse yet. Guide the user.
+    addMessage('jarvis',
+      "One small matter before we begin. To hold a proper conversation I'll need " +
+      "an Anthropic API key. I'm opening the settings panel now — set Connection " +
+      "mode to Direct, paste your key, and save. You'll find keys at console.anthropic.com.");
+    setTimeout(() => {
+      openSettings();
+      el.setMode.value = 'direct';
+      updateDirectVisibility();
+      el.setApiKey && el.setApiKey.focus();
+    }, 1100);
   }
 
   /* ---------------- Settings ---------------- */
@@ -625,6 +679,7 @@ Only emit an action when the user asks you to do something on the device; for or
       el.hud.classList.remove('hidden');
       requestAnimationFrame(() => Core.resize());
       greet(false);
+      probeEnvironment();
     } else {
       showOnboarding();
     }
