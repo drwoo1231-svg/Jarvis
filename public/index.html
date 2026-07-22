@@ -45,6 +45,18 @@
         <option value="none">No title, thanks</option>
       </select>
 
+      <label class="field-label">Interface</label>
+      <div class="platform-pick" id="platformPick">
+        <button type="button" class="platform-opt" data-platform="mobile">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M17 1H7a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2m0 18H7V5h10Z"/></svg>
+          <span>Mobile</span>
+        </button>
+        <button type="button" class="platform-opt" data-platform="pc">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M21 2H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7v2H8v2h8v-2h-2v-2h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m0 14H3V4h18Z"/></svg>
+          <span>Desktop / PC</span>
+        </button>
+      </div>
+
       <button id="onboardStart" class="primary-btn">Initialize</button>
       <button id="onboardSettingsLink" class="ghost-link">Connection settings</button>
     </div>
@@ -127,6 +139,27 @@
 
     <!-- Drag-and-drop overlay (desktop) -->
     <div id="dropZone" class="drop-zone hidden"><span>Drop an image or link — JARVIS will analyse it</span></div>
+
+    <!-- Holographic analysis scanner (PC) -->
+    <div id="holoScanner" class="holo hidden">
+      <div class="holo-panel">
+        <button id="holoClose" class="icon-btn holo-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.3 19.7 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+        </button>
+        <div class="holo-title">ANALYSIS · HOLO-SCANNER</div>
+        <div id="holoDrop" class="holo-drop">
+          <div class="holo-grid"></div>
+          <div class="holo-scan"></div>
+          <div class="holo-ring"></div>
+          <div class="holo-hint">
+            <svg viewBox="0 0 24 24" width="40" height="40"><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14a6 6 0 0 0 6 6h13a5 5 0 0 0 5-5c0-2.64-2.05-4.78-4.65-4.96M14 13v4h-4v-4H7l5-5 5 5Z"/></svg>
+            <p>Drag a file here to scan</p>
+            <button id="holoPick" class="ghost-btn">or select a file</button>
+          </div>
+        </div>
+        <div class="holo-foot">JARVIS · optical + semantic analysis · files stay on your device</div>
+      </div>
+    </div>
   </main>
 
   <!-- ===================== RESEARCH FILES ===================== -->

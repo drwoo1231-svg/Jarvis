@@ -26,6 +26,10 @@ same code runs beautifully on your computer too. No app store required.
 - 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core, live
   telemetry readouts (clock, mode, model, signal), a radar sweep and a
   waveform that reacts to your voice.
+- 🖥️ **PC / Desktop mode.** Pick Mobile or Desktop on the start screen. Desktop
+  gives a wider ops console with a much larger sphere — and a **holographic
+  scanner**: say *"initiate analysis mode"* and drag a file onto the holo-panel
+  for JARVIS to scan.
 
 
 - 🎩 **The classic butler.** Calm, precise, dryly witty — powered by Claude and

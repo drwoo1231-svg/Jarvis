@@ -16,8 +16,14 @@
     onboarding: $('onboarding'),
     nameInput: $('nameInput'),
     honorificSelect: $('honorificSelect'),
+    platformPick: $('platformPick'),
     onboardStart: $('onboardStart'),
     onboardSettingsLink: $('onboardSettingsLink'),
+
+    holoScanner: $('holoScanner'),
+    holoClose: $('holoClose'),
+    holoDrop: $('holoDrop'),
+    holoPick: $('holoPick'),
 
     hud: $('hud'),
     statusText: $('statusText'),
@@ -79,7 +85,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.5 · instant device commands';
+  const APP_VERSION = 'v1.6 · PC mode + holo-scanner';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -105,6 +111,7 @@
   let speakAmpTimer = null;
   let micStream = null, audioCtx = null, analyser = null, micRAF = null;
   let analysisPending = false;   // next typed message is an analysis subject
+  let selectedPlatform = null;   // onboarding platform choice
   const RESEARCH_KEY = 'jarvis.research.v1';
 
   /* ---------------- Status + reactor ---------------- */
@@ -278,31 +285,58 @@
     }
   }
 
-  // Free, keyless, hosted inference via pollinations.ai (OpenAI-compatible).
+  // Free, keyless, hosted inference. Best-effort: the community services that
+  // offer this keep changing (and may start charging), so we try a couple of
+  // endpoints with an anonymous referrer, then steer the user to Gemini's
+  // reliable free tier if none respond.
+  const FREE_STEER = "The free keyless service is unavailable right now (it now " +
+    "asks for registration/payment). The reliable free option is Google Gemini — " +
+    "open Settings, set AI provider to Google Gemini, and paste a free key from " +
+    "aistudio.google.com/apikey. I've opened Settings for you.";
+
   async function callFreeCloud(messages, model, system) {
-    // Guard against a leftover model name from another provider.
     const m = MODEL_SUGGESTIONS.free.indexOf(model) >= 0 ? model : 'openai';
-    const body = {
-      model: m,
-      messages: [{ role: 'system', content: system }].concat(
-        messages.map((m) => ({ role: m.role, content: String(m.content) }))
-      ),
-    };
-    const res = await fetch('https://text.pollinations.ai/openai', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const raw = await res.text();
-    if (!res.ok) throw providerError('Free cloud', raw, res.status);
-    // Usually OpenAI-shaped JSON; occasionally plain text.
+    const msgs = [{ role: 'system', content: system }].concat(
+      messages.map((x) => ({ role: x.role, content: String(x.content) }))
+    );
+    const REF = 'jarvis-pwa';
+
+    // Attempt 1 — OpenAI-compatible POST with anonymous referrer.
     try {
-      const data = JSON.parse(raw);
-      const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-      return (text || '').trim();
-    } catch {
-      return raw.trim();
-    }
+      const res = await fetch('https://text.pollinations.ai/openai?referrer=' + REF, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ model: m, messages: msgs, referrer: REF }),
+      });
+      if (res.ok) {
+        const raw = await res.text();
+        try {
+          const d = JSON.parse(raw);
+          const t = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+          if (t) return t.trim();
+        } catch { if (raw.trim()) return raw.trim(); }
+      }
+    } catch (e) { /* fall through */ }
+
+    // Attempt 2 — plain-text GET endpoint (prompt-only) with referrer.
+    try {
+      const prompt = msgs.map((x) =>
+        (x.role === 'system' ? '[Instructions] ' : x.role === 'assistant' ? 'JARVIS: ' : 'User: ') + x.content
+      ).join('\n') + '\nJARVIS:';
+      const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt) +
+        '?model=' + encodeURIComponent(m) + '&referrer=' + REF;
+      const res = await fetch(url);
+      if (res.ok) {
+        const t = (await res.text()).trim();
+        if (t && !/402|payment required|unauthor/i.test(t)) return t;
+      }
+    } catch (e) { /* fall through */ }
+
+    // Nothing worked — guide the user to a reliable free key.
+    setTimeout(() => {
+      try { openSettings(); el.setMode.value = 'direct'; el.setProvider.value = 'gemini'; updateDirectVisibility(); updateProviderUI(); } catch {}
+    }, 400);
+    throw new Error(FREE_STEER);
   }
 
   function providerError(name, raw, status) {
@@ -563,6 +597,25 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // "initiate analysis mode" — the named command for file/subject analysis.
+    if (/\b(initiate|start|enter|open|begin)\s+(analysis|scan)(\s+mode)?\b/i.test(text) ||
+        /^\s*analysis mode\s*$/i.test(text)) {
+      addMessage('user', text);
+      const who = titledName();
+      if (isPC()) {
+        addMessage('jarvis', `Analysis mode initiated${who ? ', ' + who : ''}. Drag a file onto the holo-scanner, or simply name a subject.`);
+        speak('Analysis mode initiated. Drag a file onto the scanner, or name a subject.');
+        openHoloScanner();
+        armAnalysis(true);
+      } else {
+        addMessage('jarvis', `Analysis mode initiated${who ? ', ' + who : ''}. Select a file to scan, or name a subject.`);
+        speak('Analysis mode initiated. Select a file, or name a subject.');
+        armAnalysis(true);
+        setTimeout(pickImage, 300);
+      }
+      return;
+    }
+
     // Direct device commands ("play …", "open …", "search …", "navigate …")
     // run in-app, instantly, in every mode. Executing here (synchronously,
     // inside the user's tap) also lets iOS actually open the target app.
@@ -771,6 +824,26 @@ Only emit an action when the user asks you to do something on the device; for or
     }
   }
 
+  /* ---------------- Platform (PC vs mobile) ---------------- */
+  function isPC() {
+    const p = cfg.state.platform;
+    if (p === 'pc') return true;
+    if (p === 'mobile') return false;
+    return window.innerWidth >= 900; // auto
+  }
+  function applyPlatform() {
+    document.body.classList.toggle('platform-pc', isPC());
+    requestAnimationFrame(() => Core.resize());
+  }
+
+  /* ---------------- Holographic scanner (PC analysis) ---------------- */
+  function openHoloScanner() {
+    el.holoScanner.classList.remove('hidden');
+  }
+  function closeHoloScanner() {
+    el.holoScanner.classList.add('hidden');
+  }
+
   /* ============================================================
      ANALYSIS MODE — pull up a visual, analyse it, optionally file it.
      ============================================================ */
@@ -781,12 +854,14 @@ Only emit an action when the user asks you to do something on the device; for or
     return n || '';
   }
 
-  function armAnalysis() {
+  function armAnalysis(quiet) {
     analysisPending = true;
     el.analyzeBtn.classList.add('active');
     el.textInput.placeholder = 'Name a subject to analyse…';
-    const who = titledName();
-    addMessage('jarvis', `Analysis mode engaged${who ? ', ' + who : ''}. What shall I pull up?`);
+    if (!quiet) {
+      const who = titledName();
+      addMessage('jarvis', `Analysis mode engaged${who ? ', ' + who : ''}. What shall I pull up?`);
+    }
     el.textInput.focus();
   }
 
@@ -939,6 +1014,7 @@ Only emit an action when the user asks you to do something on the device; for or
 
   async function analyzeImage(dataUrl, mime, name) {
     const who = titledName();
+    closeHoloScanner();
     renderAnalysisCard({ title: name || 'Uploaded image', image: dataUrl, extract: '' }, { image: true });
     const line = `Is this the image you'd like me to analyse${who ? ', ' + who : ''}?`;
     addMessage('jarvis', line);
@@ -1112,13 +1188,18 @@ Only emit an action when the user asks you to do something on the device; for or
     el.hud.classList.add('hidden');
     el.nameInput.value = cfg.state.userName || '';
     el.honorificSelect.value = cfg.state.honorific || 'Sir';
+    // Pre-select platform based on the current best guess.
+    selectedPlatform = isPC() ? 'pc' : 'mobile';
+    el.platformPick.querySelectorAll('.platform-opt').forEach((b) =>
+      b.classList.toggle('selected', b.dataset.platform === selectedPlatform));
     setTimeout(() => el.nameInput.focus(), 200);
   }
 
   function completeOnboarding() {
     const name = el.nameInput.value.trim();
     const hon = el.honorificSelect.value;
-    cfg.set({ userName: name, honorific: hon, onboarded: true });
+    cfg.set({ userName: name, honorific: hon, platform: selectedPlatform || 'auto', onboarded: true });
+    applyPlatform();
     el.onboarding.classList.add('hidden');
     el.hud.classList.remove('hidden');
     requestAnimationFrame(() => Core.resize());
@@ -1255,6 +1336,26 @@ Only emit an action when the user asks you to do something on the device; for or
     el.nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') completeOnboarding(); });
     el.onboardSettingsLink.addEventListener('click', () => { openSettings(); });
 
+    // Platform picker
+    el.platformPick.querySelectorAll('.platform-opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        selectedPlatform = btn.dataset.platform;
+        el.platformPick.querySelectorAll('.platform-opt').forEach((b) => b.classList.toggle('selected', b === btn));
+      });
+    });
+
+    // Holographic scanner
+    el.holoClose.addEventListener('click', closeHoloScanner);
+    el.holoPick.addEventListener('click', pickImage);
+    el.holoDrop.addEventListener('dragover', (e) => { e.preventDefault(); el.holoDrop.classList.add('dragover'); });
+    el.holoDrop.addEventListener('dragleave', () => el.holoDrop.classList.remove('dragover'));
+    el.holoDrop.addEventListener('drop', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      el.holoDrop.classList.remove('dragover');
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) handleImageFile(f);
+    });
+
     el.micBtn.addEventListener('click', toggleListen);
     el.listenToggle.addEventListener('click', () => {
       handsFree = !handsFree;
@@ -1367,6 +1468,11 @@ Only emit an action when the user asks you to do something on the device; for or
     }
 
     initTelemetry();
+    applyPlatform();
+    // Re-evaluate PC/mobile layout on resize when in auto mode.
+    window.addEventListener('resize', () => {
+      if (cfg.state.platform === 'auto') document.body.classList.toggle('platform-pc', isPC());
+    });
 
     if (cfg.state.onboarded) {
       el.onboarding.classList.add('hidden');

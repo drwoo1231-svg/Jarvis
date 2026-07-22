@@ -9,6 +9,7 @@
   const DEFAULTS = {
     userName: '',
     honorific: 'Sir',
+    platform: 'auto',          // 'auto' | 'pc' | 'mobile'
     mode: 'server',            // 'server' | 'direct' | 'ondevice' | 'demo'
     provider: 'anthropic',     // direct-mode AI provider
     apiKey: '',                // used only in 'direct' mode

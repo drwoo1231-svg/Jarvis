@@ -662,6 +662,115 @@ select.text-field {
 .research-item .ri-date { font-size: 10.5px; color: var(--text-dim); font-family: var(--mono); margin-top: 2px; }
 .research-item .ri-del { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 18px; padding: 6px; }
 
+/* ---------- Platform picker (onboarding) ---------- */
+.platform-pick { display: flex; gap: 10px; }
+.platform-opt {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  padding: 14px 8px;
+  color: var(--text-dim);
+  background: rgba(2, 14, 26, 0.6);
+  border: 1px solid var(--glass-brd);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 12.5px; letter-spacing: 0.04em;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.platform-opt.selected {
+  color: var(--cyan-soft);
+  border-color: var(--cyan);
+  background: rgba(56, 182, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(70,182,255,0.12);
+}
+
+/* ============================================================
+   PC / Desktop layout — wide ops console, bigger sphere
+   ============================================================ */
+.platform-pc .hud {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 30px; padding-right: 30px;
+}
+.platform-pc .brand-name { font-size: 19px; }
+.platform-pc .brand-sub { font-size: 8px; }
+.platform-pc .core-stage { height: min(60vh, 660px); margin: 6px 0 10px; }
+.platform-pc .telemetry { font-size: 11px; line-height: 1.9; }
+.platform-pc .tel-left { left: 3%; top: 12%; }
+.platform-pc .tel-right { right: 4%; top: 14%; }
+.platform-pc .radar { width: 78px; height: 78px; }
+.platform-pc .sig-bars { height: 34px; }
+.platform-pc .telebar { font-size: 11.5px; padding: 8px 12px; }
+.platform-pc .log { max-width: 940px; width: 100%; margin: 0 auto; }
+.platform-pc .msg { max-width: 62%; font-size: 15.5px; }
+.platform-pc .dock { max-width: 940px; width: 100%; margin: 8px auto 0; }
+.platform-pc .caption { font-size: 16px; }
+.platform-pc .hud-corner { width: 40px; height: 40px; }
+
+/* ============================================================
+   Holographic analysis scanner (PC)
+   ============================================================ */
+.holo {
+  position: fixed; inset: 0; z-index: 70;
+  display: grid; place-items: center;
+  background: rgba(1, 6, 16, 0.78);
+  backdrop-filter: blur(8px);
+  animation: rise .35s ease;
+}
+.holo-panel {
+  position: relative;
+  width: min(560px, 92vw);
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid var(--cyan-dim);
+  background: linear-gradient(160deg, rgba(8,26,48,0.9), rgba(3,12,26,0.9));
+  box-shadow: 0 0 60px rgba(56,182,255,0.25), inset 0 0 40px rgba(56,182,255,0.08);
+}
+.holo-close { position: absolute; top: 12px; right: 12px; }
+.holo-title {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.28em;
+  color: var(--cyan-soft); text-align: center; margin-bottom: 16px;
+}
+.holo-drop {
+  position: relative; overflow: hidden;
+  height: 300px; border-radius: 14px;
+  border: 1.5px dashed var(--cyan-dim);
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 55%, rgba(56,182,255,0.14), transparent 65%);
+  transition: border-color .2s, box-shadow .2s;
+}
+.holo-drop.dragover { border-color: var(--cyan); box-shadow: inset 0 0 40px rgba(56,182,255,0.3); }
+.holo-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(70,182,255,0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70,182,255,0.14) 1px, transparent 1px);
+  background-size: 26px 26px;
+  transform: perspective(400px) rotateX(55deg) scale(1.4);
+  transform-origin: center 70%;
+  animation: holo-grid 6s linear infinite;
+  opacity: 0.5;
+}
+@keyframes holo-grid { from { background-position: 0 0; } to { background-position: 0 26px; } }
+.holo-scan {
+  position: absolute; left: 0; right: 0; height: 3px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--cyan-soft), transparent);
+  box-shadow: 0 0 16px var(--cyan-soft);
+  animation: holo-scan 2.6s ease-in-out infinite;
+}
+@keyframes holo-scan { 0%,100%{ top: 6%; opacity:.4 } 50%{ top: 94%; opacity:1 } }
+.holo-ring {
+  position: absolute; width: 160px; height: 160px; border-radius: 50%;
+  border: 1px solid rgba(70,182,255,0.35);
+  box-shadow: 0 0 30px rgba(56,182,255,0.25), inset 0 0 30px rgba(56,182,255,0.15);
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+.holo-hint { position: relative; z-index: 2; text-align: center; color: var(--cyan-soft); }
+.holo-hint p { margin: 8px 0 12px; font-size: 14px; letter-spacing: 0.05em; }
+.holo-foot {
+  margin-top: 14px; text-align: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-dim);
+}
+
 /* ---------- Larger screens (desktop) ---------- */
 @media (min-width: 720px) {
   .hud { max-width: 720px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
