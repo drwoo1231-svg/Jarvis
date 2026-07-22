@@ -85,7 +85,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.7 · onboard brain (no key)';
+  const APP_VERSION = 'v1.8 · side panel + knowledge sources';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -574,6 +574,74 @@ Only emit an action when the user asks you to do something on the device; for or
     return null;
   }
 
+  /* ---- Extra keyless knowledge sources (JARVIS's "conversation dictionary") ---- */
+  const WMO = {
+    0: 'clear', 1: 'mainly clear', 2: 'partly cloudy', 3: 'overcast',
+    45: 'foggy', 48: 'foggy', 51: 'drizzling', 53: 'drizzling', 55: 'drizzling',
+    61: 'raining', 63: 'raining', 65: 'raining heavily', 66: 'freezing rain', 67: 'freezing rain',
+    71: 'snowing', 73: 'snowing', 75: 'snowing heavily', 77: 'snow grains',
+    80: 'rain showers', 81: 'rain showers', 82: 'violent rain showers',
+    85: 'snow showers', 86: 'snow showers', 95: 'thunderstorms', 96: 'thunderstorms', 99: 'thunderstorms',
+  };
+  async function getWeather(city) {
+    const tail = addressWord() ? ', ' + addressWord() : '';
+    try {
+      let lat, lon, place;
+      if (city) {
+        const g = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(city));
+        const gd = await g.json();
+        if (!gd.results || !gd.results[0]) return `I couldn't locate ${city} on the map${tail}.`;
+        lat = gd.results[0].latitude; lon = gd.results[0].longitude;
+        place = gd.results[0].name + (gd.results[0].country ? ', ' + gd.results[0].country : '');
+      } else {
+        if (!navigator.geolocation) return `Tell me a city and I'll fetch the weather${tail}.`;
+        const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 8000 }));
+        lat = pos.coords.latitude; lon = pos.coords.longitude; place = 'your area';
+      }
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m`);
+      const d = await r.json();
+      const c = d.current;
+      const cC = Math.round(c.temperature_2m);
+      const cF = Math.round(cC * 9 / 5 + 32);
+      return `It's ${cC}°C (${cF}°F) and ${WMO[c.weather_code] || 'clear'} in ${place}, winds near ${Math.round(c.wind_speed_10m)} km/h${tail}.`;
+    } catch {
+      return city ? `I couldn't reach the weather service just now${tail}.`
+                  : `Tell me a city and I'll fetch the weather${tail}.`;
+    }
+  }
+  async function getAdvice() {
+    try {
+      const r = await fetch('https://api.adviceslip.com/advice?t=' + Date.now());
+      const d = await r.json();
+      return d && d.slip && d.slip.advice ? d.slip.advice : null;
+    } catch { return null; }
+  }
+  async function getQuote() {
+    try {
+      const r = await fetch('https://api.quotable.io/random');
+      const d = await r.json();
+      if (d && d.content) return `"${d.content}" — ${d.author || 'Unknown'}`;
+    } catch { }
+    return null;
+  }
+  async function getCountry(kind, name) {
+    try {
+      const r = await fetch('https://restcountries.com/v3.1/name/' + encodeURIComponent(name) + '?fields=name,capital,population,region,currencies');
+      const d = await r.json();
+      const c = Array.isArray(d) ? d[0] : null;
+      if (!c) return null;
+      const cn = (c.name && (c.name.common || c.name.official)) || name;
+      if (/capital/.test(kind)) return `The capital of ${cn} is ${(c.capital && c.capital[0]) || 'not recorded'}.`;
+      if (/population/.test(kind)) return `${cn} has a population of about ${Number(c.population).toLocaleString()}.`;
+      if (/currency/.test(kind)) {
+        const cur = c.currencies && Object.values(c.currencies)[0];
+        return cur ? `${cn} uses the ${cur.name} (${cur.symbol || ''}).` : null;
+      }
+      if (/region|continent/.test(kind)) return `${cn} is in ${c.region}.`;
+    } catch { }
+    return null;
+  }
+
   async function localBrain(messages) {
     const last = messages[messages.length - 1];
     const raw = (last && last.content || '').toString().trim();
@@ -597,7 +665,7 @@ Only emit an action when the user asks you to do something on the device; for or
     if (/(who are you|what are you|your name|what's your name)/.test(q))
       return `I am JARVIS — Just A Rather Very Intelligent System — at your service${tail}.`;
     if (/(what can you do|help me|your capabilities|what do you do|commands)/.test(q))
-      return `Quite a lot without any key${tail}: I can play music, open apps, search the web, give directions, tell the time and date, do calculations, define words, look up facts, and run analysis on files or subjects. For open-ended conversation, connect a free brain in settings.`;
+      return `Quite a lot without any key${tail}: play music, open apps, search the web, give directions, tell the time and date, do calculations, define words, look up facts, fetch the weather, share a quote or a bit of advice, give country facts, and run analysis on files or subjects. For open-ended conversation, connect a free brain in settings.`;
     if (/(i love you|you're the best|good job|well done|nice work|you're amazing)/.test(q))
       return `Most kind${tail}. I do endeavour to be of use.`;
     if (/(tell me a joke|make me laugh|say something funny|a joke)/.test(q))
@@ -606,6 +674,24 @@ Only emit an action when the user asks you to do something on the device; for or
       return `${Math.random() < 0.5 ? 'Heads' : 'Tails'}${tail}.`;
     if (/roll (a )?(dice|die|d6)/.test(q))
       return `A ${1 + Math.floor(Math.random() * 6)}${tail}.`;
+
+    // weather
+    if (/\b(weather|temperature|forecast|how (?:hot|cold|windy)|is it (?:raining|snowing|sunny))\b/.test(q)) {
+      const cityM = q.match(/\b(?:in|for|at|around)\s+([a-z .'-]+?)\s*\??$/);
+      const w = await getWeather(cityM ? cityM[1].trim() : null);
+      if (w) return w;
+    }
+    // advice
+    if (/\b(give me advice|any advice|need advice|what should i do|some advice)\b/.test(q)) {
+      const a = await getAdvice(); if (a) return `${a}${tail}.`;
+    }
+    // quote / motivation
+    if (/\b(quote|inspire me|motivate me|motivation|some wisdom|inspiration)\b/.test(q)) {
+      const c = await getQuote(); if (c) return c;
+    }
+    // country facts
+    let cm = q.match(/\b(capital|population|currency|region|continent)\s+(?:of\s+)?(.+?)\s*\??$/);
+    if (cm) { const c = await getCountry(cm[1], cm[2].trim()); if (c) return c; }
 
     let dm = q.match(/^(?:define|definition of|what does|what's the meaning of|meaning of)\s+(.+?)(?:\s+mean)?\??$/);
     if (dm) { const def = await tryDefine(dm[1].trim()); if (def) return def; }
