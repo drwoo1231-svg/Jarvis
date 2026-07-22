@@ -1,0 +1,46 @@
+name: Deploy JARVIS to GitHub Pages
+
+# Publishes the PWA in ./public to GitHub Pages so you can open it on your
+# phone over HTTPS and add it to your home screen.
+#
+# One-time setup: in the repo, go to Settings -> Pages -> "Build and deployment"
+# -> Source: "GitHub Actions". After that this runs automatically on every push.
+
+on:
+  push:
+    branches:
+      - claude/jarvis-mobile-ai-gtwwge
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the PWA (public/) as the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
