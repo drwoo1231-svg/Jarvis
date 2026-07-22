@@ -1,0 +1,17 @@
+{
+  "name": "jarvis-assistant",
+  "version": "1.0.0",
+  "description": "JARVIS — a personal AI assistant PWA with a British butler's voice, device control, and a futuristic HUD. Mobile-first, also works on desktop.",
+  "type": "commonjs",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "icons": "python3 scripts/make_icons.py"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["jarvis", "assistant", "pwa", "voice", "claude", "ai"],
+  "license": "MIT"
+}

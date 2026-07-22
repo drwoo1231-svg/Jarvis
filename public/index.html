@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#020814" />
+  <meta name="description" content="JARVIS — your personal AI assistant." />
+
+  <title>JARVIS</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JARVIS" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated backdrop -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+
+  <!-- ===================== ONBOARDING ===================== -->
+  <section id="onboarding" class="overlay">
+    <div class="onboard-card glass">
+      <div class="onboard-emblem">
+        <img src="icons/icon.svg" alt="" width="72" height="72" />
+      </div>
+      <h1 class="onboard-title">J.A.R.V.I.S</h1>
+      <p class="onboard-sub">Just A Rather Very Intelligent System</p>
+
+      <label class="field-label" for="nameInput">What shall I call you?</label>
+      <input id="nameInput" class="text-field" type="text" maxlength="40"
+             placeholder="e.g. Tony" autocomplete="off" spellcheck="false" />
+
+      <label class="field-label" for="honorificSelect">Preferred form of address</label>
+      <select id="honorificSelect" class="text-field">
+        <option value="Sir">Sir</option>
+        <option value="Ma'am">Ma'am</option>
+        <option value="Boss">Boss</option>
+        <option value="name">Just my name</option>
+        <option value="none">No title, thanks</option>
+      </select>
+
+      <button id="onboardStart" class="primary-btn">Initialize</button>
+      <button id="onboardSettingsLink" class="ghost-link">Connection settings</button>
+    </div>
+  </section>
+
+  <!-- ===================== MAIN HUD ===================== -->
+  <main id="hud" class="hud hidden">
+    <!-- Top status bar -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">JARVIS</span>
+      </div>
+      <div id="statusText" class="status-text">SYSTEM ONLINE</div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.3 7.3 0 0 0-1.69-.98l-.38-2.65A.49.49 0 0 0 14 1h-4a.49.49 0 0 0-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64L4.57 11c-.04.32-.07.65-.07.98s.03.65.07.97l-2.11 1.66a.5.5 0 0 0-.12.64l2 3.46c.14.24.44.34.61.22l2.49-1c.52.39 1.08.73 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.17.12.47.02.61-.22l2-3.46a.5.5 0 0 0-.12-.64Z"/></svg>
+      </button>
+    </header>
+
+    <!-- Reactor core -->
+    <div class="core-stage">
+      <div class="hud-corner tl"></div>
+      <div class="hud-corner tr"></div>
+      <div class="hud-corner bl"></div>
+      <div class="hud-corner br"></div>
+      <canvas id="reactor" class="reactor" aria-hidden="true"></canvas>
+      <button id="micBtn" class="mic-btn" aria-label="Talk to JARVIS" title="Tap to talk">
+        <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3m5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11Z"/></svg>
+      </button>
+    </div>
+
+    <!-- Live caption -->
+    <div id="caption" class="caption" aria-live="polite"></div>
+
+    <!-- Conversation -->
+    <section id="log" class="log" aria-live="polite"></section>
+
+    <!-- Input dock -->
+    <div class="dock glass">
+      <input id="textInput" class="dock-input" type="text"
+             placeholder="Message JARVIS…" autocomplete="off" />
+      <button id="listenToggle" class="dock-btn" aria-label="Hands-free listening" title="Hands-free">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a2 2 0 0 1 2 2v8a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2m6 10a6 6 0 0 1-5 5.91V21h-2v-3.09A6 6 0 0 1 6 12h2a4 4 0 0 0 8 0Z"/></svg>
+      </button>
+      <button id="sendBtn" class="dock-btn send" aria-label="Send" title="Send">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 20.5v-6l8-2.5-8-2.5v-6l19 8.5Z"/></svg>
+      </button>
+    </div>
+  </main>
+
+  <!-- ===================== SETTINGS ===================== -->
+  <section id="settings" class="overlay hidden">
+    <div class="settings-card glass">
+      <div class="settings-head">
+        <h2>Settings</h2>
+        <button id="settingsClose" class="icon-btn" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.3 19.7 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+        </button>
+      </div>
+
+      <label class="field-label" for="setName">Your name</label>
+      <input id="setName" class="text-field" type="text" maxlength="40" autocomplete="off" />
+
+      <label class="field-label" for="setHonorific">Form of address</label>
+      <select id="setHonorific" class="text-field">
+        <option value="Sir">Sir</option>
+        <option value="Ma'am">Ma'am</option>
+        <option value="Boss">Boss</option>
+        <option value="name">Just my name</option>
+        <option value="none">No title</option>
+      </select>
+
+      <hr class="divider" />
+
+      <label class="field-label" for="setMode">Connection mode</label>
+      <select id="setMode" class="text-field">
+        <option value="server">Server (recommended — key stays on server)</option>
+        <option value="direct">Direct (browser calls Claude with your key)</option>
+        <option value="demo">Demo (offline, canned replies)</option>
+      </select>
+
+      <div id="directFields">
+        <label class="field-label" for="setApiKey">Anthropic API key</label>
+        <input id="setApiKey" class="text-field" type="password" autocomplete="off"
+               placeholder="sk-ant-…" spellcheck="false" />
+        <p class="hint">Stored only in this browser (localStorage). Used to call
+          the Claude API directly. Best for statically-hosted deployments.</p>
+      </div>
+
+      <label class="field-label" for="setModel">Model</label>
+      <select id="setModel" class="text-field">
+        <option value="claude-sonnet-5">Claude Sonnet 5 (fast, balanced)</option>
+        <option value="claude-opus-4-8">Claude Opus 4.8 (most capable)</option>
+        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (fastest)</option>
+      </select>
+
+      <hr class="divider" />
+
+      <label class="field-label" for="setVoice">JARVIS voice</label>
+      <select id="setVoice" class="text-field"></select>
+
+      <div class="toggle-row">
+        <label for="setSpeak">Speak replies aloud</label>
+        <input id="setSpeak" type="checkbox" checked />
+      </div>
+      <div class="toggle-row">
+        <label for="setAutoListen">Auto-listen after JARVIS speaks</label>
+        <input id="setAutoListen" type="checkbox" />
+      </div>
+
+      <div class="settings-actions">
+        <button id="testVoiceBtn" class="ghost-btn">Test voice</button>
+        <button id="resetBtn" class="ghost-btn danger">Reset JARVIS</button>
+        <button id="settingsSave" class="primary-btn">Save</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ACTION TOAST ===================== -->
+  <div id="actionToast" class="action-toast hidden" role="status"></div>
+
+  <script src="config.js"></script>
+  <script src="jarvis-core.js"></script>
+  <script src="voice.js"></script>
+  <script src="actions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
