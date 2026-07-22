@@ -152,10 +152,15 @@ JARVIS isn't tied to one company. In **⚙️ Settings → Direct → AI provide
 
 | Provider | Get a key at | Notes |
 |----------|--------------|-------|
-| **Anthropic (Claude)** | console.anthropic.com | The default. |
-| **Google Gemini** | aistudio.google.com/apikey | **Has a free tier** — great if you don't want to pay. |
-| **OpenAI (GPT)** | platform.openai.com/api-keys | GPT-4o and friends. |
+| **Free cloud (no key)** | — | Keyless, hosted on real servers (via pollinations.ai). **Fast, zero setup** — JARVIS uses this automatically when you have no key. Community-run, so it can be rate-limited or briefly down. |
+| **Google Gemini** | aistudio.google.com/apikey | **Free tier**, needs a key. Reliable and smart. |
+| **Anthropic (Claude)** | console.anthropic.com | Paid. |
+| **OpenAI (GPT)** | platform.openai.com/api-keys | Paid. GPT-4o and friends. |
 | **Other (OpenAI-compatible)** | your provider | Works with **Groq**, **OpenRouter**, **Together**, **DeepSeek**, local servers, etc. Just set the **base URL** (e.g. `https://api.groq.com/openai/v1`) and model. |
+
+> **No key, fast, works immediately:** the **Free cloud** provider. On a phone,
+> prefer this over On-device — most phones run the on-device model on the CPU
+> (WebGPU isn't engaged), which is painfully slow.
 
 The provider must allow browser (CORS) requests. Anthropic, OpenAI, Google
 Gemini and OpenRouter are all known to work directly from the browser. Your key

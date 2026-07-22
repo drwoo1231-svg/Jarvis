@@ -36,6 +36,7 @@
     telProvider: $('telProvider'),
     telLeft: $('telLeft'),
     sigBars: $('sigBars'),
+    tickerText: $('tickerText'),
 
     dock: $('dock'),
     analyzeBtn: $('analyzeBtn'),
@@ -58,7 +59,9 @@
     loadModelBtn: $('loadModelBtn'),
     loadProgress: $('loadProgress'),
     setProvider: $('setProvider'),
+    freeNote: $('freeNote'),
     baseUrlField: $('baseUrlField'),
+    keyField: $('keyField'),
     setBaseUrl: $('setBaseUrl'),
     setApiKey: $('setApiKey'),
     keyHint: $('keyHint'),
@@ -76,17 +79,19 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.3 · analysis + ops HUD';
-  const DEFAULT_LOCAL_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
+  const APP_VERSION = 'v1.4 · free cloud + detailed HUD';
+  const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
   const PROVIDER_DEFAULTS = {
+    free:                { model: 'openai',            keyless: true },
     anthropic:           { model: 'claude-sonnet-5',  keyPlaceholder: 'sk-ant-…', keyUrl: 'console.anthropic.com' },
     gemini:              { model: 'gemini-2.0-flash',  keyPlaceholder: 'AIza…',    keyUrl: 'aistudio.google.com/apikey' },
     openai:              { model: 'gpt-4o-mini',       keyPlaceholder: 'sk-…',     keyUrl: 'platform.openai.com/api-keys' },
     'openai-compatible': { model: '',                  keyPlaceholder: 'provider key', keyUrl: '' },
   };
   const MODEL_SUGGESTIONS = {
+    free: ['openai', 'openai-fast', 'mistral', 'llama', 'deepseek'],
     anthropic: ['claude-sonnet-5', 'claude-opus-4-8', 'claude-haiku-4-5-20251001'],
     gemini: ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash', 'gemini-1.5-pro'],
     openai: ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'o4-mini'],
@@ -248,12 +253,14 @@
 
   // Direct (browser) mode — talks to the chosen provider's API directly.
   async function callDirect(messages) {
-    const key = cfg.state.apiKey;
-    if (!key) throw new Error('Direct mode needs an API key. Tap the settings gear and paste your provider key.');
     const provider = cfg.state.provider || 'anthropic';
     const model = cfg.state.model || (PROVIDER_DEFAULTS[provider] || {}).model || '';
     const system = buildClientSystemPrompt();
+    const key = cfg.state.apiKey;
+    const keyless = (PROVIDER_DEFAULTS[provider] || {}).keyless;
+    if (!keyless && !key) throw new Error('Direct mode needs an API key. Tap the settings gear and paste your provider key — or choose the Free cloud provider, which needs none.');
     try {
+      if (provider === 'free') return await callFreeCloud(messages, model, system);
       if (provider === 'anthropic') return await callAnthropic(messages, key, model, system);
       if (provider === 'gemini') return await callGemini(messages, key, model, system);
       // openai and openai-compatible both speak the OpenAI chat-completions API
@@ -268,6 +275,33 @@
         throw new Error(`Couldn't reach the ${provider} API from the browser — it may block direct browser requests (CORS), or the base URL is wrong. Anthropic, OpenAI, Google Gemini and OpenRouter are known to work from the browser.`);
       }
       throw e;
+    }
+  }
+
+  // Free, keyless, hosted inference via pollinations.ai (OpenAI-compatible).
+  async function callFreeCloud(messages, model, system) {
+    // Guard against a leftover model name from another provider.
+    const m = MODEL_SUGGESTIONS.free.indexOf(model) >= 0 ? model : 'openai';
+    const body = {
+      model: m,
+      messages: [{ role: 'system', content: system }].concat(
+        messages.map((m) => ({ role: m.role, content: String(m.content) }))
+      ),
+    };
+    const res = await fetch('https://text.pollinations.ai/openai', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const raw = await res.text();
+    if (!res.ok) throw providerError('Free cloud', raw, res.status);
+    // Usually OpenAI-shaped JSON; occasionally plain text.
+    try {
+      const data = JSON.parse(raw);
+      const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      return (text || '').trim();
+    } catch {
+      return raw.trim();
     }
   }
 
@@ -985,7 +1019,14 @@ Only emit an action when the user asks you to do something on the device; for or
      ============================================================ */
   function initTelemetry() {
     el.sigBars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
-    // seed left readout lines
+    if (el.tickerText) {
+      const line = [
+        'NEURAL CORE <b>ONLINE</b>', 'UPLINK <b>STABLE</b>', 'ENCRYPTION <b>AES-256</b>',
+        'THREADS <b>128</b>', 'LATENCY <b>42MS</b>', 'MEMORY <b>NOMINAL</b>',
+        'SENSORS <b>ACTIVE</b>', 'DIAGNOSTICS <b>PASS</b>', 'ARC REACTOR <b>100%</b>',
+      ].join(' &nbsp;·&nbsp; ');
+      el.tickerText.innerHTML = line + ' &nbsp;·&nbsp; ' + line;
+    }
     updateTelemetry();
     setInterval(tickClock, 1000);
     tickClock();
@@ -1060,23 +1101,24 @@ Only emit an action when the user asks you to do something on the device; for or
 
     if (health && health.keyConfigured) return;          // server ready to chat
     if (cfg.state.mode === 'ondevice') return;            // runs locally, no key
+    if (cfg.state.mode === 'demo') return;                // user deliberately offline
+
+    const keyless = (PROVIDER_DEFAULTS[cfg.state.provider] || {}).keyless;
+    if (cfg.state.mode === 'direct' && (cfg.state.apiKey || keyless)) return; // already set up
     if (cfg.state.apiKey) {                                // we have our own key
       if (cfg.state.mode === 'server') cfg.set({ mode: 'direct' });
       return;
     }
-    if (cfg.state.mode === 'demo') return;                // user deliberately offline
 
-    // No server and no key: JARVIS can't converse yet. Guide the user.
+    // No server, no key: connect the free keyless cloud so JARVIS works with
+    // zero setup. The user can add a key later for guaranteed uptime.
+    cfg.set({ mode: 'direct', provider: 'free', model: 'openai' });
+    updateTelemetry();
+    const who = titledName();
     addMessage('jarvis',
-      "One small matter before we begin. To hold a proper conversation I'll need " +
-      "an API key from an AI provider. I'm opening settings now — choose a provider " +
-      "(Google Gemini offers a free tier), paste your key, and save.");
-    setTimeout(() => {
-      openSettings();
-      el.setMode.value = 'direct';
-      updateDirectVisibility();
-      el.setApiKey && el.setApiKey.focus();
-    }, 1100);
+      `I've connected to a complimentary service so we may speak right away${who ? ', ' + who : ''}. ` +
+      `It needs no key, though it's community-run — if it's ever slow or unavailable, ` +
+      `add a free provider key in settings. Now, how may I help?`);
   }
 
   /* ---------------- Settings ---------------- */
@@ -1108,6 +1150,8 @@ Only emit an action when the user asks you to do something on the device; for or
     const p = el.setProvider.value;
     const d = PROVIDER_DEFAULTS[p] || {};
     el.baseUrlField.style.display = (p === 'openai-compatible') ? 'block' : 'none';
+    el.keyField.style.display = d.keyless ? 'none' : 'block';
+    el.freeNote.style.display = d.keyless ? 'block' : 'none';
     el.setApiKey.placeholder = d.keyPlaceholder || 'API key';
     el.setModel.placeholder = d.model || 'model name';
     el.modelSuggestions.innerHTML = (MODEL_SUGGESTIONS[p] || [])

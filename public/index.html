@@ -100,6 +100,9 @@
     <!-- Live caption -->
     <div id="caption" class="caption" aria-live="polite"></div>
 
+    <!-- Telemetry ticker -->
+    <div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerText"></div></div>
+
     <!-- Conversation -->
     <section id="log" class="log" aria-live="polite"></section>
 
@@ -173,17 +176,19 @@
       </select>
 
       <div id="ondeviceFields">
-        <p class="hint">Runs a small AI model entirely on your device — no key,
-          no cost, private, works offline once loaded. First use downloads the
-          model (~1&nbsp;GB) and needs a recent phone with WebGPU (iOS&nbsp;18+)
-          or a recent desktop Chrome/Edge. It's less clever and slower than the
-          cloud models.</p>
+        <p class="hint"><b>⚠️ Phones are usually too slow for this.</b> On-device
+          only runs fast if your phone actually uses its GPU (WebGPU). Many
+          iPhones fall back to the CPU and take minutes per reply. If it's slow,
+          switch to <b>Direct → Free cloud (no key)</b> — it's just as key-free
+          but runs on real servers. On-device is private and offline, best on a
+          desktop Chrome/Edge.</p>
 
         <label class="field-label" for="setLocalModel">On-device model</label>
         <select id="setLocalModel" class="text-field">
-          <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 · 1B — smallest, best for phones</option>
+          <option value="Qwen2.5-0.5B-Instruct-q4f16_1-MLC">Qwen2.5 · 0.5B — fastest, tiny</option>
+          <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 · 1B — small</option>
           <option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Qwen2.5 · 1.5B — a little smarter</option>
-          <option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 · 3B — needs a powerful device</option>
+          <option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 · 3B — desktop only</option>
         </select>
 
         <button id="loadModelBtn" class="ghost-btn" style="margin-top:12px;width:100%">Download &amp; load model now</button>
@@ -193,11 +198,19 @@
       <div id="directFields">
         <label class="field-label" for="setProvider">AI provider</label>
         <select id="setProvider" class="text-field">
+          <option value="free">Free cloud — no key, fast (community)</option>
+          <option value="gemini">Google Gemini — free tier, needs a key</option>
           <option value="anthropic">Anthropic — Claude</option>
-          <option value="gemini">Google Gemini — has a free tier</option>
           <option value="openai">OpenAI — GPT</option>
           <option value="openai-compatible">Other — OpenAI-compatible (Groq, OpenRouter…)</option>
         </select>
+
+        <div id="freeNote" class="hint" style="display:none">
+          Uses a free, keyless community service (pollinations.ai) on real
+          servers — fast, nothing to sign up for. It may be rate-limited or
+          occasionally down, and your messages pass through their servers.
+          For guaranteed uptime, use Gemini's free tier.
+        </div>
 
         <div id="baseUrlField">
           <label class="field-label" for="setBaseUrl">API base URL</label>
@@ -207,10 +220,12 @@
             OpenRouter: https://openrouter.ai/api/v1</p>
         </div>
 
-        <label class="field-label" for="setApiKey">API key</label>
-        <input id="setApiKey" class="text-field" type="password" autocomplete="off"
-               placeholder="sk-ant-…" spellcheck="false" />
-        <p class="hint" id="keyHint">Stored only in this browser (localStorage).</p>
+        <div id="keyField">
+          <label class="field-label" for="setApiKey">API key</label>
+          <input id="setApiKey" class="text-field" type="password" autocomplete="off"
+                 placeholder="sk-ant-…" spellcheck="false" />
+          <p class="hint" id="keyHint">Stored only in this browser (localStorage).</p>
+        </div>
 
         <label class="field-label" for="setModel">Model</label>
         <input id="setModel" class="text-field" type="text" autocomplete="off"

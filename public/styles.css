@@ -402,6 +402,27 @@ select.text-field {
   transition: opacity 0.2s;
 }
 
+/* ---------- Telemetry ticker ---------- */
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid rgba(80,170,255,0.12);
+  border-bottom: 1px solid rgba(80,170,255,0.12);
+  padding: 4px 0;
+  margin: 2px 0 4px;
+}
+.ticker-track {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--cyan-dim);
+  animation: ticker 26s linear infinite;
+  will-change: transform;
+}
+.ticker-track b { color: var(--cyan-soft); }
+@keyframes ticker { from { transform: translateX(4%); } to { transform: translateX(-100%); } }
+
 /* ---------- Conversation log ---------- */
 .log {
   flex: 1 1 auto;

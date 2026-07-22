@@ -14,7 +14,7 @@
     apiKey: '',                // used only in 'direct' mode
     baseUrl: '',               // for the 'openai-compatible' provider
     model: 'claude-sonnet-5',
-    localModel: 'Llama-3.2-1B-Instruct-q4f16_1-MLC', // on-device model
+    localModel: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC', // on-device model (fast)
     voiceURI: '',              // chosen TTS voice
     speak: true,               // speak replies aloud
     autoListen: false,         // re-open the mic after JARVIS finishes talking

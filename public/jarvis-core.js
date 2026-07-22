@@ -95,6 +95,20 @@
     }
   }
 
+  // Longer radial spokes reaching outward, spinning slowly (as in the ref HUD).
+  function drawSpokes(radius, count, len, alpha, dir) {
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 + t * 0.05 * dir;
+      const x1 = cx + Math.cos(a) * radius, y1 = cy + Math.sin(a) * radius;
+      const x2 = cx + Math.cos(a) * (radius + len), y2 = cy + Math.sin(a) * (radius + len);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.strokeStyle = rgba(color, alpha);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
   function frame() {
     t += 0.016;
     ampSmooth = lerp(ampSmooth, amp, 0.2);
@@ -111,8 +125,12 @@
     const pulse = 1 + ampSmooth * 0.28 + Math.sin(t * 1.6) * 0.015;
 
     // ---- HUD rings ----
+    drawRing(R * 1.82, 0, Math.PI * 2, 1, 0.22, [1, 7]);        // fine dotted outer ring
+    drawSpokes(R * 1.68, 36, 12 + ampSmooth * 10, 0.28, 1);      // radial spokes
     drawRing(R * 1.72, t * 0.35, t * 0.35 + Math.PI * 1.92, 1.3, 0.32, [3, 13]);
     drawTicks(R * 1.5, 60, 6 + ampSmooth * 8, 0.22);
+    drawRing(R * 1.42, 0, Math.PI * 2, 1, 0.18, [2, 10]);        // second dotted ring
+    drawSpokes(R * 1.44, 72, 5, 0.16, -1);
     drawRing(R * 1.3, -t * 0.6, -t * 0.6 + Math.PI * 0.55, 2.2, 0.5);
     drawRing(R * 1.3, -t * 0.6 + Math.PI, -t * 0.6 + Math.PI * 1.5, 2.2, 0.5);
     drawRing(R * 1.15, t * 0.9, t * 0.9 + Math.PI * 0.85, 1.4, 0.36);
@@ -148,14 +166,21 @@
       ctx.fill();
     }
 
-    // ---- soft core glow ----
-    const coreR = R * 0.5 * pulse;
+    // ---- soft core glow (brighter, denser center) ----
+    const coreR = R * 0.55 * pulse;
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
-    g.addColorStop(0, rgba(color, 0.42 + ampSmooth * 0.3));
-    g.addColorStop(0.5, rgba(color, 0.1));
+    g.addColorStop(0, rgba(color, 0.6 + ampSmooth * 0.35));
+    g.addColorStop(0.35, rgba(color, 0.22));
     g.addColorStop(1, rgba(color, 0));
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.arc(cx, cy, coreR, 0, Math.PI * 2); ctx.fill();
+    // hot white nucleus
+    const nucR = R * 0.14 * pulse;
+    const gn = ctx.createRadialGradient(cx, cy, 0, cx, cy, nucR);
+    gn.addColorStop(0, `rgba(240,250,255,${0.75 + ampSmooth * 0.2})`);
+    gn.addColorStop(1, rgba(color, 0));
+    ctx.fillStyle = gn;
+    ctx.beginPath(); ctx.arc(cx, cy, nucR, 0, Math.PI * 2); ctx.fill();
 
     // ---- orbiting motes ----
     for (const m of motes) {
