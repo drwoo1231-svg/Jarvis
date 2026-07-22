@@ -1,7 +1,7 @@
 /* JARVIS — service worker: cache the app shell for offline launch.
    Network-first for navigation and API; cache-first for static assets. */
 
-const CACHE = 'jarvis-v3';
+const CACHE = 'jarvis-v4';
 const SHELL = [
   './',
   './index.html',
@@ -39,23 +39,19 @@ self.addEventListener('fetch', (event) => {
   // Only handle same-origin GETs; let everything else hit the network.
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // Navigation requests: network-first, fall back to cached shell.
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request).catch(() => caches.match('./index.html'))
-    );
-    return;
-  }
-
-  // Static assets: cache-first, then network (and cache the result).
+  // Network-first for everything (shell + app code) so updates land immediately
+  // whenever the device is online; fall back to cache only when offline. This
+  // avoids stale-app-stuck-on-old-version problems, at the cost of a network
+  // round trip while online (the app is tiny, so this is imperceptible).
   event.respondWith(
-    caches.match(request).then((cached) =>
-      cached ||
-      fetch(request).then((res) => {
+    fetch(request)
+      .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(request, copy)).catch(() => {});
         return res;
-      }).catch(() => cached)
-    )
+      })
+      .catch(() =>
+        caches.match(request).then((cached) => cached || caches.match('./index.html'))
+      )
   );
 });

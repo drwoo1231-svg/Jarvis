@@ -53,6 +53,10 @@
     actionToast: $('actionToast'),
   };
 
+  // Bump this whenever the app changes so users can confirm they're on the
+  // latest build (shown at the bottom of Settings).
+  const APP_VERSION = 'v1.1 · multi-provider';
+
   // Per-provider defaults for the Direct-mode connection.
   const PROVIDER_DEFAULTS = {
     anthropic:           { model: 'claude-sonnet-5',  keyPlaceholder: 'sk-ant-…', keyUrl: 'console.anthropic.com' },
@@ -655,6 +659,8 @@ Only emit an action when the user asks you to do something on the device; for or
     populateVoices();
     updateDirectVisibility();
     updateProviderUI();
+    const ver = document.getElementById('appVersion');
+    if (ver) ver.textContent = 'JARVIS ' + APP_VERSION;
     el.settings.classList.remove('hidden');
   }
   function updateDirectVisibility() {
