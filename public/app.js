@@ -79,7 +79,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.4 · free cloud + detailed HUD';
+  const APP_VERSION = 'v1.5 · instant device commands';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -512,6 +512,42 @@ Only emit an action when the user asks you to do something on the device; for or
     return h;
   }
 
+  /* Direct device commands, handled in-app so they ALWAYS work (every mode,
+     any provider) and fire within the user's tap so the app opens on iOS. */
+  function localIntent(text) {
+    const low = text.trim().toLowerCase();
+    const addr = addressWord();
+    const tail = addr ? ', ' + addr : '';
+    let m;
+
+    // play music / put on a song
+    m = low.match(/^(?:hey )?(?:jarvis[,\s]+)?(?:can you |could you |please )?(?:play|put on)\s+(.+)/i);
+    if (m) {
+      let query = m[1];
+      let service = 'youtube';
+      const sm = query.match(/\bon (youtube|spotify|apple music|apple)\b/i);
+      if (sm) service = /spotify/i.test(sm[1]) ? 'spotify' : /apple/i.test(sm[1]) ? 'apple' : 'youtube';
+      query = query.replace(/\bon (youtube|spotify|apple music|apple)\b/ig, '')
+                   .replace(/\b(for me|please|the song|some)\b/ig, '')
+                   .replace(/\s+/g, ' ').trim();
+      if (query) return { action: { type: 'play_music', query, service }, say: `Right away${tail}. Putting on ${query}${service !== 'youtube' ? ' via ' + service : ''} now.` };
+    }
+
+    // open an app
+    m = low.match(/^(?:can you |could you |please )?open\s+(?:the\s+|my\s+)?([a-z0-9 .&+-]{2,30?})(?:\s+app)?$/i);
+    if (m) { const app = m[1].trim(); return { action: { type: 'open_app', app }, say: `Opening ${app}${tail}.` }; }
+
+    // navigate / directions
+    m = low.match(/^(?:navigate|directions?|take me)\s+(?:to\s+)?(.+)/i);
+    if (m) return { action: { type: 'navigate', destination: m[1].trim() }, say: `Plotting a route to ${m[1].trim()}${tail}.` };
+
+    // web search
+    m = low.match(/^(?:search(?:\s+the\s+web)?(?:\s+for)?|google|look up)\s+(.+)/i);
+    if (m) return { action: { type: 'search_web', query: m[1].trim() }, say: `Searching for ${m[1].trim()}${tail}.` };
+
+    return null;
+  }
+
   /* ---------------- Send / respond flow ---------------- */
   async function sendMessage(text) {
     text = (text || '').trim();
@@ -524,6 +560,21 @@ Only emit an action when the user asks you to do something on the device; for or
       el.textInput.placeholder = 'Message JARVIS…';
       addMessage('user', text);
       runAnalysis(text);
+      return;
+    }
+
+    // Direct device commands ("play …", "open …", "search …", "navigate …")
+    // run in-app, instantly, in every mode. Executing here (synchronously,
+    // inside the user's tap) also lets iOS actually open the target app.
+    const intent = localIntent(text);
+    if (intent) {
+      addMessage('user', text);
+      history.push({ role: 'user', content: text });
+      addMessage('jarvis', intent.say, [intent.action]);
+      history.push({ role: 'assistant', content: intent.say });
+      executeAction(intent.action);
+      speak(intent.say);
+      maybeAutoListen();
       return;
     }
 
