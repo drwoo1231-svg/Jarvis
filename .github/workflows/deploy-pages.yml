@@ -35,6 +35,10 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # Try to turn Pages on automatically so no manual Settings step is
+          # needed. (Requires a public repo, or a paid plan for private repos.)
+          enablement: true
 
       - name: Upload the PWA (public/) as the site
         uses: actions/upload-pages-artifact@v3
