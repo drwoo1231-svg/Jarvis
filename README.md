@@ -114,7 +114,26 @@ Open **⚙️ Settings → Connection mode**:
 |------|--------------|----------|
 | **Server** | Browser → your Node server → Claude. Key lives on the server. | Running locally / on your own host. Most private. |
 | **Direct** | Browser → your chosen AI provider directly (your key, stored in the browser). | Static hosting (GitHub Pages/Netlify) with no backend. |
+| **On-device** | A small open model runs **on your device** via WebGPU (WebLLM). No key, no cost, no cloud. | Free & private use, offline. Needs a recent device. |
 | **Demo** | Offline canned butler replies + local command parsing. | Trying the UI, or when you have no key. |
+
+### On-device mode (no API key, no cost)
+
+JARVIS can run a small open model (Llama 3.2, Qwen 2.5) **entirely on your
+device** using WebGPU — no key, no signup, nothing sent to a cloud, works
+offline once loaded. In **⚙️ Settings → Connection mode → On-device**, pick a
+model and tap **Download & load model**.
+
+Caveats, honestly:
+- Needs **WebGPU**: a recent iPhone (**iOS 18+**, WebGPU enabled) or a recent
+  desktop **Chrome/Edge**. Older devices can't run it.
+- First load **downloads the model (~1 GB)** and needs a good connection.
+- It is **noticeably less capable and slower** than the cloud models (Claude,
+  Gemini, GPT). Great for chat and commands; not for heavy reasoning.
+
+No app or web page can *be* a full ChatGPT-class brain on its own — that runs on
+data-center GPUs. On-device mode is the real "no cloud" option, within the
+limits of what a phone can run.
 
 ### Choose your AI provider (Direct mode)
 

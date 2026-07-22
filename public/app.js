@@ -36,6 +36,10 @@
     setHonorific: $('setHonorific'),
     setMode: $('setMode'),
     directFields: $('directFields'),
+    ondeviceFields: $('ondeviceFields'),
+    setLocalModel: $('setLocalModel'),
+    loadModelBtn: $('loadModelBtn'),
+    loadProgress: $('loadProgress'),
     setProvider: $('setProvider'),
     baseUrlField: $('baseUrlField'),
     setBaseUrl: $('setBaseUrl'),
@@ -55,7 +59,8 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.1 · multi-provider';
+  const APP_VERSION = 'v1.2 · on-device + providers';
+  const DEFAULT_LOCAL_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
   const PROVIDER_DEFAULTS = {
@@ -174,6 +179,7 @@
   async function callModel(messages) {
     const mode = cfg.state.mode;
     if (mode === 'demo') return demoReply(messages);
+    if (mode === 'ondevice') return callLocal(messages);
     if (mode === 'direct') return callDirect(messages);
 
     // Server mode — but on static hosting (e.g. GitHub Pages) there is no
@@ -312,6 +318,75 @@
     const cand = data.candidates && data.candidates[0];
     const parts = (cand && cand.content && cand.content.parts) || [];
     return parts.map((p) => p.text || '').join('').trim();
+  }
+
+  /* ---------------- On-device (no key) ---------------- */
+  const ONDEVICE_UNSUPPORTED =
+    "This device can't run on-device AI — it needs WebGPU, which requires a " +
+    "recent phone (iOS 18+, with WebGPU enabled) or a recent desktop Chrome/Edge. " +
+    "Open Settings and pick a cloud provider (Direct mode) instead — Google " +
+    "Gemini has a free tier.";
+
+  function friendlyLocalError(e) {
+    const msg = (e && e.message) ? e.message : String(e);
+    if (/dynamically imported module|Failed to fetch|NetworkError|load failed/i.test(msg)) {
+      return "Couldn't download the on-device AI engine. This first load needs a solid internet connection — please check your connection and try again.";
+    }
+    if (/webgpu|gpu|adapter|createDevice|requestAdapter/i.test(msg)) {
+      return ONDEVICE_UNSUPPORTED;
+    }
+    if (/not found in|cannot find model|model_id/i.test(msg)) {
+      return "That on-device model isn't available. Open Settings and choose a different on-device model.";
+    }
+    return 'On-device AI error: ' + msg;
+  }
+
+  async function callLocal(messages) {
+    if (!window.JarvisLocal || !JarvisLocal.isSupported()) {
+      throw new Error(ONDEVICE_UNSUPPORTED);
+    }
+    const model = cfg.state.localModel || DEFAULT_LOCAL_MODEL;
+    try {
+      if (!JarvisLocal.isReady(model)) {
+        setStatus('LOADING MODEL', 'thinking');
+        await JarvisLocal.ensure(model, (p) => {
+          const pct = Math.round((p && p.progress || 0) * 100);
+          setStatus('LOADING ' + pct + '%', 'thinking');
+          el.caption.textContent = (p && p.text) || 'Preparing on-device AI…';
+        });
+        el.caption.textContent = '';
+      }
+      setStatus('THINKING', 'thinking');
+      return await JarvisLocal.chat(messages, buildClientSystemPrompt());
+    } catch (e) {
+      throw new Error(friendlyLocalError(e));
+    }
+  }
+
+  // Kick off the model download/load from Settings, showing progress there.
+  async function ensureLocalModel(model) {
+    if (!window.JarvisLocal || !JarvisLocal.isSupported()) {
+      el.loadProgress.textContent = ONDEVICE_UNSUPPORTED;
+      return false;
+    }
+    el.loadModelBtn.disabled = true;
+    const prev = el.loadModelBtn.textContent;
+    el.loadModelBtn.textContent = 'Loading…';
+    try {
+      await JarvisLocal.ensure(model, (p) => {
+        const pct = Math.round((p && p.progress || 0) * 100);
+        el.loadProgress.textContent = (p && p.text ? p.text : 'Loading…') +
+          (pct ? '  (' + pct + '%)' : '');
+      });
+      el.loadProgress.textContent = 'Model ready — JARVIS now runs on your device.';
+      return true;
+    } catch (e) {
+      el.loadProgress.textContent = friendlyLocalError(e);
+      return false;
+    } finally {
+      el.loadModelBtn.disabled = false;
+      el.loadModelBtn.textContent = prev;
+    }
   }
 
   // Mirrors the server-side prompt for direct (browser) mode.
@@ -626,6 +701,7 @@ Only emit an action when the user asks you to do something on the device; for or
     } catch { /* no server reachable */ }
 
     if (health && health.keyConfigured) return;          // server ready to chat
+    if (cfg.state.mode === 'ondevice') return;            // runs locally, no key
     if (cfg.state.apiKey) {                                // we have our own key
       if (cfg.state.mode === 'server') cfg.set({ mode: 'direct' });
       return;
@@ -654,6 +730,8 @@ Only emit an action when the user asks you to do something on the device; for or
     el.setBaseUrl.value = cfg.state.baseUrl || '';
     el.setApiKey.value = cfg.state.apiKey || '';
     el.setModel.value = cfg.state.model || 'claude-sonnet-5';
+    el.setLocalModel.value = cfg.state.localModel || DEFAULT_LOCAL_MODEL;
+    el.loadProgress.textContent = '';
     el.setSpeak.checked = cfg.state.speak !== false;
     el.setAutoListen.checked = !!cfg.state.autoListen;
     populateVoices();
@@ -664,7 +742,9 @@ Only emit an action when the user asks you to do something on the device; for or
     el.settings.classList.remove('hidden');
   }
   function updateDirectVisibility() {
-    el.directFields.style.display = el.setMode.value === 'direct' ? 'block' : 'none';
+    const m = el.setMode.value;
+    el.directFields.style.display = m === 'direct' ? 'block' : 'none';
+    el.ondeviceFields.style.display = m === 'ondevice' ? 'block' : 'none';
   }
   function updateProviderUI() {
     const p = el.setProvider.value;
@@ -706,6 +786,7 @@ Only emit an action when the user asks you to do something on the device; for or
       baseUrl: el.setBaseUrl.value.trim(),
       apiKey: el.setApiKey.value.trim(),
       model: el.setModel.value.trim(),
+      localModel: el.setLocalModel.value,
       voiceURI: el.setVoice.value,
       speak: el.setSpeak.checked,
       autoListen: el.setAutoListen.checked,
@@ -757,6 +838,7 @@ Only emit an action when the user asks you to do something on the device; for or
       el.setModel.value = (PROVIDER_DEFAULTS[p] || {}).model || '';
       updateProviderUI();
     });
+    el.loadModelBtn.addEventListener('click', () => ensureLocalModel(el.setLocalModel.value));
     el.settingsSave.addEventListener('click', saveSettings);
     el.testVoiceBtn.addEventListener('click', () => {
       const uri = el.setVoice.value;

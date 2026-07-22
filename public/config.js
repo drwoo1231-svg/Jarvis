@@ -9,11 +9,12 @@
   const DEFAULTS = {
     userName: '',
     honorific: 'Sir',
-    mode: 'server',            // 'server' | 'direct' | 'demo'
+    mode: 'server',            // 'server' | 'direct' | 'ondevice' | 'demo'
     provider: 'anthropic',     // direct-mode AI provider
     apiKey: '',                // used only in 'direct' mode
     baseUrl: '',               // for the 'openai-compatible' provider
     model: 'claude-sonnet-5',
+    localModel: 'Llama-3.2-1B-Instruct-q4f16_1-MLC', // on-device model
     voiceURI: '',              // chosen TTS voice
     speak: true,               // speak replies aloud
     autoListen: false,         // re-open the mic after JARVIS finishes talking

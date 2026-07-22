@@ -121,10 +121,29 @@
 
       <label class="field-label" for="setMode">Connection mode</label>
       <select id="setMode" class="text-field">
-        <option value="server">Server (recommended — key stays on server)</option>
-        <option value="direct">Direct (browser calls Claude with your key)</option>
+        <option value="server">Server (key stays on server)</option>
+        <option value="direct">Direct (browser → your AI provider)</option>
+        <option value="ondevice">On-device (no key — runs on your phone)</option>
         <option value="demo">Demo (offline, canned replies)</option>
       </select>
+
+      <div id="ondeviceFields">
+        <p class="hint">Runs a small AI model entirely on your device — no key,
+          no cost, private, works offline once loaded. First use downloads the
+          model (~1&nbsp;GB) and needs a recent phone with WebGPU (iOS&nbsp;18+)
+          or a recent desktop Chrome/Edge. It's less clever and slower than the
+          cloud models.</p>
+
+        <label class="field-label" for="setLocalModel">On-device model</label>
+        <select id="setLocalModel" class="text-field">
+          <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama 3.2 · 1B — smallest, best for phones</option>
+          <option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Qwen2.5 · 1.5B — a little smarter</option>
+          <option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 · 3B — needs a powerful device</option>
+        </select>
+
+        <button id="loadModelBtn" class="ghost-btn" style="margin-top:12px;width:100%">Download &amp; load model now</button>
+        <p class="hint" id="loadProgress"></p>
+      </div>
 
       <div id="directFields">
         <label class="field-label" for="setProvider">AI provider</label>
@@ -185,6 +204,7 @@
   <script src="jarvis-core.js"></script>
   <script src="voice.js"></script>
   <script src="actions.js"></script>
+  <script src="ondevice.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
