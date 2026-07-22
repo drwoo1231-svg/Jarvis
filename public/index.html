@@ -127,19 +127,32 @@
       </select>
 
       <div id="directFields">
-        <label class="field-label" for="setApiKey">Anthropic API key</label>
+        <label class="field-label" for="setProvider">AI provider</label>
+        <select id="setProvider" class="text-field">
+          <option value="anthropic">Anthropic — Claude</option>
+          <option value="gemini">Google Gemini — has a free tier</option>
+          <option value="openai">OpenAI — GPT</option>
+          <option value="openai-compatible">Other — OpenAI-compatible (Groq, OpenRouter…)</option>
+        </select>
+
+        <div id="baseUrlField">
+          <label class="field-label" for="setBaseUrl">API base URL</label>
+          <input id="setBaseUrl" class="text-field" type="text" autocomplete="off"
+                 spellcheck="false" placeholder="https://api.groq.com/openai/v1" />
+          <p class="hint">Groq: https://api.groq.com/openai/v1 &nbsp;·&nbsp;
+            OpenRouter: https://openrouter.ai/api/v1</p>
+        </div>
+
+        <label class="field-label" for="setApiKey">API key</label>
         <input id="setApiKey" class="text-field" type="password" autocomplete="off"
                placeholder="sk-ant-…" spellcheck="false" />
-        <p class="hint">Stored only in this browser (localStorage). Used to call
-          the Claude API directly. Best for statically-hosted deployments.</p>
-      </div>
+        <p class="hint" id="keyHint">Stored only in this browser (localStorage).</p>
 
-      <label class="field-label" for="setModel">Model</label>
-      <select id="setModel" class="text-field">
-        <option value="claude-sonnet-5">Claude Sonnet 5 (fast, balanced)</option>
-        <option value="claude-opus-4-8">Claude Opus 4.8 (most capable)</option>
-        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (fastest)</option>
-      </select>
+        <label class="field-label" for="setModel">Model</label>
+        <input id="setModel" class="text-field" type="text" autocomplete="off"
+               spellcheck="false" placeholder="claude-sonnet-5" list="modelSuggestions" />
+        <datalist id="modelSuggestions"></datalist>
+      </div>
 
       <hr class="divider" />
 

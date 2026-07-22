@@ -113,8 +113,23 @@ Open **⚙️ Settings → Connection mode**:
 | Mode | How it works | Best for |
 |------|--------------|----------|
 | **Server** | Browser → your Node server → Claude. Key lives on the server. | Running locally / on your own host. Most private. |
-| **Direct** | Browser → Claude directly (your key, stored in the browser). | Static hosting (GitHub Pages/Netlify) with no backend. |
+| **Direct** | Browser → your chosen AI provider directly (your key, stored in the browser). | Static hosting (GitHub Pages/Netlify) with no backend. |
 | **Demo** | Offline canned butler replies + local command parsing. | Trying the UI, or when you have no key. |
+
+### Choose your AI provider (Direct mode)
+
+JARVIS isn't tied to one company. In **⚙️ Settings → Direct → AI provider**, pick:
+
+| Provider | Get a key at | Notes |
+|----------|--------------|-------|
+| **Anthropic (Claude)** | console.anthropic.com | The default. |
+| **Google Gemini** | aistudio.google.com/apikey | **Has a free tier** — great if you don't want to pay. |
+| **OpenAI (GPT)** | platform.openai.com/api-keys | GPT-4o and friends. |
+| **Other (OpenAI-compatible)** | your provider | Works with **Groq**, **OpenRouter**, **Together**, **DeepSeek**, local servers, etc. Just set the **base URL** (e.g. `https://api.groq.com/openai/v1`) and model. |
+
+The provider must allow browser (CORS) requests. Anthropic, OpenAI, Google
+Gemini and OpenRouter are all known to work directly from the browser. Your key
+is stored only on your device.
 
 ---
 

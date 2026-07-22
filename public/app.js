@@ -36,8 +36,13 @@
     setHonorific: $('setHonorific'),
     setMode: $('setMode'),
     directFields: $('directFields'),
+    setProvider: $('setProvider'),
+    baseUrlField: $('baseUrlField'),
+    setBaseUrl: $('setBaseUrl'),
     setApiKey: $('setApiKey'),
+    keyHint: $('keyHint'),
     setModel: $('setModel'),
+    modelSuggestions: $('modelSuggestions'),
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
@@ -46,6 +51,20 @@
     settingsSave: $('settingsSave'),
 
     actionToast: $('actionToast'),
+  };
+
+  // Per-provider defaults for the Direct-mode connection.
+  const PROVIDER_DEFAULTS = {
+    anthropic:           { model: 'claude-sonnet-5',  keyPlaceholder: 'sk-ant-…', keyUrl: 'console.anthropic.com' },
+    gemini:              { model: 'gemini-2.0-flash',  keyPlaceholder: 'AIza…',    keyUrl: 'aistudio.google.com/apikey' },
+    openai:              { model: 'gpt-4o-mini',       keyPlaceholder: 'sk-…',     keyUrl: 'platform.openai.com/api-keys' },
+    'openai-compatible': { model: '',                  keyPlaceholder: 'provider key', keyUrl: '' },
+  };
+  const MODEL_SUGGESTIONS = {
+    anthropic: ['claude-sonnet-5', 'claude-opus-4-8', 'claude-haiku-4-5-20251001'],
+    gemini: ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash', 'gemini-1.5-pro'],
+    openai: ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1-mini', 'o4-mini'],
+    'openai-compatible': ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'mixtral-8x7b-32768'],
   };
 
   // Conversation history for the API (role/content pairs).
@@ -198,9 +217,41 @@
     throw new Error(info.message || info.error || `Server error (${res.status}).`);
   }
 
+  // Direct (browser) mode — talks to the chosen provider's API directly.
   async function callDirect(messages) {
     const key = cfg.state.apiKey;
-    if (!key) throw new Error('Direct mode needs your Anthropic API key. Add it in Settings.');
+    if (!key) throw new Error('Direct mode needs an API key. Tap the settings gear and paste your provider key.');
+    const provider = cfg.state.provider || 'anthropic';
+    const model = cfg.state.model || (PROVIDER_DEFAULTS[provider] || {}).model || '';
+    const system = buildClientSystemPrompt();
+    try {
+      if (provider === 'anthropic') return await callAnthropic(messages, key, model, system);
+      if (provider === 'gemini') return await callGemini(messages, key, model, system);
+      // openai and openai-compatible both speak the OpenAI chat-completions API
+      const baseUrl = provider === 'openai'
+        ? 'https://api.openai.com/v1'
+        : (cfg.state.baseUrl || '').trim().replace(/\/+$/, '');
+      if (!baseUrl) throw new Error('Please set the API base URL in Settings for this provider (e.g. https://api.groq.com/openai/v1).');
+      return await callOpenAICompatible(messages, key, model, system, baseUrl);
+    } catch (e) {
+      // A failed fetch (CORS / offline / bad host) surfaces as a TypeError.
+      if (e instanceof TypeError) {
+        throw new Error(`Couldn't reach the ${provider} API from the browser — it may block direct browser requests (CORS), or the base URL is wrong. Anthropic, OpenAI, Google Gemini and OpenRouter are known to work from the browser.`);
+      }
+      throw e;
+    }
+  }
+
+  function providerError(name, raw, status) {
+    let msg = raw;
+    try {
+      const j = JSON.parse(raw);
+      msg = (j.error && (j.error.message || j.error.status)) || j.message || raw;
+    } catch { /* keep raw */ }
+    return new Error(`${name} error (${status}): ${String(msg).slice(0, 240)}`);
+  }
+
+  async function callAnthropic(messages, key, model, system) {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -209,21 +260,54 @@
         'content-type': 'application/json',
         'anthropic-dangerous-direct-browser-access': 'true',
       },
+      body: JSON.stringify({ model, max_tokens: 1024, system, messages }),
+    });
+    const raw = await res.text();
+    if (!res.ok) throw providerError('Anthropic API', raw, res.status);
+    const data = JSON.parse(raw);
+    return (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
+  }
+
+  async function callOpenAICompatible(messages, key, model, system, baseUrl) {
+    const res = await fetch(baseUrl + '/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + key, 'content-type': 'application/json' },
       body: JSON.stringify({
-        model: cfg.state.model,
+        model,
         max_tokens: 1024,
-        system: buildClientSystemPrompt(),
-        messages,
+        messages: [{ role: 'system', content: system }].concat(
+          messages.map((m) => ({ role: m.role, content: String(m.content) }))
+        ),
       }),
     });
     const raw = await res.text();
-    if (!res.ok) {
-      let msg = raw;
-      try { msg = JSON.parse(raw).error?.message || raw; } catch {}
-      throw new Error(`Claude API: ${msg}`);
-    }
+    if (!res.ok) throw providerError('API', raw, res.status);
     const data = JSON.parse(raw);
-    return (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
+    const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    return (text || '').trim();
+  }
+
+  async function callGemini(messages, key, model, system) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+    const contents = messages.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: String(m.content) }],
+    }));
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: system }] },
+        contents,
+        generationConfig: { maxOutputTokens: 1024 },
+      }),
+    });
+    const raw = await res.text();
+    if (!res.ok) throw providerError('Gemini API', raw, res.status);
+    const data = JSON.parse(raw);
+    const cand = data.candidates && data.candidates[0];
+    const parts = (cand && cand.content && cand.content.parts) || [];
+    return parts.map((p) => p.text || '').join('').trim();
   }
 
   // Mirrors the server-side prompt for direct (browser) mode.
@@ -547,8 +631,8 @@ Only emit an action when the user asks you to do something on the device; for or
     // No server and no key: JARVIS can't converse yet. Guide the user.
     addMessage('jarvis',
       "One small matter before we begin. To hold a proper conversation I'll need " +
-      "an Anthropic API key. I'm opening the settings panel now — set Connection " +
-      "mode to Direct, paste your key, and save. You'll find keys at console.anthropic.com.");
+      "an API key from an AI provider. I'm opening settings now — choose a provider " +
+      "(Google Gemini offers a free tier), paste your key, and save.");
     setTimeout(() => {
       openSettings();
       el.setMode.value = 'direct';
@@ -562,16 +646,31 @@ Only emit an action when the user asks you to do something on the device; for or
     el.setName.value = cfg.state.userName || '';
     el.setHonorific.value = cfg.state.honorific || 'Sir';
     el.setMode.value = cfg.state.mode || 'server';
+    el.setProvider.value = cfg.state.provider || 'anthropic';
+    el.setBaseUrl.value = cfg.state.baseUrl || '';
     el.setApiKey.value = cfg.state.apiKey || '';
     el.setModel.value = cfg.state.model || 'claude-sonnet-5';
     el.setSpeak.checked = cfg.state.speak !== false;
     el.setAutoListen.checked = !!cfg.state.autoListen;
     populateVoices();
     updateDirectVisibility();
+    updateProviderUI();
     el.settings.classList.remove('hidden');
   }
   function updateDirectVisibility() {
     el.directFields.style.display = el.setMode.value === 'direct' ? 'block' : 'none';
+  }
+  function updateProviderUI() {
+    const p = el.setProvider.value;
+    const d = PROVIDER_DEFAULTS[p] || {};
+    el.baseUrlField.style.display = (p === 'openai-compatible') ? 'block' : 'none';
+    el.setApiKey.placeholder = d.keyPlaceholder || 'API key';
+    el.setModel.placeholder = d.model || 'model name';
+    el.modelSuggestions.innerHTML = (MODEL_SUGGESTIONS[p] || [])
+      .map((m) => `<option value="${m}"></option>`).join('');
+    el.keyHint.textContent = d.keyUrl
+      ? `Stored only in this browser. Get a key at ${d.keyUrl}.`
+      : 'Stored only in this browser (localStorage).';
   }
   function populateVoices() {
     const voices = Voice.getVoices();
@@ -597,8 +696,10 @@ Only emit an action when the user asks you to do something on the device; for or
       userName: el.setName.value.trim(),
       honorific: el.setHonorific.value,
       mode: el.setMode.value,
+      provider: el.setProvider.value,
+      baseUrl: el.setBaseUrl.value.trim(),
       apiKey: el.setApiKey.value.trim(),
-      model: el.setModel.value,
+      model: el.setModel.value.trim(),
       voiceURI: el.setVoice.value,
       speak: el.setSpeak.checked,
       autoListen: el.setAutoListen.checked,
@@ -644,6 +745,12 @@ Only emit an action when the user asks you to do something on the device; for or
     el.settingsBtn.addEventListener('click', openSettings);
     el.settingsClose.addEventListener('click', () => el.settings.classList.add('hidden'));
     el.setMode.addEventListener('change', updateDirectVisibility);
+    el.setProvider.addEventListener('change', () => {
+      // Switching provider swaps in that provider's default model.
+      const p = el.setProvider.value;
+      el.setModel.value = (PROVIDER_DEFAULTS[p] || {}).model || '';
+      updateProviderUI();
+    });
     el.settingsSave.addEventListener('click', saveSettings);
     el.testVoiceBtn.addEventListener('click', () => {
       const uri = el.setVoice.value;

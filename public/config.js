@@ -10,7 +10,9 @@
     userName: '',
     honorific: 'Sir',
     mode: 'server',            // 'server' | 'direct' | 'demo'
+    provider: 'anthropic',     // direct-mode AI provider
     apiKey: '',                // used only in 'direct' mode
+    baseUrl: '',               // for the 'openai-compatible' provider
     model: 'claude-sonnet-5',
     voiceURI: '',              // chosen TTS voice
     speak: true,               // speak replies aloud
