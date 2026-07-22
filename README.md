@@ -130,7 +130,7 @@ Open **⚙️ Settings → Connection mode**:
 | **Server** | Browser → your Node server → Claude. Key lives on the server. | Running locally / on your own host. Most private. |
 | **Direct** | Browser → your chosen AI provider directly (your key, stored in the browser). | Static hosting (GitHub Pages/Netlify) with no backend. |
 | **On-device** | A small open model runs **on your device** via WebGPU (WebLLM). No key, no cost, no cloud. | Free & private use, offline. Needs a recent device. |
-| **Demo** | Offline canned butler replies + local command parsing. | Trying the UI, or when you have no key. |
+| **Onboard brain** | JARVIS's own keyless logic core — no API, no cloud AI. Does maths, time/date, dictionary definitions, quick facts (keyless Wikipedia/dictionary), identity & small talk, plus all device commands. | **Works instantly with zero setup.** The default when you have no key. Not a full conversationalist — connect a brain for that. |
 
 ### On-device mode (no API key, no cost)
 

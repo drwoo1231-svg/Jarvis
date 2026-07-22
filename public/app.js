@@ -85,7 +85,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.6 · PC mode + holo-scanner';
+  const APP_VERSION = 'v1.7 · onboard brain (no key)';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -209,7 +209,7 @@
 
   async function callModel(messages) {
     const mode = cfg.state.mode;
-    if (mode === 'demo') return demoReply(messages);
+    if (mode === 'demo') return localBrain(messages);
     if (mode === 'ondevice') return callLocal(messages);
     if (mode === 'direct') return callDirect(messages);
 
@@ -332,12 +332,15 @@
       }
     } catch (e) { /* fall through */ }
 
-    // Nothing worked — guide the user to a reliable free key.
-    setTimeout(() => {
-      try { openSettings(); el.setMode.value = 'direct'; el.setProvider.value = 'gemini'; updateDirectVisibility(); updateProviderUI(); } catch {}
-    }, 400);
-    throw new Error(FREE_STEER);
+    // The free service is unavailable — fall back to JARVIS's onboard brain so
+    // there's always a reply, and gently suggest a reliable free key once.
+    if (!freeNoticeShown) {
+      freeNoticeShown = true;
+      toast('Free cloud unavailable — using onboard brain. Add Gemini in Settings for full chat.');
+    }
+    return localBrain(messages);
   }
+  let freeNoticeShown = false;
 
   function providerError(name, raw, status) {
     let msg = raw;
@@ -500,45 +503,123 @@ Only emit an action when the user asks you to do something on the device; for or
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
 
   /* ---------------- Demo / offline mode ---------------- */
-  function demoReply(messages) {
-    const last = messages[messages.length - 1];
-    const q = (last && last.content || '').toString().toLowerCase();
-    const name = cfg.state.userName;
-    const addr = addressWord();
+  /* ============================================================
+     ONBOARD BRAIN — JARVIS's keyless logic core. No API, no cloud AI.
+     Handles maths, time, definitions, quick facts (keyless web APIs),
+     identity and small talk. Device commands are handled earlier by
+     localIntent(). This is what runs in "Offline brain" mode and as the
+     fallback whenever a cloud brain is unavailable.
+     ============================================================ */
+  const JOKES = [
+    'I would tell you a UDP joke, but you might not get it.',
+    'There are 10 kinds of people: those who understand binary, and those who do not.',
+    'I am reading a book on anti-gravity. It is impossible to put down.',
+    'A byte walked into a bar looking a little off. The bartender asked, "Parity issue?"',
+    'Why did the function stop calling? It reached its base case.',
+  ];
 
-    // light local intent parsing so device actions still work offline
-    let action = null;
-    let mPlay = q.match(/\b(?:play|put on)\b(.*)/);
-    if (mPlay && mPlay[1].trim()) {
-      const query = mPlay[1].replace(/\bon (youtube|spotify|apple music|apple)\b/, '').replace(/\bfor me\b/, '').trim();
-      const service = /spotify/.test(q) ? 'spotify' : /apple/.test(q) ? 'apple' : 'youtube';
-      action = { type: 'play_music', query: query || 'music', service };
-      return withAction(`Very well${addr ? ', ' + addr : ''}. Putting that on now.`, action);
-    }
-    let mOpen = q.match(/\bopen\b\s+([a-z0-9 +]+)/);
-    if (mOpen) {
-      action = { type: 'open_app', app: mOpen[1].trim() };
-      return withAction(`Right away${addr ? ', ' + addr : ''}.`, action);
-    }
-    let mSearch = q.match(/\b(?:search|google|look up)\b(.*)/);
-    if (mSearch && mSearch[1].trim()) {
-      action = { type: 'search_web', query: mSearch[1].trim() };
-      return withAction(`Searching that for you now.`, action);
-    }
-    if (/^(hi|hello|hey|jarvis)\b/.test(q)) {
-      return Promise.resolve(`Good to see you${name ? ', ' + name : addr ? ', ' + addr : ''}. How may I be of service?`);
-    }
-    if (/\b(time|date|day)\b/.test(q)) {
-      return Promise.resolve(`It is ${new Date().toLocaleString()}.`);
-    }
-    return Promise.resolve(
-      `I'm currently in offline demo mode${addr ? ', ' + addr : ''}, so my conversational faculties are limited. ` +
-      `Add an API key in Settings and I'll be fully at your service. I can still open apps, play music, and run searches — just ask.`
-    );
+  function fmtNum(n) {
+    if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+    return String(Math.round(n * 1e6) / 1e6);
   }
-  function withAction(text, action) {
-    return Promise.resolve(`${text}\n<action>${JSON.stringify(action)}</action>`);
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function greetPart() {
+    const h = new Date().getHours();
+    return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
   }
+
+  function tryMath(raw) {
+    let s = raw.toLowerCase()
+      .replace(/what(?:'s| is| are)|calculate|compute|evaluate|equals?|the answer to|how much is|\?/g, '')
+      .trim();
+    const pct = s.match(/([\d.]+)\s*(?:%|percent)\s*of\s*([\d.]+)/);
+    if (pct) return fmtNum((parseFloat(pct[1]) / 100) * parseFloat(pct[2]));
+    const sq = s.match(/(?:sqrt|square root of)\s*([\d.]+)/);
+    if (sq) return fmtNum(Math.sqrt(parseFloat(sq[1])));
+    let expr = s
+      .replace(/\btimes\b|\bx\b|×/g, '*').replace(/\bplus\b/g, '+')
+      .replace(/\bminus\b/g, '-').replace(/\bdivided by\b|÷/g, '/')
+      .replace(/[^0-9+\-*/().%\s]/g, '').trim();
+    if (/[0-9]/.test(expr) && /[+\-*/]/.test(expr) && /^[0-9+\-*/().%\s]+$/.test(expr)) {
+      try {
+        const r = Function('"use strict";return (' + expr.replace(/%/g, '/100') + ')')();
+        if (typeof r === 'number' && isFinite(r)) return fmtNum(r);
+      } catch { /* not maths */ }
+    }
+    return null;
+  }
+
+  async function tryDefine(word) {
+    try {
+      const r = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word));
+      if (!r.ok) return null;
+      const d = await r.json();
+      const meaning = d && d[0] && d[0].meanings && d[0].meanings[0];
+      const def = meaning && meaning.definitions && meaning.definitions[0] && meaning.definitions[0].definition;
+      if (def) return `${cap(word)}${meaning.partOfSpeech ? ' (' + meaning.partOfSpeech + ')' : ''}: ${def}`;
+    } catch { /* offline */ }
+    return null;
+  }
+
+  async function tryFact(subject) {
+    try {
+      const data = await fetchWiki(subject);
+      if (data && data.extract) {
+        let t = data.extract.slice(0, 360);
+        const lastDot = t.lastIndexOf('. ');
+        if (lastDot > 80) t = t.slice(0, lastDot + 1);
+        return t;
+      }
+    } catch { /* offline */ }
+    return null;
+  }
+
+  async function localBrain(messages) {
+    const last = messages[messages.length - 1];
+    const raw = (last && last.content || '').toString().trim();
+    const q = raw.toLowerCase();
+    const tail = addressWord() ? ', ' + addressWord() : '';
+
+    const math = tryMath(raw);
+    if (math !== null) return `That would be ${math}${tail}.`;
+
+    if (/\bwhat(?:'s| is)?\s+the\s+time\b|\btime is it\b|^time\b/.test(q))
+      return `It is ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${tail}.`;
+    if (/\b(date|what day|what's today|todays date|today's date)\b/.test(q))
+      return `Today is ${new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}${tail}.`;
+
+    if (/^(hi|hello|hey|yo|greetings|good (morning|afternoon|evening)|jarvis)\b/.test(q))
+      return `${greetPart()}${tail}. How may I be of service?`;
+    if (/(how are you|how's it going|how do you do|you okay)/.test(q))
+      return `Operating at peak efficiency, thank you${tail}. And how may I assist?`;
+    if (/(thank you|thanks|cheers|much appreciated|appreciate it)/.test(q))
+      return `My pleasure${tail}.`;
+    if (/(who are you|what are you|your name|what's your name)/.test(q))
+      return `I am JARVIS — Just A Rather Very Intelligent System — at your service${tail}.`;
+    if (/(what can you do|help me|your capabilities|what do you do|commands)/.test(q))
+      return `Quite a lot without any key${tail}: I can play music, open apps, search the web, give directions, tell the time and date, do calculations, define words, look up facts, and run analysis on files or subjects. For open-ended conversation, connect a free brain in settings.`;
+    if (/(i love you|you're the best|good job|well done|nice work|you're amazing)/.test(q))
+      return `Most kind${tail}. I do endeavour to be of use.`;
+    if (/(tell me a joke|make me laugh|say something funny|a joke)/.test(q))
+      return JOKES[Math.floor(Math.random() * JOKES.length)];
+    if (/(flip a coin|heads or tails)/.test(q))
+      return `${Math.random() < 0.5 ? 'Heads' : 'Tails'}${tail}.`;
+    if (/roll (a )?(dice|die|d6)/.test(q))
+      return `A ${1 + Math.floor(Math.random() * 6)}${tail}.`;
+
+    let dm = q.match(/^(?:define|definition of|what does|what's the meaning of|meaning of)\s+(.+?)(?:\s+mean)?\??$/);
+    if (dm) { const def = await tryDefine(dm[1].trim()); if (def) return def; }
+
+    let fm = raw.match(/^(?:what(?:'s| is| are|'re)|who(?:'s| is| was| are)|tell me about|explain|describe)\s+(.+?)\??$/i);
+    if (fm) {
+      const subject = fm[1].replace(/^(a|an|the)\s+/i, '').trim();
+      const fact = await tryFact(subject);
+      if (fact) return fact;
+    }
+
+    return `I'm running on my onboard logic just now${tail} — no key required — so free-flowing conversation is limited. I can still handle maths, the time and date, definitions, quick facts, and full control of your device. For unrestricted conversation, add a free brain in settings; Google Gemini's free tier does the job nicely.`;
+  }
+
   function addressWord() {
     const h = cfg.state.honorific;
     if (!h || h === 'none') return '';
@@ -1175,9 +1256,12 @@ Only emit an action when the user asks you to do something on the device; for or
     if (el.telLeft) {
       el.telLeft.innerHTML = [
         ['SYS', 'ONLINE'], ['CORE', provider],
-        ['MODEL', String(modelName).slice(0, 16)],
-        ['UPLINK', mode === 'ondevice' ? 'LOCAL' : 'SECURE'],
-        ['PWR', '100%'],
+        ['MODEL', String(modelName).slice(0, 18)],
+        ['UPLINK', mode === 'ondevice' ? 'LOCAL' : mode === 'demo' ? 'ONBOARD' : 'SECURE'],
+        ['LATENCY', (28 + Math.floor(Math.random() * 24)) + 'MS'],
+        ['MEMORY', 'NOMINAL'], ['THREADS', '128'],
+        ['CIPHER', 'AES-256'], ['SENSORS', 'ACTIVE'],
+        ['INTEGRITY', '100%'], ['PWR', '100%'],
       ].map(([k, v]) => `<div class="tl-row">${k} <b>${escapeHtml(v)}</b></div>`).join('');
     }
   }
@@ -1242,15 +1326,16 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
-    // No server, no key: connect the free keyless cloud so JARVIS works with
-    // zero setup. The user can add a key later for guaranteed uptime.
-    cfg.set({ mode: 'direct', provider: 'free', model: 'openai' });
+    // No server, no key: run on the onboard brain — works instantly, no key,
+    // no cloud. The user can connect a full brain (e.g. Gemini's free tier) later.
+    cfg.set({ mode: 'demo' });
     updateTelemetry();
     const who = titledName();
     addMessage('jarvis',
-      `I've connected to a complimentary service so we may speak right away${who ? ', ' + who : ''}. ` +
-      `It needs no key, though it's community-run — if it's ever slow or unavailable, ` +
-      `add a free provider key in settings. Now, how may I help?`);
+      `I'm running on my onboard logic core${who ? ', ' + who : ''} — no key required. ` +
+      `I can do maths, tell the time, define words, look up facts, and fully control your ` +
+      `device: try "what's 25 times 8", "define serendipity", "who is Ada Lovelace", or ` +
+      `"play a song". For unrestricted conversation, connect a free brain in settings.`);
   }
 
   /* ---------------- Settings ---------------- */
