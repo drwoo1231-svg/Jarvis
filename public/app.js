@@ -29,6 +29,23 @@
     listenToggle: $('listenToggle'),
     sendBtn: $('sendBtn'),
     settingsBtn: $('settingsBtn'),
+    filesBtn: $('filesBtn'),
+
+    telClock: $('telClock'),
+    telMode: $('telMode'),
+    telProvider: $('telProvider'),
+    telLeft: $('telLeft'),
+    sigBars: $('sigBars'),
+
+    dock: $('dock'),
+    analyzeBtn: $('analyzeBtn'),
+    imageBtn: $('imageBtn'),
+    imageInput: $('imageInput'),
+    dropZone: $('dropZone'),
+
+    research: $('research'),
+    researchClose: $('researchClose'),
+    researchList: $('researchList'),
 
     settings: $('settings'),
     settingsClose: $('settingsClose'),
@@ -59,7 +76,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.2 · on-device + providers';
+  const APP_VERSION = 'v1.3 · analysis + ops HUD';
   const DEFAULT_LOCAL_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -82,6 +99,8 @@
   let handsFree = false;
   let speakAmpTimer = null;
   let micStream = null, audioCtx = null, analyser = null, micRAF = null;
+  let analysisPending = false;   // next typed message is an analysis subject
+  const RESEARCH_KEY = 'jarvis.research.v1';
 
   /* ---------------- Status + reactor ---------------- */
   function setStatus(text, cls) {
@@ -463,6 +482,17 @@ Only emit an action when the user asks you to do something on the device; for or
   async function sendMessage(text) {
     text = (text || '').trim();
     if (!text || busy) return;
+
+    // In analysis mode, the next message is the subject to pull up & analyse.
+    if (analysisPending) {
+      analysisPending = false;
+      el.analyzeBtn.classList.remove('active');
+      el.textInput.placeholder = 'Message JARVIS…';
+      addMessage('user', text);
+      runAnalysis(text);
+      return;
+    }
+
     busy = true;
     stopMicAnalyser();
     Voice.stopSpeaking();
@@ -656,6 +686,334 @@ Only emit an action when the user asks you to do something on the device; for or
     }
   }
 
+  /* ============================================================
+     ANALYSIS MODE — pull up a visual, analyse it, optionally file it.
+     ============================================================ */
+  function titledName() {
+    const n = cfg.state.userName;
+    const h = cfg.state.honorific;
+    if (h && h !== 'none' && h !== 'name') return n ? `${h} ${n}` : h;
+    return n || '';
+  }
+
+  function armAnalysis() {
+    analysisPending = true;
+    el.analyzeBtn.classList.add('active');
+    el.textInput.placeholder = 'Name a subject to analyse…';
+    const who = titledName();
+    addMessage('jarvis', `Analysis mode engaged${who ? ', ' + who : ''}. What shall I pull up?`);
+    el.textInput.focus();
+  }
+
+  // Query Wikipedia (CORS-enabled, no key) for a representative image + summary.
+  async function fetchWiki(query) {
+    const api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*' +
+      '&generator=search&gsrlimit=1&gsrsearch=' + encodeURIComponent(query) +
+      '&prop=pageimages|extracts&piprop=thumbnail&pithumbsize=640&exintro=1&explaintext=1';
+    const res = await fetch(api);
+    if (!res.ok) throw new Error('search failed (' + res.status + ')');
+    const data = await res.json();
+    const pages = data && data.query && data.query.pages;
+    if (!pages) return null;
+    const page = pages[Object.keys(pages)[0]];
+    if (!page) return null;
+    return {
+      title: page.title || query,
+      image: page.thumbnail && page.thumbnail.source || '',
+      extract: (page.extract || '').trim(),
+    };
+  }
+
+  async function runAnalysis(query) {
+    busy = true;
+    setStatus('ANALYZING', 'analyzing');
+    Core.setState('analyzing');
+    Core.setAmplitude(0.4);
+    const typing = showTyping();
+    const who = titledName();
+    try {
+      const data = await fetchWiki(query);
+      typing.remove();
+      if (!data || (!data.image && !data.extract)) {
+        addMessage('jarvis', `I couldn't pull up anything on "${query}"${who ? ', ' + who : ''}. Care to rephrase, or shall I run a web search instead?`);
+        // offer a web search action
+        addMessage('jarvis', '', [{ type: 'search_web', query }]);
+        return;
+      }
+      renderAnalysisCard(data);
+      const line = `I've pulled up ${data.title}. Is this what you're looking for${who ? ', ' + who : ''}?`;
+      addMessage('jarvis', line);
+      speak(line);
+    } catch (e) {
+      typing.remove();
+      addMessage('jarvis', `My analysis feed hit a snag: ${e.message}. Shall I try a plain web search?`);
+      addMessage('jarvis', '', [{ type: 'search_web', query }]);
+    } finally {
+      busy = false;
+      setStatus('SYSTEM ONLINE', '');
+      Core.setState('idle');
+      Core.setAmplitude(0);
+    }
+  }
+
+  function renderAnalysisCard(data, opts) {
+    opts = opts || {};
+    const card = document.createElement('div');
+    card.className = 'analysis-card';
+    const media = data.image
+      ? `<div class="analysis-media"><img src="${data.image}" alt="" referrerpolicy="no-referrer"/><span class="scanline"></span></div>`
+      : '';
+    card.innerHTML =
+      `<div class="analysis-head"><span class="scan-dot"></span>Analysis${opts.image ? ' · uploaded image' : ''}</div>` +
+      media +
+      `<div class="analysis-body"><div class="analysis-title">${escapeHtml(data.title || 'Subject')}</div>` +
+      `<div class="analysis-text"></div><div class="analysis-actions"></div></div>`;
+    el.log.appendChild(card);
+    el.log.scrollTop = el.log.scrollHeight;
+
+    const actions = card.querySelector('.analysis-actions');
+    const textEl = card.querySelector('.analysis-text');
+
+    if (opts.confirmed) {
+      textEl.textContent = data.extract || '';
+      buildConfirmedActions(actions, data);
+    } else {
+      textEl.textContent = 'Awaiting your confirmation…';
+      const yes = document.createElement('button');
+      yes.className = 'affirm';
+      yes.textContent = 'Yes, that\'s it';
+      yes.addEventListener('click', () => {
+        actions.innerHTML = '';
+        confirmAnalysis(card, textEl, actions, data);
+      });
+      const no = document.createElement('button');
+      no.textContent = 'No, refine';
+      no.addEventListener('click', () => { card.remove(); armAnalysis(); });
+      actions.appendChild(yes);
+      actions.appendChild(no);
+    }
+  }
+
+  async function confirmAnalysis(card, textEl, actions, data) {
+    const who = titledName();
+    // Present the analysis: use the LLM to summarise in butler voice if we can,
+    // else show the encyclopaedic extract directly.
+    let analysis = data.extract || '';
+    const canLLM = cfg.state.mode === 'direct' || cfg.state.mode === 'server' || cfg.state.mode === 'ondevice';
+    setStatus('ANALYZING', 'analyzing');
+    try {
+      if (canLLM && (cfg.state.apiKey || cfg.state.mode === 'server' || cfg.state.mode === 'ondevice')) {
+        const prompt = `In two or three sentences, in your refined butler voice, give an analytical briefing on "${data.title}". Context: ${(data.extract || '').slice(0, 1200)}`;
+        const reply = await callModel([{ role: 'user', content: prompt }]);
+        const parsed = parseActions(reply || '');
+        if (parsed.clean) analysis = parsed.clean;
+      }
+    } catch { /* fall back to extract */ }
+    setStatus('SYSTEM ONLINE', '');
+
+    textEl.textContent = analysis || 'No further detail available.';
+    const follow = `How may I help you with this${who ? ', ' + who : ''}?`;
+    addMessage('jarvis', follow);
+    speak(follow);
+    buildConfirmedActions(actions, data);
+
+    // seed conversation context so follow-up questions know the subject
+    history.push({ role: 'assistant', content: `We are analysing "${data.title}". ${(data.extract || '').slice(0, 600)}` });
+  }
+
+  function buildConfirmedActions(actions, data) {
+    actions.innerHTML = '';
+    const who = titledName();
+    const save = document.createElement('button');
+    save.className = 'save';
+    save.textContent = `Save to Private Research Files`;
+    save.addEventListener('click', () => {
+      saveResearch({ title: data.title, image: data.image || '', note: data.extract || '' });
+      save.textContent = 'Filed ✓';
+      save.disabled = true;
+      const line = `Filed under your private research, ${who || 'as requested'}.`;
+      toast('Saved to Private Research Files');
+      speak(line);
+    });
+    const search = document.createElement('button');
+    search.textContent = 'Open full web results';
+    search.addEventListener('click', () => Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(data.title)));
+    actions.appendChild(save);
+    actions.appendChild(search);
+  }
+
+  /* ---- Image analysis (upload / drop) ---- */
+  function pickImage() { el.imageInput.click(); }
+
+  function handleImageFile(file) {
+    if (!file || !/^image\//.test(file.type)) { toast('That doesn\'t look like an image.'); return; }
+    const reader = new FileReader();
+    reader.onload = () => analyzeImage(reader.result, file.type, file.name);
+    reader.readAsDataURL(file);
+  }
+
+  async function analyzeImage(dataUrl, mime, name) {
+    const who = titledName();
+    renderAnalysisCard({ title: name || 'Uploaded image', image: dataUrl, extract: '' }, { image: true });
+    const line = `Is this the image you'd like me to analyse${who ? ', ' + who : ''}?`;
+    addMessage('jarvis', line);
+    speak(line);
+    // The card's "Yes" path will run the actual vision analysis.
+    const cards = el.log.querySelectorAll('.analysis-card');
+    const card = cards[cards.length - 1];
+    const actions = card.querySelector('.analysis-actions');
+    const textEl = card.querySelector('.analysis-text');
+    actions.innerHTML = '';
+    const yes = document.createElement('button');
+    yes.className = 'affirm';
+    yes.textContent = 'Yes, analyse it';
+    yes.addEventListener('click', async () => {
+      actions.innerHTML = '';
+      textEl.textContent = 'Analysing…';
+      setStatus('ANALYZING', 'analyzing');
+      let desc = '';
+      try {
+        desc = await visionDescribe(dataUrl, mime);
+      } catch (e) { desc = ''; }
+      setStatus('SYSTEM ONLINE', '');
+      if (!desc) {
+        desc = 'Full visual analysis needs a vision-capable cloud provider (Claude, Gemini, or GPT) in Direct mode. I\'ve filed the image regardless.';
+      }
+      textEl.textContent = desc;
+      const follow = `How may I help you with this${who ? ', ' + who : ''}?`;
+      addMessage('jarvis', follow);
+      speak(follow);
+      buildConfirmedActions(actions, { title: name || 'Uploaded image', image: dataUrl, extract: desc });
+    });
+    const no = document.createElement('button');
+    no.textContent = 'No';
+    no.addEventListener('click', () => card.remove());
+    actions.appendChild(yes);
+    actions.appendChild(no);
+  }
+
+  // Vision description via the active cloud provider, if it supports images.
+  async function visionDescribe(dataUrl, mime) {
+    if (cfg.state.mode !== 'direct' || !cfg.state.apiKey) return '';
+    const provider = cfg.state.provider;
+    const model = cfg.state.model || (PROVIDER_DEFAULTS[provider] || {}).model;
+    const key = cfg.state.apiKey;
+    const b64 = dataUrl.split(',')[1] || '';
+    const media = (mime || 'image/png');
+    const ask = 'Identify and analyse this image in two or three sentences, in a refined butler voice.';
+    if (provider === 'anthropic') {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model, max_tokens: 400, messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: media, data: b64 } },
+          { type: 'text', text: ask },
+        ] }] }),
+      });
+      const d = await r.json();
+      return (d.content || []).filter((x) => x.type === 'text').map((x) => x.text).join(' ').trim();
+    }
+    if (provider === 'gemini') {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+      const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [ { inline_data: { mime_type: media, data: b64 } }, { text: ask } ] }] }) });
+      const d = await r.json();
+      const parts = d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts || [];
+      return parts.map((p) => p.text || '').join('').trim();
+    }
+    if (provider === 'openai' || provider === 'openai-compatible') {
+      const base = provider === 'openai' ? 'https://api.openai.com/v1' : (cfg.state.baseUrl || '').replace(/\/+$/, '');
+      const r = await fetch(base + '/chat/completions', { method: 'POST', headers: { 'Authorization': 'Bearer ' + key, 'content-type': 'application/json' },
+        body: JSON.stringify({ model, max_tokens: 400, messages: [{ role: 'user', content: [
+          { type: 'text', text: ask }, { type: 'image_url', image_url: { url: dataUrl } },
+        ] }] }) });
+      const d = await r.json();
+      return d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content || '';
+    }
+    return '';
+  }
+
+  /* ---- Private research files (local) ---- */
+  function loadResearch() {
+    try { return JSON.parse(localStorage.getItem(RESEARCH_KEY) || '[]'); } catch { return []; }
+  }
+  function saveResearch(item) {
+    const list = loadResearch();
+    list.unshift({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), savedAt: Date.now(), ...item });
+    // keep storage sane
+    while (list.length > 40) list.pop();
+    try { localStorage.setItem(RESEARCH_KEY, JSON.stringify(list)); }
+    catch { toast('Storage full — remove some files first.'); }
+  }
+  function deleteResearch(id) {
+    const list = loadResearch().filter((x) => x.id !== id);
+    try { localStorage.setItem(RESEARCH_KEY, JSON.stringify(list)); } catch {}
+    renderResearchList();
+  }
+  function openResearch() { renderResearchList(); el.research.classList.remove('hidden'); }
+  function renderResearchList() {
+    const list = loadResearch();
+    el.researchList.innerHTML = '';
+    if (!list.length) {
+      el.researchList.innerHTML = '<div class="research-empty">No files yet. Use Analysis mode, then “Save to Private Research Files”.</div>';
+      return;
+    }
+    list.forEach((it) => {
+      const row = document.createElement('div');
+      row.className = 'research-item';
+      const img = it.image ? `<img src="${it.image}" alt="" referrerpolicy="no-referrer"/>` : '';
+      row.innerHTML = img +
+        `<div class="ri-body"><div class="ri-title">${escapeHtml(it.title || 'Untitled')}</div>` +
+        `<div class="ri-date">${new Date(it.savedAt).toLocaleString()}</div></div>` +
+        `<button class="ri-del" aria-label="Delete">✕</button>`;
+      row.querySelector('.ri-del').addEventListener('click', () => deleteResearch(it.id));
+      row.addEventListener('click', (e) => {
+        if (e.target.classList.contains('ri-del')) return;
+        if (it.note) addMessage('jarvis', `From your research files — ${it.title}: ${it.note.slice(0, 400)}`);
+        el.research.classList.add('hidden');
+      });
+      el.researchList.appendChild(row);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  /* ============================================================
+     TELEMETRY — the ops-console readouts
+     ============================================================ */
+  function initTelemetry() {
+    el.sigBars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+    // seed left readout lines
+    updateTelemetry();
+    setInterval(tickClock, 1000);
+    tickClock();
+  }
+  function tickClock() {
+    if (!el.telClock) return;
+    const d = new Date();
+    el.telClock.textContent = d.toLocaleTimeString([], { hour12: false });
+  }
+  function updateTelemetry() {
+    const mode = cfg.state.mode;
+    const provider = mode === 'ondevice' ? 'ON-DEVICE'
+      : mode === 'demo' ? 'DEMO'
+      : mode === 'server' ? 'SERVER'
+      : (cfg.state.provider || 'anthropic').toUpperCase();
+    if (el.telMode) el.telMode.textContent = 'MODE · ' + mode.toUpperCase();
+    if (el.telProvider) el.telProvider.textContent = 'CORE · ' + provider;
+    const modelName = (mode === 'ondevice' ? cfg.state.localModel : cfg.state.model) || '—';
+    if (el.telLeft) {
+      el.telLeft.innerHTML = [
+        ['SYS', 'ONLINE'], ['CORE', provider],
+        ['MODEL', String(modelName).slice(0, 16)],
+        ['UPLINK', mode === 'ondevice' ? 'LOCAL' : 'SECURE'],
+        ['PWR', '100%'],
+      ].map(([k, v]) => `<div class="tl-row">${k} <b>${escapeHtml(v)}</b></div>`).join('');
+    }
+  }
+
   /* ---------------- Onboarding ---------------- */
   function showOnboarding() {
     el.onboarding.classList.remove('hidden');
@@ -792,6 +1150,7 @@ Only emit an action when the user asks you to do something on the device; for or
       autoListen: el.setAutoListen.checked,
     });
     el.settings.classList.add('hidden');
+    updateTelemetry();
     toast('Settings saved.');
   }
 
@@ -850,6 +1209,49 @@ Only emit an action when the user asks you to do something on the device; for or
         location.reload();
       }
     });
+
+    // Analysis + research
+    el.analyzeBtn.addEventListener('click', () => {
+      if (analysisPending) {
+        analysisPending = false;
+        el.analyzeBtn.classList.remove('active');
+        el.textInput.placeholder = 'Message JARVIS…';
+      } else {
+        armAnalysis();
+      }
+    });
+    el.imageBtn.addEventListener('click', pickImage);
+    el.imageInput.addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) handleImageFile(f);
+      el.imageInput.value = '';
+    });
+    el.filesBtn.addEventListener('click', openResearch);
+    el.researchClose.addEventListener('click', () => el.research.classList.add('hidden'));
+
+    // Drag & drop (desktop): images -> analyse; links/text -> analyse subject
+    let dragDepth = 0;
+    window.addEventListener('dragenter', (e) => { e.preventDefault(); dragDepth++; el.dropZone.classList.remove('hidden'); });
+    window.addEventListener('dragover', (e) => e.preventDefault());
+    window.addEventListener('dragleave', (e) => { e.preventDefault(); if (--dragDepth <= 0) { dragDepth = 0; el.dropZone.classList.add('hidden'); } });
+    window.addEventListener('drop', (e) => {
+      e.preventDefault(); dragDepth = 0; el.dropZone.classList.add('hidden');
+      const dt = e.dataTransfer;
+      if (!dt) return;
+      const file = dt.files && dt.files[0];
+      if (file && /^image\//.test(file.type)) { handleImageFile(file); return; }
+      const text = (dt.getData('text/uri-list') || dt.getData('text/plain') || '').trim();
+      if (text) {
+        addMessage('user', text);
+        if (/^https?:\/\/\S+\.(png|jpe?g|gif|webp|bmp|svg)(\?\S*)?$/i.test(text)) {
+          analyzeImage(text, 'image/jpeg', text.split('/').pop());
+        } else if (/^https?:\/\//i.test(text)) {
+          runAnalysis(text.replace(/^https?:\/\/(www\.)?/, '').split(/[/?#]/)[0]);
+        } else {
+          runAnalysis(text);
+        }
+      }
+    });
   }
 
   /* ---------------- Boot ---------------- */
@@ -868,6 +1270,8 @@ Only emit an action when the user asks you to do something on the device; for or
     if (!Voice.sttSupported) {
       el.micBtn.title = 'Voice input unavailable — type below';
     }
+
+    initTelemetry();
 
     if (cfg.state.onboarded) {
       el.onboarding.classList.add('hidden');

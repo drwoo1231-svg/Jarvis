@@ -17,6 +17,17 @@ same code runs beautifully on your computer too. No app store required.
 
 ## What it does
 
+- 🛰️ **Analysis mode.** Tap the 🔍, name a subject, and JARVIS pulls up a
+  visual and a briefing (via Wikipedia — live web data, no key), asks *"Is this
+  what you're looking for?"*, analyses it, then offers to file it in your
+  **Private Research Files** (stored locally on your device). You can also
+  hand it an **image** (tap the picture button, or drag-drop on desktop) and,
+  with a vision-capable provider, JARVIS describes it.
+- 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core, live
+  telemetry readouts (clock, mode, model, signal), a radar sweep and a
+  waveform that reacts to your voice.
+
+
 - 🎩 **The classic butler.** Calm, precise, dryly witty — powered by Claude and
   the JARVIS persona. Have a full conversation about anything: code, science,
   writing, advice, brainstorming, trivia.
