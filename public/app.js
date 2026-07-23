@@ -103,7 +103,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.1 · in-app music player';
+  const APP_VERSION = 'v2.2 · system diagnostics';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -985,6 +985,17 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // System diagnostics — JARVIS reports its real host hardware.
+    if (/\b(run |full |system )?(diagnostics?|self[- ]?test|system check)\b/i.test(text) ||
+        /\b(hardware|system) (report|check|specs?|info)\b/i.test(text) ||
+        /\b(your|these) (specs|hardware|system)\b/i.test(text) ||
+        /\bhow (much|many) (ram|memory|cores|cpu)\b/i.test(text) ||
+        /\bwhat('?s| is| are)?\s+(your|this) (cpu|gpu|ram|memory|hardware|specs|processor|storage)\b/i.test(text)) {
+      addMessage('user', text);
+      runDiagnostics();
+      return;
+    }
+
     // Music: "play/put on X" plays IN-APP (spinning disk) unless a service is
     // named ("… on spotify"); "open X by Y" is treated as a song too.
     {
@@ -1781,6 +1792,72 @@ Only emit an action when the user asks you to do something on the device; for or
     const d = new Date();
     el.telClock.textContent = d.toLocaleTimeString([], { hour12: false });
   }
+  async function getHardware() {
+    const cores = navigator.hardwareConcurrency || null;
+    const ram = navigator.deviceMemory || null; // GB, coarse, Chromium only
+    const gpu = getGPU();
+    let storage = null;
+    try {
+      if (navigator.storage && navigator.storage.estimate) {
+        const e = await navigator.storage.estimate();
+        storage = { quota: e.quota, usage: e.usage };
+      }
+    } catch { /* not exposed */ }
+    const dpr = window.devicePixelRatio || 1;
+    const screenStr = `${Math.round(screen.width * dpr)}×${Math.round(screen.height * dpr)}`;
+    const conn = navigator.connection && navigator.connection.effectiveType;
+    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || 'unknown';
+    return { cores, ram, gpu, storage, screenStr, conn, platform };
+  }
+
+  // A JARVIS message that preserves line breaks (for reports/lists).
+  function addPreMessage(text) {
+    const div = document.createElement('div');
+    div.className = 'msg jarvis';
+    div.innerHTML = '<span class="who">JARVIS</span>';
+    const body = document.createElement('span');
+    body.textContent = text;
+    body.style.whiteSpace = 'pre-wrap';
+    div.appendChild(body);
+    el.log.appendChild(div);
+    el.log.scrollTop = el.log.scrollHeight;
+  }
+
+  async function runDiagnostics() {
+    const who = titledName();
+    const tail = who ? ', ' + who : '';
+    setStatus('DIAGNOSTICS', 'analyzing');
+    Core.setState('analyzing'); Core.setAmplitude(0.35);
+    const hw = await getHardware();
+    setStatus('SYSTEM ONLINE', ''); Core.setState('idle'); Core.setAmplitude(0);
+    const gb = (b) => (b ? (b / 1073741824).toFixed(1) + ' GB' : '—');
+
+    const rec = [];
+    if (hw.ram && hw.ram <= 4) rec.push('memory is on the low side — 16 GB or more of RAM would markedly improve multitasking');
+    else if (hw.ram && hw.ram <= 8) rec.push('16–32 GB of RAM would give more headroom for heavy tasks');
+    if (hw.cores && hw.cores <= 4) rec.push('a processor with more cores would help with parallel work');
+    if (/swiftshader|llvmpipe|software|microsoft basic/i.test(hw.gpu || '')) rec.push('no hardware GPU acceleration is active — a discrete GPU would transform graphics and on-device AI');
+    rec.push('an NVMe SSD (if you are not already on one) is the single best upgrade for day-to-day responsiveness');
+
+    const report = [
+      `Running full diagnostics${tail}. Here is what I can read of this host:`,
+      ``,
+      `  • Processor:  ${hw.cores ? hw.cores + ' logical cores' : 'not exposed'}`,
+      `  • Memory:     ${hw.ram ? '~' + hw.ram + ' GB' : 'hidden by the browser'}`,
+      `  • Graphics:   ${hw.gpu || 'unknown'}`,
+      `  • Storage:    ${hw.storage ? gb(hw.storage.quota) + ' available to me (' + gb(hw.storage.usage) + ' used)' : 'not exposed'}`,
+      `  • Display:    ${hw.screenStr}${hw.conn ? '  ·  network ' + hw.conn : ''}`,
+      `  • Platform:   ${hw.platform}`,
+      ``,
+      `Recommendation${tail}: ${rec.join('; ')}.`,
+      ``,
+      `A candid note: browsers deliberately hide the exact CPU model, total RAM, and drive type (NVMe vs SATA) for your privacy, so I cannot confirm those from in here. Your operating system's System Information / Task Manager / "About This Mac" will show the full truth.`,
+    ].join('\n');
+
+    addPreMessage(report);
+    speak(`Diagnostics complete${tail}. ${hw.cores || 'Several'} logical cores, ${hw.ram ? 'about ' + hw.ram + ' gigabytes of memory' : 'memory hidden by the browser'}, graphics running on ${hw.gpu}. My upgrade recommendations are on screen.`);
+  }
+
   let _gpu = null;
   function getGPU() {
     if (_gpu) return _gpu;
@@ -1811,9 +1888,11 @@ Only emit an action when the user asks you to do something on the device; for or
         ['MODEL', String(modelName).slice(0, 20)],
         ['GPU', getGPU()],
         ['GPU LOAD', (24 + Math.floor(Math.random() * 46)) + '%'],
+        ['CPU', (navigator.hardwareConcurrency ? navigator.hardwareConcurrency + ' CORES' : '—')],
+        ['RAM', (navigator.deviceMemory ? '~' + navigator.deviceMemory + ' GB' : 'N/A')],
         ['UPLINK', mode === 'ondevice' ? 'LOCAL' : mode === 'demo' ? 'ONBOARD' : 'SECURE'],
         ['LATENCY', (28 + Math.floor(Math.random() * 24)) + 'MS'],
-        ['MEMORY', 'NOMINAL'], ['THREADS', '128'],
+        ['MEMORY', 'NOMINAL'],
         ['CIPHER', 'AES-256'], ['SENSORS', 'ACTIVE'],
         ['INTEGRITY', '100%'], ['PWR', '100%'],
       ].map(([k, v]) => `<div class="tl-row">${k} <b>${escapeHtml(v)}</b></div>`).join('');
