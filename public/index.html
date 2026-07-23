@@ -282,6 +282,23 @@
 
       <hr class="divider" />
 
+      <label class="field-label">Contacts</label>
+      <p class="hint">Saved only on this device — browsers can't read your real
+        contacts. JARVIS uses these for "call/text/facetime &lt;name&gt;".</p>
+      <div id="contactsList" class="contacts-list"></div>
+      <div class="contact-add">
+        <input id="cName" class="text-field" type="text" placeholder="Name" autocomplete="off" />
+        <input id="cNumber" class="text-field" type="tel" placeholder="+1 555 123 4567" autocomplete="off" />
+        <select id="cApp" class="text-field">
+          <option value="">Phone</option>
+          <option value="facetime">FaceTime</option>
+          <option value="whatsapp">WhatsApp</option>
+        </select>
+        <button id="cAdd" class="ghost-btn">Add</button>
+      </div>
+
+      <hr class="divider" />
+
       <label class="field-label" for="setVoice">JARVIS voice</label>
       <select id="setVoice" class="text-field"></select>
 

@@ -82,6 +82,11 @@
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
+    contactsList: $('contactsList'),
+    cName: $('cName'),
+    cNumber: $('cNumber'),
+    cApp: $('cApp'),
+    cAdd: $('cAdd'),
     testVoiceBtn: $('testVoiceBtn'),
     resetBtn: $('resetBtn'),
     settingsSave: $('settingsSave'),
@@ -91,7 +96,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.9 · calls, contacts, more apps & slang';
+  const APP_VERSION = 'v2.0 · in-app search, projects, deep search';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -118,6 +123,9 @@
   let micStream = null, audioCtx = null, analyser = null, micRAF = null;
   let analysisPending = false;   // next typed message is an analysis subject
   let selectedPlatform = null;   // onboarding platform choice
+  let pendingSave = null;        // analysis awaiting a filing decision
+  let pendingDeepSearch = false; // awaiting deep-search kind
+  let lastAnalysisSubject = '';  // subject/title of the most recent analysis
   const RESEARCH_KEY = 'jarvis.research.v1';
 
   /* ---------------- Status + reactor ---------------- */
@@ -540,6 +548,25 @@ Only emit an action when the user asks you to do something on the device; for or
     const list = loadContacts();
     return list.find((c) => c.name.toLowerCase() === n) || list.find((c) => c.name.toLowerCase().indexOf(n) >= 0);
   }
+  function deleteContact(name) {
+    saveContacts(loadContacts().filter((c) => c.name.toLowerCase() !== name.toLowerCase()));
+    renderContacts();
+  }
+  function renderContacts() {
+    if (!el.contactsList) return;
+    const list = loadContacts();
+    el.contactsList.innerHTML = list.length ? '' : '<p class="hint" style="margin:6px 4px">No contacts yet.</p>';
+    list.forEach((c) => {
+      const row = document.createElement('div');
+      row.className = 'contact-row';
+      row.innerHTML = `<span class="cr-name">${escapeHtml(c.name)}</span>` +
+        `<span class="cr-num">${escapeHtml(c.number)}</span>` +
+        (c.app ? `<span class="cr-app">${escapeHtml(c.app)}</span>` : '') +
+        `<button class="cr-del" aria-label="Delete">✕</button>`;
+      row.querySelector('.cr-del').addEventListener('click', () => deleteContact(c.name));
+      el.contactsList.appendChild(row);
+    });
+  }
 
   function fmtNum(n) {
     if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
@@ -802,7 +829,17 @@ Only emit an action when the user asks you to do something on the device; for or
       return { say: `Noted${tail}. I'll remember ${name}'s number.` };
     }
 
-    // call / facetime someone
+    // call / facetime someone (optionally "on <app>")
+    const DIALABLE = ['', 'phone', 'tel', 'facetime', 'facetime audio', 'whatsapp'];
+    const callResult = (number, app, name) => {
+      app = (app || '').toLowerCase().replace(/\bapp\b/i, '').trim();
+      if (DIALABLE.indexOf(app) >= 0) {
+        const verb = app === 'facetime' ? 'FaceTiming' : app === 'whatsapp' ? 'Opening WhatsApp with' : 'Calling';
+        return { action: { type: 'call', number, app, name }, say: `${verb} ${name}${tail}.` };
+      }
+      // Apps like Instagram / Line can't dial a number via URL — open the app.
+      return { action: { type: 'open_app', app }, say: `Opening ${app}${tail}. I can't dial within ${app} directly, so tap ${name} there to call.` };
+    };
     m = text.match(/^(?:hey )?(?:jarvis[,\s]+)?(?:can you |could you |please )?(call|ring|dial|phone|facetime)\s+(.+?)(?:\s+(?:on|via|using|with|through)\s+([a-z ]+?)(?:\s+app)?)?\.?$/i);
     if (m) {
       const verb = m[1].toLowerCase();
@@ -810,14 +847,9 @@ Only emit an action when the user asks you to do something on the device; for or
       let app = (m[3] || '').toLowerCase().replace(/\bapp\b/i, '').trim();
       if (verb === 'facetime' && !app) app = 'facetime';
       const numMatch = target.match(/\+?\d[\d\s()\-]{5,}/);
-      if (numMatch) {
-        return { action: { type: 'call', number: numMatch[0], app, name: target }, say: `${app === 'facetime' ? 'FaceTiming' : 'Calling'} ${target}${app && app !== 'facetime' && app !== 'phone' ? ' on ' + app : ''}${tail}.` };
-      }
+      if (numMatch) return callResult(numMatch[0], app, target);
       const c = findContact(target);
-      if (c) {
-        const useApp = app || c.app || '';
-        return { action: { type: 'call', number: c.number, app: useApp, name: c.name }, say: `${useApp === 'facetime' ? 'FaceTiming' : 'Calling'} ${c.name}${useApp && useApp !== 'facetime' && useApp !== 'phone' ? ' on ' + useApp : ''}${tail}.` };
-      }
+      if (c) return callResult(c.number, app || c.app || '', c.name);
       if (/^[a-z][a-z .'-]{0,20}$/i.test(target) && target.split(/\s+/).length <= 2)
         return { say: `I don't have a number for ${target}${tail}. Say "save ${target}'s number as …" and I'll remember it.` };
       return null;
@@ -835,6 +867,31 @@ Only emit an action when the user asks you to do something on the device; for or
       if (/^[a-z][a-z .'-]{0,20}$/i.test(target) && target.split(/\s+/).length <= 2)
         return { say: `I don't have a number for ${target}${tail}. Save it first with "save ${target}'s number as …".` };
       return null;
+    }
+
+    // open a chat/conversation with someone in an app
+    m = text.match(/^(?:pull up|open|show|bring up|get)\s+(?:my\s+|the\s+)?(?:chat|conversation|convo|messages?|dm|texts?)\s+(?:with|between|to|from|of)\s+(.+?)\s+(?:on|in|using)\s+([a-z ]+?)(?:\s+app)?\.?$/i);
+    if (m) {
+      const target = m[1].trim().replace(/^my\s+/i, '');
+      const app = m[2].trim().toLowerCase().replace(/\bapp\b/i, '').trim();
+      const c = findContact(target);
+      return {
+        action: { type: 'open_chat', app, number: c ? c.number : '', handle: c ? c.handle : '', name: c ? c.name : target },
+        say: `Pulling up your ${app} chat with ${c ? c.name : target}${tail}.`,
+      };
+    }
+
+    // search WITHIN an app ("search cats on youtube", "search youtube for cats")
+    m = text.match(/^(?:search(?:\s+for)?|look up|look for|find)\s+(.+?)\s+(?:on|in|using)\s+([a-z ]+?)(?:\s+app)?\.?$/i);
+    if (!m) {
+      const m2 = text.match(/^search\s+([a-z][a-z ]*?)\s+for\s+(.+?)\.?$/i);
+      if (m2 && !/^(the )?(web|internet|google|online)$/i.test(m2[1].trim())) m = [m2[0], m2[2], m2[1]];
+    }
+    if (m) {
+      const query = m[1].trim();
+      const app = m[2].trim().toLowerCase().replace(/\bapp\b/i, '').trim();
+      const label = app.charAt(0).toUpperCase() + app.slice(1);
+      return { action: { type: 'search_in_app', app, query }, say: `Searching ${label} for ${query}${tail}.` };
     }
 
     // open / launch / turn on an app
@@ -856,6 +913,33 @@ Only emit an action when the user asks you to do something on the device; for or
   async function sendMessage(text) {
     text = (text || '').trim();
     if (!text || busy) return;
+    const low0 = text.toLowerCase();
+
+    // Awaiting a filing decision after an analysis?
+    if (pendingSave) {
+      if (/(first project|the project|^project\b|to the project)/.test(low0)) { addMessage('user', text); doSaveResearch(pendingSave, 'first-project'); return; }
+      if (/^(yes|yeah|yep|yup|sure|ok|okay|please|do it|as usual|save it|affirmative|go ahead|ya|yea)\b/.test(low0)) { addMessage('user', text); doSaveResearch(pendingSave, 'research'); return; }
+      if (/^(no|nope|nah|don'?t|cancel|skip|forget it|leave it)\b/.test(low0)) { addMessage('user', text); pendingSave = null; const l = `Very well — I'll not file it${titledName() ? ', ' + titledName() : ''}.`; addMessage('jarvis', l); speak(l); return; }
+      pendingSave = null; // anything else: drop the prompt and handle normally
+    }
+
+    // Awaiting the deep-search kind?
+    if (pendingDeepSearch) {
+      if (/(internet|browsing|browse|web|online|google)/.test(low0)) { addMessage('user', text); runDeepSearch('internet'); return; }
+      if (/(investigat|adventur|what it is|deep|dive|identify|analy)/.test(low0)) { addMessage('user', text); runDeepSearch('investigate'); return; }
+      pendingDeepSearch = false;
+    }
+
+    // "do a deep search" command (uses the last analysed subject)
+    if (/\b(deep search|deep dive|deep investigation|investigate deeper|dig deeper)\b/i.test(text)) {
+      addMessage('user', text);
+      startDeepSearch(lastAnalysisSubject);
+      return;
+    }
+
+    // "analyse <subject>" — pull it up and analyse directly.
+    let am = text.match(/^analy[sz]e\s+(.+?)\.?$/i);
+    if (am) { addMessage('user', text); runAnalysis(am[1].trim()); return; }
 
     // In analysis mode, the next message is the subject to pull up & analyse.
     if (analysisPending) {
@@ -1281,35 +1365,138 @@ Only emit an action when the user asks you to do something on the device; for or
     history.push({ role: 'assistant', content: `We are analysing "${data.title}". ${(data.extract || '').slice(0, 600)}` });
   }
 
+  // Offer to file the analysed item — "as usual" (research) or the first project.
   function buildConfirmedActions(actions, data) {
     actions.innerHTML = '';
     const who = titledName();
-    const save = document.createElement('button');
-    save.className = 'save';
-    save.textContent = `Save to Private Research Files`;
-    save.addEventListener('click', () => {
-      saveResearch({ title: data.title, image: data.image || '', note: data.extract || '' });
-      save.textContent = 'Filed ✓';
-      save.disabled = true;
-      const line = `Filed under your private research, ${who || 'as requested'}.`;
-      toast('Saved to Private Research Files');
-      speak(line);
+    lastAnalysisSubject = data.title || lastAnalysisSubject;
+    pendingSave = data;
+
+    const ask = `Shall I put this in your Private Research Files as usual, or under your First Project${who ? ', ' + who : ''}?`;
+    addMessage('jarvis', ask);
+    speak(ask);
+
+    const bRes = document.createElement('button');
+    bRes.className = 'save';
+    bRes.textContent = 'Research files';
+    bRes.addEventListener('click', () => doSaveResearch(data, 'research'));
+    const bProj = document.createElement('button');
+    bProj.className = 'save';
+    bProj.style.background = 'linear-gradient(120deg, var(--gold), #ffe6b0)';
+    bProj.textContent = 'First project';
+    bProj.addEventListener('click', () => doSaveResearch(data, 'first-project'));
+    const bDeep = document.createElement('button');
+    bDeep.textContent = 'Deep search';
+    bDeep.addEventListener('click', () => startDeepSearch(data.title));
+    const bWeb = document.createElement('button');
+    bWeb.textContent = 'Open web results';
+    bWeb.addEventListener('click', () => Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(data.title || '')));
+    actions.append(bRes, bProj, bDeep, bWeb);
+  }
+
+  function doSaveResearch(data, project) {
+    saveResearch({
+      title: data.title, image: data.image || '', note: data.extract || data.note || '',
+      type: data.type || 'subject', project: project || 'research',
     });
-    const search = document.createElement('button');
-    search.textContent = 'Open full web results';
-    search.addEventListener('click', () => Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(data.title)));
-    actions.appendChild(save);
-    actions.appendChild(search);
+    pendingSave = null;
+    const who = titledName();
+    const dest = project === 'first-project' ? 'your First Project' : 'your Private Research Files';
+    const kind = data.type === 'photo' ? 'an image' : data.type === 'document' ? 'a document' : 'a subject';
+    const line = `Filed under ${dest}${who ? ', ' + who : ''}, sorted as ${kind}.`;
+    addMessage('jarvis', line);
+    toast('Filed to ' + (project === 'first-project' ? 'First Project' : 'Research Files'));
+    speak(line);
+  }
+
+  // A JARVIS message with tappable choice buttons.
+  function addChoiceMessage(text, options) {
+    const div = document.createElement('div');
+    div.className = 'msg jarvis';
+    div.innerHTML = '<span class="who">JARVIS</span>';
+    const body = document.createElement('span'); body.textContent = text; div.appendChild(body);
+    const wrap = document.createElement('div'); wrap.className = 'analysis-actions'; wrap.style.marginTop = '10px';
+    options.forEach((o) => {
+      const b = document.createElement('button');
+      if (o.affirm) b.className = 'affirm';
+      b.textContent = o.label;
+      b.addEventListener('click', o.onClick);
+      wrap.appendChild(b);
+    });
+    div.appendChild(wrap);
+    el.log.appendChild(div);
+    el.log.scrollTop = el.log.scrollHeight;
+  }
+
+  function startDeepSearch(subject) {
+    lastAnalysisSubject = subject || lastAnalysisSubject;
+    if (!lastAnalysisSubject) {
+      const l = `Point me at something first${titledName() ? ', ' + titledName() : ''} — name a subject or drop a file.`;
+      addMessage('jarvis', l); speak(l); return;
+    }
+    pendingDeepSearch = true;
+    const who = titledName();
+    const ask = `What kind of search would you like${who ? ', ' + who : ''} — internet browsing, or an adventurous investigation of what it is?`;
+    addChoiceMessage(ask, [
+      { label: '🌐 Internet browsing', affirm: true, onClick: () => runDeepSearch('internet') },
+      { label: '🔬 Investigate what it is', onClick: () => runDeepSearch('investigate') },
+    ]);
+    speak(ask);
+  }
+
+  async function runDeepSearch(kind) {
+    pendingDeepSearch = false;
+    const subject = lastAnalysisSubject;
+    const who = titledName();
+    if (kind === 'internet') {
+      const line = `Commencing internet browsing on ${subject}${who ? ', ' + who : ''}.`;
+      addMessage('jarvis', line, [{ type: 'search_web', query: subject }]);
+      Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(subject));
+      speak(line);
+      return;
+    }
+    setStatus('ANALYZING', 'analyzing');
+    const fact = await tryFact(subject);
+    setStatus('SYSTEM ONLINE', '');
+    const line = fact
+      ? `Investigation${who ? ', ' + who : ''}: ${fact}`
+      : `I couldn't dig up more on ${subject} from my sources${who ? ', ' + who : ''}. Shall I browse the web instead?`;
+    addMessage('jarvis', line, [{ type: 'search_web', query: subject + ' explained' }]);
+    speak(line.slice(0, 220));
   }
 
   /* ---- Image analysis (upload / drop) ---- */
   function pickImage() { el.imageInput.click(); }
 
   function handleImageFile(file) {
-    if (!file || !/^image\//.test(file.type)) { toast('That doesn\'t look like an image.'); return; }
-    const reader = new FileReader();
-    reader.onload = () => analyzeImage(reader.result, file.type, file.name);
-    reader.readAsDataURL(file);
+    if (!file) return;
+    if (/^image\//.test(file.type)) {
+      const reader = new FileReader();
+      reader.onload = () => analyzeImage(reader.result, file.type, file.name);
+      reader.readAsDataURL(file);
+    } else {
+      analyzeDocument(file);
+    }
+  }
+
+  // Non-image files: identify by type/metadata and offer to file (keyless).
+  function analyzeDocument(file) {
+    closeHoloScanner();
+    const who = titledName();
+    const ext = (file.name.split('.').pop() || 'file').toUpperCase();
+    const kb = Math.max(1, Math.round(file.size / 1024));
+    const size = kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : kb + ' KB';
+    const desc = `This is a ${ext} document — "${file.name}", ${size}. I can't read its contents without a connected brain, but I can file and organise it${who ? ', ' + who : ''}.`;
+    renderAnalysisCard({ title: file.name, image: '', extract: desc }, { image: false });
+    const cards = el.log.querySelectorAll('.analysis-card');
+    const card = cards[cards.length - 1];
+    const actions = card.querySelector('.analysis-actions');
+    const textEl = card.querySelector('.analysis-text');
+    textEl.textContent = desc;
+    actions.innerHTML = '';
+    addMessage('jarvis', desc);
+    speak(`This is a ${ext} document.`);
+    buildConfirmedActions(actions, { title: file.name, image: '', extract: desc, type: 'document' });
   }
 
   async function analyzeImage(dataUrl, mime, name) {
@@ -1344,7 +1531,7 @@ Only emit an action when the user asks you to do something on the device; for or
       const follow = `How may I help you with this${who ? ', ' + who : ''}?`;
       addMessage('jarvis', follow);
       speak(follow);
-      buildConfirmedActions(actions, { title: name || 'Uploaded image', image: dataUrl, extract: desc });
+      buildConfirmedActions(actions, { title: name || 'Uploaded image', image: dataUrl, extract: desc, type: 'photo' });
     });
     const no = document.createElement('button');
     no.textContent = 'No';
@@ -1400,9 +1587,16 @@ Only emit an action when the user asks you to do something on the device; for or
   }
   function saveResearch(item) {
     const list = loadResearch();
-    list.unshift({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), savedAt: Date.now(), ...item });
-    // keep storage sane
-    while (list.length > 40) list.pop();
+    // Guard localStorage quota: drop very large inline images (keep metadata).
+    if (item.image && item.image.length > 400000) item.image = '';
+    list.unshift({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      savedAt: Date.now(),
+      type: item.type || 'subject',
+      project: item.project || 'research',
+      ...item,
+    });
+    while (list.length > 60) list.pop();
     try { localStorage.setItem(RESEARCH_KEY, JSON.stringify(list)); }
     catch { toast('Storage full — remove some files first.'); }
   }
@@ -1412,28 +1606,41 @@ Only emit an action when the user asks you to do something on the device; for or
     renderResearchList();
   }
   function openResearch() { renderResearchList(); el.research.classList.remove('hidden'); }
+  const TYPE_ICON = { photo: '🖼', document: '📄', subject: '🔎' };
   function renderResearchList() {
     const list = loadResearch();
     el.researchList.innerHTML = '';
     if (!list.length) {
-      el.researchList.innerHTML = '<div class="research-empty">No files yet. Use Analysis mode, then “Save to Private Research Files”.</div>';
+      el.researchList.innerHTML = '<div class="research-empty">No files yet. Enter Analysis mode, analyse a subject or drop a file, then file it here.</div>';
       return;
     }
-    list.forEach((it) => {
-      const row = document.createElement('div');
-      row.className = 'research-item';
-      const img = it.image ? `<img src="${it.image}" alt="" referrerpolicy="no-referrer"/>` : '';
-      row.innerHTML = img +
-        `<div class="ri-body"><div class="ri-title">${escapeHtml(it.title || 'Untitled')}</div>` +
-        `<div class="ri-date">${new Date(it.savedAt).toLocaleString()}</div></div>` +
-        `<button class="ri-del" aria-label="Delete">✕</button>`;
-      row.querySelector('.ri-del').addEventListener('click', () => deleteResearch(it.id));
-      row.addEventListener('click', (e) => {
-        if (e.target.classList.contains('ri-del')) return;
-        if (it.note) addMessage('jarvis', `From your research files — ${it.title}: ${it.note.slice(0, 400)}`);
-        el.research.classList.add('hidden');
+    // Group by project, then show type badges.
+    const groups = {};
+    list.forEach((it) => { const p = it.project || 'research'; (groups[p] = groups[p] || []).push(it); });
+    const order = ['research', 'first-project'];
+    Object.keys(groups).sort((a, b) => order.indexOf(a) - order.indexOf(b)).forEach((proj) => {
+      const head = document.createElement('div');
+      head.className = 'research-group';
+      head.textContent = proj === 'first-project' ? '★ First Project' : 'Research Files';
+      el.researchList.appendChild(head);
+      groups[proj].forEach((it) => {
+        const row = document.createElement('div');
+        row.className = 'research-item';
+        const media = it.image
+          ? `<img src="${it.image}" alt="" referrerpolicy="no-referrer"/>`
+          : `<div class="ri-icon">${TYPE_ICON[it.type] || '🔎'}</div>`;
+        row.innerHTML = media +
+          `<div class="ri-body"><div class="ri-title">${escapeHtml(it.title || 'Untitled')}</div>` +
+          `<div class="ri-date">${(it.type || 'subject').toUpperCase()} · ${new Date(it.savedAt).toLocaleDateString()}</div></div>` +
+          `<button class="ri-del" aria-label="Delete">✕</button>`;
+        row.querySelector('.ri-del').addEventListener('click', () => deleteResearch(it.id));
+        row.addEventListener('click', (e) => {
+          if (e.target.classList.contains('ri-del')) return;
+          if (it.note) addMessage('jarvis', `From your ${proj === 'first-project' ? 'first project' : 'research files'} — ${it.title}: ${it.note.slice(0, 400)}`);
+          el.research.classList.add('hidden');
+        });
+        el.researchList.appendChild(row);
       });
-      el.researchList.appendChild(row);
     });
   }
 
@@ -1463,6 +1670,21 @@ Only emit an action when the user asks you to do something on the device; for or
     const d = new Date();
     el.telClock.textContent = d.toLocaleTimeString([], { hour12: false });
   }
+  let _gpu = null;
+  function getGPU() {
+    if (_gpu) return _gpu;
+    try {
+      const c = document.createElement('canvas');
+      const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+      const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+      let r = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : (gl && gl.getParameter(gl.RENDERER)) || 'GPU';
+      r = String(r);
+      const m = r.match(/ANGLE \(([^,]+),\s*([^,\)]+)/);
+      if (m) r = m[2];
+      _gpu = r.replace(/\(R\)|\(TM\)|Corporation|Graphics/gi, '').replace(/\s+/g, ' ').trim().slice(0, 22) || 'GPU';
+    } catch { _gpu = 'GPU'; }
+    return _gpu;
+  }
   function updateTelemetry() {
     const mode = cfg.state.mode;
     const provider = mode === 'ondevice' ? 'ON-DEVICE'
@@ -1475,7 +1697,9 @@ Only emit an action when the user asks you to do something on the device; for or
     if (el.telLeft) {
       el.telLeft.innerHTML = [
         ['SYS', 'ONLINE'], ['CORE', provider],
-        ['MODEL', String(modelName).slice(0, 18)],
+        ['MODEL', String(modelName).slice(0, 20)],
+        ['GPU', getGPU()],
+        ['GPU LOAD', (24 + Math.floor(Math.random() * 46)) + '%'],
         ['UPLINK', mode === 'ondevice' ? 'LOCAL' : mode === 'demo' ? 'ONBOARD' : 'SECURE'],
         ['LATENCY', (28 + Math.floor(Math.random() * 24)) + 'MS'],
         ['MEMORY', 'NOMINAL'], ['THREADS', '128'],
@@ -1571,6 +1795,7 @@ Only emit an action when the user asks you to do something on the device; for or
     el.setSpeak.checked = cfg.state.speak !== false;
     el.setAutoListen.checked = !!cfg.state.autoListen;
     populateVoices();
+    renderContacts();
     updateDirectVisibility();
     updateProviderUI();
     const ver = document.getElementById('appVersion');
@@ -1646,6 +1871,17 @@ Only emit an action when the user asks you to do something on the device; for or
         selectedPlatform = btn.dataset.platform;
         el.platformPick.querySelectorAll('.platform-opt').forEach((b) => b.classList.toggle('selected', b === btn));
       });
+    });
+
+    // Contacts (settings)
+    el.cAdd.addEventListener('click', () => {
+      const name = el.cName.value.trim();
+      const number = el.cNumber.value.trim();
+      if (!name || !number) { toast('Enter a name and number.'); return; }
+      addContact(name, number, el.cApp.value);
+      el.cName.value = ''; el.cNumber.value = ''; el.cApp.value = '';
+      renderContacts();
+      toast(`Saved ${name}.`);
     });
 
     // Simulated incoming call

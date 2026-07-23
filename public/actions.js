@@ -78,6 +78,31 @@
     'apple maps': { label: 'Apple Maps', url: () => 'https://maps.apple.com' },
   };
 
+  // In-app search URLs.
+  const APP_SEARCH = {
+    youtube: (q) => `https://www.youtube.com/results?search_query=${enc(q)}`,
+    'youtube music': (q) => `https://music.youtube.com/search?q=${enc(q)}`,
+    instagram: (q) => `https://www.instagram.com/explore/search/keyword/?q=${enc(q)}`,
+    twitter: (q) => `https://twitter.com/search?q=${enc(q)}`,
+    x: (q) => `https://x.com/search?q=${enc(q)}`,
+    tiktok: (q) => `https://www.tiktok.com/search?q=${enc(q)}`,
+    spotify: (q) => `https://open.spotify.com/search/${enc(q)}`,
+    google: (q) => `https://www.google.com/search?q=${enc(q)}`,
+    reddit: (q) => `https://www.reddit.com/search/?q=${enc(q)}`,
+    amazon: (q) => `https://www.amazon.com/s?k=${enc(q)}`,
+    ebay: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}`,
+    maps: (q) => `https://www.google.com/maps/search/?api=1&query=${enc(q)}`,
+    'google maps': (q) => `https://www.google.com/maps/search/?api=1&query=${enc(q)}`,
+    pinterest: (q) => `https://www.pinterest.com/search/pins/?q=${enc(q)}`,
+    soundcloud: (q) => `https://soundcloud.com/search?q=${enc(q)}`,
+    netflix: (q) => `https://www.netflix.com/search?q=${enc(q)}`,
+    linkedin: (q) => `https://www.linkedin.com/search/results/all/?keywords=${enc(q)}`,
+    github: (q) => `https://github.com/search?q=${enc(q)}&type=repositories`,
+    wikipedia: (q) => `https://en.wikipedia.org/w/index.php?search=${enc(q)}`,
+    'apple music': (q) => `https://music.apple.com/search?term=${enc(q)}`,
+    twitch: (q) => `https://www.twitch.tv/search?term=${enc(q)}`,
+  };
+
   function musicUrl(query, service) {
     const q = enc(query || '');
     switch ((service || 'youtube').toLowerCase()) {
@@ -112,6 +137,25 @@
       }
       case 'search_web':
         return { kind: 'link', label: `Search: ${action.query}`, url: `https://www.google.com/search?q=${enc(action.query || '')}`, auto: true };
+      case 'search_in_app': {
+        const app = String(action.app || '').toLowerCase().trim();
+        const q = action.query || '';
+        const fn = APP_SEARCH[app];
+        const url = fn ? fn(q) : `https://www.google.com/search?q=${enc(q + ' ' + app)}`;
+        const label = APPS[app] ? APPS[app].label : (app.charAt(0).toUpperCase() + app.slice(1));
+        return { kind: 'link', label: `Search ${label}: ${q}`, url, auto: true };
+      }
+      case 'open_chat': {
+        const app = String(action.app || '').toLowerCase().trim();
+        const num = String(action.number || '').replace(/\D/g, '');
+        const who = action.name || '';
+        if (app === 'whatsapp' && num) return { kind: 'link', label: `WhatsApp · ${who}`, url: `https://wa.me/${num}`, auto: true };
+        if ((app === 'messages' || app === 'sms' || app === 'text') && action.number) return { kind: 'link', label: `Messages · ${who}`, url: `sms:${String(action.number).replace(/[^\d+*#]/g, '')}`, auto: true };
+        if (app === 'telegram' && action.handle) return { kind: 'link', label: `Telegram · ${who}`, url: `https://t.me/${String(action.handle).replace(/^@/, '')}`, auto: true };
+        // Apps that can't target a specific chat via URL — just open the app.
+        const appEntry = APPS[app];
+        return { kind: 'link', label: `Open ${appEntry ? appEntry.label : app}`, url: appEntry ? appEntry.url() : `https://www.google.com/search?q=${enc(app + ' app')}`, auto: true };
+      }
       case 'open_url': {
         let url = String(action.url || '');
         if (url && !/^[a-z]+:/i.test(url)) url = 'https://' + url;
