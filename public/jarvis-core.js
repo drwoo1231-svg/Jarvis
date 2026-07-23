@@ -95,6 +95,18 @@
     }
   }
 
+  function drawPoly(radius, sides, rot, alpha, width) {
+    ctx.beginPath();
+    for (let i = 0; i <= sides; i++) {
+      const a = rot + (i / sides) * Math.PI * 2;
+      const x = cx + Math.cos(a) * radius, y = cy + Math.sin(a) * radius;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = rgba(color, alpha);
+    ctx.lineWidth = width;
+    ctx.stroke();
+  }
+
   // Longer radial spokes reaching outward, spinning slowly (as in the ref HUD).
   function drawSpokes(radius, count, len, alpha, dir) {
     for (let i = 0; i < count; i++) {
@@ -123,6 +135,24 @@
 
     const R = baseR;
     const pulse = 1 + ampSmooth * 0.28 + Math.sin(t * 1.6) * 0.015;
+
+    // ---- geometric HUD frames ----
+    drawPoly(R * 1.62, 6, t * 0.12, 0.22, 1.2);                  // rotating hexagon
+    drawPoly(R * 1.5, 3, -t * 0.09, 0.14, 1);                    // counter triangle
+
+    // ---- radar sweep over the globe ----
+    const sweepA = t * 0.8;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R * 1.28, sweepA, sweepA + 0.5);
+    ctx.closePath();
+    const sg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.28);
+    sg.addColorStop(0, rgba(color, 0));
+    sg.addColorStop(1, rgba(color, 0.22));
+    ctx.fillStyle = sg;
+    ctx.fill();
+    ctx.restore();
 
     // ---- HUD rings ----
     drawRing(R * 1.82, 0, Math.PI * 2, 1, 0.22, [1, 7]);        // fine dotted outer ring

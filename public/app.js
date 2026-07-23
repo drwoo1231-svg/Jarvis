@@ -31,6 +31,10 @@
     incallAnswer: $('incallAnswer'),
     incallDecline: $('incallDecline'),
 
+    displayPanel: $('displayPanel'),
+    dispClose: $('dispClose'),
+    dispBody: $('dispBody'),
+
     nowPlaying: $('nowPlaying'),
     npClose: $('npClose'),
     npFrame: $('npFrame'),
@@ -103,7 +107,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.4 · web search, visual pull-up, adaptive analysis';
+  const APP_VERSION = 'v2.5 · weather, alarms, calendar, visual panel';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -985,6 +989,47 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    const tail0 = addressWord() ? ', ' + addressWord() : '';
+
+    // Visual weather forecast (lively panel beside the core).
+    if (/\b(weather|forecast|temperature|how (?:hot|cold)|is it (?:raining|sunny|snowing|cold|hot))\b/i.test(text)) {
+      addMessage('user', text);
+      const cm = text.match(/\b(?:in|for|at|around|near)\s+([a-z .'-]+?)\s*\??$/i);
+      showWeather(cm ? cm[1].trim() : null);
+      return;
+    }
+
+    // Alarm (in-app, fires while the app is open).
+    if (/\b(?:set|create|put)?\s*(?:an?\s+)?alarm\b|\bwake me(?:\s+up)?\b/i.test(text)) {
+      addMessage('user', text);
+      const target = parseClockTime(text);
+      if (!target) { const l = `At what time shall I set the alarm${tail0}?`; addMessage('jarvis', l); speak(l); return; }
+      const label = (text.match(/\b(?:for|labelled|called)\s+([a-z ]{3,30})$/i) || [])[1] || '';
+      const ts = setAlarm(target, label.trim());
+      const l = `Alarm set for ${ts}${tail0}. I'll sound it while JARVIS is open.`;
+      addMessage('jarvis', l); speak(l);
+      return;
+    }
+
+    // Google Calendar event / appointment.
+    if (/\b(calendar|appointment)\b/i.test(text) || /^\s*schedule\s+/i.test(text) ||
+        /\b(add|create|set up|put|make)\b.*\b(event|meeting|reminder)\b/i.test(text)) {
+      addMessage('user', text);
+      let title = text
+        .replace(/^(?:hey )?(?:jarvis[,\s]+)?(?:can you |could you |please )?(?:add|create|schedule|set up|put|make)\s+/i, '')
+        .replace(/\b(?:an?|a)\s+(?:calendar\s+)?(?:event|appointment|meeting|reminder)\b(?:\s+(?:for|to|about|called|named|titled|with|of))?/i, '')
+        .replace(/\b(?:on|in|to)\s+(?:my\s+)?calendar\b/i, '')
+        .replace(/\b(?:at|for|on)\s+\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?)?/i, '')
+        .replace(/\b(?:today|tomorrow)\b/i, '')
+        .replace(/\s+/g, ' ').trim() || 'New event';
+      const when = parseClockTime(text);
+      const action = { type: 'calendar', title };
+      if (when) { action.start = fmtCal(when); action.end = fmtCal(new Date(when.getTime() + 3600000)); }
+      const say = `Opening a new calendar event${when ? ' for ' + when.toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : ''}${tail0}. Adjust and save it in Google Calendar.`;
+      addMessage('jarvis', say, [action]); executeAction(action); speak(say);
+      return;
+    }
+
     // Visual pull-up — "show me / pull up a picture of X" (internet or files).
     let vm = text.match(/^(?:show me|pull up|bring up|find me|get me|display|pull)\s+(?:an?\s+|the\s+)?(?:picture|photo|image|pic|visual)\s+(?:of\s+|for\s+|showing\s+)?(.+?)\??$/i);
     if (!vm) { const vv = text.match(/^what (?:does|do)\s+(.+?)\s+look like\??$/i); if (vv) vm = vv; }
@@ -1119,8 +1164,58 @@ Only emit an action when the user asks you to do something on the device; for or
       const phrase = label ? `Your ${label} timer is up.` : 'Your timer is up.';
       addMessage('jarvis', phrase);
       speak(phrase);
+      beep(4);
       try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
     }, seconds * 1000);
+  }
+
+  // A short alarm tone via WebAudio.
+  function beep(times) {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      let t0 = audioCtx.currentTime;
+      for (let i = 0; i < (times || 4); i++) {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.frequency.value = i % 2 ? 880 : 660;
+        o.connect(g); g.connect(audioCtx.destination);
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(0.3, t0 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
+        o.start(t0); o.stop(t0 + 0.36); t0 += 0.5;
+      }
+    } catch { /* audio unavailable */ }
+  }
+
+  // Parse a clock time (with am/pm and today/tomorrow) out of free text.
+  function parseClockTime(text) {
+    const m = text.match(/(\d{1,2})(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)?/i);
+    if (!m) return null;
+    let h = parseInt(m[1], 10); const min = m[2] ? parseInt(m[2], 10) : 0;
+    const ap = (m[3] || '').toLowerCase().replace(/\./g, '');
+    if (ap === 'pm' && h < 12) h += 12;
+    if (ap === 'am' && h === 12) h = 0;
+    const now = new Date();
+    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0, 0);
+    if (/tomorrow/i.test(text)) target.setDate(target.getDate() + 1);
+    else if (target <= now && !/today/i.test(text)) target.setDate(target.getDate() + 1);
+    return target;
+  }
+  function fmtCal(d) {
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}T${p(d.getHours())}${p(d.getMinutes())}00`;
+  }
+  function setAlarm(target, label) {
+    const ts = target.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const ms = target - Date.now();
+    setTimeout(() => {
+      const who = titledName();
+      const line = `${label ? label + ' — ' : ''}Alarm${who ? ', ' + who : ''}. It is ${ts}.`;
+      addMessage('jarvis', line);
+      speak(`Alarm. It is ${ts}. ${label || ''}`);
+      beep(8);
+      try { navigator.vibrate && navigator.vibrate([400, 200, 400, 200, 400]); } catch {}
+    }, ms);
+    return ts;
   }
 
   /* ---------------- Speech (TTS) ---------------- */
@@ -1658,38 +1753,113 @@ Only emit an action when the user asks you to do something on the device; for or
     }
   }
 
-  /* ---- Visual pull-up (a picture from the internet) ---- */
+  /* ---- Shared display panel beside the core ---- */
+  function showDisplayPanel(html) {
+    el.dispBody.innerHTML = html;
+    el.displayPanel.classList.remove('hidden');
+  }
+  function closeDisplay() { el.displayPanel.classList.add('hidden'); el.dispBody.innerHTML = ''; }
+
+  // Fetch a representative image URL for a subject (Wikipedia REST summary is
+  // the most reliable for thumbnails; falls back to the search generator).
+  async function fetchImage(query) {
+    try {
+      const s = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(query.replace(/\s+/g, '_')));
+      if (s.ok) {
+        const d = await s.json();
+        const src = (d.originalimage && d.originalimage.source) || (d.thumbnail && d.thumbnail.source);
+        if (src) return { title: d.title || query, image: src, extract: d.extract || '' };
+      }
+    } catch { /* try generator */ }
+    const w = await fetchWiki(query).catch(() => null);
+    if (w && w.image) return w;
+    return w ? { ...w, image: '' } : null;
+  }
+
+  /* ---- Visual pull-up (a picture, shown beside the core) ---- */
   async function showVisual(query) {
     const tail = addressWord() ? ', ' + addressWord() : '';
+    showDisplayPanel('<div class="disp-title">◉ Visual Feed</div><div class="disp-loading">Retrieving imagery…</div>');
     const t = startThinking(['Searching visual archives', 'Retrieving imagery', 'Rendering']);
-    const data = await fetchWiki(query).catch(() => null);
+    const data = await fetchImage(query);
     if (data && data.image) {
       lastAnalysisSubject = data.title;
       t.finish('Pulled up ' + data.title + '.', 96);
-      renderVisualCard(data);
+      showDisplayPanel(
+        `<div class="disp-title">◉ ${escapeHtml(data.title || 'Visual')}</div>` +
+        `<img src="${data.image}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"/>` +
+        (data.extract ? `<div class="disp-cap">${escapeHtml(data.extract.split('. ').slice(0, 2).join('. '))}</div>` : '')
+      );
+      addMessage('jarvis', `Here is ${data.title}${tail}. I've put it on the display beside me.`);
       speak(`Here is ${data.title}${tail}.`);
     } else {
+      closeDisplay();
       t.finish("I couldn't pull that from my archives — opening image results.", 45);
-      addMessage('jarvis', '', [{ type: 'open_url', url: 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(query) }]);
       Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(query));
     }
   }
-  function renderVisualCard(data) {
-    const card = document.createElement('div');
-    card.className = 'analysis-card';
-    const media = data.image ? `<div class="analysis-media"><img src="${data.image}" alt="" referrerpolicy="no-referrer"/><span class="scanline"></span></div>` : '';
-    card.innerHTML = `<div class="analysis-head"><span class="scan-dot"></span>Visual</div>` + media +
-      `<div class="analysis-body"><div class="analysis-title">${escapeHtml(data.title || '')}</div>` +
-      `<div class="analysis-text">${escapeHtml((data.extract || '').split('. ').slice(0, 2).join('. '))}</div>` +
-      `<div class="analysis-actions"></div></div>`;
-    el.log.appendChild(card);
-    el.log.scrollTop = el.log.scrollHeight;
-    const actions = card.querySelector('.analysis-actions');
-    const analyse = document.createElement('button'); analyse.className = 'affirm'; analyse.textContent = 'Analyse this';
-    analyse.addEventListener('click', () => { lastAnalysisSubject = data.title; runAnalysis(data.title); });
-    const web = document.createElement('button'); web.textContent = 'More on the web';
-    web.addEventListener('click', () => Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(data.title || '')));
-    actions.append(analyse, web);
+
+  /* ---- Live visual weather forecast ---- */
+  function wxIcon(code) {
+    if (code === 0 || code === 1) return { emoji: '☀️', cls: 'sun', precip: null };
+    if (code === 2) return { emoji: '⛅', cls: '', precip: null };
+    if (code === 3) return { emoji: '☁️', cls: '', precip: null };
+    if (code === 45 || code === 48) return { emoji: '🌫️', cls: '', precip: null };
+    if (code >= 51 && code <= 67) return { emoji: '🌧️', cls: '', precip: 'rain' };
+    if ((code >= 71 && code <= 77) || code === 85 || code === 86) return { emoji: '❄️', cls: '', precip: 'snow' };
+    if (code >= 80 && code <= 82) return { emoji: '🌦️', cls: '', precip: 'rain' };
+    if (code >= 95) return { emoji: '⛈️', cls: '', precip: 'rain' };
+    return { emoji: '🌡️', cls: '', precip: null };
+  }
+  function precipHTML(kind) {
+    if (!kind) return '';
+    let drops = '';
+    for (let i = 0; i < 14; i++) {
+      const left = Math.round(Math.random() * 100);
+      const dur = (0.5 + Math.random() * 0.7).toFixed(2);
+      const delay = (Math.random()).toFixed(2);
+      drops += `<i style="left:${left}%;animation-duration:${dur}s;animation-delay:${delay}s"></i>`;
+    }
+    return `<div class="wx-precip ${kind === 'snow' ? 'snow' : ''}">${drops}</div>`;
+  }
+  async function showWeather(city) {
+    const tail = addressWord() ? ', ' + addressWord() : '';
+    showDisplayPanel('<div class="disp-title">◉ Weather</div><div class="disp-loading">Acquiring location…</div>');
+    const t = startThinking(['Fixing location', 'Contacting meteorological feed', 'Rendering forecast']);
+    try {
+      let lat, lon, place;
+      if (city) {
+        const g = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(city));
+        const gd = await g.json();
+        if (!gd.results || !gd.results[0]) { t.finish("I couldn't find that place.", 40); showDisplayPanel(`<div class="disp-title">◉ Weather</div><div class="disp-loading">Couldn't locate ${escapeHtml(city)}.</div>`); return; }
+        lat = gd.results[0].latitude; lon = gd.results[0].longitude; place = gd.results[0].name + (gd.results[0].country_code ? ', ' + gd.results[0].country_code : '');
+      } else {
+        const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 9000 }));
+        lat = pos.coords.latitude; lon = pos.coords.longitude; place = 'Your location';
+      }
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=auto`);
+      const d = await r.json();
+      const c = d.current;
+      const temp = Math.round(c.temperature_2m);
+      const ic = wxIcon(c.weather_code);
+      const hi = d.daily ? Math.round(d.daily.temperature_2m_max[0]) : null;
+      const lo = d.daily ? Math.round(d.daily.temperature_2m_min[0]) : null;
+      t.finish('Forecast ready.', 97);
+      showDisplayPanel(
+        `<div class="disp-title">◉ Weather · ${escapeHtml(place)}</div>` +
+        `<div class="wx">${precipHTML(ic.precip)}` +
+        `<div class="wx-icon ${ic.cls}">${ic.emoji}</div>` +
+        `<div class="wx-temp">${temp}°C</div>` +
+        `<div class="wx-cond">${(WMO[c.weather_code] || 'clear')}</div>` +
+        `<div class="wx-loc">${escapeHtml(place)}</div>` +
+        (hi != null ? `<div class="wx-extra">H ${hi}°  ·  L ${lo}°</div>` : '') +
+        `</div>`
+      );
+      speak(`It's ${temp} degrees and ${WMO[c.weather_code] || 'clear'} in ${place}${tail}.`);
+    } catch (e) {
+      t.finish('Weather feed unavailable.', 40);
+      showDisplayPanel(`<div class="disp-title">◉ Weather</div><div class="disp-loading">${city ? "Couldn't reach the weather feed." : 'Tell me a city — location access was denied.'}</div>`);
+    }
   }
 
   /* ---- Adaptive analysis: detect type and route ---- */
@@ -2285,7 +2455,8 @@ Only emit an action when the user asks you to do something on the device; for or
       toast(`Saved ${name}.`);
     });
 
-    // Now Playing
+    // Display panel + Now Playing
+    el.dispClose.addEventListener('click', closeDisplay);
     el.npClose.addEventListener('click', closeNowPlaying);
 
     // Simulated incoming call

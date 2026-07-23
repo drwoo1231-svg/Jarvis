@@ -201,6 +201,14 @@
         const q = [subj, body].filter(Boolean).join('&');
         return { kind: 'link', label: `Email ${action.to || ''}`.trim(), url: `mailto:${to}${q ? '?' + q : ''}`, auto: true };
       }
+      case 'calendar': {
+        const title = enc(action.title || 'New event');
+        const dates = action.start ? `&dates=${action.start}/${action.end || action.start}` : '';
+        const details = action.details ? `&details=${enc(action.details)}` : '';
+        const loc = action.location ? `&location=${enc(action.location)}` : '';
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}${dates}${details}${loc}`;
+        return { kind: 'link', label: `Calendar · ${action.title || 'Event'}`, url, auto: true };
+      }
       case 'timer': {
         const secs = Math.max(1, parseInt(action.seconds, 10) || 0);
         if (!secs) return null;
