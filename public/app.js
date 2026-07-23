@@ -103,7 +103,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.2 · system diagnostics';
+  const APP_VERSION = 'v2.3 · iOS music fix';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -1323,7 +1323,10 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
     playVideoId(id, query);
-    const say = `Now playing ${query}${tail}.`;
+    // iOS blocks autoplay-with-sound; the player is visible so a single tap starts it.
+    const say = Actions.isIOS
+      ? `${query} is cued up${tail}. Tap the disk once to begin — iPhone requires a tap for sound.`
+      : `Now playing ${query}${tail}.`;
     addMessage('jarvis', say);
     speak(say);
   }
