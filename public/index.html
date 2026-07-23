@@ -161,6 +161,22 @@
       </div>
     </div>
 
+    <!-- In-app music player (spinning disk next to the core) -->
+    <div id="nowPlaying" class="nowplaying hidden">
+      <div class="np-panel">
+        <button id="npClose" class="icon-btn np-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.3 19.7 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+        </button>
+        <div class="np-tag">◉ NOW PLAYING</div>
+        <div class="np-stage">
+          <div id="npFrame" class="np-frame"></div>
+          <div id="npDisk" class="np-disk"><span class="np-shine"></span><span class="np-hole"></span></div>
+        </div>
+        <div id="npTitle" class="np-title">—</div>
+        <div class="np-viz" id="npViz"></div>
+      </div>
+    </div>
+
     <!-- Simulated incoming call (a demo — a web app can't detect real calls) -->
     <div id="incomingCall" class="incall hidden">
       <div class="incall-panel glass">

@@ -111,6 +111,8 @@
       case 'apple':
       case 'apple music':
         return { label: `Apple Music · ${query}`, url: `https://music.apple.com/search?term=${q}` };
+      case 'soundcloud':
+        return { label: `SoundCloud · ${query}`, url: `https://soundcloud.com/search?q=${q}` };
       case 'youtube':
       default:
         // YouTube search opens the app on mobile; user taps the top result.

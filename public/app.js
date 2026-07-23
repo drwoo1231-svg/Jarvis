@@ -31,6 +31,13 @@
     incallAnswer: $('incallAnswer'),
     incallDecline: $('incallDecline'),
 
+    nowPlaying: $('nowPlaying'),
+    npClose: $('npClose'),
+    npFrame: $('npFrame'),
+    npDisk: $('npDisk'),
+    npTitle: $('npTitle'),
+    npViz: $('npViz'),
+
     hud: $('hud'),
     statusText: $('statusText'),
     reactor: $('reactor'),
@@ -96,7 +103,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.0 · in-app search, projects, deep search';
+  const APP_VERSION = 'v2.1 · in-app music player';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -978,6 +985,32 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // Music: "play/put on X" plays IN-APP (spinning disk) unless a service is
+    // named ("… on spotify"); "open X by Y" is treated as a song too.
+    {
+      const tail = addressWord() ? ', ' + addressWord() : '';
+      let song = null;
+      const pm = text.match(/^(?:hey )?(?:jarvis[,\s]+)?(?:can you |could you |please )?(?:play|put on)\s+(.+)/i);
+      if (pm) song = pm[1].trim();
+      else { const om = text.match(/^(?:can you |could you |please )?open\s+(.+\bby\b.+)/i); if (om) song = om[1].trim(); }
+      if (song) {
+        const svc = song.match(/\bon\s+(youtube music|youtube|spotify|apple music|apple|soundcloud)\b/i);
+        const q = song.replace(/\bon\s+(youtube music|youtube|spotify|apple music|apple|soundcloud)\b/ig, '')
+                      .replace(/\b(for me|please|the song|some)\b/ig, '').replace(/\s+/g, ' ').trim();
+        addMessage('user', text);
+        if (svc) {
+          const s = svc[1].toLowerCase();
+          const service = /spotify/.test(s) ? 'spotify' : /apple/.test(s) ? 'apple' : /soundcloud/.test(s) ? 'soundcloud' : 'youtube';
+          const built = { type: 'play_music', query: q, service };
+          const say = `Right away${tail}. Putting on ${q} via ${service}.`;
+          addMessage('jarvis', say, [built]); executeAction(built); speak(say);
+        } else {
+          playSongInApp(q);
+        }
+        return;
+      }
+    }
+
     // Direct device commands ("play …", "open …", "search …", "navigate …")
     // run in-app, instantly, in every mode. Executing here (synchronously,
     // inside the user's tap) also lets iOS actually open the target app.
@@ -1204,6 +1237,84 @@ Only emit an action when the user asks you to do something on the device; for or
   }
   function closeHoloScanner() {
     el.holoScanner.classList.add('hidden');
+  }
+
+  /* ---------------- In-app music player (spinning disk) ---------------- */
+  function showNowPlaying(title) {
+    if (!el.npViz.childElementCount) {
+      let bars = '';
+      for (let i = 0; i < 18; i++) bars += `<i style="animation-delay:${(i % 6) * 0.1}s;height:${6 + Math.random() * 18}px"></i>`;
+      el.npViz.innerHTML = bars;
+    }
+    el.npTitle.textContent = title;
+    el.npDisk.classList.remove('spinning');
+    el.nowPlaying.classList.remove('hidden');
+  }
+  function closeNowPlaying() {
+    el.nowPlaying.classList.add('hidden');
+    el.npFrame.innerHTML = '';                // stop playback
+    el.npDisk.classList.remove('spinning');
+  }
+  function playVideoId(id, title) {
+    el.npFrame.innerHTML =
+      `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0" ` +
+      `title="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    el.npDisk.classList.add('spinning');
+    el.npTitle.textContent = title;
+  }
+
+  function withTimeout(ms) {
+    const c = new AbortController();
+    setTimeout(() => c.abort(), ms);
+    return c.signal;
+  }
+  // Resolve a YouTube video id for a query using free, keyless public search
+  // instances (Piped / Invidious). Any may be down; we try several.
+  async function resolveVideoId(query) {
+    const piped = ['https://pipedapi.kavin.rocks', 'https://pipedapi.adminforge.de', 'https://api.piped.private.coffee'];
+    for (const base of piped) {
+      try {
+        const r = await fetch(`${base}/search?q=${encodeURIComponent(query)}&filter=videos`, { signal: withTimeout(6000) });
+        if (!r.ok) continue;
+        const d = await r.json();
+        const items = d.items || d;
+        const hit = Array.isArray(items) && items.find((i) => (i.url || '').indexOf('watch?v=') >= 0);
+        const mm = hit && hit.url.match(/v=([\w-]{11})/);
+        if (mm) return mm[1];
+      } catch { /* try next */ }
+    }
+    const inv = ['https://inv.nadeko.net', 'https://invidious.jing.rocks', 'https://yewtu.be'];
+    for (const base of inv) {
+      try {
+        const r = await fetch(`${base}/api/v1/search?q=${encodeURIComponent(query)}&type=video`, { signal: withTimeout(6000) });
+        if (!r.ok) continue;
+        const d = await r.json();
+        const hit = Array.isArray(d) && d.find((i) => i.videoId);
+        if (hit) return hit.videoId;
+      } catch { /* try next */ }
+    }
+    return null;
+  }
+
+  async function playSongInApp(query) {
+    const tail = addressWord() ? ', ' + addressWord() : '';
+    showNowPlaying('Searching for ' + query + '…');
+    setStatus('SEARCHING', 'analyzing');
+    let id = null;
+    try { id = await resolveVideoId(query); } catch { id = null; }
+    setStatus('SYSTEM ONLINE', '');
+    if (!id) {
+      closeNowPlaying();
+      const say = `I couldn't stream that in-app just now${tail} — opening YouTube for it instead.`;
+      addMessage('jarvis', say, [{ type: 'play_music', query, service: 'youtube' }]);
+      Actions.autoOpen('https://www.youtube.com/results?search_query=' + encodeURIComponent(query));
+      speak(say);
+      return;
+    }
+    playVideoId(id, query);
+    const say = `Now playing ${query}${tail}.`;
+    addMessage('jarvis', say);
+    speak(say);
   }
 
   /* ---------------- Simulated incoming call (demo only) ---------------- */
@@ -1883,6 +1994,9 @@ Only emit an action when the user asks you to do something on the device; for or
       renderContacts();
       toast(`Saved ${name}.`);
     });
+
+    // Now Playing
+    el.npClose.addEventListener('click', closeNowPlaying);
 
     // Simulated incoming call
     el.incallAnswer.addEventListener('click', () => endIncomingCall(true));
