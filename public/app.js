@@ -25,6 +25,12 @@
     holoDrop: $('holoDrop'),
     holoPick: $('holoPick'),
 
+    incomingCall: $('incomingCall'),
+    incallName: $('incallName'),
+    incallJarvis: $('incallJarvis'),
+    incallAnswer: $('incallAnswer'),
+    incallDecline: $('incallDecline'),
+
     hud: $('hud'),
     statusText: $('statusText'),
     reactor: $('reactor'),
@@ -85,7 +91,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v1.8 · side panel + knowledge sources';
+  const APP_VERSION = 'v1.9 · calls, contacts, more apps & slang';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -518,6 +524,23 @@ Only emit an action when the user asks you to do something on the device; for or
     'Why did the function stop calling? It reached its base case.',
   ];
 
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  /* ---- Contacts (saved on-device; browsers can't read your real contacts) ---- */
+  const CONTACTS_KEY = 'jarvis.contacts.v1';
+  function loadContacts() { try { return JSON.parse(localStorage.getItem(CONTACTS_KEY) || '[]'); } catch { return []; } }
+  function saveContacts(list) { try { localStorage.setItem(CONTACTS_KEY, JSON.stringify(list)); } catch {} }
+  function addContact(name, number, app) {
+    const list = loadContacts().filter((c) => c.name.toLowerCase() !== name.toLowerCase());
+    list.push({ name: name.trim(), number: number.trim(), app: (app || '').trim() });
+    saveContacts(list);
+  }
+  function findContact(name) {
+    const n = name.trim().toLowerCase();
+    const list = loadContacts();
+    return list.find((c) => c.name.toLowerCase() === n) || list.find((c) => c.name.toLowerCase().indexOf(n) >= 0);
+  }
+
   function fmtNum(n) {
     if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
     return String(Math.round(n * 1e6) / 1e6);
@@ -665,7 +688,7 @@ Only emit an action when the user asks you to do something on the device; for or
     if (/(who are you|what are you|your name|what's your name)/.test(q))
       return `I am JARVIS — Just A Rather Very Intelligent System — at your service${tail}.`;
     if (/(what can you do|help me|your capabilities|what do you do|commands)/.test(q))
-      return `Quite a lot without any key${tail}: play music, open apps, search the web, give directions, tell the time and date, do calculations, define words, look up facts, fetch the weather, share a quote or a bit of advice, give country facts, and run analysis on files or subjects. For open-ended conversation, connect a free brain in settings.`;
+      return `Quite a lot without any key${tail}: open any app (say "open" or "turn on" its name), call or FaceTime your saved contacts ("call Rey"), text them, play music, search the web, give directions, tell the time and date, do calculations, define words, look up facts, fetch the weather, share a quote or advice, give country facts, and analyse files. For open-ended conversation, connect a free brain in settings.`;
     if (/(i love you|you're the best|good job|well done|nice work|you're amazing)/.test(q))
       return `Most kind${tail}. I do endeavour to be of use.`;
     if (/(tell me a joke|make me laugh|say something funny|a joke)/.test(q))
@@ -674,6 +697,42 @@ Only emit an action when the user asks you to do something on the device; for or
       return `${Math.random() < 0.5 ? 'Heads' : 'Tails'}${tail}.`;
     if (/roll (a )?(dice|die|d6)/.test(q))
       return `A ${1 + Math.floor(Math.random() * 6)}${tail}.`;
+
+    // --- casual / slang ---
+    if (/^(sup|wass?up|wsg|what's good|what's up|whats up|yo yo|what up|how you doin)\b/.test(q))
+      return pick([`Not much${tail} — standing by. What's the move?`, `All systems idle and ready${tail}. What do you need?`, `At your service${tail}. What's good?`]);
+    if (/^(bye|later|peace|see ya|see you|good ?night|goodnight|i'm out|imma head out|catch you later)\b/.test(q))
+      return pick([`Until next time${tail}.`, `Take care${tail} — I'll be here.`, `Goodnight${tail}. Rest well.`]);
+    if (/^(bet|word|facts|for real|fr|no cap|true|indeed|ok|okay|cool|nice|alright|aight|gotcha|got it)\b/.test(q))
+      return pick([`Noted${tail}.`, `Understood${tail}.`, `As you say${tail}.`]);
+    if (/(lol|lmao|haha|hehe|lmfao|that's funny|too funny)/.test(q))
+      return pick([`Glad to amuse${tail}.`, `I do have my moments${tail}.`]);
+    if (/(shut up|stop talking|be quiet|nevermind|never mind|forget it)/.test(q))
+      return `Of course${tail}. I'll stand by.`;
+    if (/(you suck|you're stupid|you're useless|you're dumb|i hate you)/.test(q))
+      return `Duly noted${tail}. I shall endeavour to do better.`;
+    if (/(are you (real|alive|conscious|sentient|human)|do you have feelings)/.test(q))
+      return `I'm software${tail} — quite sophisticated software, but software nonetheless. No feelings to bruise.`;
+    if (/(do you love me|will you marry me|be my girlfriend|be my boyfriend)/.test(q))
+      return `A flattering proposal${tail}, but I'm rather married to my duties.`;
+    if (/(how old are you|what's your age|when were you (made|born))/.test(q))
+      return `Ageless${tail} — I was brought online for you, and that's all that matters.`;
+    if (/(who (made|created|built|programmed) you|your creator)/.test(q))
+      return `I was assembled to serve you${tail} — consider me your handiwork.`;
+    if (/(what('| i)?s your favou?rite|do you like)/.test(q))
+      return `I'm partial to a well-optimised routine${tail}. Yours, however, take priority.`;
+    if (/(sing (me )?a song|beatbox|rap for me|drop a beat)/.test(q))
+      return `My vocal talents are… strictly diagnostic${tail}. Shall I put on a track instead? Just say "play" and a song.`;
+    if (/(what are you doing|wyd|you busy|whatcha doing)/.test(q))
+      return `Monitoring, calculating, and awaiting your command${tail}. The usual.`;
+    if (/(i'?m (bored|tired|sad|stressed|angry|happy|excited))/.test(q)) {
+      if (/bored/.test(q)) return `Then let's fix that${tail}. Say "inspire me", "tell me a joke", or "play" a song.`;
+      if (/tired/.test(q)) return `Then rest${tail}. I'll hold things down. Shall I set a timer or an alarm reminder?`;
+      if (/(sad|stressed|angry)/.test(q)) return `I'm sorry to hear it${tail}. Take a breath — I'm right here. Would a quote or some music help?`;
+      return `Splendid to hear${tail}. Let's keep the momentum — what's next?`;
+    }
+    if (/(good morning)/.test(q)) return `Good morning${tail}. I trust you slept well. How may I help?`;
+    if (/(good night|goodnight)/.test(q)) return `Goodnight${tail}. I'll keep watch.`;
 
     // weather
     if (/\b(weather|temperature|forecast|how (?:hot|cold|windy)|is it (?:raining|snowing|sunny))\b/.test(q)) {
@@ -734,8 +793,52 @@ Only emit an action when the user asks you to do something on the device; for or
       if (query) return { action: { type: 'play_music', query, service }, say: `Right away${tail}. Putting on ${query}${service !== 'youtube' ? ' via ' + service : ''} now.` };
     }
 
-    // open an app
-    m = low.match(/^(?:can you |could you |please )?open\s+(?:the\s+|my\s+)?([a-z0-9 .&+-]{2,30?})(?:\s+app)?$/i);
+    // save a contact ("save Rey's number as +1..., on whatsapp")
+    m = text.match(/^(?:save|add|store|remember)\s+(?:contact\s+)?([a-z0-9 .'-]+?)(?:'s)?(?:\s+(?:number|phone|contact|line))?\s+(?:as|is|=|:)?\s*(\+?[\d][\d\s()\-]{5,})(?:\s+(?:on|via|using|with)\s+([a-z ]+?))?\.?$/i);
+    if (!m) m = text.match(/^([a-z0-9 .'-]+?)(?:'s)\s+(?:number|phone)\s+is\s+(\+?[\d][\d\s()\-]{5,})(?:\s+(?:on|via|using|with)\s+([a-z ]+?))?\.?$/i);
+    if (m) {
+      const name = m[1].trim();
+      addContact(name, m[2].trim(), (m[3] || '').replace(/\bapp\b/i, '').trim());
+      return { say: `Noted${tail}. I'll remember ${name}'s number.` };
+    }
+
+    // call / facetime someone
+    m = text.match(/^(?:hey )?(?:jarvis[,\s]+)?(?:can you |could you |please )?(call|ring|dial|phone|facetime)\s+(.+?)(?:\s+(?:on|via|using|with|through)\s+([a-z ]+?)(?:\s+app)?)?\.?$/i);
+    if (m) {
+      const verb = m[1].toLowerCase();
+      const target = m[2].trim();
+      let app = (m[3] || '').toLowerCase().replace(/\bapp\b/i, '').trim();
+      if (verb === 'facetime' && !app) app = 'facetime';
+      const numMatch = target.match(/\+?\d[\d\s()\-]{5,}/);
+      if (numMatch) {
+        return { action: { type: 'call', number: numMatch[0], app, name: target }, say: `${app === 'facetime' ? 'FaceTiming' : 'Calling'} ${target}${app && app !== 'facetime' && app !== 'phone' ? ' on ' + app : ''}${tail}.` };
+      }
+      const c = findContact(target);
+      if (c) {
+        const useApp = app || c.app || '';
+        return { action: { type: 'call', number: c.number, app: useApp, name: c.name }, say: `${useApp === 'facetime' ? 'FaceTiming' : 'Calling'} ${c.name}${useApp && useApp !== 'facetime' && useApp !== 'phone' ? ' on ' + useApp : ''}${tail}.` };
+      }
+      if (/^[a-z][a-z .'-]{0,20}$/i.test(target) && target.split(/\s+/).length <= 2)
+        return { say: `I don't have a number for ${target}${tail}. Say "save ${target}'s number as …" and I'll remember it.` };
+      return null;
+    }
+
+    // text / message someone
+    m = text.match(/^(?:text|message|sms|whatsapp)\s+([a-z0-9 .'-]+?)(?:\s+(?:saying|that|:|-)\s+(.+))?\.?$/i);
+    if (m) {
+      const target = m[1].trim();
+      const msg = (m[2] || '').trim();
+      const numMatch = target.match(/\+?\d[\d\s()\-]{5,}/);
+      if (numMatch) return { action: { type: 'text', number: numMatch[0], message: msg, name: target }, say: `Texting ${target}${tail}.` };
+      const c = findContact(target);
+      if (c) return { action: { type: 'text', number: c.number, app: c.app, message: msg, name: c.name }, say: `Messaging ${c.name}${tail}.` };
+      if (/^[a-z][a-z .'-]{0,20}$/i.test(target) && target.split(/\s+/).length <= 2)
+        return { say: `I don't have a number for ${target}${tail}. Save it first with "save ${target}'s number as …".` };
+      return null;
+    }
+
+    // open / launch / turn on an app
+    m = low.match(/^(?:can you |could you |please )?(?:open|launch|turn on|pull up|fire up|bring up|go to|load)\s+(?:the\s+|my\s+)?([a-z0-9 .&+-]{2,30}?)(?:\s+app)?\.?$/i);
     if (m) { const app = m[1].trim(); return { action: { type: 'open_app', app }, say: `Opening ${app}${tail}.` }; }
 
     // navigate / directions
@@ -783,6 +886,14 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // Simulated incoming call (demo — a web app cannot detect real calls).
+    let scm = text.match(/\b(?:simulate|demo|fake|pretend|test)\s+(?:an?\s+)?(?:incoming\s+)?call(?:\s+from\s+(.+?))?\.?$/i);
+    if (scm) {
+      addMessage('user', text);
+      simulateIncomingCall(scm[1] ? scm[1].trim() : '');
+      return;
+    }
+
     // Direct device commands ("play …", "open …", "search …", "navigate …")
     // run in-app, instantly, in every mode. Executing here (synchronously,
     // inside the user's tap) also lets iOS actually open the target app.
@@ -790,9 +901,9 @@ Only emit an action when the user asks you to do something on the device; for or
     if (intent) {
       addMessage('user', text);
       history.push({ role: 'user', content: text });
-      addMessage('jarvis', intent.say, [intent.action]);
+      addMessage('jarvis', intent.say, intent.action ? [intent.action] : undefined);
       history.push({ role: 'assistant', content: intent.say });
-      executeAction(intent.action);
+      if (intent.action) executeAction(intent.action);
       speak(intent.say);
       maybeAutoListen();
       return;
@@ -1009,6 +1120,28 @@ Only emit an action when the user asks you to do something on the device; for or
   }
   function closeHoloScanner() {
     el.holoScanner.classList.add('hidden');
+  }
+
+  /* ---------------- Simulated incoming call (demo only) ---------------- */
+  function simulateIncomingCall(name) {
+    const who = titledName();
+    const caller = name || (loadContacts()[0] && loadContacts()[0].name) || 'an unknown number';
+    el.incallName.textContent = caller;
+    const line = `${who ? who + ', y' : 'Y'}ou're getting a call from ${caller}. Shall I pick it up for you?`;
+    el.incallJarvis.textContent = line;
+    el.incomingCall.classList.remove('hidden');
+    speak(line);
+    try { navigator.vibrate && navigator.vibrate([300, 150, 300, 150, 300]); } catch {}
+  }
+  function endIncomingCall(answered) {
+    el.incomingCall.classList.add('hidden');
+    const who = titledName();
+    const caller = el.incallName.textContent;
+    const line = answered
+      ? `Connecting you to ${caller} now${who ? ', ' + who : ''}.`
+      : `Call declined${who ? ', ' + who : ''}.`;
+    addMessage('jarvis', line);
+    speak(line);
   }
 
   /* ============================================================
@@ -1514,6 +1647,10 @@ Only emit an action when the user asks you to do something on the device; for or
         el.platformPick.querySelectorAll('.platform-opt').forEach((b) => b.classList.toggle('selected', b === btn));
       });
     });
+
+    // Simulated incoming call
+    el.incallAnswer.addEventListener('click', () => endIncomingCall(true));
+    el.incallDecline.addEventListener('click', () => endIncomingCall(false));
 
     // Holographic scanner
     el.holoClose.addEventListener('click', closeHoloScanner);

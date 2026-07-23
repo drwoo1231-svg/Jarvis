@@ -780,6 +780,39 @@ select.text-field {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-dim);
 }
 
+/* ---------- Simulated incoming call ---------- */
+.incall {
+  position: fixed; inset: 0; z-index: 80;
+  display: grid; place-items: center;
+  background: rgba(1, 5, 14, 0.9);
+  backdrop-filter: blur(10px);
+  animation: rise .3s ease;
+}
+.incall-panel {
+  width: min(360px, 90vw);
+  padding: 30px 24px;
+  text-align: center;
+}
+.incall-tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em;
+  color: var(--gold); margin-bottom: 20px;
+}
+.incall-avatar {
+  width: 92px; height: 92px; margin: 0 auto 14px;
+  display: grid; place-items: center; font-size: 44px;
+  border-radius: 50%; border: 1px solid var(--cyan-dim);
+  box-shadow: var(--glow); animation: pulse-ring 1.6s ease-in-out infinite;
+}
+.incall-name { font-size: 24px; font-weight: 600; color: #fff; }
+.incall-jarvis { margin: 12px 0 24px; color: var(--cyan-soft); font-style: italic; font-size: 14px; }
+.incall-actions { display: flex; gap: 16px; justify-content: center; }
+.incall-btn {
+  flex: 1; padding: 14px; border: none; border-radius: 30px;
+  font-size: 15px; font-weight: 600; cursor: pointer; color: #fff;
+}
+.incall-btn.answer { background: linear-gradient(120deg, #23d18b, #1aa870); }
+.incall-btn.decline { background: linear-gradient(120deg, #ff5c6c, #d63a4a); }
+
 /* ---------- Larger screens (desktop) ---------- */
 @media (min-width: 720px) {
   .hud { max-width: 720px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }

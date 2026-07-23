@@ -51,6 +51,31 @@
     drive:     { label: 'Drive',     url: () => 'https://drive.google.com' },
     notes:     { label: 'Keep',      url: () => 'https://keep.google.com' },
     amazon:    { label: 'Amazon',    url: () => 'https://www.amazon.com' },
+    safari:    { label: 'Browser',   url: () => 'https://www.google.com' },
+    browser:   { label: 'Browser',   url: () => 'https://www.google.com' },
+    snapchat:  { label: 'Snapchat',  url: () => (isIOS || isAndroid) ? 'snapchat://' : 'https://www.snapchat.com' },
+    discord:   { label: 'Discord',   url: () => 'https://discord.com/app' },
+    soundcloud:{ label: 'SoundCloud',url: () => 'https://soundcloud.com' },
+    pinterest: { label: 'Pinterest', url: () => 'https://www.pinterest.com' },
+    linkedin:  { label: 'LinkedIn',  url: () => 'https://www.linkedin.com' },
+    uber:      { label: 'Uber',      url: () => (isIOS || isAndroid) ? 'uber://' : 'https://m.uber.com' },
+    lyft:      { label: 'Lyft',      url: () => (isIOS || isAndroid) ? 'lyft://' : 'https://www.lyft.com' },
+    doordash:  { label: 'DoorDash',  url: () => 'https://www.doordash.com' },
+    'app store': { label: 'App Store', url: () => 'https://apps.apple.com' },
+    facetime:  { label: 'FaceTime',  url: () => 'facetime://' },
+    line:      { label: 'LINE',      url: () => 'line://' },
+    wechat:    { label: 'WeChat',    url: () => 'weixin://' },
+    zoom:      { label: 'Zoom',      url: () => 'https://zoom.us' },
+    slack:     { label: 'Slack',     url: () => 'https://app.slack.com' },
+    paypal:    { label: 'PayPal',    url: () => 'https://www.paypal.com' },
+    venmo:     { label: 'Venmo',     url: () => (isIOS || isAndroid) ? 'venmo://' : 'https://venmo.com' },
+    'cash app':{ label: 'Cash App',  url: () => 'https://cash.app' },
+    github:    { label: 'GitHub',    url: () => 'https://github.com' },
+    chatgpt:   { label: 'ChatGPT',   url: () => 'https://chat.openai.com' },
+    weather:   { label: 'Weather',   url: () => 'https://weather.com' },
+    calculator:{ label: 'Calculator',url: () => 'https://www.google.com/search?q=calculator' },
+    'youtube music': { label: 'YT Music', url: () => 'https://music.youtube.com' },
+    'apple maps': { label: 'Apple Maps', url: () => 'https://maps.apple.com' },
   };
 
   function musicUrl(query, service) {
@@ -101,13 +126,27 @@
       }
       case 'call': {
         const num = String(action.number || '').replace(/[^\d+*#]/g, '');
+        const app = String(action.app || '').toLowerCase().trim();
+        const who = action.name || action.number || '';
         if (!num) return null;
-        return { kind: 'link', label: `Call ${action.number}`, url: `tel:${num}`, auto: true };
+        const digits = num.replace(/\D/g, '');
+        if (app === 'facetime')
+          return { kind: 'link', label: `FaceTime ${who}`, url: `facetime://${num}`, auto: true };
+        if (app === 'facetime audio' || app === 'facetime-audio')
+          return { kind: 'link', label: `FaceTime ${who}`, url: `facetime-audio://${num}`, auto: true };
+        if (app === 'whatsapp')
+          return { kind: 'link', label: `WhatsApp ${who}`, url: `https://wa.me/${digits}`, auto: true };
+        return { kind: 'link', label: `Call ${who}`, url: `tel:${num}`, auto: true };
       }
       case 'text': {
         const num = String(action.number || '').replace(/[^\d+*#]/g, '');
+        const app = String(action.app || '').toLowerCase().trim();
+        const who = action.name || action.number || '';
+        const digits = num.replace(/\D/g, '');
+        if (app === 'whatsapp')
+          return { kind: 'link', label: `WhatsApp ${who}`.trim(), url: `https://wa.me/${digits}${action.message ? '?text=' + enc(action.message) : ''}`, auto: true };
         const body = action.message ? `${isIOS ? '&' : '?'}body=${enc(action.message)}` : '';
-        return { kind: 'link', label: `Text ${action.number || ''}`.trim(), url: `sms:${num}${body}`, auto: true };
+        return { kind: 'link', label: `Text ${who}`.trim(), url: `sms:${num}${body}`, auto: true };
       }
       case 'email': {
         const to = enc(action.to || '');

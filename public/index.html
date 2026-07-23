@@ -160,6 +160,20 @@
         <div class="holo-foot">JARVIS · optical + semantic analysis · files stay on your device</div>
       </div>
     </div>
+
+    <!-- Simulated incoming call (a demo — a web app can't detect real calls) -->
+    <div id="incomingCall" class="incall hidden">
+      <div class="incall-panel glass">
+        <div class="incall-tag">INCOMING CALL · SIMULATION</div>
+        <div class="incall-avatar" id="incallAvatar">👤</div>
+        <div class="incall-name" id="incallName">Unknown</div>
+        <div class="incall-jarvis" id="incallJarvis"></div>
+        <div class="incall-actions">
+          <button id="incallDecline" class="incall-btn decline" aria-label="Decline">Decline</button>
+          <button id="incallAnswer" class="incall-btn answer" aria-label="Answer">Answer</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- ===================== RESEARCH FILES ===================== -->
