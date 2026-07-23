@@ -103,7 +103,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.3 · iOS music fix';
+  const APP_VERSION = 'v2.4 · web search, visual pull-up, adaptive analysis';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -985,6 +985,25 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // Visual pull-up — "show me / pull up a picture of X" (internet or files).
+    let vm = text.match(/^(?:show me|pull up|bring up|find me|get me|display|pull)\s+(?:an?\s+|the\s+)?(?:picture|photo|image|pic|visual)\s+(?:of\s+|for\s+|showing\s+)?(.+?)\??$/i);
+    if (!vm) { const vv = text.match(/^what (?:does|do)\s+(.+?)\s+look like\??$/i); if (vv) vm = vv; }
+    if (vm) {
+      addMessage('user', text);
+      const q = vm[1].trim();
+      if (/\b(my )?(files?|gallery|photos?|camera roll|device|phone|folder)\b/i.test(q)) {
+        addMessage('jarvis', `Select a picture to pull up${addressWord() ? ', ' + addressWord() : ''}.`);
+        pickImage();
+      } else {
+        showVisual(q);
+      }
+      return;
+    }
+
+    // Web-search answer — actually summarises, keyless (Wikipedia) + link.
+    let wm = text.match(/^(?:search the web for|web search|research|look up|find out about|tell me about)\s+(.+?)\??$/i);
+    if (wm) { addMessage('user', text); webAnswer(wm[1].trim()); return; }
+
     // System diagnostics — JARVIS reports its real host hardware.
     if (/\b(run |full |system )?(diagnostics?|self[- ]?test|system check)\b/i.test(text) ||
         /\b(hardware|system) (report|check|specs?|info)\b/i.test(text) ||
@@ -1590,38 +1609,224 @@ Only emit an action when the user asks you to do something on the device; for or
     speak(line.slice(0, 220));
   }
 
-  /* ---- Image analysis (upload / drop) ---- */
-  function pickImage() { el.imageInput.click(); }
+  /* ---- Live "thinking" steps + confidence ---- */
+  function startThinking(steps) {
+    const div = document.createElement('div');
+    div.className = 'msg jarvis';
+    div.innerHTML = '<span class="who">JARVIS</span><span class="think"></span>';
+    const span = div.querySelector('.think');
+    el.log.appendChild(div);
+    el.log.scrollTop = el.log.scrollHeight;
+    let i = 0;
+    span.innerHTML = escapeHtml(steps[0]) + ' <span class="dotpulse">…</span>';
+    setStatus('ANALYZING', 'analyzing'); Core.setState('analyzing'); Core.setAmplitude(0.4);
+    const iv = setInterval(() => {
+      i++;
+      if (i < steps.length) { span.innerHTML = escapeHtml(steps[i]) + ' <span class="dotpulse">…</span>'; el.log.scrollTop = el.log.scrollHeight; }
+    }, 700);
+    return {
+      finish(text, confidence) {
+        clearInterval(iv);
+        span.innerHTML = escapeHtml(text || 'Complete.');
+        if (confidence != null) {
+          const c = document.createElement('span');
+          c.className = 'confidence ' + (confidence >= 90 ? 'hi' : confidence >= 65 ? 'mid' : 'lo');
+          c.textContent = confidence + '%';
+          span.appendChild(document.createTextNode(' '));
+          span.appendChild(c);
+        }
+        setStatus('SYSTEM ONLINE', ''); Core.setState('idle'); Core.setAmplitude(0);
+        el.log.scrollTop = el.log.scrollHeight;
+      },
+    };
+  }
 
-  function handleImageFile(file) {
-    if (!file) return;
-    if (/^image\//.test(file.type)) {
-      const reader = new FileReader();
-      reader.onload = () => analyzeImage(reader.result, file.type, file.name);
-      reader.readAsDataURL(file);
+  /* ---- Web-search answer (keyless: Wikipedia snippet + link) ---- */
+  async function webAnswer(query) {
+    const tail = addressWord() ? ', ' + addressWord() : '';
+    const t = startThinking(['Querying the web', 'Retrieving sources', 'Summarising findings']);
+    const data = await fetchWiki(query).catch(() => null);
+    if (data && data.extract) {
+      lastAnalysisSubject = data.title;
+      t.finish('Here is what I found on ' + data.title + ':', 95);
+      addMessage('jarvis', data.extract.slice(0, 500), [{ type: 'search_web', query }]);
+      speak(`Here is what I found on ${data.title}${tail}.`);
     } else {
-      analyzeDocument(file);
+      t.finish("I couldn't summarise that from my sources — opening full web results.", 40);
+      addMessage('jarvis', '', [{ type: 'search_web', query }]);
+      Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(query));
     }
   }
 
-  // Non-image files: identify by type/metadata and offer to file (keyless).
-  function analyzeDocument(file) {
+  /* ---- Visual pull-up (a picture from the internet) ---- */
+  async function showVisual(query) {
+    const tail = addressWord() ? ', ' + addressWord() : '';
+    const t = startThinking(['Searching visual archives', 'Retrieving imagery', 'Rendering']);
+    const data = await fetchWiki(query).catch(() => null);
+    if (data && data.image) {
+      lastAnalysisSubject = data.title;
+      t.finish('Pulled up ' + data.title + '.', 96);
+      renderVisualCard(data);
+      speak(`Here is ${data.title}${tail}.`);
+    } else {
+      t.finish("I couldn't pull that from my archives — opening image results.", 45);
+      addMessage('jarvis', '', [{ type: 'open_url', url: 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(query) }]);
+      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(query));
+    }
+  }
+  function renderVisualCard(data) {
+    const card = document.createElement('div');
+    card.className = 'analysis-card';
+    const media = data.image ? `<div class="analysis-media"><img src="${data.image}" alt="" referrerpolicy="no-referrer"/><span class="scanline"></span></div>` : '';
+    card.innerHTML = `<div class="analysis-head"><span class="scan-dot"></span>Visual</div>` + media +
+      `<div class="analysis-body"><div class="analysis-title">${escapeHtml(data.title || '')}</div>` +
+      `<div class="analysis-text">${escapeHtml((data.extract || '').split('. ').slice(0, 2).join('. '))}</div>` +
+      `<div class="analysis-actions"></div></div>`;
+    el.log.appendChild(card);
+    el.log.scrollTop = el.log.scrollHeight;
+    const actions = card.querySelector('.analysis-actions');
+    const analyse = document.createElement('button'); analyse.className = 'affirm'; analyse.textContent = 'Analyse this';
+    analyse.addEventListener('click', () => { lastAnalysisSubject = data.title; runAnalysis(data.title); });
+    const web = document.createElement('button'); web.textContent = 'More on the web';
+    web.addEventListener('click', () => Actions.autoOpen('https://www.google.com/search?q=' + encodeURIComponent(data.title || '')));
+    actions.append(analyse, web);
+  }
+
+  /* ---- Adaptive analysis: detect type and route ---- */
+  function pickImage() { el.imageInput.click(); }
+  function round(n) { return Math.round(n * 100) / 100; }
+  function detectFileKind(file) {
+    const name = (file.name || '').toLowerCase();
+    const type = file.type || '';
+    if (/^image\//.test(type)) return 'image';
+    if (/\.(csv|tsv)$/.test(name) || type === 'text/csv') return 'sheet';
+    if (/\.(js|mjs|ts|jsx|tsx|py|java|c|cpp|h|cs|go|rb|php|rs|swift|kt|html|css|json|xml|sh|sql|ya?ml|toml)$/.test(name)) return 'code';
+    if (/\.(txt|md|markdown|log|rtf)$/.test(name) || /^text\//.test(type)) return 'text';
+    if (/\.pdf$/.test(name) || type === 'application/pdf') return 'pdf';
+    if (/^audio\//.test(type) || /\.(mp3|wav|m4a|ogg|flac|aac)$/.test(name)) return 'audio';
+    if (/^video\//.test(type) || /\.(mp4|mov|avi|mkv|webm)$/.test(name)) return 'video';
+    if (/\.(xlsx|xls)$/.test(name)) return 'sheet-bin';
+    if (/\.(docx?|pptx?)$/.test(name)) return 'office';
+    return 'file';
+  }
+  function kindLabel(k) {
+    return ({ image: 'image', sheet: 'spreadsheet', 'sheet-bin': 'spreadsheet', code: 'source code',
+      text: 'document', pdf: 'PDF', audio: 'audio', video: 'video', office: 'office document', file: 'file' }[k]) || 'file';
+  }
+
+  function handleImageFile(file) {
+    if (!file) return;
+    const kind = detectFileKind(file);
+    if (kind === 'image') {
+      const r = new FileReader(); r.onload = () => analyzeImage(r.result, file.type, file.name); r.readAsDataURL(file); return;
+    }
+    if (kind === 'text' || kind === 'code' || kind === 'sheet') {
+      const r = new FileReader(); r.onload = () => analyzeTextFile(String(r.result), file, kind); r.readAsText(file); return;
+    }
+    analyzeDocument(file, kind); // pdf / audio / video / office / xlsx / other
+  }
+
+  function renderFileCard(title, kind, icon) {
+    const card = document.createElement('div');
+    card.className = 'analysis-card';
+    card.innerHTML = `<div class="analysis-head"><span class="scan-dot"></span>Analysis · ${escapeHtml(kindLabel(kind))}</div>` +
+      `<div class="analysis-body"><div class="analysis-title">${icon} ${escapeHtml(title)}</div>` +
+      `<div class="analysis-text" style="white-space:pre-wrap"></div><div class="analysis-actions"></div></div>`;
+    el.log.appendChild(card); el.log.scrollTop = el.log.scrollHeight;
+    return card;
+  }
+
+  // Text / code / CSV — read contents in-browser (keyless) and, if a brain is
+  // connected, run a real review/summary.
+  async function analyzeTextFile(content, file, kind) {
     closeHoloScanner();
-    const who = titledName();
+    const who = titledName(); const tail = who ? ', ' + who : '';
+    const name = file.name;
+    const steps = kind === 'sheet' ? ['Parsing rows', 'Detecting columns', 'Computing statistics', 'Finding trends']
+      : kind === 'code' ? ['Reading source', 'Mapping structure', 'Scanning for issues']
+        : ['Reading document', 'Extracting text', 'Analysing language'];
+    const t = startThinking(steps);
+
+    const lines = content.split(/\r?\n/);
+    let summary = '';
+    if (kind === 'sheet') {
+      const rows = lines.filter((l) => l.trim().length);
+      const headers = (rows[0] || '').split(/[,\t]/).map((s) => s.trim());
+      const dataRows = rows.slice(1).map((r) => r.split(/[,\t]/));
+      const stats = headers.map((h, ci) => {
+        const nums = dataRows.map((r) => parseFloat((r[ci] || '').replace(/[^0-9.\-]/g, ''))).filter((n) => isFinite(n));
+        if (nums.length >= Math.max(2, dataRows.length * 0.5)) {
+          const sum = nums.reduce((a, b) => a + b, 0);
+          return `${h || 'col'}: min ${round(Math.min(...nums))}, max ${round(Math.max(...nums))}, avg ${round(sum / nums.length)}`;
+        }
+        return null;
+      }).filter(Boolean);
+      summary = `${Math.max(0, rows.length - 1)} rows × ${headers.length} columns.\nColumns: ${headers.join(', ')}.` +
+        (stats.length ? `\n\nNumeric summary:\n• ${stats.join('\n• ')}` : '');
+    } else if (kind === 'code') {
+      const lang = (name.split('.').pop() || '').toUpperCase();
+      const fns = (content.match(/\b(function|def|func|class|=>)\b/g) || []).length;
+      const todos = (content.match(/\b(TODO|FIXME|HACK|XXX)\b/g) || []).length;
+      summary = `${lang} source · ${lines.length} lines · ~${fns} functions/blocks${todos ? ` · ${todos} TODO/FIXME markers` : ''}.`;
+    } else {
+      const words = (content.trim().match(/\S+/g) || []).length;
+      summary = `${words} words · ${lines.length} lines.\nOpening: "${content.trim().slice(0, 200).replace(/\s+/g, ' ')}…"`;
+    }
+
+    let deep = '';
+    const connected = (cfg.state.mode === 'direct' && cfg.state.apiKey) || cfg.state.mode === 'server';
+    if (connected) {
+      try {
+        const prompt = kind === 'code'
+          ? `Review this file "${name}" concisely in your butler voice — note bugs, security issues, and improvements:\n\n${content.slice(0, 6000)}`
+          : kind === 'sheet'
+            ? `Summarise the trends and anomalies in this data in your butler voice:\n\n${content.slice(0, 6000)}`
+            : `Summarise this document's key points and any risks in your butler voice:\n\n${content.slice(0, 6000)}`;
+        deep = parseActions((await callModel([{ role: 'user', content: prompt }])) || '').clean;
+      } catch { /* keyless summary only */ }
+    }
+
+    t.finish(`Analysis complete — ${kindLabel(kind)} detected.`, connected ? 97 : 82);
+    const icon = kind === 'sheet' ? '📊' : kind === 'code' ? '💻' : '📄';
+    const card = renderFileCard(name, kind, icon);
+    card.querySelector('.analysis-text').textContent = summary + (deep ? '\n\n' + deep : (connected ? '' : '\n\n(Connect a brain in Settings for a full review.)'));
+    const say = `Analysis complete${tail}. I've detected a ${kindLabel(kind)}${connected ? '' : ' — connect a brain for a deep review'}.`;
+    addMessage('jarvis', say); speak(say);
+    buildConfirmedActions(card.querySelector('.analysis-actions'), { title: name, image: '', extract: summary, type: 'document' });
+  }
+
+  // pdf / audio / video / office / other — identify + honest about depth.
+  function analyzeDocument(file, kind) {
+    closeHoloScanner();
+    const who = titledName(); const tail = who ? ', ' + who : '';
+    kind = kind || detectFileKind(file);
     const ext = (file.name.split('.').pop() || 'file').toUpperCase();
     const kb = Math.max(1, Math.round(file.size / 1024));
     const size = kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : kb + ' KB';
-    const desc = `This is a ${ext} document — "${file.name}", ${size}. I can't read its contents without a connected brain, but I can file and organise it${who ? ', ' + who : ''}.`;
-    renderAnalysisCard({ title: file.name, image: '', extract: desc }, { image: false });
-    const cards = el.log.querySelectorAll('.analysis-card');
-    const card = cards[cards.length - 1];
-    const actions = card.querySelector('.analysis-actions');
-    const textEl = card.querySelector('.analysis-text');
-    textEl.textContent = desc;
-    actions.innerHTML = '';
-    addMessage('jarvis', desc);
-    speak(`This is a ${ext} document.`);
-    buildConfirmedActions(actions, { title: file.name, image: '', extract: desc, type: 'document' });
+    const t = startThinking(['Reading header', 'Identifying format', 'Assessing content']);
+    const icon = kind === 'pdf' ? '📄' : kind === 'audio' ? '🎵' : kind === 'video' ? '🎥' : kind === 'office' ? '📝' : '📄';
+    const need = (kind === 'pdf' || kind === 'office') ? 'a connected brain to read its contents'
+      : kind === 'audio' ? 'a connected transcription brain to hear it'
+        : kind === 'video' ? 'a connected brain to watch it' : 'a connected brain to read it';
+    const desc = `Detected a ${kindLabel(kind)} — "${file.name}", ${size} (${ext}). I can file and organise it now; a full read/summary needs ${need}.`;
+    t.finish(`Detected: ${kindLabel(kind)}.`, 70);
+    const card = renderFileCard(file.name, kind, icon);
+    card.querySelector('.analysis-text').textContent = desc;
+    addMessage('jarvis', `I've detected a ${kindLabel(kind)}${tail}.`); speak(`I've detected a ${kindLabel(kind)}${tail}.`);
+    buildConfirmedActions(card.querySelector('.analysis-actions'), { title: file.name, image: '', extract: desc, type: 'document' });
+  }
+
+  // Keyless in-browser OCR via Tesseract.js (loaded on demand).
+  async function ocrImage(dataUrl) {
+    if (!window.Tesseract) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+        s.onload = res; s.onerror = rej; document.head.appendChild(s);
+      });
+    }
+    const r = await window.Tesseract.recognize(dataUrl, 'eng');
+    return (r && r.data && r.data.text || '').trim();
   }
 
   async function analyzeImage(dataUrl, mime, name) {
@@ -1642,21 +1847,24 @@ Only emit an action when the user asks you to do something on the device; for or
     yes.textContent = 'Yes, analyse it';
     yes.addEventListener('click', async () => {
       actions.innerHTML = '';
-      textEl.textContent = 'Analysing…';
-      setStatus('ANALYZING', 'analyzing');
-      let desc = '';
-      try {
-        desc = await visionDescribe(dataUrl, mime);
-      } catch (e) { desc = ''; }
-      setStatus('SYSTEM ONLINE', '');
-      if (!desc) {
-        desc = 'Full visual analysis needs a vision-capable cloud provider (Claude, Gemini, or GPT) in Direct mode. I\'ve filed the image regardless.';
+      const connected = cfg.state.mode === 'direct' && cfg.state.apiKey;
+      const t = startThinking(connected
+        ? ['Extracting visual elements', 'Detecting objects', 'Reading any text', 'Identifying scene']
+        : ['Extracting visual elements', 'Running on-device OCR', 'Reading text']);
+      let desc = '', conf = 55;
+      if (connected) {
+        try { desc = await visionDescribe(dataUrl, mime); if (desc) conf = 96; } catch { desc = ''; }
       }
-      textEl.textContent = desc;
+      let ocr = '';
+      if (!connected) { try { ocr = await ocrImage(dataUrl); if (ocr) conf = 80; } catch { ocr = ''; } }
+      let out = desc || 'Full scene identification (objects, people, what is happening) needs a connected vision brain — Gemini\'s free tier, Claude, or GPT. Keyless, I read text and organise the image.';
+      if (ocr) out += `\n\nText detected (OCR): "${ocr.slice(0, 400)}"`;
+      t.finish('Analysis complete — image processed.', conf);
+      textEl.textContent = out;
       const follow = `How may I help you with this${who ? ', ' + who : ''}?`;
       addMessage('jarvis', follow);
       speak(follow);
-      buildConfirmedActions(actions, { title: name || 'Uploaded image', image: dataUrl, extract: desc, type: 'photo' });
+      buildConfirmedActions(actions, { title: name || 'Uploaded image', image: dataUrl, extract: out, type: 'photo' });
     });
     const no = document.createElement('button');
     no.textContent = 'No';
