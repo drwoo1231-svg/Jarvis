@@ -1,7 +1,7 @@
 /* JARVIS — service worker: cache the app shell for offline launch.
    Network-first for navigation and API; cache-first for static assets. */
 
-const CACHE = 'jarvis-v19';
+const CACHE = 'jarvis-v20';
 const SHELL = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const SHELL = [
   './voice.js',
   './actions.js',
   './ondevice.js',
+  './panels.js',
   './app.js',
   './manifest.webmanifest',
   './icons/icon.svg',

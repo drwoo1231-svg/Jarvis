@@ -30,8 +30,25 @@ same code runs beautifully on your computer too. No app store required.
   87% confidence,"* with a probability bar-chart and a reference photo pulled
   up beside the core. If it can't be sure, JARVIS drops into **focus mode** and
   searches it on Google for you.
-- 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core, live
-  telemetry readouts (clock, mode, model, signal), a radar sweep and a
+- 🧲 **Movable holographic desktop (v2.7).** Every panel is a draggable
+  hologram — drag it anywhere with inertia, optional **snap-to-grid**, and it
+  **remembers where you put it**. Double-click a panel's title bar to send it
+  home; hit the **lock** button to pin the layout. The **＋ widget library**
+  adds or removes panels: Clock, Weather, System Status, Applications, JARVIS
+  Log, World Map, Notes, Calculator, Music and the Dog Assistant. Ask JARVIS
+  too — *"lock the layout"*, *"reset my layout"*, *"open the widget library"*,
+  *"add the calculator widget"*.
+- 🎵 **Music player with real transport.** The spinning-disk player now has
+  **⏮ · −10s · ▶/⏸ · +10s · ⏭**, a **seekable progress bar**, volume, shuffle,
+  repeat and favourite — driven by the YouTube player so rewind/fast-forward
+  actually work.
+- 🐾 **Dog Assistant.** A little dog icon expands into a dashboard — camera,
+  mood, hunger, water, sleep, last walk and treat counter (camera and GPS are
+  simulated until you connect real hardware).
+- 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core wrapped in a
+  **colour-coded status ring** (blue idle · cyan listening · amber thinking ·
+  purple searching · white speaking · red warning), ambient floating particles,
+  animated scan lines and mouse-responsive lighting, a radar sweep and a
   waveform that reacts to your voice.
 - 🖥️ **PC / Desktop mode.** Pick Mobile or Desktop on the start screen. Desktop
   gives a wider ops console with a much larger sphere — and a **holographic

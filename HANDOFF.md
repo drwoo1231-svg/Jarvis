@@ -133,8 +133,34 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   confidence", pulls a reference image into the display panel, and drops into
   focus mode (Google image search) when confidence < 18% or the model is offline.
   Keyless: TF.js + MobileNet from CDN, cached in `_mobilenet`.
+- Layout / widgets (v2.7): `lock the layout`, `unlock the layout`,
+  `reset my layout`, `snap to grid`, `open the widget library`,
+  `show/hide the <clock|weather|system|applications|calculator|notes|world map|music|log> widget`,
+  `show the dog`. Handled directly in `sendMessage` (the Layout/widgets block).
 - Misc: `what's 25 times 8`, `weather in Tokyo`, `define serendipity`,
   `who is Ada Lovelace`, `inspire me`, `simulate a call from Pepper`.
+
+### v2.7 — movable holographic interface (added on top of the single-column HUD)
+- `public/panels.js` (`window.JarvisPanels`): turns any element into a draggable
+  hologram — pointer drag + capped inertia, snap-to-grid, per-panel persistence
+  (`jarvis.layout.v1` as `{id:{dx,dy}}`), bring-to-front, double-click-title
+  reset, global lock (`jarvis.layoutprefs.v1`). Movement is a `translate3d`
+  offset ON TOP of each panel's CSS position, so the three overlay panels
+  (`#displayPanel`, `.np-panel`, `.holo-panel`) had their transform-based
+  centering changed to `margin-inline:auto` / fixed `top` so the offset is
+  purely additive — keep it that way.
+- Dashboard widgets live in `#dashboard` in `index.html`; `initDashboard()` in
+  app.js wires drag, the `＋` widget library (`#widgetLib`, `WIDGETS` array,
+  visibility persisted in `jarvis.widgets.v1`, default set differs PC vs mobile),
+  per-widget updaters (clock, weather via open-meteo, system status, apps grid,
+  world-map dots, notes, calculator), the dog companion, music transport and
+  the ambient particle canvas + mouse-light (`initAmbient()`).
+- Music: `playVideoId` now uses the **YouTube IFrame API** (`ytPlayer`) so
+  −10/+10/play-pause/volume/seek are real; `musicHistory`/`musicIdx` back
+  prev/next; falls back to a plain embed if the API can't load. Disk design
+  unchanged (the user asked NOT to redesign it).
+- Core status ring: `body[data-core]` (set in `setStatus`) drives the `--ring`
+  colour on `.core-ring`; `jarvis-core.js` PALETTE gained `searching`/`warning`.
 
 ---
 

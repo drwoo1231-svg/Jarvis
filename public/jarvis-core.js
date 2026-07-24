@@ -10,8 +10,10 @@
     idle:      { r: 70,  g: 170, b: 255 },
     listening: { r: 90,  g: 220, b: 255 },
     thinking:  { r: 255, g: 200, b: 110 },
-    speaking:  { r: 120, g: 210, b: 255 },
+    speaking:  { r: 235, g: 245, b: 255 },
+    searching: { r: 170, g: 120, b: 255 },
     analyzing: { r: 150, g: 130, b: 255 },
+    warning:   { r: 255, g: 90,  b: 90  },
   };
 
   let canvas, ctx, dpr = 1;

@@ -41,6 +41,33 @@
     npDisk: $('npDisk'),
     npTitle: $('npTitle'),
     npViz: $('npViz'),
+    npProgress: $('npProgress'),
+    npBar: $('npBar'),
+    npCur: $('npCur'),
+    npDur: $('npDur'),
+    npPrev: $('npPrev'),
+    npBack: $('npBack'),
+    npPlay: $('npPlay'),
+    npFwd: $('npFwd'),
+    npNext: $('npNext'),
+    npShuffle: $('npShuffle'),
+    npRepeat: $('npRepeat'),
+    npFav: $('npFav'),
+    npVol: $('npVol'),
+
+    widgetsBtn: $('widgetsBtn'),
+    lockBtn: $('lockBtn'),
+    dashboard: $('dashboard'),
+    widgetLib: $('widgetLib'),
+    wlGrid: $('wlGrid'),
+    wlClose: $('wlClose'),
+    wlSnap: $('wlSnap'),
+    wlReset: $('wlReset'),
+    dogFab: $('dogFab'),
+    dogPanel: $('dogPanel'),
+    dogClose: $('dogClose'),
+    bgParticles: $('bgParticles'),
+    mouseLight: $('mouseLight'),
 
     hud: $('hud'),
     statusText: $('statusText'),
@@ -107,7 +134,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.6 · identify (x-ray scan + probability breakdown)';
+  const APP_VERSION = 'v2.7 · movable holographic panels + widget library';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -144,10 +171,31 @@
   function setStatus(text, cls) {
     el.statusText.textContent = text;
     el.statusText.className = 'status-text' + (cls ? ' ' + cls : '');
-    if (cls === 'listening') Core.setState('listening');
-    else if (cls === 'thinking') Core.setState('thinking');
-    else if (cls === 'speaking') Core.setState('speaking');
-    else Core.setState('idle');
+    // Map the status class to a core visual state (drives the colored ring too).
+    const state = cls === 'listening' ? 'listening'
+      : cls === 'thinking' ? 'thinking'
+        : cls === 'speaking' ? 'speaking'
+          : cls === 'searching' ? 'searching'
+            : cls === 'analyzing' ? 'analyzing'
+              : cls === 'warning' ? 'warning'
+                : 'idle';
+    Core.setState(state);
+    document.body.setAttribute('data-core', state);
+    jlog(text);
+  }
+
+  // Rolling JARVIS log used by the LOG widget.
+  const _jlog = [];
+  function jlog(text) {
+    if (!text) return;
+    const stamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    _jlog.unshift({ t: stamp, m: text });
+    if (_jlog.length > 30) _jlog.pop();
+    const body = document.getElementById('wlBody');
+    if (body) {
+      body.innerHTML = _jlog.slice(0, 12).map((e) =>
+        `<div class="jl-row"><span class="jl-t">${e.t}</span><span class="jl-m">${escapeHtml(e.m)}</span></div>`).join('');
+    }
   }
 
   /* ---------------- Message rendering ---------------- */
@@ -523,7 +571,10 @@ Your replies are spoken aloud with a British butler's voice and shown on screen.
 # Device Control
 You run inside an app on the user's phone and computer. To act on the device, emit one or more directives, each on its own line, as: <action>{"type":"...", ...}</action>. The app strips these before showing/speaking your reply, then performs them. Always also give a short spoken confirmation.
 Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; search_web {query}; open_url {url}; navigate {destination}; call {number}; text {number,message}; email {to,subject,body}; timer {seconds,label}.
-Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.`;
+Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
+
+# Holographic Interface (v2.7)
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -1043,6 +1094,44 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // Layout / widgets / dog — the movable holographic interface.
+    {
+      const who = titledName(); const t2 = who ? ', ' + who : '';
+      if (/\b(lock|unlock)\s+(the\s+)?(layout|panels?|widgets?)\b/i.test(text) || /\block\s+(the\s+)?(layout|panels?)\b/i.test(text)) {
+        addMessage('user', text);
+        const wantLock = /\block\b/i.test(text) && !/\bunlock\b/i.test(text);
+        Panels.setLock(wantLock); syncLockBtn();
+        const l = wantLock ? `Layout locked${t2}. Panels are pinned in place.` : `Layout unlocked${t2} — drag any panel where you like.`;
+        addMessage('jarvis', l); speak(l); return;
+      }
+      if (/\breset\s+(the\s+|my\s+)?(layout|panels?|widgets?)\b/i.test(text)) {
+        addMessage('user', text); Panels.resetAll();
+        const l = `Layout restored to defaults${t2}.`; addMessage('jarvis', l); speak(l); return;
+      }
+      if (/\bsnap\s+to\s+grid\b|\bgrid\s+snap\b/i.test(text)) {
+        addMessage('user', text); const on = /\b(off|disable|stop)\b/i.test(text) ? (Panels.setSnap(false), false) : (Panels.setSnap(true), true);
+        el.wlSnap.textContent = 'Snap to grid: ' + (on ? 'On' : 'Off');
+        const l = `Snap-to-grid ${on ? 'enabled' : 'disabled'}${t2}.`; addMessage('jarvis', l); speak(l); return;
+      }
+      if (/\b(open|show|bring up)\s+(the\s+)?widget\s+(library|menu|list)\b|\badd\s+a\s+widget\b|\bwidget\s+library\b/i.test(text)) {
+        addMessage('user', text); el.widgetLib.classList.remove('hidden');
+        const l = `Widget library open${t2}. Tap a widget to add or remove it.`; addMessage('jarvis', l); speak(l); return;
+      }
+      if (/\b(show|open|bring up|expand)\s+(the\s+|my\s+)?dog\b/i.test(text)) {
+        addMessage('user', text); setWidgetVisible('dogPanel', true);
+        const l = `Here's the dog dashboard${t2}.`; addMessage('jarvis', l); speak(l); return;
+      }
+      const wm2 = text.match(/\b(show|add|open|display|hide|remove|close)\s+(?:the\s+|my\s+)?(clock|time|weather|system|status|applications?|apps|calculator|calc|notes?|world\s*map|map|music|log)\b(?:\s+(widget|panel))?/i);
+      if (wm2 && (wm2[3] || /\b(widget|panel)\b/i.test(text))) {
+        addMessage('user', text);
+        const map = { clock: 'wTime', time: 'wTime', weather: 'wWeather', system: 'wSystem', status: 'wSystem', application: 'wApps', applications: 'wApps', app: 'wApps', apps: 'wApps', calculator: 'wCalc', calc: 'wCalc', note: 'wNotes', notes: 'wNotes', worldmap: 'wMap', map: 'wMap', music: 'nowPlaying', log: 'wLog' };
+        const key = wm2[2].toLowerCase().replace(/\s+/g, '');
+        const id = map[key];
+        const hide = /\b(hide|remove|close)\b/i.test(wm2[1]);
+        if (id) { setWidgetVisible(id, !hide); const l = `${hide ? 'Hid' : 'Added'} the ${wm2[2]} ${wm2[3] || 'panel'}${t2}.`; addMessage('jarvis', l); speak(l); return; }
+      }
+    }
+
     // Visual pull-up — "show me / pull up a picture of X" (internet or files).
     let vm = text.match(/^(?:show me|pull up|bring up|find me|get me|display|pull)\s+(?:an?\s+|the\s+)?(?:picture|photo|image|pic|visual)\s+(?:of\s+|for\s+|showing\s+)?(.+?)\??$/i);
     if (!vm) { const vv = text.match(/^what (?:does|do)\s+(.+?)\s+look like\??$/i); if (vv) vm = vv; }
@@ -1377,7 +1466,15 @@ Only emit an action when the user asks you to do something on the device; for or
     el.holoScanner.classList.add('hidden');
   }
 
-  /* ---------------- In-app music player (spinning disk) ---------------- */
+  /* ---------------- In-app music player (spinning disk) ----------------
+     The disk design is unchanged; on top of it we drive a real YouTube
+     IFrame player so the transport controls (−10s / +10s / play-pause /
+     volume / seek) actually work. Falls back to a plain embed if the API
+     can't load. */
+  let ytPlayer = null, npTick = null, npRepeat = false, npShuffle = false;
+  const musicHistory = [];     // { id, title } session queue for prev/next
+  let musicIdx = -1;
+
   function showNowPlaying(title) {
     if (!el.npViz.childElementCount) {
       let bars = '';
@@ -1390,15 +1487,107 @@ Only emit an action when the user asks you to do something on the device; for or
   }
   function closeNowPlaying() {
     el.nowPlaying.classList.add('hidden');
+    stopNpTick();
+    try { if (ytPlayer && ytPlayer.destroy) ytPlayer.destroy(); } catch { /* ignore */ }
+    ytPlayer = null;
     el.npFrame.innerHTML = '';                // stop playback
     el.npDisk.classList.remove('spinning');
+    el.nowPlaying.classList.remove('playing');
   }
-  function playVideoId(id, title) {
-    el.npFrame.innerHTML =
-      `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0" ` +
-      `title="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-    el.npDisk.classList.add('spinning');
+
+  function loadYTApi() {
+    return new Promise((resolve) => {
+      if (window.YT && window.YT.Player) return resolve(true);
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { try { prev && prev(); } catch { /* */ } resolve(true); };
+      if (!document.getElementById('yt-iframe-api')) {
+        const s = document.createElement('script');
+        s.id = 'yt-iframe-api'; s.src = 'https://www.youtube.com/iframe_api';
+        s.onerror = () => resolve(false);
+        document.head.appendChild(s);
+      }
+      setTimeout(() => resolve(!!(window.YT && window.YT.Player)), 4500);
+    });
+  }
+
+  async function playVideoId(id, title, fromNav) {
     el.npTitle.textContent = title;
+    el.npDisk.classList.add('spinning');
+    el.nowPlaying.classList.add('playing');
+    if (!fromNav) {                          // record in the session queue
+      musicHistory.splice(musicIdx + 1);     // drop any forward history
+      musicHistory.push({ id, title });
+      musicIdx = musicHistory.length - 1;
+    }
+    const ok = await loadYTApi();
+    if (ok && window.YT && window.YT.Player) {
+      if (ytPlayer && ytPlayer.loadVideoById) {
+        ytPlayer.loadVideoById(id);
+        startNpTick();
+      } else {
+        el.npFrame.innerHTML = '<div id="ytplayer"></div>';
+        ytPlayer = new window.YT.Player('ytplayer', {
+          videoId: id,
+          playerVars: { autoplay: 1, playsinline: 1, rel: 0, controls: 0, modestbranding: 1, iv_load_policy: 3 },
+          events: {
+            onReady: (e) => { try { e.target.playVideo(); } catch { /* */ } applyVol(); startNpTick(); },
+            onStateChange: onYtState,
+          },
+        });
+      }
+    } else {
+      // Fallback: plain embed (no programmatic seek).
+      el.npFrame.innerHTML =
+        `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0" ` +
+        `title="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    }
+  }
+
+  function onYtState(e) {
+    const S = window.YT && window.YT.PlayerState;
+    if (!S) return;
+    if (e.data === S.PLAYING) { el.npPlay.textContent = '⏸'; el.npDisk.classList.add('spinning'); startNpTick(); }
+    else if (e.data === S.PAUSED) { el.npPlay.textContent = '▶'; el.npDisk.classList.remove('spinning'); }
+    else if (e.data === S.ENDED) {
+      el.npDisk.classList.remove('spinning');
+      if (npRepeat) { try { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); } catch { /* */ } }
+      else musicNext();
+    }
+  }
+  function fmtTime(s) {
+    s = Math.max(0, Math.floor(s || 0));
+    const m = Math.floor(s / 60); return m + ':' + String(s % 60).padStart(2, '0');
+  }
+  function startNpTick() {
+    stopNpTick();
+    npTick = setInterval(() => {
+      if (!ytPlayer || !ytPlayer.getDuration) return;
+      const cur = ytPlayer.getCurrentTime() || 0;
+      const dur = ytPlayer.getDuration() || 0;
+      el.npCur.textContent = fmtTime(cur);
+      el.npDur.textContent = fmtTime(dur);
+      el.npBar.style.width = dur ? (cur / dur * 100) + '%' : '0%';
+    }, 500);
+  }
+  function stopNpTick() { if (npTick) { clearInterval(npTick); npTick = null; } }
+  function applyVol() { try { if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(parseInt(el.npVol.value, 10)); } catch { /* */ } }
+  function musicSeek(delta) { try { if (ytPlayer && ytPlayer.getCurrentTime) ytPlayer.seekTo(Math.max(0, ytPlayer.getCurrentTime() + delta), true); } catch { /* */ } }
+  function musicToggle() {
+    try {
+      const S = window.YT && window.YT.PlayerState;
+      if (!ytPlayer || !S) return;
+      const st = ytPlayer.getPlayerState();
+      if (st === S.PLAYING) ytPlayer.pauseVideo(); else ytPlayer.playVideo();
+    } catch { /* */ }
+  }
+  function musicPrev() {
+    try { if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.getCurrentTime() > 3) { ytPlayer.seekTo(0, true); return; } } catch { /* */ }
+    if (musicIdx > 0) { musicIdx--; const it = musicHistory[musicIdx]; playVideoId(it.id, it.title, true); }
+    else musicSeek(-9999);
+  }
+  function musicNext() {
+    if (musicIdx < musicHistory.length - 1) { musicIdx++; const it = musicHistory[musicIdx]; playVideoId(it.id, it.title, true); }
+    else { try { ytPlayer && ytPlayer.seekTo(0, true); } catch { /* */ } }
   }
 
   function withTimeout(ms) {
@@ -2709,6 +2898,364 @@ Only emit an action when the user asks you to do something on the device; for or
     });
   }
 
+  /* ========================================================================
+     v2.7 — movable panels, widget library, dashboard widgets, dog companion,
+     ambient visuals. Everything below is additive to the existing HUD.
+     ======================================================================== */
+  const Panels = window.JarvisPanels;
+  const LS_WIDGETS = 'jarvis.widgets.v1';
+  const WIDGETS = [
+    { id: 'wTime', name: 'Clock', icon: '◷' },
+    { id: 'wWeather', name: 'Weather', icon: '☁' },
+    { id: 'wSystem', name: 'System', icon: '▤' },
+    { id: 'wApps', name: 'Applications', icon: '⌘' },
+    { id: 'wLog', name: 'JARVIS Log', icon: '❯' },
+    { id: 'wMap', name: 'World Map', icon: '◍' },
+    { id: 'wNotes', name: 'Notes', icon: '✎' },
+    { id: 'wCalc', name: 'Calculator', icon: '=' },
+    { id: 'nowPlaying', name: 'Music', icon: '♪' },
+    { id: 'dogPanel', name: 'Dog', icon: '🐾' },
+  ];
+
+  function initDashboard() {
+    if (!Panels) return;
+    // Make every panel draggable. Overlay panels drag from their body; widgets
+    // drag from their title bar; music drags from the NOW PLAYING tag.
+    Panels.enable(el.displayPanel, { id: 'displayPanel' });
+    const npPanel = el.nowPlaying.querySelector('.np-panel');
+    if (npPanel) Panels.enable(npPanel, { id: 'nowPlaying', handle: '.np-tag' });
+    const holoPanel = el.holoScanner.querySelector('.holo-panel');
+    if (holoPanel) Panels.enable(holoPanel, { id: 'holoScanner', handle: '.holo-title' });
+    Panels.enable(el.dogPanel, { id: 'dogPanel', handle: '.w-head' });
+    ['wTime', 'wWeather', 'wSystem', 'wApps', 'wLog', 'wMap', 'wNotes', 'wCalc'].forEach((id) => {
+      const node = document.getElementById(id);
+      if (node) Panels.enable(node, { id, handle: '.w-head' });
+    });
+    Panels.initPrefs();
+    syncLockBtn();
+
+    // Per-widget close buttons.
+    document.querySelectorAll('.widget .w-x').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        const w = e.target.closest('.widget');
+        if (w) setWidgetVisible(w.id, false);
+      });
+    });
+
+    buildWidgetLibrary();
+    buildAppsGrid();
+    buildCalc();
+    buildWorldMap();
+    initNotes();
+    initDog();
+    initMusicControls();
+    restoreWidgets();
+
+    // Widget library + layout controls.
+    el.widgetsBtn.addEventListener('click', () => el.widgetLib.classList.toggle('hidden'));
+    el.wlClose.addEventListener('click', () => el.widgetLib.classList.add('hidden'));
+    el.lockBtn.addEventListener('click', () => { Panels.toggleLock(); syncLockBtn(); toast(Panels.isLocked() ? 'Layout locked.' : 'Layout unlocked — drag panels freely.'); });
+    el.wlSnap.addEventListener('click', () => { const on = Panels.toggleSnap(); el.wlSnap.textContent = 'Snap to grid: ' + (on ? 'On' : 'Off'); });
+    el.wlReset.addEventListener('click', () => { Panels.resetAll(); toast('Layout reset to defaults.'); });
+    el.wlSnap.textContent = 'Snap to grid: ' + (Panels.isSnap() ? 'On' : 'Off');
+
+    // Live updaters.
+    tickWidgetClock(); setInterval(tickWidgetClock, 1000);
+    updateSystemWidget(); setInterval(updateSystemWidget, 4000);
+  }
+
+  function syncLockBtn() {
+    if (el.lockBtn) el.lockBtn.classList.toggle('active', Panels.isLocked());
+  }
+
+  /* ---- Widget visibility + library ---- */
+  function loadWidgetPrefs() {
+    try { return JSON.parse(localStorage.getItem(LS_WIDGETS)); } catch { return null; }
+  }
+  function saveWidgetPrefs(list) {
+    try { localStorage.setItem(LS_WIDGETS, JSON.stringify(list)); } catch { /* */ }
+  }
+  function visibleWidgets() {
+    return WIDGETS.filter((w) => { const n = document.getElementById(w.id); return n && !n.classList.contains('hidden'); }).map((w) => w.id);
+  }
+  function setWidgetVisible(id, show, quiet) {
+    const node = document.getElementById(id);
+    if (!node) return;
+    node.classList.toggle('hidden', !show);
+    if (id === 'dogPanel') el.dogFab.classList.toggle('hidden', show);
+    if (show) Panels.front(id);
+    const chip = el.wlGrid && el.wlGrid.querySelector(`[data-w="${id}"]`);
+    if (chip) chip.classList.toggle('on', show);
+    if (!quiet) saveWidgetPrefs(visibleWidgets());
+    if (show && id === 'wWeather') loadWeatherWidget();
+  }
+  function buildWidgetLibrary() {
+    el.wlGrid.innerHTML = '';
+    WIDGETS.forEach((w) => {
+      const b = document.createElement('button');
+      b.className = 'wl-chip'; b.dataset.w = w.id;
+      b.innerHTML = `<span class="wl-ic">${w.icon}</span><span>${w.name}</span>`;
+      b.addEventListener('click', () => {
+        const node = document.getElementById(w.id);
+        setWidgetVisible(w.id, node.classList.contains('hidden'));
+      });
+      el.wlGrid.appendChild(b);
+    });
+  }
+  function restoreWidgets() {
+    let list = loadWidgetPrefs();
+    if (!Array.isArray(list)) list = isPC() ? ['wTime', 'wWeather', 'wSystem', 'wApps', 'wLog', 'wMap'] : [];
+    WIDGETS.forEach((w) => setWidgetVisible(w.id, list.indexOf(w.id) >= 0, true));
+    saveWidgetPrefs(list);
+  }
+
+  /* ---- Clock widget ---- */
+  function tickWidgetClock() {
+    const c = document.getElementById('wtClock'), d = document.getElementById('wtDate');
+    if (!c) return;
+    const now = new Date();
+    c.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    d.textContent = now.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
+  }
+
+  /* ---- Weather widget (keyless open-meteo) ---- */
+  async function loadWeatherWidget() {
+    const body = document.getElementById('wwBody');
+    if (!body) return;
+    body.innerHTML = '<div class="w-loading">Acquiring…</div>';
+    try {
+      let lat, lon, place;
+      const saved = localStorage.getItem('jarvis.wxcity');
+      if (saved) {
+        const g = await (await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(saved))).json();
+        if (g.results && g.results[0]) { lat = g.results[0].latitude; lon = g.results[0].longitude; place = g.results[0].name; }
+      }
+      if (lat == null) {
+        const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 8000 }));
+        lat = pos.coords.latitude; lon = pos.coords.longitude; place = 'Local';
+      }
+      const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`)).json();
+      const ic = wxIcon(d.current.weather_code);
+      body.innerHTML = `<div class="ww"><span class="ww-ic ${ic.cls}">${ic.emoji}</span>` +
+        `<span class="ww-temp">${Math.round(d.current.temperature_2m)}°C</span></div>` +
+        `<div class="ww-cond">${WMO[d.current.weather_code] || 'clear'} · ${escapeHtml(place)}</div>`;
+    } catch {
+      body.innerHTML = '<div class="w-loading">Allow location, or set a city with "weather in ___".</div>';
+    }
+  }
+
+  /* ---- System status widget ---- */
+  let _batt = null;
+  async function updateSystemWidget() {
+    const body = document.getElementById('wsBody');
+    if (!body || document.getElementById('wSystem').classList.contains('hidden')) return;
+    const cores = navigator.hardwareConcurrency || 4;
+    // No true CPU meter in a browser; show a lively estimate that trends with activity.
+    const cpu = Math.min(99, Math.round(12 + Math.random() * 22 + (busy ? 30 : 0)));
+    let ram = null;
+    if (performance && performance.memory) ram = Math.round(performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit * 100);
+    else if (navigator.deviceMemory) ram = Math.round(35 + Math.random() * 20);
+    else ram = 45;
+    const conn = navigator.connection || {};
+    const net = conn.downlink ? Math.min(100, Math.round(conn.downlink / 10 * 100)) : 68;
+    if (!_batt && navigator.getBattery) { try { _batt = await navigator.getBattery(); _batt.addEventListener('levelchange', updateSystemWidget); } catch { /* */ } }
+    const batt = _batt ? Math.round(_batt.level * 100) : 97;
+    const rows = [
+      ['CPU', cpu, cores + ' cores'],
+      ['RAM', ram, ''],
+      ['NETWORK', net, conn.effectiveType ? conn.effectiveType.toUpperCase() : ''],
+      ['BATTERY', batt, _batt && _batt.charging ? '⚡' : ''],
+    ];
+    body.innerHTML = rows.map(([k, v, note]) =>
+      `<div class="ss-row"><span class="ss-k">${k}</span>` +
+      `<span class="ss-track"><span class="ss-bar" style="width:${v}%"></span></span>` +
+      `<span class="ss-v">${v}%${note ? ' <em>' + note + '</em>' : ''}</span></div>`).join('');
+  }
+
+  /* ---- Applications widget (quick launch) ---- */
+  function buildAppsGrid() {
+    const grid = document.getElementById('waGrid');
+    if (!grid) return;
+    const apps = [
+      ['YouTube', '▶', { type: 'open_app', app: 'youtube' }],
+      ['Spotify', '♫', { type: 'open_app', app: 'spotify' }],
+      ['Maps', '◈', { type: 'open_app', app: 'maps' }],
+      ['Calendar', '▦', { type: 'calendar', title: 'New event' }],
+      ['Camera', '◉', { type: 'open_app', app: 'camera' }],
+      ['Files', '▤', { type: 'open_app', app: 'files' }],
+      ['Browser', '◍', { type: 'open_url', url: 'https://www.google.com' }],
+      ['Weather', '☁', { widget: 'wWeather' }],
+    ];
+    grid.innerHTML = '';
+    apps.forEach(([name, ic, action]) => {
+      const b = document.createElement('button');
+      b.className = 'app-tile'; b.innerHTML = `<span class="app-ic">${ic}</span><span>${name}</span>`;
+      b.addEventListener('click', () => {
+        if (action.widget) { setWidgetVisible(action.widget, true); return; }
+        executeAction(action);
+      });
+      grid.appendChild(b);
+    });
+  }
+
+  /* ---- World map widget (decorative dotted globe) ---- */
+  function buildWorldMap() {
+    const wrap = document.getElementById('wmDots');
+    if (!wrap) return;
+    const COLS = 42, ROWS = 18;
+    // A coarse land-mask so the dots read as continents.
+    const mask = [
+      '......xxx.......xxxxx......', '...xxxxxxxx...xxxxxxxxxx...', '..xxxxxxxx...xxxxxxxxxxxx..',
+      '..xxxxxx......xxxxxxxx.....', '...xxxx.......xxxxxxx......', '....xx.........xxxxxx......',
+      '....x...........xxxx.......', '.................xx........',
+    ];
+    let html = '';
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const mr = mask[Math.floor(r / ROWS * mask.length)] || '';
+        const on = mr[Math.floor(c / COLS * mr.length)] === 'x';
+        const hot = on && Math.random() < 0.06;
+        html += `<span class="wm-dot${on ? ' on' : ''}${hot ? ' hot' : ''}"></span>`;
+      }
+    }
+    wrap.style.setProperty('--cols', COLS);
+    wrap.innerHTML = html;
+  }
+
+  /* ---- Notes widget ---- */
+  function initNotes() {
+    const t = document.getElementById('wnText');
+    if (!t) return;
+    t.value = localStorage.getItem('jarvis.notes') || '';
+    t.addEventListener('input', () => { try { localStorage.setItem('jarvis.notes', t.value); } catch { /* */ } });
+  }
+
+  /* ---- Calculator widget ---- */
+  function buildCalc() {
+    const keys = document.getElementById('wcKeys'), screen = document.getElementById('wcScreen');
+    if (!keys) return;
+    const layout = ['C', '(', ')', '/', '7', '8', '9', '*', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '⌫', '='];
+    let expr = '';
+    const render = () => { screen.textContent = expr || '0'; };
+    keys.innerHTML = '';
+    layout.forEach((k) => {
+      const b = document.createElement('button');
+      b.className = 'calc-key' + (k === '=' ? ' eq' : (/[/*\-+()]/.test(k) ? ' op' : ''));
+      b.textContent = k;
+      b.addEventListener('click', () => {
+        if (k === 'C') expr = '';
+        else if (k === '⌫') expr = expr.slice(0, -1);
+        else if (k === '=') {
+          try {
+            if (/^[0-9+\-*/().\s]+$/.test(expr)) { const v = Function('"use strict";return (' + expr + ')')(); expr = String(+(+v).toFixed(8)); }
+            else expr = 'Error';
+          } catch { expr = 'Error'; }
+        } else { if (expr === 'Error') expr = ''; expr += k; }
+        render();
+      });
+      keys.appendChild(b);
+    });
+    render();
+  }
+
+  /* ---- Dog companion ---- */
+  function dogState() {
+    let s;
+    try { s = JSON.parse(localStorage.getItem('jarvis.dog')); } catch { s = null; }
+    return s || { hunger: 70, water: 80, sleep: 65, treats: 0, lastWalk: null };
+  }
+  function saveDog(s) { try { localStorage.setItem('jarvis.dog', JSON.stringify(s)); } catch { /* */ } }
+  function renderDog() {
+    const s = dogState();
+    const stats = document.getElementById('dogStats');
+    const mood = document.getElementById('dogMood');
+    if (!stats) return;
+    const avg = (s.hunger + s.water + s.sleep) / 3;
+    const m = avg > 70 ? ['Happy', '🐶'] : avg > 45 ? ['Content', '🐕'] : ['Needs care', '🥺'];
+    mood.innerHTML = `Mood: <b>${m[0]}</b> ${m[1]}`;
+    const walk = s.lastWalk ? new Date(s.lastWalk).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+    const rows = [
+      ['🍖 Hunger', s.hunger], ['💧 Water', s.water], ['😴 Sleep', s.sleep],
+    ];
+    stats.innerHTML = rows.map(([k, v]) =>
+      `<div class="ss-row"><span class="ss-k">${k}</span><span class="ss-track"><span class="ss-bar" style="width:${v}%"></span></span><span class="ss-v">${v}%</span></div>`).join('') +
+      `<div class="dog-line">🦴 Treats today <b>${s.treats}</b> · 🚶 Last walk <b>${walk}</b> · 📍 GPS <b class="ok">home</b></div>` +
+      `<div class="dog-note">Health, GPS and camera are simulated — connect a real tracker/cam to go live.</div>`;
+  }
+  function initDog() {
+    el.dogFab.addEventListener('click', () => setWidgetVisible('dogPanel', true));
+    el.dogClose.addEventListener('click', () => setWidgetVisible('dogPanel', false));
+    document.getElementById('dogTreat').addEventListener('click', () => { const s = dogState(); s.treats++; s.hunger = Math.min(100, s.hunger + 8); saveDog(s); renderDog(); toast('🦴 Treat given.'); });
+    document.getElementById('dogWalk').addEventListener('click', () => { const s = dogState(); s.lastWalk = Date.now(); s.sleep = Math.min(100, s.sleep + 6); saveDog(s); renderDog(); toast('🚶 Walk logged.'); });
+    document.getElementById('dogPhoto').addEventListener('click', () => toast('📸 Snapshot saved to Photos (simulated).'));
+    renderDog();
+  }
+
+  /* ---- Music transport controls ---- */
+  function initMusicControls() {
+    el.npPlay.addEventListener('click', musicToggle);
+    el.npBack.addEventListener('click', () => musicSeek(-10));
+    el.npFwd.addEventListener('click', () => musicSeek(10));
+    el.npPrev.addEventListener('click', musicPrev);
+    el.npNext.addEventListener('click', musicNext);
+    el.npVol.addEventListener('input', applyVol);
+    el.npShuffle.addEventListener('click', () => { npShuffle = !npShuffle; el.npShuffle.classList.toggle('on', npShuffle); });
+    el.npRepeat.addEventListener('click', () => { npRepeat = !npRepeat; el.npRepeat.classList.toggle('on', npRepeat); });
+    el.npFav.addEventListener('click', () => {
+      const on = el.npFav.classList.toggle('on');
+      el.npFav.textContent = on ? '♥' : '♡';
+      toast(on ? 'Added to favourites.' : 'Removed from favourites.');
+    });
+    el.npProgress.addEventListener('click', (e) => {
+      try {
+        if (!ytPlayer || !ytPlayer.getDuration) return;
+        const r = el.npProgress.getBoundingClientRect();
+        const frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+        ytPlayer.seekTo(frac * ytPlayer.getDuration(), true);
+      } catch { /* */ }
+    });
+  }
+
+  /* ---- Ambient particles + mouse-responsive lighting ---- */
+  function initAmbient() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Mouse light + parallax.
+    window.addEventListener('pointermove', (e) => {
+      if (el.mouseLight) el.mouseLight.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      const px = (e.clientX / window.innerWidth - 0.5) * 2;
+      const py = (e.clientY / window.innerHeight - 0.5) * 2;
+      document.body.style.setProperty('--par-x', (px * 8).toFixed(1) + 'px');
+      document.body.style.setProperty('--par-y', (py * 8).toFixed(1) + 'px');
+    }, { passive: true });
+
+    const cv = el.bgParticles;
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    let W, H, dots = [];
+    const seed = () => {
+      W = cv.width = window.innerWidth; H = cv.height = window.innerHeight;
+      const n = Math.min(90, Math.round(W * H / 26000));
+      dots = Array.from({ length: n }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+        r: Math.random() * 1.6 + 0.4, a: Math.random() * 0.5 + 0.15,
+      }));
+    };
+    seed(); window.addEventListener('resize', seed);
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      for (const d of dots) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+        if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(120,210,255,${d.a})`; ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    };
+    draw();
+  }
+
   /* ---------------- Boot ---------------- */
   function boot() {
     Core.init(el.reactor);
@@ -2728,6 +3275,8 @@ Only emit an action when the user asks you to do something on the device; for or
 
     initTelemetry();
     applyPlatform();
+    initDashboard();
+    initAmbient();
     // Re-evaluate PC/mobile layout on resize when in auto mode.
     window.addEventListener('resize', () => {
       if (cfg.state.platform === 'auto') document.body.classList.toggle('platform-pc', isPC());
