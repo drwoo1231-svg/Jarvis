@@ -137,6 +137,21 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   `.teach-row` calls `teachLabel()` → KNN example persisted to `jarvis.knn.v1`.
   Keyless: TF.js + mobilenet + coco-ssd + knn-classifier from CDN (loaders
   `loadMobileNet`/`loadCoco`/`loadKNN`, cached; `loadScript` has a 12s timeout).
+
+### v3.0 — dog removed, real Google Calendar, honest phone alarms
+- The Dog companion was fully removed (FAB, panel, `initDog`/`renderDog`,
+  widget-library entry, CSS, brain mention, `jarvis.dog` storage).
+- Google Calendar: with a user-supplied OAuth client ID (`cfg.googleClientId`,
+  set in Settings → "Connect Google"), `gcalCreate()` signs in via Google
+  Identity Services (`loadGIS`/`gcalGetToken`, scope `calendar.events`) and
+  POSTs events to the Calendar API `primary/events` with popup reminders — a
+  real write. Without a client ID it falls back to the pre-filled TEMPLATE link
+  (now carrying `&ctz=<IANA zone>` so the time is correct). The calendar and
+  alarm command handlers branch on `gcalConnected()`.
+- Alarms: still sound in-app; since a web app can't touch the native Clock,
+  the handler also creates a Google Calendar reminder (connected) or offers a
+  calendar-event chip (not connected) so the phone notifies at the time.
+  Honest wording throughout; brain prompt updated.
 - Layout / widgets (v2.7): `lock the layout`, `unlock the layout`,
   `reset my layout`, `snap to grid`, `open the widget library`,
   `show/hide the <clock|weather|system|applications|calculator|notes|world map|music|log> widget`,

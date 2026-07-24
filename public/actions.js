@@ -274,7 +274,11 @@
         const dates = action.start ? `&dates=${action.start}/${action.end || action.start}` : '';
         const details = action.details ? `&details=${enc(action.details)}` : '';
         const loc = action.location ? `&location=${enc(action.location)}` : '';
-        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}${dates}${details}${loc}`;
+        // Bare dates in a TEMPLATE link are read as UTC; pass the local zone so
+        // the event lands at the time the user actually meant.
+        let ctz = '';
+        try { const z = Intl.DateTimeFormat().resolvedOptions().timeZone; if (z) ctz = `&ctz=${enc(z)}`; } catch { /* */ }
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}${dates}${ctz}${details}${loc}`;
         return { kind: 'link', label: `Calendar · ${action.title || 'Event'}`, url, auto: true };
       }
       case 'timer': {

@@ -19,6 +19,7 @@
     voiceURI: '',              // chosen TTS voice
     speak: true,               // speak replies aloud
     autoListen: false,         // re-open the mic after JARVIS finishes talking
+    googleClientId: '',        // Google OAuth client ID → real Calendar writes
     onboarded: false,
   };
 

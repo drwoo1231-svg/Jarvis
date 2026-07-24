@@ -1068,7 +1068,7 @@ body[data-core="warning"]   { --ring: 255,90,90; }
 .ww-temp { font-size: 32px; font-weight: 700; color: #fff; }
 .ww-cond { text-align: center; margin-top: 6px; font-size: 12px; color: var(--cyan-soft); text-transform: capitalize; }
 
-/* System status / progress rows (shared with dog stats) */
+/* System status / progress rows */
 .ss-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-family: var(--mono); font-size: 11px; }
 .ss-k { flex: 0 0 62px; color: var(--text-dim); letter-spacing: 0.05em; }
 .ss-track { flex: 1; height: 6px; border-radius: 4px; background: rgba(70,182,255,0.12); overflow: hidden; }
@@ -1121,29 +1121,6 @@ body[data-core="warning"]   { --ring: 255,90,90; }
 .calc-key.op { color: var(--cyan-soft); }
 .calc-key.eq { background: linear-gradient(120deg, var(--cyan), #2b8fe0); color: #001428; font-weight: 700; }
 
-/* ---- Dog companion ---- */
-.dog-fab {
-  position: fixed; right: 22px; bottom: calc(96px + var(--safe-bottom)); z-index: 55;
-  width: 54px; height: 54px; border-radius: 50%; font-size: 26px; cursor: pointer;
-  border: 1px solid var(--cyan-dim); background: linear-gradient(150deg, rgba(9,28,52,0.92), rgba(3,12,26,0.92));
-  box-shadow: 0 0 24px rgba(56,182,255,0.4); animation: fabBob 3s ease-in-out infinite;
-}
-.dog-fab:hover { box-shadow: 0 0 34px rgba(56,182,255,0.7); }
-@keyframes fabBob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-5px) } }
-.dog-panel { width: 268px; top: auto; bottom: 100px; right: 22px; left: auto; z-index: 56; }
-.dog-cam {
-  position: relative; height: 118px; border-radius: 10px; margin-bottom: 10px;
-  background: repeating-linear-gradient(0deg, rgba(70,182,255,0.05) 0 2px, transparent 2px 4px), #04101f;
-  border: 1px solid var(--glass-brd); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-}
-.dog-cam span { font-family: var(--mono); font-size: 11px; color: var(--cyan-soft); letter-spacing: 0.14em; }
-.dog-cam em { font-size: 10px; color: var(--text-dim); font-style: normal; text-align: center; padding: 0 10px; }
-.dog-mood { font-size: 13px; margin-bottom: 8px; } .dog-mood b { color: var(--cyan-soft); }
-.dog-line { margin-top: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-dim); line-height: 1.6; } .dog-line b { color: var(--cyan-soft); } .dog-line b.ok { color: #23d18b; }
-.dog-note { margin-top: 6px; font-size: 10px; color: var(--text-dim); opacity: 0.8; }
-.dog-actions { display: flex; gap: 6px; margin-top: 10px; }
-.dog-actions .w-mini-btn { margin: 0; flex: 1; text-align: center; }
-
 /* ---- Widget library ---- */
 .widget-lib { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; background: rgba(1,5,14,0.6); backdrop-filter: blur(4px); }
 .wl-panel { width: min(460px, 92vw); padding: 20px; border-radius: 18px; }
@@ -1185,7 +1162,7 @@ body[data-core="warning"]   { --ring: 255,90,90; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bg-scan, .widget::after, .dog-fab, .core-ring span, .wm-dot.hot { animation: none !important; }
+  .bg-scan, .widget::after, .core-ring span, .wm-dot.hot { animation: none !important; }
   .bg-particles { display: none; }
 }
 

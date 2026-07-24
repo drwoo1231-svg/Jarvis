@@ -282,22 +282,6 @@
       </section>
     </div>
 
-    <!-- ===================== DOG COMPANION ===================== -->
-    <button id="dogFab" class="dog-fab" aria-label="Dog assistant" title="Dog assistant">🐕</button>
-    <section id="dogPanel" class="widget dog-panel hidden" data-widget="dog">
-      <header class="w-head"><span class="w-title">🐾 DOG ASSISTANT</span><button class="w-x" id="dogClose" aria-label="Collapse">×</button></header>
-      <div class="w-body">
-        <div class="dog-cam" id="dogCam"><span>◉ LIVE CAM</span><em>simulated feed — connect a camera to go live</em></div>
-        <div class="dog-mood" id="dogMood">Mood: <b>Happy</b> 🐶</div>
-        <div class="dog-stats" id="dogStats"></div>
-        <div class="dog-actions no-drag">
-          <button class="w-mini-btn" id="dogTreat">🦴 Treat</button>
-          <button class="w-mini-btn" id="dogWalk">🚶 Walk</button>
-          <button class="w-mini-btn" id="dogPhoto">📸 Photo</button>
-        </div>
-      </div>
-    </section>
-
     <!-- ===================== WIDGET LIBRARY ===================== -->
     <section id="widgetLib" class="widget-lib hidden">
       <div class="wl-panel glass">
@@ -436,6 +420,23 @@
           <option value="whatsapp">WhatsApp</option>
         </select>
         <button id="cAdd" class="ghost-btn">Add</button>
+      </div>
+
+      <hr class="divider" />
+
+      <label class="field-label">Google Calendar</label>
+      <p class="hint">Connect your Google account so JARVIS can add events to your
+        real calendar (and phone reminders) in one tap. Without this, JARVIS opens
+        a pre-filled event you save yourself.</p>
+      <div id="gcalStatus" class="hint" style="margin:4px 0 8px"></div>
+      <input id="setGoogleClientId" class="text-field" type="text" autocomplete="off"
+             spellcheck="false" placeholder="Google OAuth Client ID (…apps.googleusercontent.com)" />
+      <p class="hint">Free to create: Google Cloud Console → APIs &amp; Services →
+        Credentials → OAuth client ID (Web) → add this site as an authorized
+        JavaScript origin, and enable the Google Calendar API.</p>
+      <div class="settings-actions">
+        <button id="gcalConnect" class="ghost-btn">Connect Google</button>
+        <button id="gcalDisconnect" class="ghost-btn">Disconnect</button>
       </div>
 
       <hr class="divider" />

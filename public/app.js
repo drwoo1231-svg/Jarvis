@@ -63,9 +63,6 @@
     wlClose: $('wlClose'),
     wlSnap: $('wlSnap'),
     wlReset: $('wlReset'),
-    dogFab: $('dogFab'),
-    dogPanel: $('dogPanel'),
-    dogClose: $('dogClose'),
     bgParticles: $('bgParticles'),
     mouseLight: $('mouseLight'),
 
@@ -120,6 +117,10 @@
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
+    setGoogleClientId: $('setGoogleClientId'),
+    gcalConnect: $('gcalConnect'),
+    gcalDisconnect: $('gcalDisconnect'),
+    gcalStatus: $('gcalStatus'),
     contactsList: $('contactsList'),
     cName: $('cName'),
     cNumber: $('cNumber'),
@@ -134,7 +135,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.9 · object detection + teachable identify';
+  const APP_VERSION = 'v3.0 · real Google Calendar, phone reminders (dog removed)';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -574,7 +575,7 @@ Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; searc
 Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
 
 # Holographic Interface (v2.7)
-The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, and Music. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. JARVIS can add events to the user's REAL Google Calendar once they connect their Google account in Settings (otherwise it opens a pre-filled event for them to save); connected events also schedule phone reminders. Alarms sound in-app while JARVIS is open — a web app cannot set the phone's native Clock app, so JARVIS also offers a calendar reminder that notifies the phone at that time. If asked to set a native phone alarm, explain this honestly and offer the calendar reminder (or suggest Siri/Google Assistant for a true Clock alarm). The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -1051,15 +1052,31 @@ The interface is a movable holographic operating system. Every panel is draggabl
       return;
     }
 
-    // Alarm (in-app, fires while the app is open).
+    // Alarm — sounds in-app; also adds a phone-notifying reminder (a browser
+    // app can't set the native Clock app, so we use a calendar alert instead).
     if (/\b(?:set|create|put)?\s*(?:an?\s+)?alarm\b|\bwake me(?:\s+up)?\b/i.test(text)) {
       addMessage('user', text);
       const target = parseClockTime(text);
       if (!target) { const l = `At what time shall I set the alarm${tail0}?`; addMessage('jarvis', l); speak(l); return; }
       const label = (text.match(/\b(?:for|labelled|called)\s+([a-z ]{3,30})$/i) || [])[1] || '';
       const ts = setAlarm(target, label.trim());
-      const l = `Alarm set for ${ts}${tail0}. I'll sound it while JARVIS is open.`;
-      addMessage('jarvis', l); speak(l);
+      const title = 'Alarm' + (label.trim() ? ' — ' + label.trim() : '');
+      if (gcalConnected()) {
+        (async () => {
+          try {
+            await gcalCreate({ title, when: target });
+            const l = `Alarm set for ${ts}${tail0}. I'll sound it in-app, and I've added a reminder to your Google Calendar so your phone alerts you at ${ts} even if JARVIS is closed.`;
+            addMessage('jarvis', l); speak(l);
+          } catch {
+            const l = `Alarm set for ${ts}${tail0}. I'll sound it while JARVIS is open.`;
+            addMessage('jarvis', l); speak(l);
+          }
+        })();
+        return;
+      }
+      const action = { type: 'calendar', title, start: fmtCal(target), end: fmtCal(new Date(target.getTime() + 300000)) };
+      const l = `Alarm set for ${ts}${tail0}. I'll sound it while JARVIS is open. A phone's Clock app can't be set from the web — but tap below to add a reminder that alerts your phone at ${ts} even when JARVIS is closed.`;
+      addMessage('jarvis', l, [action]); speak(`Alarm set for ${ts}${tail0}. I'll sound it while JARVIS is open, and you can add a phone reminder from the button.`);
       return;
     }
 
@@ -1075,9 +1092,31 @@ The interface is a movable holographic operating system. Every panel is draggabl
         .replace(/\b(?:today|tomorrow)\b/i, '')
         .replace(/\s+/g, ' ').trim() || 'New event';
       const when = parseClockTime(text);
-      const action = { type: 'calendar', title };
-      if (when) { action.start = fmtCal(when); action.end = fmtCal(new Date(when.getTime() + 3600000)); }
-      const say = `Opening a new calendar event${when ? ' for ' + when.toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : ''}${tail0}. Adjust and save it in Google Calendar.`;
+      const whenStr = when ? ' for ' + when.toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+      const template = () => {
+        const action = { type: 'calendar', title };
+        if (when) { action.start = fmtCal(when); action.end = fmtCal(new Date(when.getTime() + 3600000)); }
+        return action;
+      };
+      if (gcalConnected()) {
+        // Create the event directly on the user's Google Calendar.
+        (async () => {
+          try {
+            const created = await gcalCreate({ title, when });
+            const l = `Done${tail0} — "${title}" is on your Google Calendar${whenStr}. You'll get a reminder on your phone.`;
+            addMessage('jarvis', l, created && created.htmlLink ? [{ type: 'open_url', url: created.htmlLink }] : undefined);
+            speak(l);
+            updateGcalStatus();
+          } catch (e) {
+            const action = template();
+            const l = `I couldn't reach your Google account${tail0} — opening a pre-filled event to save instead.`;
+            addMessage('jarvis', l, [action]); executeAction(action); speak(l);
+          }
+        })();
+        return;
+      }
+      const action = template();
+      const say = `Opening a new calendar event${whenStr}${tail0}. Adjust and save it in Google Calendar. Tip: connect your Google account in Settings and I'll add events directly.`;
       addMessage('jarvis', say, [action]); executeAction(action); speak(say);
       return;
     }
@@ -1094,7 +1133,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
       return;
     }
 
-    // Layout / widgets / dog — the movable holographic interface.
+    // Layout / widgets — the movable holographic interface.
     {
       const who = titledName(); const t2 = who ? ', ' + who : '';
       if (/\b(lock|unlock)\s+(the\s+)?(layout|panels?|widgets?)\b/i.test(text) || /\block\s+(the\s+)?(layout|panels?)\b/i.test(text)) {
@@ -1116,10 +1155,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
       if (/\b(open|show|bring up)\s+(the\s+)?widget\s+(library|menu|list)\b|\badd\s+a\s+widget\b|\bwidget\s+library\b/i.test(text)) {
         addMessage('user', text); el.widgetLib.classList.remove('hidden');
         const l = `Widget library open${t2}. Tap a widget to add or remove it.`; addMessage('jarvis', l); speak(l); return;
-      }
-      if (/\b(show|open|bring up|expand)\s+(the\s+|my\s+)?dog\b/i.test(text)) {
-        addMessage('user', text); setWidgetVisible('dogPanel', true);
-        const l = `Here's the dog dashboard${t2}.`; addMessage('jarvis', l); speak(l); return;
       }
       const wm2 = text.match(/\b(show|add|open|display|hide|remove|close)\s+(?:the\s+|my\s+)?(clock|time|weather|system|status|applications?|apps|calculator|calc|notes?|world\s*map|map|music|log)\b(?:\s+(widget|panel))?/i);
       if (wm2 && (wm2[3] || /\b(widget|panel)\b/i.test(text))) {
@@ -1279,6 +1314,76 @@ The interface is a movable holographic operating system. Every panel is draggabl
   }
 
   // A short alarm tone via WebAudio.
+  /* ---------------- Google Calendar (real one-tap events) ----------------
+     With a Google OAuth client ID (Settings), JARVIS signs in and writes
+     events straight to the user's calendar via the Calendar API — which also
+     schedules phone reminders. Without it, we fall back to a pre-filled
+     Calendar link the user saves themselves. */
+  let gcalTokenClient = null, gcalToken = '', gcalTokenExp = 0;
+  function loadGIS() {
+    return new Promise((res, rej) => {
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) return res();
+      const s = document.createElement('script');
+      let done = false;
+      const fin = (fn, a) => { if (!done) { done = true; fn(a); } };
+      s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.defer = true;
+      s.onload = () => fin(res);
+      s.onerror = () => fin(rej, new Error('Google sign-in failed to load'));
+      setTimeout(() => fin(rej, new Error('Google sign-in timed out')), 10000);
+      document.head.appendChild(s);
+    });
+  }
+  function gcalInitClient() {
+    const cid = (cfg.state.googleClientId || '').trim();
+    if (!cid || !(window.google && window.google.accounts)) return null;
+    gcalTokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: cid,
+      scope: 'https://www.googleapis.com/auth/calendar.events',
+      callback: () => {},
+    });
+    return gcalTokenClient;
+  }
+  function gcalGetToken(interactive) {
+    return new Promise((resolve, reject) => {
+      if (gcalToken && Date.now() < gcalTokenExp - 60000) return resolve(gcalToken);
+      if (!gcalTokenClient && !gcalInitClient()) return reject(new Error('Add a Google client ID in Settings'));
+      gcalTokenClient.callback = (resp) => {
+        if (resp && resp.access_token) { gcalToken = resp.access_token; gcalTokenExp = Date.now() + (resp.expires_in || 3600) * 1000; resolve(gcalToken); }
+        else reject(new Error((resp && resp.error) || 'authorisation failed'));
+      };
+      try { gcalTokenClient.requestAccessToken({ prompt: interactive ? 'consent' : '' }); } catch (e) { reject(e); }
+    });
+  }
+  function gcalConnected() { return !!(cfg.state.googleClientId || '').trim(); }
+  function fmtDateOnly(d) { const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; }
+  async function gcalCreate(ev) {
+    await loadGIS();
+    const token = await gcalGetToken(false);
+    const body = {
+      summary: ev.title || 'New event',
+      reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 0 }, { method: 'popup', minutes: 10 }] },
+    };
+    if (ev.when) {
+      body.start = { dateTime: ev.when.toISOString() };
+      body.end = { dateTime: new Date(ev.when.getTime() + 3600000).toISOString() };
+    } else {
+      const d = fmtDateOnly(new Date());
+      body.start = { date: d }; body.end = { date: d };
+    }
+    const r = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+      method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    if (!r.ok) throw new Error('calendar returned ' + r.status);
+    return r.json();
+  }
+  function updateGcalStatus() {
+    if (!el.gcalStatus) return;
+    const has = gcalConnected();
+    el.gcalStatus.textContent = !has ? 'Not connected — using pre-filled links.'
+      : (gcalToken ? '✓ Connected — events go straight to your calendar.' : 'Client ID saved — tap “Connect Google”.');
+    el.gcalStatus.style.color = gcalToken ? '#23d18b' : '';
+  }
+
   function beep(times) {
     try {
       audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
@@ -2856,6 +2961,8 @@ The interface is a movable holographic operating system. Every panel is draggabl
     el.loadProgress.textContent = '';
     el.setSpeak.checked = cfg.state.speak !== false;
     el.setAutoListen.checked = !!cfg.state.autoListen;
+    if (el.setGoogleClientId) el.setGoogleClientId.value = cfg.state.googleClientId || '';
+    updateGcalStatus();
     populateVoices();
     renderContacts();
     updateDirectVisibility();
@@ -2915,7 +3022,9 @@ The interface is a movable holographic operating system. Every panel is draggabl
       voiceURI: el.setVoice.value,
       speak: el.setSpeak.checked,
       autoListen: el.setAutoListen.checked,
+      googleClientId: el.setGoogleClientId ? el.setGoogleClientId.value.trim() : (cfg.state.googleClientId || ''),
     });
+    gcalTokenClient = null; // pick up any client-id change on next request
     el.settings.classList.add('hidden');
     updateTelemetry();
     toast('Settings saved.');
@@ -3005,6 +3114,24 @@ The interface is a movable holographic operating system. Every panel is draggabl
     });
     el.loadModelBtn.addEventListener('click', () => ensureLocalModel(el.setLocalModel.value));
     el.settingsSave.addEventListener('click', saveSettings);
+
+    // Google Calendar connect / disconnect
+    if (el.gcalConnect) el.gcalConnect.addEventListener('click', async () => {
+      const cid = el.setGoogleClientId.value.trim();
+      if (!cid) { toast('Paste your Google client ID first.'); return; }
+      cfg.set({ googleClientId: cid }); gcalTokenClient = null;
+      el.gcalConnect.disabled = true; el.gcalConnect.textContent = 'Connecting…';
+      try { await loadGIS(); await gcalGetToken(true); toast('Google Calendar connected.'); }
+      catch (e) { toast('Could not connect: ' + (e && e.message || 'error')); }
+      el.gcalConnect.disabled = false; el.gcalConnect.textContent = 'Connect Google';
+      updateGcalStatus();
+    });
+    if (el.gcalDisconnect) el.gcalDisconnect.addEventListener('click', () => {
+      try { if (gcalToken && window.google) window.google.accounts.oauth2.revoke(gcalToken, () => {}); } catch { /* */ }
+      gcalToken = ''; gcalTokenExp = 0;
+      toast('Google Calendar disconnected.');
+      updateGcalStatus();
+    });
     el.testVoiceBtn.addEventListener('click', () => {
       const uri = el.setVoice.value;
       Voice.speak('Voice systems nominal. At your service.', { voiceURI: uri });
@@ -3076,7 +3203,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
     { id: 'wNotes', name: 'Notes', icon: '✎' },
     { id: 'wCalc', name: 'Calculator', icon: '=' },
     { id: 'nowPlaying', name: 'Music', icon: '♪' },
-    { id: 'dogPanel', name: 'Dog', icon: '🐾' },
   ];
 
   function initDashboard() {
@@ -3088,7 +3214,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
     if (npPanel) Panels.enable(npPanel, { id: 'nowPlaying', handle: '.np-tag' });
     const holoPanel = el.holoScanner.querySelector('.holo-panel');
     if (holoPanel) Panels.enable(holoPanel, { id: 'holoScanner', handle: '.holo-title' });
-    Panels.enable(el.dogPanel, { id: 'dogPanel', handle: '.w-head' });
     ['wTime', 'wWeather', 'wSystem', 'wApps', 'wLog', 'wMap', 'wNotes', 'wCalc'].forEach((id) => {
       const node = document.getElementById(id);
       if (node) Panels.enable(node, { id, handle: '.w-head' });
@@ -3111,7 +3236,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
     buildCalc();
     buildWorldMap();
     initNotes();
-    initDog();
     initMusicControls();
     restoreWidgets();
 
@@ -3146,7 +3270,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
     const node = document.getElementById(id);
     if (!node) return;
     node.classList.toggle('hidden', !show);
-    if (id === 'dogPanel') el.dogFab.classList.toggle('hidden', show);
     if (show) Panels.front(id);
     const chip = el.wlGrid && el.wlGrid.querySelector(`[data-w="${id}"]`);
     if (chip) chip.classList.toggle('on', show);
@@ -3373,39 +3496,6 @@ The interface is a movable holographic operating system. Every panel is draggabl
       keys.appendChild(b);
     });
     render();
-  }
-
-  /* ---- Dog companion ---- */
-  function dogState() {
-    let s;
-    try { s = JSON.parse(localStorage.getItem('jarvis.dog')); } catch { s = null; }
-    return s || { hunger: 70, water: 80, sleep: 65, treats: 0, lastWalk: null };
-  }
-  function saveDog(s) { try { localStorage.setItem('jarvis.dog', JSON.stringify(s)); } catch { /* */ } }
-  function renderDog() {
-    const s = dogState();
-    const stats = document.getElementById('dogStats');
-    const mood = document.getElementById('dogMood');
-    if (!stats) return;
-    const avg = (s.hunger + s.water + s.sleep) / 3;
-    const m = avg > 70 ? ['Happy', '🐶'] : avg > 45 ? ['Content', '🐕'] : ['Needs care', '🥺'];
-    mood.innerHTML = `Mood: <b>${m[0]}</b> ${m[1]}`;
-    const walk = s.lastWalk ? new Date(s.lastWalk).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
-    const rows = [
-      ['🍖 Hunger', s.hunger], ['💧 Water', s.water], ['😴 Sleep', s.sleep],
-    ];
-    stats.innerHTML = rows.map(([k, v]) =>
-      `<div class="ss-row"><span class="ss-k">${k}</span><span class="ss-track"><span class="ss-bar" style="width:${v}%"></span></span><span class="ss-v">${v}%</span></div>`).join('') +
-      `<div class="dog-line">🦴 Treats today <b>${s.treats}</b> · 🚶 Last walk <b>${walk}</b> · 📍 GPS <b class="ok">home</b></div>` +
-      `<div class="dog-note">Health, GPS and camera are simulated — connect a real tracker/cam to go live.</div>`;
-  }
-  function initDog() {
-    el.dogFab.addEventListener('click', () => setWidgetVisible('dogPanel', true));
-    el.dogClose.addEventListener('click', () => setWidgetVisible('dogPanel', false));
-    document.getElementById('dogTreat').addEventListener('click', () => { const s = dogState(); s.treats++; s.hunger = Math.min(100, s.hunger + 8); saveDog(s); renderDog(); toast('🦴 Treat given.'); });
-    document.getElementById('dogWalk').addEventListener('click', () => { const s = dogState(); s.lastWalk = Date.now(); s.sleep = Math.min(100, s.sleep + 6); saveDog(s); renderDog(); toast('🚶 Walk logged.'); });
-    document.getElementById('dogPhoto').addEventListener('click', () => toast('📸 Snapshot saved to Photos (simulated).'));
-    renderDog();
   }
 
   /* ---- Music transport controls ---- */

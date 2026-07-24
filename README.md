@@ -38,16 +38,22 @@ same code runs beautifully on your computer too. No app store required.
   **remembers where you put it**. Double-click a panel's title bar to send it
   home; hit the **lock** button to pin the layout. The **＋ widget library**
   adds or removes panels: Clock, Weather, System Status, Applications, JARVIS
-  Log, World Map, Notes, Calculator, Music and the Dog Assistant. Ask JARVIS
-  too — *"lock the layout"*, *"reset my layout"*, *"open the widget library"*,
-  *"add the calculator widget"*.
+  Log, World Map, Notes, Calculator and Music. Ask JARVIS too — *"lock the
+  layout"*, *"reset my layout"*, *"open the widget library"*, *"add the
+  calculator widget"*.
 - 🎵 **Music player with real transport.** The spinning-disk player now has
   **⏮ · −10s · ▶/⏸ · +10s · ⏭**, a **seekable progress bar**, volume, shuffle,
   repeat and favourite — driven by the YouTube player so rewind/fast-forward
   actually work.
-- 🐾 **Dog Assistant.** A little dog icon expands into a dashboard — camera,
-  mood, hunger, water, sleep, last walk and treat counter (camera and GPS are
-  simulated until you connect real hardware).
+- 📅 **Real Google Calendar.** Connect your Google account once in Settings
+  (paste an OAuth client ID) and *"add a dentist appointment at 3pm"* writes
+  the event **straight to your calendar** with a **phone reminder** — no extra
+  taps. Without connecting, JARVIS opens a pre-filled event you save yourself
+  (now with the correct time zone).
+- ⏰ **Alarms + phone reminders.** JARVIS sounds an alarm in-app while it's
+  open. A web app *can't* set your phone's native Clock app — so JARVIS is
+  honest about it and offers a **calendar reminder that alerts your phone** at
+  the time even when JARVIS is closed.
 - 🌦️ **Live weather holograms.** Weather is drawn as an animated hologram, not
   an emoji — a glowing rotating sun, drifting holographic clouds, falling rain
   streaks, snowfall, or a flashing lightning storm, matched to live conditions.
