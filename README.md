@@ -23,13 +23,16 @@ same code runs beautifully on your computer too. No app store required.
   **Private Research Files** (stored locally on your device). You can also
   hand it an **image** (tap the picture button, or drag-drop on desktop) and,
   with a vision-capable provider, JARVIS describes it.
-- 🔬 **Identify.** Say *"identify this"* (or *"what is this?"*) and drop in a
-  picture. JARVIS runs an **on-device X-ray scan** — a keyless neural net
-  (MobileNet, 1,000 classes) that runs entirely in your browser — and breaks
-  down **the probability of what it is**: *"It seems your image is a carrot —
-  87% confidence,"* with a probability bar-chart and a reference photo pulled
-  up beside the core. If it can't be sure, JARVIS drops into **focus mode** and
-  searches it on Google for you.
+- 🔬 **Identify (teachable).** Say *"identify this"* (or *"what is this?"*) and
+  drop in a picture. JARVIS runs a **visible X-ray scan** — an animated scan
+  beam, grid and reticle sweep over the image — then uses two keyless in-browser
+  neural nets: **COCO-SSD object detection** (knows everyday things like carrot,
+  apple, banana, cup, laptop, dog) which **draws labelled boxes** around what it
+  finds, plus **MobileNet** for fine-grained detail. It breaks down **the
+  probability of what it is** (*"It seems your image is a carrot — 86%"*), pulls
+  a reference photo beside the core, and drops into **focus mode** (Google) if
+  unsure. **It learns:** if it's wrong, type the correct name in the *"Teach me"*
+  box and JARVIS remembers it on-device — recognising it next time.
 - 🧲 **Movable holographic desktop (v2.7).** Every panel is a draggable
   hologram — drag it anywhere with inertia, optional **snap-to-grid**, and it
   **remembers where you put it**. Double-click a panel's title bar to send it

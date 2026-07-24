@@ -134,7 +134,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.8 · live weather holograms + native app launch';
+  const APP_VERSION = 'v2.9 · object detection + teachable identify';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -574,7 +574,7 @@ Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; searc
 Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
 
 # Holographic Interface (v2.7)
-The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -2255,40 +2255,99 @@ The interface is a movable holographic operating system. Every panel is draggabl
   function loadScript(src) {
     return new Promise((res, rej) => {
       const s = document.createElement('script');
-      s.src = src; s.onload = res; s.onerror = () => rej(new Error('load failed: ' + src));
+      let done = false;
+      const finish = (fn, arg) => { if (!done) { done = true; fn(arg); } };
+      s.src = src;
+      s.onload = () => finish(res);
+      s.onerror = () => finish(rej, new Error('load failed: ' + src));
+      // Don't let a hung CDN block a scan forever.
+      setTimeout(() => finish(rej, new Error('load timeout: ' + src)), 12000);
       document.head.appendChild(s);
     });
   }
-  let _mobilenet = null, _mnLoading = null;
+  const CDN = 'https://cdn.jsdelivr.net/npm/';
+  let _tf = null, _mobilenet = null, _coco = null, _knn = null;
+  async function loadTF() { if (!window.tf) await loadScript(CDN + '@tensorflow/tfjs@4/dist/tf.min.js'); _tf = window.tf; return _tf; }
   async function loadMobileNet() {
     if (_mobilenet) return _mobilenet;
-    if (_mnLoading) return _mnLoading;
-    _mnLoading = (async () => {
-      if (!window.tf) await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js');
-      if (!window.mobilenet) await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2/dist/mobilenet.min.js');
-      _mobilenet = await window.mobilenet.load({ version: 2, alpha: 1.0 });
-      return _mobilenet;
-    })();
-    return _mnLoading;
+    await loadTF();
+    if (!window.mobilenet) await loadScript(CDN + '@tensorflow-models/mobilenet@2/dist/mobilenet.min.js');
+    _mobilenet = await window.mobilenet.load({ version: 2, alpha: 1.0 });
+    return _mobilenet;
   }
-  // Returns [{ label, prob }] sorted desc, or throws if the model can't load.
-  async function classifyImage(dataUrl) {
-    const net = await loadMobileNet();
-    const img = await new Promise((res, rej) => {
-      const im = new Image();
-      im.crossOrigin = 'anonymous';
-      im.onload = () => res(im); im.onerror = rej; im.src = dataUrl;
-    });
-    const preds = await net.classify(img, 5);
-    return preds.map((p) => ({
-      // ImageNet labels are comma-lists of synonyms; take the cleanest one.
-      label: String(p.className).split(',')[0].trim(),
-      prob: p.probability,
-    }));
+  // COCO-SSD detects 80 EVERYDAY objects — including carrot, apple, banana,
+  // orange, broccoli, cup, laptop, phone, dog, cat, person… — the "basic
+  // stuff" MobileNet's 1,000 fine-grained classes miss. It also gives boxes.
+  async function loadCoco() {
+    if (_coco) return _coco;
+    await loadTF();
+    if (!window.cocoSsd) await loadScript(CDN + '@tensorflow-models/coco-ssd@2/dist/coco-ssd.min.js');
+    _coco = await window.cocoSsd.load({ base: 'lite_mobilenet_v2' });
+    return _coco;
   }
-  function articleFor(word) {
-    return /^[aeiou]/i.test((word || '').trim()) ? 'an' : 'a';
+  // KNN classifier = on-device "training". The user teaches it labels and it
+  // remembers them (persisted), consulted first on future scans.
+  async function loadKNN() {
+    if (_knn) return _knn;
+    await loadTF();
+    if (!window.knnClassifier) await loadScript(CDN + '@tensorflow-models/knn-classifier@1/dist/knn-classifier.min.js');
+    _knn = window.knnClassifier.create();
+    try {
+      const raw = localStorage.getItem('jarvis.knn.v1');
+      if (raw) {
+        const obj = JSON.parse(raw), t = {};
+        Object.keys(obj).forEach((k) => { const a = obj[k]; t[k] = window.tf.tensor(a, [a.length / 1024, 1024]); });
+        _knn.setClassifierDataset(t);
+      }
+    } catch { /* start fresh */ }
+    return _knn;
   }
+  function persistKNN(knn) {
+    try {
+      const ds = knn.getClassifierDataset(), obj = {};
+      Object.keys(ds).forEach((k) => { obj[k] = Array.from(ds[k].dataSync()); });
+      localStorage.setItem('jarvis.knn.v1', JSON.stringify(obj));
+    } catch { /* quota / unsupported */ }
+  }
+  function knnCount(knn) { try { return Object.keys(knn.getClassifierDataset()).length; } catch { return 0; } }
+
+  function imgFromDataUrl(dataUrl) {
+    return new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = dataUrl; });
+  }
+  // Run every available detector on one image element.
+  async function visionScan(imgEl) {
+    const out = { detections: [], classifications: [], taught: null };
+    let emb = null;
+    try { const coco = await loadCoco(); out.detections = await coco.detect(imgEl, 10); } catch { /* offline */ }
+    try {
+      const mn = await loadMobileNet();
+      out.classifications = (await mn.classify(imgEl, 5)).map((p) => ({ label: String(p.className).split(',')[0].trim(), prob: p.probability }));
+      try { if (mn.infer) emb = mn.infer(imgEl, true); } catch { emb = null; }
+    } catch { /* offline */ }
+    // Consult what the user has taught (if anything).
+    try {
+      if (emb && localStorage.getItem('jarvis.knn.v1')) {
+        const knn = await loadKNN();
+        if (knnCount(knn) > 0) { const r = await knn.predictClass(emb, 3); out.taught = { label: r.label, prob: r.confidences[r.label] }; }
+      }
+    } catch { /* no taught data */ }
+    if (emb && emb.dispose) emb.dispose();
+    return out;
+  }
+  // Teach a label for the current image (adds a KNN example, persists it).
+  async function teachLabel(dataUrl, label) {
+    try {
+      const mn = await loadMobileNet();
+      const knn = await loadKNN();
+      const imgEl = await imgFromDataUrl(dataUrl);
+      const emb = mn.infer(imgEl, true);
+      knn.addExample(emb, label);
+      emb.dispose();
+      persistKNN(knn);
+      return true;
+    } catch { return false; }
+  }
+  function articleFor(word) { return /^[aeiou]/i.test((word || '').trim()) ? 'an' : 'a'; }
   function probListHTML(preds) {
     return '<div class="prob-list">' + preds.map((p) => {
       const pct = Math.round(p.prob * 100);
@@ -2297,9 +2356,69 @@ The interface is a movable holographic operating system. Every panel is draggabl
         `<span class="pp">${pct}%</span></div>`;
     }).join('') + '</div>';
   }
+  // Merge detections + classifications into one ranked probability list.
+  function buildPredList(scan) {
+    const map = new Map();
+    (scan.detections || []).forEach((d) => { if (!map.has(d.class) || map.get(d.class) < d.score) map.set(d.class, d.score); });
+    (scan.classifications || []).forEach((c) => { if (!map.has(c.label)) map.set(c.label, c.prob); });
+    return [...map.entries()].map(([label, prob]) => ({ label, prob })).sort((a, b) => b.prob - a.prob).slice(0, 5);
+  }
 
-  // The "identify" flow: X-ray scan → probability breakdown → name it & pull up
-  // a reference image, or drop into focus mode (Google image search) if unsure.
+  /* ---- Visible X-ray scan overlay ---- */
+  function startXray(media, img) {
+    if (img) img.classList.add('xray');
+    if (!media) return;
+    media.classList.add('scanning', 'ident-media');
+    if (!media.querySelector('.xray-fx')) {
+      media.insertAdjacentHTML('beforeend',
+        '<div class="xray-fx"><span class="xr-grid"></span><span class="xr-beam"></span><span class="xr-label">◉ X-RAY SCAN</span><span class="xr-corner tl"></span><span class="xr-corner tr"></span><span class="xr-corner bl"></span><span class="xr-corner br"></span></div>');
+    }
+  }
+  function stopXray(media, img) {
+    if (img) img.classList.remove('xray');
+    if (media) { media.classList.remove('scanning'); const fx = media.querySelector('.xray-fx'); if (fx) fx.remove(); }
+  }
+  // Draw neon detection boxes over the revealed image (object-fit: contain map).
+  function drawBoxes(media, img, detections) {
+    if (!media || !img) return;
+    const nW = img.naturalWidth, nH = img.naturalHeight, cW = img.clientWidth, cH = img.clientHeight;
+    if (!nW || !cW) return;
+    const scale = Math.min(cW / nW, cH / nH);
+    const offX = (cW - nW * scale) / 2, offY = (cH - nH * scale) / 2;
+    const boxes = detections.filter((d) => d.score >= 0.35).slice(0, 6).map((d) => {
+      const [x, y, w, h] = d.bbox;
+      return `<div class="ident-box" style="left:${offX + x * scale}px;top:${offY + y * scale}px;width:${w * scale}px;height:${h * scale}px"><span>${escapeHtml(d.class)} ${Math.round(d.score * 100)}%</span></div>`;
+    }).join('');
+    const old = media.querySelector('.ident-boxes'); if (old) old.remove();
+    if (boxes) media.insertAdjacentHTML('beforeend', `<div class="ident-boxes">${boxes}</div>`);
+  }
+  // "Not right? teach me" — trains the on-device classifier.
+  function addTeachRow(actions, textEl, dataUrl, currentLabel, who) {
+    const wrap = document.createElement('div');
+    wrap.className = 'teach-row';
+    wrap.innerHTML = '<input class="teach-input no-drag" type="text" maxlength="40" placeholder="Not right? Teach me what it is…"><button class="teach-btn">Teach</button>';
+    const input = wrap.querySelector('.teach-input'), btn = wrap.querySelector('.teach-btn');
+    const go = async () => {
+      const label = (input.value || '').trim();
+      if (!label) { input.focus(); return; }
+      btn.disabled = true; btn.textContent = 'Learning…';
+      const ok = await teachLabel(dataUrl, label);
+      btn.textContent = ok ? 'Learned ✓' : 'Try again';
+      if (ok) {
+        lastAnalysisSubject = label;
+        const say = `Understood${who ? ', ' + who : ''}. I'll remember this is ${articleFor(label)} ${label}.`;
+        textEl.innerHTML = `<b>${escapeHtml(label)}</b> — learned from you. I'll recognise it next time.`;
+        addMessage('jarvis', say); speak(say);
+        try { const ref = await fetchImage(label); if (ref && ref.image) showDisplayPanel(`<div class="disp-title">◉ ${escapeHtml(ref.title || label)}</div><img src="${ref.image}" referrerpolicy="no-referrer" onerror="this.style.display='none'"/>`); } catch { /* */ }
+      } else { btn.disabled = false; }
+    };
+    btn.addEventListener('click', go);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+    actions.appendChild(wrap);
+  }
+
+  // The "identify" flow: visible X-ray scan → object detection + classification
+  // → name it (with boxes) & pull a reference image, or focus-mode Google.
   async function identifyImage(dataUrl, mime, name) {
     closeHoloScanner();
     const who = titledName();
@@ -2312,66 +2431,63 @@ The interface is a movable holographic operating system. Every panel is draggabl
     const textEl = card.querySelector('.analysis-text');
     const actions = card.querySelector('.analysis-actions');
     actions.innerHTML = '';
-    if (media) media.classList.add('scanning');
-    if (img) img.classList.add('xray');
+    const started = Date.now();
+    startXray(media, img);
 
     const line = `Scanning${tail} — decomposing the image.`;
     addMessage('jarvis', line); speak(line);
-    const t = startThinking(['Initialising neural net', 'X-ray decomposition', 'Matching against 1,000 known classes', 'Computing probabilities']);
+    const t = startThinking(['Initialising neural nets', 'X-ray decomposition', 'Detecting objects', 'Matching known classes', 'Computing probabilities']);
 
-    let preds = null;
-    try { preds = await classifyImage(dataUrl); } catch (e) { preds = null; }
+    const imgEl = await imgFromDataUrl(dataUrl).catch(() => null);
+    let scan = { detections: [], classifications: [], taught: null };
+    if (imgEl) { try { scan = await visionScan(imgEl); } catch { /* offline */ } }
 
-    // Give the eye a moment to enjoy the x-ray, then reveal the true image.
-    setTimeout(() => { if (img) img.classList.remove('xray'); if (media) media.classList.remove('scanning'); }, 1200);
+    // Hold the x-ray on screen for at least ~1.7s so it's clearly visible.
+    await new Promise((r) => setTimeout(r, Math.max(0, 1700 - (Date.now() - started))));
+    stopXray(media, img);
+    if (scan.detections.length) drawBoxes(media, img, scan.detections);
 
-    if (!preds || !preds.length) {
-      t.finish("My onboard classifier is offline — engaging focus mode.", 30);
-      const q = (name || 'this object').replace(/\.[a-z0-9]+$/i, '');
-      textEl.textContent = `I could not run identification on-device${tail}. Engaging focus mode — searching Google Images for a match.`;
-      const say = `I couldn't identify it on my own${tail}. Engaging focus mode — searching it on Google.`;
+    const preds = buildPredList(scan);
+    let best = null, source = '';
+    if (scan.taught && scan.taught.prob >= 0.65) { best = { label: scan.taught.label, prob: scan.taught.prob }; source = 'taught'; }
+    if (!best) { const d = scan.detections.slice().sort((a, b) => b.score - a.score)[0]; if (d && d.score >= 0.5) { best = { label: d.class, prob: d.score }; source = 'coco'; } }
+    if (!best && scan.classifications.length && scan.classifications[0].prob >= 0.18) { best = { label: scan.classifications[0].label, prob: scan.classifications[0].prob }; source = 'mobilenet'; }
+
+    if (!best) {
+      const guess = (scan.classifications[0] && scan.classifications[0].label) || (name || 'this object').replace(/\.[a-z0-9]+$/i, '');
+      t.finish('Confidence too low — engaging focus mode.', scan.classifications[0] ? Math.round(scan.classifications[0].prob * 100) : 30);
+      textEl.innerHTML = preds.length ? (`Best guesses, but none certain${escapeHtml(tail)}:` + probListHTML(preds)) : `I couldn't identify it on-device${escapeHtml(tail)}.`;
+      const say = `I cannot identify this with confidence${tail}. Engaging focus mode — searching it on Google.`;
       addMessage('jarvis', say); speak(say);
-      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q));
-      buildConfirmedActions(actions, { title: name || 'Unidentified subject', image: dataUrl, extract: 'Unidentified — searched externally.', type: 'photo' });
+      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(guess));
+      buildConfirmedActions(actions, { title: guess, image: dataUrl, extract: 'Low-confidence identification.', type: 'photo' });
+      addTeachRow(actions, textEl, dataUrl, guess, who);
       return;
     }
 
-    const top = preds[0];
-    const pct = Math.round(top.prob * 100);
-    const CONF = 0.18; // below this, JARVIS admits it isn't sure → focus mode
+    const pct = Math.round(best.prob * 100);
+    const others = scan.detections.filter((d) => d.score >= 0.4).length;
+    t.finish(`Identified: ${best.label}${source === 'coco' && others > 1 ? ` (+${others - 1} more)` : ''}.`, Math.min(99, Math.max(55, pct)));
+    lastAnalysisSubject = best.label;
+    const extra = source === 'taught' ? ' (from what you taught me)' : '';
+    textEl.innerHTML = `<b>${escapeHtml(best.label)}</b> — ${pct}% confidence${extra}.` + probListHTML(preds);
+    addMessage('jarvis', `It seems your image is ${articleFor(best.label)} ${best.label} — ${pct}% confidence${extra}${tail}.`);
+    speak(`It seems your image is ${articleFor(best.label)} ${best.label}, ${pct} percent confidence${tail}.`);
 
-    if (top.prob < CONF) {
-      t.finish('Confidence too low to name it — engaging focus mode.', Math.max(20, pct));
-      textEl.innerHTML =
-        `Best guesses, but none certain${escapeHtml(tail)}:` + probListHTML(preds);
-      const say = `I cannot identify this with confidence${tail}. It may be ${articleFor(top.label)} ${top.label}, but I'm only ${pct}% sure. Engaging focus mode — searching it on Google.`;
-      addMessage('jarvis', say); speak(say);
-      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(top.label));
-      buildConfirmedActions(actions, { title: top.label, image: dataUrl, extract: 'Low-confidence identification.', type: 'photo' });
-      return;
-    }
-
-    t.finish(`Identified: ${top.label}.`, Math.min(98, Math.max(60, pct)));
-    lastAnalysisSubject = top.label;
-    const spoken = `It seems your image is ${articleFor(top.label)} ${top.label}, ${pct} percent confidence${tail}.`;
-    textEl.innerHTML = `<b>${escapeHtml(top.label)}</b> — ${pct}% confidence.` + probListHTML(preds);
-    addMessage('jarvis', `It seems your image is ${articleFor(top.label)} ${top.label} — ${pct}% confidence${tail}.`);
-    speak(spoken);
-
-    // Pull up a reference image + short description of the identified thing.
     try {
-      const ref = await fetchImage(top.label);
+      const ref = await fetchImage(best.label);
       if (ref && ref.image) {
         showDisplayPanel(
-          `<div class="disp-title">◉ ${escapeHtml(ref.title || top.label)}</div>` +
+          `<div class="disp-title">◉ ${escapeHtml(ref.title || best.label)}</div>` +
           `<img src="${ref.image}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"/>` +
           (ref.extract ? `<div class="disp-cap">${escapeHtml(ref.extract.split('. ').slice(0, 2).join('. '))}</div>` : '')
         );
         if (ref.extract) textEl.innerHTML += `<div class="ident-desc">${escapeHtml(ref.extract.split('. ').slice(0, 2).join('. '))}.</div>`;
       }
-    } catch { /* reference image is a bonus, not required */ }
+    } catch { /* reference image is a bonus */ }
 
-    buildConfirmedActions(actions, { title: top.label, image: dataUrl, extract: textEl.textContent, type: 'photo' });
+    buildConfirmedActions(actions, { title: best.label, image: dataUrl, extract: textEl.textContent, type: 'photo' });
+    addTeachRow(actions, textEl, dataUrl, best.label, who);
   }
 
   async function analyzeImage(dataUrl, mime, name) {

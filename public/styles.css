@@ -1275,3 +1275,67 @@ body[data-core="warning"]   { --ring: 255,90,90; }
 @media (prefers-reduced-motion: reduce) {
   .wsc-rays, .wsc-core, .wsc-cloud, .wsc-rain i, .wsc-snow i, .wsc-fog i, .wsc-bolt { animation: none !important; }
 }
+
+/* ============================================================
+   Identify — visible X-ray scan, detection boxes, teach row
+   ============================================================ */
+/* Identify images fit fully (so detection boxes map exactly). */
+.analysis-media.ident-media img { object-fit: contain; max-height: 300px; background: #020a16; }
+
+.xray-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+.xr-grid {
+  position: absolute; inset: 0; opacity: 0.6;
+  background:
+    linear-gradient(rgba(70,182,255,0.16) 1px, transparent 1px) 0 0 / 100% 16px,
+    linear-gradient(90deg, rgba(70,182,255,0.16) 1px, transparent 1px) 0 0 / 16px 100%;
+  mask: radial-gradient(circle, #000 60%, transparent 100%);
+  -webkit-mask: radial-gradient(circle, #000 60%, transparent 100%);
+}
+.xr-beam {
+  position: absolute; left: 0; right: 0; height: 16%; top: -16%;
+  background: linear-gradient(180deg, transparent, rgba(120,220,255,0.5), rgba(255,255,255,0.9), rgba(120,220,255,0.5), transparent);
+  box-shadow: 0 0 26px rgba(120,210,255,0.85);
+  animation: xrBeam 1.5s ease-in-out infinite;
+}
+@keyframes xrBeam { 0% { top: -18%; } 100% { top: 102%; } }
+.xr-label {
+  position: absolute; top: 8px; left: 10px; font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.22em; color: #bfe9ff; text-shadow: 0 0 8px rgba(120,210,255,0.9);
+  animation: xrBlink 1s steps(2) infinite;
+}
+@keyframes xrBlink { 50% { opacity: 0.35; } }
+.xr-corner { position: absolute; width: 16px; height: 16px; border: 2px solid rgba(120,210,255,0.8); }
+.xr-corner.tl { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
+.xr-corner.tr { top: 6px; right: 6px; border-left: 0; border-bottom: 0; }
+.xr-corner.bl { bottom: 6px; left: 6px; border-right: 0; border-top: 0; }
+.xr-corner.br { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+
+/* Detection boxes over the identified image */
+.ident-boxes { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.ident-box {
+  position: absolute; border: 1.5px solid var(--cyan-soft); border-radius: 3px;
+  box-shadow: 0 0 10px rgba(70,182,255,0.6), inset 0 0 12px rgba(70,182,255,0.14);
+  animation: boxPop 0.3s ease;
+}
+.ident-box span {
+  position: absolute; top: -18px; left: -1px; white-space: nowrap; text-transform: capitalize;
+  background: rgba(4,16,30,0.92); border: 1px solid var(--cyan-dim); color: var(--cyan-soft);
+  font-family: var(--mono); font-size: 10px; padding: 1px 5px; border-radius: 4px;
+}
+@keyframes boxPop { from { opacity: 0; transform: scale(1.06); } }
+
+/* Teach / correct row */
+.teach-row { display: flex; gap: 6px; width: 100%; margin-top: 10px; }
+.teach-input {
+  flex: 1; background: rgba(2,10,22,0.6); border: 1px solid var(--glass-brd); border-radius: 8px;
+  color: var(--text); padding: 6px 9px; font-size: 12px; outline: none;
+}
+.teach-input:focus { border-color: var(--cyan-dim); }
+.teach-btn {
+  border: 1px solid var(--cyan-dim); background: rgba(70,182,255,0.14); color: var(--cyan-soft);
+  border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.teach-btn:hover { background: rgba(70,182,255,0.24); }
+.teach-btn:disabled { opacity: 0.7; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) { .xr-beam, .xr-label { animation: none !important; } }

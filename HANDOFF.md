@@ -127,12 +127,16 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   `call Rey on whatsapp`, `text Rey saying hi`, `pull up my chat with Rey on whatsapp`.
 - Analysis: `analyze the Eiffel Tower` → confirm → "research files" or "first
   project"; `deep search`; drag a file/photo onto the HUD (holo-scanner on PC).
-- Identify: `identify this` / `what is this?` → opens the image picker, runs an
-  on-device MobileNet X-ray scan (`identifyImage` in `public/app.js`), shows a
-  probability breakdown (`.prob-list`), says "It seems your image is a [X] — N%
-  confidence", pulls a reference image into the display panel, and drops into
-  focus mode (Google image search) when confidence < 18% or the model is offline.
-  Keyless: TF.js + MobileNet from CDN, cached in `_mobilenet`.
+- Identify: `identify this` / `what is this?` → opens the image picker, runs a
+  visible X-ray scan (`startXray`/`stopXray` add `.xray-fx` beam/grid/reticle +
+  `.xray` filter, held ≥1.7s), then `visionScan()` runs COCO-SSD object
+  detection (everyday objects incl. carrot; `drawBoxes` overlays `.ident-box`)
+  + MobileNet fine-grained classification + a user-taught KNN classifier. Names
+  the best result with a `.prob-list` breakdown, pulls a reference image, or
+  drops into focus mode (Google) when nothing is confident. Teachable: the
+  `.teach-row` calls `teachLabel()` → KNN example persisted to `jarvis.knn.v1`.
+  Keyless: TF.js + mobilenet + coco-ssd + knn-classifier from CDN (loaders
+  `loadMobileNet`/`loadCoco`/`loadKNN`, cached; `loadScript` has a 12s timeout).
 - Layout / widgets (v2.7): `lock the layout`, `unlock the layout`,
   `reset my layout`, `snap to grid`, `open the widget library`,
   `show/hide the <clock|weather|system|applications|calculator|notes|world map|music|log> widget`,
