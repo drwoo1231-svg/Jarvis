@@ -107,7 +107,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.5 · weather, alarms, calendar, visual panel';
+  const APP_VERSION = 'v2.6 · identify (x-ray scan + probability breakdown)';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -133,6 +133,7 @@
   let speakAmpTimer = null;
   let micStream = null, audioCtx = null, analyser = null, micRAF = null;
   let analysisPending = false;   // next typed message is an analysis subject
+  let identifyPending = false;   // next picked image goes through identifyImage
   let selectedPlatform = null;   // onboarding platform choice
   let pendingSave = null;        // analysis awaiting a filing decision
   let pendingDeepSearch = false; // awaiting deep-search kind
@@ -1030,6 +1031,18 @@ Only emit an action when the user asks you to do something on the device; for or
       return;
     }
 
+    // "identify ___" — X-ray scan + probability breakdown of a picture.
+    if (/^\s*(?:jarvis[,\s]+)?(?:can you |could you |please )?identif(?:y|ies)\b/i.test(text) ||
+        /^\s*what(?:'s| is| are)?\s+(?:this|that|these|it)\b.*\??$/i.test(text) && /\b(image|picture|photo|pic|thing|object|shown?)\b/i.test(text)) {
+      addMessage('user', text);
+      const who = titledName();
+      identifyPending = true;
+      addMessage('jarvis', `Select the image to identify${who ? ', ' + who : ''} — I'll scan it and break down the probabilities.`);
+      speak('Select the image to identify. I will scan it and break down the probabilities.');
+      setTimeout(pickImage, 250);
+      return;
+    }
+
     // Visual pull-up — "show me / pull up a picture of X" (internet or files).
     let vm = text.match(/^(?:show me|pull up|bring up|find me|get me|display|pull)\s+(?:an?\s+|the\s+)?(?:picture|photo|image|pic|visual)\s+(?:of\s+|for\s+|showing\s+)?(.+?)\??$/i);
     if (!vm) { const vv = text.match(/^what (?:does|do)\s+(.+?)\s+look like\??$/i); if (vv) vm = vv; }
@@ -1888,8 +1901,12 @@ Only emit an action when the user asks you to do something on the device; for or
     if (!file) return;
     const kind = detectFileKind(file);
     if (kind === 'image') {
-      const r = new FileReader(); r.onload = () => analyzeImage(r.result, file.type, file.name); r.readAsDataURL(file); return;
+      const identify = identifyPending; identifyPending = false;
+      const r = new FileReader();
+      r.onload = () => (identify ? identifyImage(r.result, file.type, file.name) : analyzeImage(r.result, file.type, file.name));
+      r.readAsDataURL(file); return;
     }
+    identifyPending = false;
     if (kind === 'text' || kind === 'code' || kind === 'sheet') {
       const r = new FileReader(); r.onload = () => analyzeTextFile(String(r.result), file, kind); r.readAsText(file); return;
     }
@@ -1997,6 +2014,129 @@ Only emit an action when the user asks you to do something on the device; for or
     }
     const r = await window.Tesseract.recognize(dataUrl, 'eng');
     return (r && r.data && r.data.text || '').trim();
+  }
+
+  /* ---------- Keyless image identification (on-device MobileNet) ---------- */
+  function loadScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error('load failed: ' + src));
+      document.head.appendChild(s);
+    });
+  }
+  let _mobilenet = null, _mnLoading = null;
+  async function loadMobileNet() {
+    if (_mobilenet) return _mobilenet;
+    if (_mnLoading) return _mnLoading;
+    _mnLoading = (async () => {
+      if (!window.tf) await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js');
+      if (!window.mobilenet) await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2/dist/mobilenet.min.js');
+      _mobilenet = await window.mobilenet.load({ version: 2, alpha: 1.0 });
+      return _mobilenet;
+    })();
+    return _mnLoading;
+  }
+  // Returns [{ label, prob }] sorted desc, or throws if the model can't load.
+  async function classifyImage(dataUrl) {
+    const net = await loadMobileNet();
+    const img = await new Promise((res, rej) => {
+      const im = new Image();
+      im.crossOrigin = 'anonymous';
+      im.onload = () => res(im); im.onerror = rej; im.src = dataUrl;
+    });
+    const preds = await net.classify(img, 5);
+    return preds.map((p) => ({
+      // ImageNet labels are comma-lists of synonyms; take the cleanest one.
+      label: String(p.className).split(',')[0].trim(),
+      prob: p.probability,
+    }));
+  }
+  function articleFor(word) {
+    return /^[aeiou]/i.test((word || '').trim()) ? 'an' : 'a';
+  }
+  function probListHTML(preds) {
+    return '<div class="prob-list">' + preds.map((p) => {
+      const pct = Math.round(p.prob * 100);
+      return `<div class="prob-row"><span class="pn">${escapeHtml(p.label)}</span>` +
+        `<span class="ptrack"><span class="pbar" style="width:${pct}%"></span></span>` +
+        `<span class="pp">${pct}%</span></div>`;
+    }).join('') + '</div>';
+  }
+
+  // The "identify" flow: X-ray scan → probability breakdown → name it & pull up
+  // a reference image, or drop into focus mode (Google image search) if unsure.
+  async function identifyImage(dataUrl, mime, name) {
+    closeHoloScanner();
+    const who = titledName();
+    const tail = who ? ', ' + who : '';
+    renderAnalysisCard({ title: name || 'Unidentified subject', image: dataUrl, extract: '' }, { image: true });
+    const cards = el.log.querySelectorAll('.analysis-card');
+    const card = cards[cards.length - 1];
+    const media = card.querySelector('.analysis-media');
+    const img = card.querySelector('.analysis-media img');
+    const textEl = card.querySelector('.analysis-text');
+    const actions = card.querySelector('.analysis-actions');
+    actions.innerHTML = '';
+    if (media) media.classList.add('scanning');
+    if (img) img.classList.add('xray');
+
+    const line = `Scanning${tail} — decomposing the image.`;
+    addMessage('jarvis', line); speak(line);
+    const t = startThinking(['Initialising neural net', 'X-ray decomposition', 'Matching against 1,000 known classes', 'Computing probabilities']);
+
+    let preds = null;
+    try { preds = await classifyImage(dataUrl); } catch (e) { preds = null; }
+
+    // Give the eye a moment to enjoy the x-ray, then reveal the true image.
+    setTimeout(() => { if (img) img.classList.remove('xray'); if (media) media.classList.remove('scanning'); }, 1200);
+
+    if (!preds || !preds.length) {
+      t.finish("My onboard classifier is offline — engaging focus mode.", 30);
+      const q = (name || 'this object').replace(/\.[a-z0-9]+$/i, '');
+      textEl.textContent = `I could not run identification on-device${tail}. Engaging focus mode — searching Google Images for a match.`;
+      const say = `I couldn't identify it on my own${tail}. Engaging focus mode — searching it on Google.`;
+      addMessage('jarvis', say); speak(say);
+      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q));
+      buildConfirmedActions(actions, { title: name || 'Unidentified subject', image: dataUrl, extract: 'Unidentified — searched externally.', type: 'photo' });
+      return;
+    }
+
+    const top = preds[0];
+    const pct = Math.round(top.prob * 100);
+    const CONF = 0.18; // below this, JARVIS admits it isn't sure → focus mode
+
+    if (top.prob < CONF) {
+      t.finish('Confidence too low to name it — engaging focus mode.', Math.max(20, pct));
+      textEl.innerHTML =
+        `Best guesses, but none certain${escapeHtml(tail)}:` + probListHTML(preds);
+      const say = `I cannot identify this with confidence${tail}. It may be ${articleFor(top.label)} ${top.label}, but I'm only ${pct}% sure. Engaging focus mode — searching it on Google.`;
+      addMessage('jarvis', say); speak(say);
+      Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(top.label));
+      buildConfirmedActions(actions, { title: top.label, image: dataUrl, extract: 'Low-confidence identification.', type: 'photo' });
+      return;
+    }
+
+    t.finish(`Identified: ${top.label}.`, Math.min(98, Math.max(60, pct)));
+    lastAnalysisSubject = top.label;
+    const spoken = `It seems your image is ${articleFor(top.label)} ${top.label}, ${pct} percent confidence${tail}.`;
+    textEl.innerHTML = `<b>${escapeHtml(top.label)}</b> — ${pct}% confidence.` + probListHTML(preds);
+    addMessage('jarvis', `It seems your image is ${articleFor(top.label)} ${top.label} — ${pct}% confidence${tail}.`);
+    speak(spoken);
+
+    // Pull up a reference image + short description of the identified thing.
+    try {
+      const ref = await fetchImage(top.label);
+      if (ref && ref.image) {
+        showDisplayPanel(
+          `<div class="disp-title">◉ ${escapeHtml(ref.title || top.label)}</div>` +
+          `<img src="${ref.image}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"/>` +
+          (ref.extract ? `<div class="disp-cap">${escapeHtml(ref.extract.split('. ').slice(0, 2).join('. '))}</div>` : '')
+        );
+        if (ref.extract) textEl.innerHTML += `<div class="ident-desc">${escapeHtml(ref.extract.split('. ').slice(0, 2).join('. '))}.</div>`;
+      }
+    } catch { /* reference image is a bonus, not required */ }
+
+    buildConfirmedActions(actions, { title: top.label, image: dataUrl, extract: textEl.textContent, type: 'photo' });
   }
 
   async function analyzeImage(dataUrl, mime, name) {

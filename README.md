@@ -23,6 +23,13 @@ same code runs beautifully on your computer too. No app store required.
   **Private Research Files** (stored locally on your device). You can also
   hand it an **image** (tap the picture button, or drag-drop on desktop) and,
   with a vision-capable provider, JARVIS describes it.
+- 🔬 **Identify.** Say *"identify this"* (or *"what is this?"*) and drop in a
+  picture. JARVIS runs an **on-device X-ray scan** — a keyless neural net
+  (MobileNet, 1,000 classes) that runs entirely in your browser — and breaks
+  down **the probability of what it is**: *"It seems your image is a carrot —
+  87% confidence,"* with a probability bar-chart and a reference photo pulled
+  up beside the core. If it can't be sure, JARVIS drops into **focus mode** and
+  searches it on Google for you.
 - 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core, live
   telemetry readouts (clock, mode, model, signal), a radar sweep and a
   waveform that reacts to your voice.

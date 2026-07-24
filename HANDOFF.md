@@ -127,6 +127,12 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   `call Rey on whatsapp`, `text Rey saying hi`, `pull up my chat with Rey on whatsapp`.
 - Analysis: `analyze the Eiffel Tower` → confirm → "research files" or "first
   project"; `deep search`; drag a file/photo onto the HUD (holo-scanner on PC).
+- Identify: `identify this` / `what is this?` → opens the image picker, runs an
+  on-device MobileNet X-ray scan (`identifyImage` in `public/app.js`), shows a
+  probability breakdown (`.prob-list`), says "It seems your image is a [X] — N%
+  confidence", pulls a reference image into the display panel, and drops into
+  focus mode (Google image search) when confidence < 18% or the model is offline.
+  Keyless: TF.js + MobileNet from CDN, cached in `_mobilenet`.
 - Misc: `what's 25 times 8`, `weather in Tokyo`, `define serendipity`,
   `who is Ada Lovelace`, `inspire me`, `simulate a call from Pepper`.
 
