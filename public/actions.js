@@ -78,6 +78,74 @@
     'apple maps': { label: 'Apple Maps', url: () => 'https://maps.apple.com' },
   };
 
+  /* Native protocol handlers — these actually launch the INSTALLED desktop or
+     mobile app on the user's own machine (the OS hands the scheme to the
+     registered app). Used first; the https URL above is the fallback if the
+     app isn't installed. Never a web search. */
+  const isMac = /Mac/.test(ua) && !isIOS;
+  const NATIVE = {
+    spotify:   'spotify:',
+    discord:   'discord://',
+    slack:     'slack://open',
+    whatsapp:  'whatsapp://',
+    telegram:  'tg://',
+    steam:     'steam://open/main',
+    vscode:    'vscode://',
+    snapchat:  'snapchat://',
+    facetime:  'facetime://',
+    line:      'line://',
+    wechat:    'weixin://',
+    zoom:      'zoommtg://',
+    mail:      'mailto:',
+    gmail:     'mailto:',
+    music:     isMac || isIOS ? 'music://' : '',
+    'apple music': isMac || isIOS ? 'music://' : '',
+    maps:      isMac || isIOS ? 'maps://' : '',
+    'apple maps': 'maps://',
+    messages:  isMac || isIOS ? 'imessage://' : (isAndroid ? 'sms:' : ''),
+    phone:     'tel:',
+    facebook:  isIOS || isAndroid ? 'fb://' : '',
+    instagram: isIOS || isAndroid ? 'instagram://' : '',
+    twitter:   isIOS || isAndroid ? 'twitter://' : '',
+    x:         isIOS || isAndroid ? 'twitter://' : '',
+    reddit:    isIOS || isAndroid ? 'reddit://' : '',
+    netflix:   isIOS || isAndroid ? 'nflx://' : '',
+    twitch:    isIOS || isAndroid ? 'twitch://' : '',
+  };
+
+  // Launch a native app by scheme; if it doesn't take over, open the web app.
+  // Assigning location to an external scheme is handled by the OS WITHOUT
+  // unloading the page (for registered protocols), so JARVIS stays put.
+  function launchApp(scheme, web) {
+    if (!scheme) { if (web) autoOpen(web); return false; }
+    let handed = false;
+    const mark = () => { handed = true; };
+    document.addEventListener('visibilitychange', mark, { once: true });
+    window.addEventListener('blur', mark, { once: true });
+    const started = Date.now();
+    try { window.location.href = scheme; } catch { /* unregistered scheme */ }
+    // Fallback to the web app if we're still here and the OS didn't switch away.
+    if (web) setTimeout(() => {
+      if (!handed && document.visibilityState === 'visible' && Date.now() - started < 2500) autoOpen(web);
+    }, 1500);
+    return true;
+  }
+
+  // Public: open an app by key. Native first, real web app second — never a
+  // Google search for a known app.
+  function openApp(key) {
+    key = String(key || '').toLowerCase().trim();
+    const app = APPS[key];
+    const web = app ? app.url() : '';
+    const scheme = NATIVE[key] || (web && /^[a-z][a-z0-9.+-]*:/i.test(web) && !/^https?:/i.test(web) ? web : '');
+    const JA = window.JarvisActions || { launchApp, autoOpen };
+    if (scheme) { JA.launchApp(scheme, /^https?:/i.test(web) ? web : ''); return { label: app ? app.label : key, native: true }; }
+    if (web) { JA.autoOpen(web); return { label: app ? app.label : key, native: false }; }
+    // Truly unknown app: last-resort search so the click still does something.
+    JA.autoOpen('https://www.google.com/search?q=' + enc(key + ' app'));
+    return { label: key, native: false };
+  }
+
   // In-app search URLs.
   const APP_SEARCH = {
     youtube: (q) => `https://www.youtube.com/results?search_query=${enc(q)}`,
@@ -247,5 +315,5 @@
     }
   }
 
-  window.JarvisActions = { build, autoOpen, formatDuration, isIOS, isAndroid };
+  window.JarvisActions = { build, autoOpen, openApp, launchApp, formatDuration, isIOS, isAndroid };
 })();

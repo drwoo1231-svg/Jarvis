@@ -134,7 +134,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v2.7 · movable holographic panels + widget library';
+  const APP_VERSION = 'v2.8 · live weather holograms + native app launch';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -574,7 +574,7 @@ Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; searc
 Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
 
 # Holographic Interface (v2.7)
-The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, Music, and the Dog Assistant. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The Dog Assistant expands from a small dog icon into a dashboard (camera, mood, hunger, water, sleep, last walk, treats) — note that camera and GPS are simulated unless real hardware is connected. The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -1248,6 +1248,13 @@ The interface is a movable holographic operating system. Every panel is draggabl
   }
 
   function executeAction(a) {
+    // "open_app" launches the real native app on the device (URL scheme) with
+    // the web app as fallback — never a web search.
+    if (a && String(a.type).toLowerCase() === 'open_app' && a.app) {
+      const r = Actions.openApp(a.app);
+      toast((r && r.native ? 'Opening ' : 'Launching ') + (r ? r.label : a.app));
+      return;
+    }
     const built = Actions.build(a);
     if (!built) return;
     if (built.kind === 'timer') {
@@ -2024,6 +2031,46 @@ The interface is a movable holographic operating system. Every panel is draggabl
     }
     return `<div class="wx-precip ${kind === 'snow' ? 'snow' : ''}">${drops}</div>`;
   }
+
+  /* Live holographic weather scene (animated CSS, not an emoji): glowing sun
+     with rotating rays, drifting clouds, falling rain, snow, lightning. */
+  function weatherSceneType(code) {
+    if (code === 0 || code === 1) return 'sun';
+    if (code === 2) return 'partly';
+    if (code === 3) return 'cloud';
+    if (code === 45 || code === 48) return 'fog';
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'rain';
+    if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snow';
+    if (code >= 95) return 'storm';
+    return 'sun';
+  }
+  function weatherSceneHTML(code, size) {
+    const type = weatherSceneType(code);
+    const hasSun = type === 'sun' || type === 'partly';
+    const hasCloud = type === 'partly' || type === 'cloud' || type === 'rain' || type === 'snow' || type === 'storm';
+    let inner = '';
+    if (hasSun) inner += '<div class="wsc-sun"><span class="wsc-rays"></span><span class="wsc-core"></span></div>';
+    if (type === 'fog') inner += '<div class="wsc-fog"><i></i><i></i><i></i></div>';
+    if (hasCloud) inner += '<div class="wsc-cloud"><b></b><b></b><b></b><b></b></div>';
+    if (type === 'rain' || type === 'storm') {
+      let r = '';
+      for (let i = 0; i < 16; i++) {
+        const l = 8 + Math.random() * 82, dur = (0.45 + Math.random() * 0.45).toFixed(2), dl = (Math.random()).toFixed(2);
+        r += `<i style="left:${l}%;animation-duration:${dur}s;animation-delay:${dl}s"></i>`;
+      }
+      inner += `<div class="wsc-rain">${r}</div>`;
+    }
+    if (type === 'snow') {
+      let s = '';
+      for (let i = 0; i < 16; i++) {
+        const l = 6 + Math.random() * 88, dur = (1.8 + Math.random() * 1.8).toFixed(2), dl = (Math.random() * 2).toFixed(2), dx = Math.round(Math.random() * 14 - 7);
+        s += `<i style="left:${l}%;animation-duration:${dur}s;animation-delay:${dl}s;--dx:${dx}px"></i>`;
+      }
+      inner += `<div class="wsc-snow">${s}</div>`;
+    }
+    if (type === 'storm') inner += '<span class="wsc-bolt"></span>';
+    return `<div class="wsc wsc-${type} ${size === 'sm' ? 'wsc-sm' : 'wsc-lg'}">${inner}</div>`;
+  }
   async function showWeather(city) {
     const tail = addressWord() ? ', ' + addressWord() : '';
     showDisplayPanel('<div class="disp-title">◉ Weather</div><div class="disp-loading">Acquiring location…</div>');
@@ -2043,14 +2090,13 @@ The interface is a movable holographic operating system. Every panel is draggabl
       const d = await r.json();
       const c = d.current;
       const temp = Math.round(c.temperature_2m);
-      const ic = wxIcon(c.weather_code);
       const hi = d.daily ? Math.round(d.daily.temperature_2m_max[0]) : null;
       const lo = d.daily ? Math.round(d.daily.temperature_2m_min[0]) : null;
       t.finish('Forecast ready.', 97);
       showDisplayPanel(
         `<div class="disp-title">◉ Weather · ${escapeHtml(place)}</div>` +
-        `<div class="wx">${precipHTML(ic.precip)}` +
-        `<div class="wx-icon ${ic.cls}">${ic.emoji}</div>` +
+        `<div class="wx">` +
+        weatherSceneHTML(c.weather_code, 'lg') +
         `<div class="wx-temp">${temp}°C</div>` +
         `<div class="wx-cond">${(WMO[c.weather_code] || 'clear')}</div>` +
         `<div class="wx-loc">${escapeHtml(place)}</div>` +
@@ -2944,6 +2990,8 @@ The interface is a movable holographic operating system. Every panel is draggabl
 
     buildWidgetLibrary();
     buildAppsGrid();
+    const wwr = document.getElementById('wwRefresh');
+    if (wwr) wwr.addEventListener('click', loadWeatherWidget);
     buildCalc();
     buildWorldMap();
     initNotes();
@@ -3035,8 +3083,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
         lat = pos.coords.latitude; lon = pos.coords.longitude; place = 'Local';
       }
       const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`)).json();
-      const ic = wxIcon(d.current.weather_code);
-      body.innerHTML = `<div class="ww"><span class="ww-ic ${ic.cls}">${ic.emoji}</span>` +
+      body.innerHTML = `<div class="ww">${weatherSceneHTML(d.current.weather_code, 'sm')}` +
         `<span class="ww-temp">${Math.round(d.current.temperature_2m)}°C</span></div>` +
         `<div class="ww-cond">${WMO[d.current.weather_code] || 'clear'} · ${escapeHtml(place)}</div>`;
     } catch {
@@ -3072,30 +3119,84 @@ The interface is a movable holographic operating system. Every panel is draggabl
       `<span class="ss-v">${v}%${note ? ' <em>' + note + '</em>' : ''}</span></div>`).join('');
   }
 
-  /* ---- Applications widget (quick launch) ---- */
+  /* ---- Applications widget (quick launch) ----
+     Tiles open the REAL app on the user's machine: native URL schemes launch
+     the installed desktop/mobile app (web app as fallback), Camera opens the
+     actual webcam, Files opens the real file picker. No web searches. */
   function buildAppsGrid() {
     const grid = document.getElementById('waGrid');
     if (!grid) return;
     const apps = [
-      ['YouTube', '▶', { type: 'open_app', app: 'youtube' }],
-      ['Spotify', '♫', { type: 'open_app', app: 'spotify' }],
-      ['Maps', '◈', { type: 'open_app', app: 'maps' }],
-      ['Calendar', '▦', { type: 'calendar', title: 'New event' }],
-      ['Camera', '◉', { type: 'open_app', app: 'camera' }],
-      ['Files', '▤', { type: 'open_app', app: 'files' }],
-      ['Browser', '◍', { type: 'open_url', url: 'https://www.google.com' }],
-      ['Weather', '☁', { widget: 'wWeather' }],
+      ['Spotify', '♫', () => launchNative('spotify')],
+      ['Discord', '🎮', () => launchNative('discord')],
+      ['YouTube', '▶', () => launchNative('youtube')],
+      ['Maps', '◈', () => launchNative('maps')],
+      ['Mail', '✉', () => launchNative('mail')],
+      ['Calendar', '▦', () => Actions.autoOpen('https://calendar.google.com')],
+      ['Camera', '◉', () => openCamera()],
+      ['Files', '▤', () => openFiles()],
     ];
     grid.innerHTML = '';
-    apps.forEach(([name, ic, action]) => {
+    apps.forEach(([name, ic, fn]) => {
       const b = document.createElement('button');
       b.className = 'app-tile'; b.innerHTML = `<span class="app-ic">${ic}</span><span>${name}</span>`;
-      b.addEventListener('click', () => {
-        if (action.widget) { setWidgetVisible(action.widget, true); return; }
-        executeAction(action);
-      });
+      b.addEventListener('click', fn);
       grid.appendChild(b);
     });
+  }
+  function launchNative(key) {
+    const r = Actions.openApp(key);
+    toast((r && r.native ? 'Opening ' : 'Launching ') + (r ? r.label : key) + (r && r.native ? ' on your device' : ''));
+  }
+
+  // Real webcam feed — "connect to my computer's camera".
+  let camStream = null;
+  async function openCamera() {
+    const who = addressWord() ? ', ' + addressWord() : '';
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      toast('Camera not available in this browser.'); return;
+    }
+    showDisplayPanel('<div class="disp-title">◉ Camera Feed</div><div class="disp-loading">Requesting camera…</div>');
+    try {
+      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+      el.dispBody.innerHTML = '<div class="disp-title">◉ Live Camera</div><video id="camVideo" autoplay playsinline muted class="cam-video"></video>' +
+        '<div class="cam-row"><button class="w-mini-btn" id="camSnap" style="margin:8px 6px 0 0">📸 Snapshot</button><button class="w-mini-btn" id="camStop" style="margin:8px 0 0">■ Stop</button></div>';
+      const v = document.getElementById('camVideo'); v.srcObject = camStream;
+      document.getElementById('camStop').addEventListener('click', stopCamera);
+      document.getElementById('camSnap').addEventListener('click', () => {
+        const cv = document.createElement('canvas'); cv.width = v.videoWidth || 640; cv.height = v.videoHeight || 480;
+        cv.getContext('2d').drawImage(v, 0, 0, cv.width, cv.height);
+        toast('Snapshot captured.');
+        identifyImage(cv.toDataURL('image/png'), 'image/png', 'camera-snapshot.png');
+      });
+      addMessage('jarvis', `Camera online${who}. I've put the live feed on the display.`);
+    } catch (e) {
+      el.dispBody.innerHTML = '<div class="disp-title">◉ Camera</div><div class="disp-loading">Camera access was denied.</div>';
+      toast('Camera access denied.');
+    }
+  }
+  function stopCamera() {
+    if (camStream) { camStream.getTracks().forEach((t) => t.stop()); camStream = null; }
+    closeDisplay();
+  }
+
+  // Real file access — "connect to my computer's files".
+  async function openFiles() {
+    const who = addressWord() ? ', ' + addressWord() : '';
+    if (window.showOpenFilePicker) {
+      try {
+        const [handle] = await window.showOpenFilePicker();
+        const file = await handle.getFile();
+        addMessage('jarvis', `Opening ${file.name}${who}.`);
+        handleImageFile(file);
+        return;
+      } catch { /* user cancelled or unsupported — fall through */ }
+    }
+    // Fallback: the OS file chooser (opens the user's real files).
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.addEventListener('change', () => { const f = inp.files && inp.files[0]; if (f) handleImageFile(f); });
+    inp.click();
   }
 
   /* ---- World map widget (decorative dotted globe) ---- */

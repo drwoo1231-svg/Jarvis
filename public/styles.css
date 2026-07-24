@@ -1188,3 +1188,90 @@ body[data-core="warning"]   { --ring: 255,90,90; }
   .bg-scan, .widget::after, .dog-fab, .core-ring span, .wm-dot.hot { animation: none !important; }
   .bg-particles { display: none; }
 }
+
+/* ============================================================
+   Live holographic weather scenes (animated, not emoji)
+   All sizes in em so the scene scales with .wsc font-size.
+   ============================================================ */
+.wsc { position: relative; }
+.wsc-lg { font-size: 15px; width: 9em; height: 7em; margin: 2px auto 8px; }
+.wsc-sm { font-size: 7.5px; width: 9em; height: 7em; }
+.wsc * { box-sizing: border-box; }
+
+/* Sun — glowing core + rotating rays */
+.wsc-sun { position: absolute; left: 50%; top: 50%; width: 4em; height: 4em; transform: translate(-50%, -50%); }
+.wsc-partly .wsc-sun { left: 34%; top: 2.4em; width: 3.2em; height: 3.2em; }
+.wsc-rays {
+  position: absolute; inset: -1.3em; border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255,210,130,0.85) 0 3deg, transparent 3deg 15deg);
+  -webkit-mask: radial-gradient(closest-side, transparent 60%, #000 63%, #000 82%, transparent 85%);
+          mask: radial-gradient(closest-side, transparent 60%, #000 63%, #000 82%, transparent 85%);
+  animation: wsc-spin 14s linear infinite; filter: drop-shadow(0 0 3px rgba(255,200,110,0.6));
+}
+.wsc-core {
+  position: absolute; inset: 0.7em; border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 8%, #ffe49a 42%, rgba(255,200,110,0.25) 72%, transparent 78%);
+  box-shadow: 0 0 1.6em rgba(255,200,110,0.85), 0 0 2.8em rgba(120,200,255,0.5);
+  animation: wsc-pulse 3s ease-in-out infinite;
+}
+@keyframes wsc-spin { to { transform: rotate(360deg); } }
+@keyframes wsc-pulse { 0%,100% { transform: scale(1); opacity: 0.94; } 50% { transform: scale(1.06); opacity: 1; } }
+
+/* Cloud — translucent holographic puffs, gently drifting */
+.wsc-cloud { position: absolute; left: 50%; top: 2.2em; width: 5.4em; height: 2.6em; transform: translateX(-50%); animation: wsc-drift 6s ease-in-out infinite; }
+.wsc-partly .wsc-cloud { left: 58%; top: 2.8em; }
+.wsc-cloud b {
+  position: absolute; display: block; border-radius: 50%;
+  background: linear-gradient(180deg, rgba(224,242,255,0.96), rgba(150,200,240,0.7));
+  box-shadow: 0 0 1.3em rgba(120,200,255,0.55), inset 0 -0.2em 0.4em rgba(80,140,200,0.4);
+}
+.wsc-cloud b:nth-child(1) { width: 2.4em; height: 2.4em; left: 1.4em; top: 0; }
+.wsc-cloud b:nth-child(2) { width: 1.9em; height: 1.9em; left: 0.2em; top: 0.7em; }
+.wsc-cloud b:nth-child(3) { width: 1.9em; height: 1.9em; left: 3.4em; top: 0.7em; }
+.wsc-cloud b:nth-child(4) { width: 4.6em; height: 1.5em; left: 0.4em; top: 1.1em; border-radius: 0.8em; }
+@keyframes wsc-drift { 0%,100% { transform: translateX(-50%); } 50% { transform: translateX(calc(-50% + 0.5em)); } }
+
+/* Rain — falling streaks */
+.wsc-rain { position: absolute; inset: 0; }
+.wsc-rain i {
+  position: absolute; top: 3.6em; width: 0.14em; height: 1.1em; border-radius: 1px;
+  background: linear-gradient(rgba(150,220,255,0.95), transparent);
+  filter: drop-shadow(0 0 2px rgba(120,200,255,0.8)); animation: wsc-fall linear infinite;
+}
+@keyframes wsc-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(3.2em); opacity: 0; } }
+
+/* Snow — drifting flakes */
+.wsc-snow { position: absolute; inset: 0; }
+.wsc-snow i {
+  position: absolute; top: 3.4em; width: 0.42em; height: 0.42em; border-radius: 50%;
+  background: #eaf6ff; box-shadow: 0 0 4px #cfeeff; animation: wsc-snowfall linear infinite;
+}
+@keyframes wsc-snowfall { 0% { transform: translate(0,0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--dx,0), 3.4em); opacity: 0.1; } }
+
+/* Fog — drifting bands */
+.wsc-fog { position: absolute; inset: 0; }
+.wsc-fog i { position: absolute; left: 0.4em; right: 0.4em; height: 0.5em; border-radius: 0.5em; background: linear-gradient(90deg, transparent, rgba(160,210,255,0.5), transparent); animation: wsc-fogdrift ease-in-out infinite alternate; }
+.wsc-fog i:nth-child(1) { top: 2.2em; animation-duration: 3.4s; }
+.wsc-fog i:nth-child(2) { top: 3.3em; animation-duration: 4.2s; }
+.wsc-fog i:nth-child(3) { top: 4.4em; animation-duration: 3.8s; }
+@keyframes wsc-fogdrift { from { transform: translateX(-0.5em); opacity: 0.5; } to { transform: translateX(0.5em); opacity: 0.9; } }
+
+/* Storm — lightning bolt flash */
+.wsc-bolt {
+  position: absolute; left: 3.5em; top: 3em; width: 1.5em; height: 2.6em;
+  background: linear-gradient(#ffffff, #bfe6ff);
+  clip-path: polygon(58% 0, 18% 56%, 44% 56%, 26% 100%, 82% 38%, 52% 38%);
+  filter: drop-shadow(0 0 6px #cfeeff); opacity: 0; animation: wsc-flash 3.4s steps(1) infinite;
+}
+@keyframes wsc-flash { 0%,10%,14%,100% { opacity: 0; } 11%,13% { opacity: 1; } 12% { opacity: 0.4; } }
+
+/* Weather widget layout tweak: scene + temp side by side */
+.ww { min-height: 60px; }
+
+/* Camera feed */
+.cam-video { width: 100%; border-radius: 12px; border: 1px solid var(--glass-brd); display: block; background: #020a16; box-shadow: 0 0 24px rgba(56,182,255,0.25); }
+.cam-row { display: flex; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wsc-rays, .wsc-core, .wsc-cloud, .wsc-rain i, .wsc-snow i, .wsc-fog i, .wsc-bolt { animation: none !important; }
+}

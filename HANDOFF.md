@@ -162,6 +162,23 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
 - Core status ring: `body[data-core]` (set in `setStatus`) drives the `--ring`
   colour on `.core-ring`; `jarvis-core.js` PALETTE gained `searching`/`warning`.
 
+### v2.8 — live weather holograms + native app launch
+- Weather: `weatherSceneHTML(code,size)` / `weatherSceneType(code)` in app.js
+  build an animated CSS scene (`.wsc*` in styles.css — rotating sun rays,
+  drifting clouds, falling rain, snow, lightning) instead of an emoji. Used by
+  both `showWeather` (display panel, size 'lg') and `loadWeatherWidget`
+  (widget, size 'sm', wired to `#wwRefresh`). Sizes are in `em` so the scene
+  scales with the container's font-size.
+- Applications: `Actions.openApp(key)` launches the REAL installed app via a
+  native URL scheme (`NATIVE` map + `launchApp` in actions.js: window.location
+  → scheme, web app as fallback after 1.5s if still visible), never a Google
+  search. `executeAction` routes `open_app` through it so voice "open spotify"
+  also launches native. The apps grid (`buildAppsGrid`) wires Spotify/Discord/
+  YouTube/Maps/Mail/Calendar plus `openCamera()` (real getUserMedia feed with
+  snapshot→identify) and `openFiles()` (File System Access API / file picker).
+  `openApp` dispatches through `window.JarvisActions.launchApp/autoOpen` so the
+  paths are test-spyable.
+
 ---
 
 ## 6. HONEST platform limits (do NOT pretend these work)

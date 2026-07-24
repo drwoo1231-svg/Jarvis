@@ -45,6 +45,14 @@ same code runs beautifully on your computer too. No app store required.
 - 🐾 **Dog Assistant.** A little dog icon expands into a dashboard — camera,
   mood, hunger, water, sleep, last walk and treat counter (camera and GPS are
   simulated until you connect real hardware).
+- 🌦️ **Live weather holograms.** Weather is drawn as an animated hologram, not
+  an emoji — a glowing rotating sun, drifting holographic clouds, falling rain
+  streaks, snowfall, or a flashing lightning storm, matched to live conditions.
+- 🖥️ **Applications launch the real app on your machine.** Tiles use native URL
+  schemes to open the **installed** app (Spotify, Discord, Slack, WhatsApp,
+  Mail…), open real web apps directly instead of searching for them, open your
+  **actual webcam** for Camera, and your **real file picker** for Files — no
+  Google searches.
 - 🌌 **Iron-Man ops-console HUD.** A rotating particle-globe core wrapped in a
   **colour-coded status ring** (blue idle · cyan listening · amber thinking ·
   purple searching · white speaking · red warning), ambient floating particles,
