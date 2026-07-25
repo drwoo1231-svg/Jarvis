@@ -24,8 +24,11 @@ same code runs beautifully on your computer too. No app store required.
   hand it an **image** (tap the picture button, or drag-drop on desktop) and,
   with a vision-capable provider, JARVIS describes it.
 - 🔬 **Identify (teachable).** Say *"identify this"* (or *"what is this?"*) and
-  drop in a picture. JARVIS runs a **visible X-ray scan** — an animated scan
-  beam, grid and reticle sweep over the image — then uses two keyless in-browser
+  drop in a picture. JARVIS runs a **visible X-ray scan** — the image turns to a
+  cyan spectral negative under a sweeping beam, scan grid and corner reticles
+  with a live "SPECTRAL DECOMPOSITION / NEURAL NET · ACTIVE" readout, then
+  **targeting reticles lock on** to each object one by one and a **radial
+  confidence gauge** counts up beside the ranked probability bars — then uses two keyless in-browser
   neural nets: **COCO-SSD object detection** (knows everyday things like carrot,
   apple, banana, cup, laptop, dog) which **draws labelled boxes** around what it
   finds, plus **MobileNet** for fine-grained detail. It breaks down **the
@@ -33,6 +36,20 @@ same code runs beautifully on your computer too. No app store required.
   a reference photo beside the core, and drops into **focus mode** (Google) if
   unsure. **It learns:** if it's wrong, type the correct name in the *"Teach me"*
   box and JARVIS remembers it on-device — recognising it next time.
+- 🎓 **Career Lab — JARVIS tutors your field.** Tell it what you're training as
+  (**Medicine · Chemistry · Computer Science · Engineering**) at setup, in
+  Settings, or just say *"I want to be a doctor"* — and every explanation is
+  pitched to that field. Then open the Career Lab for holographic study
+  modules:
+  - *"show all the 206 bones in the human body and scatter them one by one so I
+    can memorize them"* → all **206 bones**, individually named and
+    anatomically grouped, dealt across a holographic field **one at a time**,
+    with step controls, a speed dial, live progress and region call-outs.
+  - Also **the 118 elements**, the **12 cranial nerves**, organ systems, vitals
+    & lab ranges, polyatomic ions, **Big-O complexity**, data structures,
+    mechanics and electrical theory.
+  - **"Quiz me"** drills any deck with real multiple-choice questions — carpal
+    vs. tarsal, symbol vs. element — and keeps score.
 - 🧲 **Movable holographic desktop (v2.7).** Every panel is a draggable
   hologram — drag it anywhere with inertia, optional **snap-to-grid**, and it
   **remembers where you put it**. Double-click a panel's title bar to send it

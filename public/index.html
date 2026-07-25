@@ -48,6 +48,14 @@
         <option value="none">No title, thanks</option>
       </select>
 
+      <label class="field-label">Your field — so I can tutor you properly</label>
+      <div class="career-pick" id="careerPick">
+        <button type="button" class="career-opt" data-career="medicine"><span class="co-ic">⚕</span><span>Medicine</span></button>
+        <button type="button" class="career-opt" data-career="chemistry"><span class="co-ic">⚗</span><span>Chemistry</span></button>
+        <button type="button" class="career-opt" data-career="cs"><span class="co-ic">⌘</span><span>Computer Sci</span></button>
+        <button type="button" class="career-opt" data-career="engineering"><span class="co-ic">⚙</span><span>Engineering</span></button>
+      </div>
+
       <label class="field-label">Interface</label>
       <div class="platform-pick" id="platformPick">
         <button type="button" class="platform-opt" data-platform="mobile">
@@ -78,6 +86,9 @@
       </div>
       <div id="statusText" class="status-text">SYSTEM ONLINE</div>
       <div class="topbar-btns">
+        <button id="careerBtn" class="icon-btn" aria-label="Career Lab" title="Career Lab — study modules">
+          <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M12 3 1 9l11 6 9-4.91V17h2V9zM5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg>
+        </button>
         <button id="widgetsBtn" class="icon-btn" aria-label="Add widget" title="Widget library">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M13 11V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z"/></svg>
         </button>
@@ -282,6 +293,62 @@
       </section>
     </div>
 
+    <!-- ===================== CAREER LAB ===================== -->
+    <section id="careerLab" class="career-lab hidden">
+      <div class="cl-panel">
+        <header class="cl-head">
+          <div class="cl-brand">
+            <span class="cl-ic" id="clIcon">⚕</span>
+            <span class="cl-titles">
+              <span class="cl-title" id="clTitle">CAREER LAB</span>
+              <span class="cl-sub" id="clSub">select a module</span>
+            </span>
+          </div>
+          <div class="cl-domains" id="clDomains"></div>
+          <button id="clClose" class="icon-btn" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.3 19.7 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+          </button>
+        </header>
+
+        <div class="cl-body">
+          <aside class="cl-decks" id="clDecks"></aside>
+
+          <div class="cl-stage-wrap">
+            <div class="cl-stage" id="clStage">
+              <div class="cl-grid-bg"></div>
+              <div class="cl-field" id="clField"></div>
+              <div class="cl-empty" id="clEmpty">Select a module, then <b>Scatter</b> to begin.</div>
+            </div>
+
+            <div class="cl-readout" id="clReadout">
+              <div class="cl-current" id="clCurrent">—</div>
+              <div class="cl-currentsub" id="clCurrentSub"></div>
+              <div class="cl-progress"><span class="cl-progress-bar" id="clBar"></span></div>
+              <div class="cl-counts"><span id="clCount">0 / 0</span><span id="clGroup"></span></div>
+            </div>
+
+            <div class="cl-quiz hidden" id="clQuiz">
+              <div class="cl-quiz-q" id="clQuizQ">—</div>
+              <div class="cl-quiz-opts" id="clQuizOpts"></div>
+              <div class="cl-quiz-score" id="clQuizScore"></div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="cl-controls">
+          <button class="cl-btn primary" id="clScatter">◈ Scatter</button>
+          <button class="cl-btn" id="clPause">⏸ Pause</button>
+          <button class="cl-btn" id="clPrev">◀</button>
+          <button class="cl-btn" id="clNext">▶</button>
+          <button class="cl-btn" id="clQuizBtn">◎ Quiz me</button>
+          <button class="cl-btn" id="clReset">↺ Reset</button>
+          <label class="cl-speed">Speed
+            <input id="clSpeed" type="range" min="120" max="1600" step="20" value="620" />
+          </label>
+        </footer>
+      </div>
+    </section>
+
     <!-- ===================== WIDGET LIBRARY ===================== -->
     <section id="widgetLib" class="widget-lib hidden">
       <div class="wl-panel glass">
@@ -424,6 +491,19 @@
 
       <hr class="divider" />
 
+      <label class="field-label" for="setCareer">Career field (tunes JARVIS's tutoring)</label>
+      <select id="setCareer" class="text-field">
+        <option value="">Not set — general assistant</option>
+        <option value="medicine">⚕ Medical science — doctor / med student</option>
+        <option value="chemistry">⚗ Chemistry — chemist / scientist</option>
+        <option value="cs">⌘ Computer science — software engineer</option>
+        <option value="engineering">⚙ Engineering</option>
+      </select>
+      <p class="hint">JARVIS tailors explanations to your field and opens the
+        matching study decks in the Career Lab.</p>
+
+      <hr class="divider" />
+
       <label class="field-label">Google Calendar</label>
       <p class="hint">Connect your Google account so JARVIS can add events to your
         real calendar (and phone reminders) in one tap. Without this, JARVIS opens
@@ -472,6 +552,7 @@
   <script src="actions.js"></script>
   <script src="ondevice.js"></script>
   <script src="panels.js"></script>
+  <script src="career.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

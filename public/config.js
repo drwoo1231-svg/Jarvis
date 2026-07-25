@@ -20,6 +20,7 @@
     speak: true,               // speak replies aloud
     autoListen: false,         // re-open the mic after JARVIS finishes talking
     googleClientId: '',        // Google OAuth client ID → real Calendar writes
+    career: '',                // 'medicine' | 'chemistry' | 'cs' | 'engineering'
     onboarded: false,
   };
 

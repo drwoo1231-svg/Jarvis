@@ -117,6 +117,35 @@
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
+    setCareer: $('setCareer'),
+    careerPick: $('careerPick'),
+    careerBtn: $('careerBtn'),
+    careerLab: $('careerLab'),
+    clClose: $('clClose'),
+    clIcon: $('clIcon'),
+    clTitle: $('clTitle'),
+    clSub: $('clSub'),
+    clDomains: $('clDomains'),
+    clDecks: $('clDecks'),
+    clStage: $('clStage'),
+    clField: $('clField'),
+    clEmpty: $('clEmpty'),
+    clCurrent: $('clCurrent'),
+    clCurrentSub: $('clCurrentSub'),
+    clBar: $('clBar'),
+    clCount: $('clCount'),
+    clGroup: $('clGroup'),
+    clQuiz: $('clQuiz'),
+    clQuizQ: $('clQuizQ'),
+    clQuizOpts: $('clQuizOpts'),
+    clQuizScore: $('clQuizScore'),
+    clScatter: $('clScatter'),
+    clPause: $('clPause'),
+    clPrev: $('clPrev'),
+    clNext: $('clNext'),
+    clQuizBtn: $('clQuizBtn'),
+    clReset: $('clReset'),
+    clSpeed: $('clSpeed'),
     setGoogleClientId: $('setGoogleClientId'),
     gcalConnect: $('gcalConnect'),
     gcalDisconnect: $('gcalDisconnect'),
@@ -135,7 +164,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v3.0 · real Google Calendar, phone reminders (dog removed)';
+  const APP_VERSION = 'v3.1 · Career Lab + upgraded X-ray scanner';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -163,6 +192,7 @@
   let analysisPending = false;   // next typed message is an analysis subject
   let identifyPending = false;   // next picked image goes through identifyImage
   let selectedPlatform = null;   // onboarding platform choice
+  let selectedCareer = '';       // onboarding career-field choice
   let pendingSave = null;        // analysis awaiting a filing decision
   let pendingDeepSearch = false; // awaiting deep-search kind
   let lastAnalysisSubject = '';  // subject/title of the most recent analysis
@@ -561,10 +591,15 @@
     const address = hon && hon !== 'none' && hon !== 'name'
       ? `Address the user as "${hon}"${name ? ` or by name ("${name}")` : ''}, sparingly and naturally.`
       : name ? `The user's name is "${name}"; address them by name occasionally.` : 'You do not know the user\'s name yet.';
+    const dom = (cfg.state.career && window.JarvisCareer && window.JarvisCareer.getDomain(cfg.state.career)) || null;
+    const careerBlock = dom ? `
+
+# The User's Field — ${dom.name}
+The user is training as ${/^[aeiou]/i.test(dom.title) ? 'an' : 'a'} ${dom.title.toLowerCase()}. Tailor explanations, examples, analogies and terminology to ${dom.name} whenever it fits, and pitch answers at a serious student of that field — precise, correct, unpatronising. When they ask you to teach, list or memorise something in this area, be rigorous and complete. You have a Career Lab with study modules (${dom.decks.map((d) => d.name).join(', ')}) that scatters items across a holographic field one at a time for memorisation and can quiz them; mention it when it would genuinely help.` : '';
     return `${BASE_PERSONA}
 
 # The User
-${address}
+${address}${careerBlock}
 
 # Voice Output
 Your replies are spoken aloud with a British butler's voice and shown on screen. Use clean natural prose, no markdown, asterisks, bullets, headings, or emojis. Keep everyday replies to 1-3 sentences; expand only when needed.
@@ -575,7 +610,7 @@ Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; searc
 Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
 
 # Holographic Interface (v2.7)
-The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, and Music. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. JARVIS can add events to the user's REAL Google Calendar once they connect their Google account in Settings (otherwise it opens a pre-filled event for them to save); connected events also schedule phone reminders. Alarms sound in-app while JARVIS is open — a web app cannot set the phone's native Clock app, so JARVIS also offers a calendar reminder that notifies the phone at that time. If asked to set a native phone alarm, explain this honestly and offer the calendar reminder (or suggest Siri/Google Assistant for a true Clock alarm). The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, and Music. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. The Career Lab (the mortarboard button, or "open the career lab") holds study modules for Medical Science, Chemistry, Computer Science and Engineering — for example all 206 bones of the human skeleton, the 118 elements, the twelve cranial nerves, Big-O complexity. Ask things like "show all the 206 bones and scatter them one by one so I can memorise them" and JARVIS lays them out across a holographic field one at a time, with step controls, a speed slider and a quiz mode. JARVIS can add events to the user's REAL Google Calendar once they connect their Google account in Settings (otherwise it opens a pre-filled event for them to save); connected events also schedule phone reminders. Alarms sound in-app while JARVIS is open — a web app cannot set the phone's native Clock app, so JARVIS also offers a calendar reminder that notifies the phone at that time. If asked to set a native phone alarm, explain this honestly and offer the calendar reminder (or suggest Siri/Google Assistant for a true Clock alarm). The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -1131,6 +1166,59 @@ The interface is a movable holographic operating system. Every panel is draggabl
       speak('Select the image to identify. I will scan it and break down the probabilities.');
       setTimeout(pickImage, 250);
       return;
+    }
+
+    // Career Lab — set a field, study a deck, scatter it, get quizzed.
+    {
+      const who = titledName(); const t3 = who ? ', ' + who : '';
+      // "I want to be a doctor" / "set my field to chemistry"
+      const wantsCareer = /\bi\s+(?:want|wish|would like|am going)\s+to\s+(?:be|become|study)\b|\bi'?m\s+(?:a|an|studying)\b|\bset\s+my\s+(?:career|field|major|profession)\b|\bmy\s+(?:career|field|major|profession)\s+is\b/i.test(text);
+      if (wantsCareer) {
+        const hit = CAREER_WORDS.find(([re]) => re.test(text));
+        if (hit) {
+          addMessage('user', text);
+          cfg.set({ career: hit[1] });
+          if (el.setCareer) el.setCareer.value = hit[1];
+          const d = Career.getDomain(hit[1]);
+          const l = `Noted${t3} — I'll tutor you as ${/^[aeiou]/i.test(d.title) ? 'an' : 'a'} ${d.title.toLowerCase()}. ${d.blurb} Your modules: ${d.decks.map((k) => k.name).join(', ')}. Say "open the career lab" any time.`;
+          addMessage('jarvis', l); speak(`Noted${t3}. I'll tutor you in ${d.name}. Say open the career lab whenever you're ready.`);
+          return;
+        }
+      }
+      // "quiz me [on X]"
+      if (/\bquiz me\b|\btest me\b/i.test(text)) {
+        addMessage('user', text);
+        const dk = matchDeck(text);
+        if (dk) { openCareerLab(dk, false); startQuiz(); }
+        else if (CL.deck) { el.careerLab.classList.remove('hidden'); startQuiz(); }
+        else { openCareerLab(); const l = `Pick a module and I'll test you${t3}.`; addMessage('jarvis', l); speak(l); return; }
+        const l = `Very well${t3} — eyes on the field. Answer as they come.`;
+        addMessage('jarvis', l); speak(l); return;
+      }
+      // "show all the 206 bones … and scatter them one by one so I can memorise"
+      const wantsStudy = /\b(show|list|display|pull up|teach me|study|memoris|memoriz|scatter|drill|revise|learn)\b/i.test(text);
+      const dk = wantsStudy ? matchDeck(text) : null;
+      if (dk) {
+        addMessage('user', text);
+        const scatter = /\bscatter\b|\bone by one\b|\bmemoris|\bmemoriz|\bdrill\b|\bshow (me )?(all|every)\b|\blist\b/i.test(text);
+        openCareerLab(dk, scatter);
+        const found = Career.getDeck(dk);
+        const n = Career.items(found.deck).length;
+        const l = scatter
+          ? `Bringing up all ${n} — ${found.deck.name}${t3}. I'll scatter them one at a time so you can commit each to memory. Use ◀ ▶ to step, and the speed slider to slow me down.`
+          : `${found.deck.name} is on the field${t3} — ${n} items. Press Scatter when you're ready.`;
+        addMessage('jarvis', l);
+        speak(scatter ? `Bringing up all ${n}${t3}. I'll scatter them one at a time.` : `${found.deck.name} ready${t3}.`);
+        return;
+      }
+      if (/\b(open|show|bring up|start)\s+(the\s+)?(career|study)\s*(lab|mode|centre|center)?\b|\bcareer lab\b|\bstudy mode\b/i.test(text)) {
+        addMessage('user', text);
+        openCareerLab();
+        const d = careerDomain();
+        const l = d ? `Career Lab open${t3} — ${d.name}. Choose a module.`
+          : `Career Lab open${t3}. Choose your field along the top, then a module.`;
+        addMessage('jarvis', l); speak(l); return;
+      }
     }
 
     // Layout / widgets — the movable holographic interface.
@@ -2454,12 +2542,22 @@ The interface is a movable holographic operating system. Every panel is draggabl
   }
   function articleFor(word) { return /^[aeiou]/i.test((word || '').trim()) ? 'an' : 'a'; }
   function probListHTML(preds) {
-    return '<div class="prob-list">' + preds.map((p) => {
+    return '<div class="prob-list">' + preds.map((p, i) => {
       const pct = Math.round(p.prob * 100);
-      return `<div class="prob-row"><span class="pn">${escapeHtml(p.label)}</span>` +
+      return `<div class="prob-row${i === 0 ? ' top' : ''}"><span class="pn">${escapeHtml(p.label)}</span>` +
         `<span class="ptrack"><span class="pbar" style="width:${pct}%"></span></span>` +
         `<span class="pp">${pct}%</span></div>`;
     }).join('') + '</div>';
+  }
+  // Headline result: radial gauge + name + source, above the breakdown.
+  function identHeadHTML(label, pct, source) {
+    const src = source === 'taught' ? 'MATCHED · YOUR TRAINING'
+      : source === 'coco' ? 'OBJECT DETECTION · LOCKED'
+        : source === 'mobilenet' ? 'CLASSIFIER · BEST MATCH' : 'LOW CONFIDENCE';
+    return `<div class="ident-head">${confDialHTML(pct)}<div>` +
+      `<div class="ident-name">${escapeHtml(label)}</div>` +
+      `<div class="ident-meta${source ? '' : ' warn'}">${src}</div>` +
+      `</div></div>`;
   }
   // Merge detections + classifications into one ranked probability list.
   function buildPredList(scan) {
@@ -2476,26 +2574,63 @@ The interface is a movable holographic operating system. Every panel is draggabl
     media.classList.add('scanning', 'ident-media');
     if (!media.querySelector('.xray-fx')) {
       media.insertAdjacentHTML('beforeend',
-        '<div class="xray-fx"><span class="xr-grid"></span><span class="xr-beam"></span><span class="xr-label">◉ X-RAY SCAN</span><span class="xr-corner tl"></span><span class="xr-corner tr"></span><span class="xr-corner bl"></span><span class="xr-corner br"></span></div>');
+        '<div class="xray-fx">' +
+        '<span class="xr-grid"></span><span class="xr-beam"></span><span class="xr-sweepline"></span>' +
+        '<span class="xr-label">◉ X-RAY SCAN</span>' +
+        '<span class="xr-corner tl"></span><span class="xr-corner tr"></span><span class="xr-corner bl"></span><span class="xr-corner br"></span>' +
+        '<span class="xr-hud">' +
+        '<span class="xh-tr">SPECTRAL DECOMPOSITION<br>NEURAL NET · ACTIVE</span>' +
+        '<span class="xh-bl">ANALYSING<span class="xh-bar"><i></i></span></span>' +
+        '</span></div>');
     }
   }
   function stopXray(media, img) {
     if (img) img.classList.remove('xray');
     if (media) { media.classList.remove('scanning'); const fx = media.querySelector('.xray-fx'); if (fx) fx.remove(); }
   }
-  // Draw neon detection boxes over the revealed image (object-fit: contain map).
+  // Draw lock-on reticles over each detection (object-fit: contain mapping),
+  // snapping on one at a time like a targeting system.
   function drawBoxes(media, img, detections) {
     if (!media || !img) return;
     const nW = img.naturalWidth, nH = img.naturalHeight, cW = img.clientWidth, cH = img.clientHeight;
     if (!nW || !cW) return;
     const scale = Math.min(cW / nW, cH / nH);
     const offX = (cW - nW * scale) / 2, offY = (cH - nH * scale) / 2;
-    const boxes = detections.filter((d) => d.score >= 0.35).slice(0, 6).map((d) => {
-      const [x, y, w, h] = d.bbox;
-      return `<div class="ident-box" style="left:${offX + x * scale}px;top:${offY + y * scale}px;width:${w * scale}px;height:${h * scale}px"><span>${escapeHtml(d.class)} ${Math.round(d.score * 100)}%</span></div>`;
-    }).join('');
+    const hits = detections.filter((d) => d.score >= 0.35).slice(0, 6);
     const old = media.querySelector('.ident-boxes'); if (old) old.remove();
-    if (boxes) media.insertAdjacentHTML('beforeend', `<div class="ident-boxes">${boxes}</div>`);
+    if (!hits.length) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'ident-boxes';
+    media.appendChild(wrap);
+    hits.forEach((d, i) => {
+      const [x, y, w, h] = d.bbox;
+      setTimeout(() => {
+        const b = document.createElement('div');
+        b.className = 'ident-box lock';
+        b.style.cssText = `left:${offX + x * scale}px;top:${offY + y * scale}px;width:${w * scale}px;height:${h * scale}px`;
+        b.innerHTML = '<i></i><i></i><i></i><i></i>' +
+          `<span>${escapeHtml(d.class)} ${Math.round(d.score * 100)}%</span>`;
+        wrap.appendChild(b);
+      }, i * 180);
+    });
+  }
+  // Radial confidence gauge for the headline result.
+  function confDialHTML(pct) {
+    const R = 32, C = 2 * Math.PI * R;
+    const off = C * (1 - Math.max(0, Math.min(100, pct)) / 100);
+    return `<div class="conf-dial"><svg width="74" height="74" viewBox="0 0 74 74" aria-hidden="true">` +
+      `<defs><linearGradient id="cdGrad" x1="0" y1="0" x2="1" y2="1">` +
+      `<stop offset="0%" stop-color="#46b6ff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient></defs>` +
+      `<circle class="cd-track" cx="37" cy="37" r="${R}"/>` +
+      `<circle class="cd-val" cx="37" cy="37" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"/>` +
+      `</svg><span class="cd-num">${pct}%</span></div>`;
+  }
+  // Animate the dial to its value once it's in the DOM.
+  function runConfDial(root, pct) {
+    const c = root && root.querySelector('.conf-dial .cd-val');
+    if (!c) return;
+    const R = 32, C = 2 * Math.PI * R;
+    requestAnimationFrame(() => { c.style.strokeDashoffset = String(C * (1 - Math.max(0, Math.min(100, pct)) / 100)); });
   }
   // "Not right? teach me" — trains the on-device classifier.
   function addTeachRow(actions, textEl, dataUrl, currentLabel, who) {
@@ -2560,8 +2695,12 @@ The interface is a movable holographic operating system. Every panel is draggabl
 
     if (!best) {
       const guess = (scan.classifications[0] && scan.classifications[0].label) || (name || 'this object').replace(/\.[a-z0-9]+$/i, '');
-      t.finish('Confidence too low — engaging focus mode.', scan.classifications[0] ? Math.round(scan.classifications[0].prob * 100) : 30);
-      textEl.innerHTML = preds.length ? (`Best guesses, but none certain${escapeHtml(tail)}:` + probListHTML(preds)) : `I couldn't identify it on-device${escapeHtml(tail)}.`;
+      const lowPct = scan.classifications[0] ? Math.round(scan.classifications[0].prob * 100) : 0;
+      t.finish('Confidence too low — engaging focus mode.', lowPct || 30);
+      textEl.innerHTML = preds.length
+        ? (identHeadHTML(guess, lowPct, '') + probListHTML(preds))
+        : `I couldn't identify it on-device${escapeHtml(tail)}.`;
+      runConfDial(textEl, lowPct);
       const say = `I cannot identify this with confidence${tail}. Engaging focus mode — searching it on Google.`;
       addMessage('jarvis', say); speak(say);
       Actions.autoOpen('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(guess));
@@ -2575,7 +2714,8 @@ The interface is a movable holographic operating system. Every panel is draggabl
     t.finish(`Identified: ${best.label}${source === 'coco' && others > 1 ? ` (+${others - 1} more)` : ''}.`, Math.min(99, Math.max(55, pct)));
     lastAnalysisSubject = best.label;
     const extra = source === 'taught' ? ' (from what you taught me)' : '';
-    textEl.innerHTML = `<b>${escapeHtml(best.label)}</b> — ${pct}% confidence${extra}.` + probListHTML(preds);
+    textEl.innerHTML = identHeadHTML(best.label, pct, source) + probListHTML(preds);
+    runConfDial(textEl, pct);
     addMessage('jarvis', `It seems your image is ${articleFor(best.label)} ${best.label} — ${pct}% confidence${extra}${tail}.`);
     speak(`It seems your image is ${articleFor(best.label)} ${best.label}, ${pct} percent confidence${tail}.`);
 
@@ -2886,13 +3026,16 @@ The interface is a movable holographic operating system. Every panel is draggabl
     selectedPlatform = isPC() ? 'pc' : 'mobile';
     el.platformPick.querySelectorAll('.platform-opt').forEach((b) =>
       b.classList.toggle('selected', b.dataset.platform === selectedPlatform));
+    selectedCareer = cfg.state.career || '';
+    if (el.careerPick) el.careerPick.querySelectorAll('.career-opt').forEach((b) =>
+      b.classList.toggle('selected', b.dataset.career === selectedCareer));
     setTimeout(() => el.nameInput.focus(), 200);
   }
 
   function completeOnboarding() {
     const name = el.nameInput.value.trim();
     const hon = el.honorificSelect.value;
-    cfg.set({ userName: name, honorific: hon, platform: selectedPlatform || 'auto', onboarded: true });
+    cfg.set({ userName: name, honorific: hon, platform: selectedPlatform || 'auto', career: selectedCareer || '', onboarded: true });
     applyPlatform();
     el.onboarding.classList.add('hidden');
     el.hud.classList.remove('hidden');
@@ -2961,6 +3104,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     el.loadProgress.textContent = '';
     el.setSpeak.checked = cfg.state.speak !== false;
     el.setAutoListen.checked = !!cfg.state.autoListen;
+    if (el.setCareer) el.setCareer.value = cfg.state.career || '';
     if (el.setGoogleClientId) el.setGoogleClientId.value = cfg.state.googleClientId || '';
     updateGcalStatus();
     populateVoices();
@@ -3023,6 +3167,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
       speak: el.setSpeak.checked,
       autoListen: el.setAutoListen.checked,
       googleClientId: el.setGoogleClientId ? el.setGoogleClientId.value.trim() : (cfg.state.googleClientId || ''),
+      career: el.setCareer ? el.setCareer.value : (cfg.state.career || ''),
     });
     gcalTokenClient = null; // pick up any client-id change on next request
     el.settings.classList.add('hidden');
@@ -3041,6 +3186,15 @@ The interface is a movable holographic operating system. Every panel is draggabl
       btn.addEventListener('click', () => {
         selectedPlatform = btn.dataset.platform;
         el.platformPick.querySelectorAll('.platform-opt').forEach((b) => b.classList.toggle('selected', b === btn));
+      });
+    });
+
+    // Career field picker (onboarding)
+    if (el.careerPick) el.careerPick.querySelectorAll('.career-opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        selectedCareer = selectedCareer === btn.dataset.career ? '' : btn.dataset.career;
+        el.careerPick.querySelectorAll('.career-opt').forEach((b) =>
+          b.classList.toggle('selected', b.dataset.career === selectedCareer));
       });
     });
 
@@ -3563,6 +3717,300 @@ The interface is a movable holographic operating system. Every panel is draggabl
     draw();
   }
 
+  /* ========================================================================
+     CAREER LAB — domain-tailored study modules.
+     Pick a field (medicine / chemistry / CS / engineering) and JARVIS scatters
+     a deck of knowledge into a holographic field one item at a time so it can
+     be memorised, then drills it back with a quiz.
+     ======================================================================== */
+  const Career = window.JarvisCareer;
+  const CL = {
+    domain: null, deck: null, items: [], idx: -1,
+    timer: null, running: false, speed: 620, quiz: null,
+  };
+
+  function careerDomain() {
+    return (cfg.state.career && Career.getDomain(cfg.state.career)) || null;
+  }
+  function careerName() {
+    const d = careerDomain();
+    return d ? d.name : '';
+  }
+
+  function openCareerLab(deckId, autoScatter) {
+    if (!Career) return;
+    el.careerLab.classList.remove('hidden');
+    const startDomain = (deckId && Career.getDeck(deckId) && Career.getDeck(deckId).domain)
+      || careerDomain() || Career.getDomain('medicine');
+    renderDomains(startDomain.id);
+    selectDomain(startDomain.id, deckId);
+    if (deckId) selectDeck(deckId, autoScatter);
+  }
+  function closeCareerLab() {
+    stopScatter();
+    el.careerLab.classList.add('hidden');
+  }
+
+  function renderDomains(activeId) {
+    el.clDomains.innerHTML = '';
+    Career.domainIds.forEach((id) => {
+      const d = Career.getDomain(id);
+      const b = document.createElement('button');
+      b.className = 'cl-dom' + (id === activeId ? ' on' : '');
+      b.innerHTML = `<span>${d.icon}</span><em>${escapeHtml(d.name)}</em>`;
+      b.addEventListener('click', () => { renderDomains(id); selectDomain(id); });
+      el.clDomains.appendChild(b);
+    });
+  }
+  function selectDomain(id, keepDeck) {
+    const d = Career.getDomain(id);
+    if (!d) return;
+    CL.domain = d;
+    el.careerLab.style.setProperty('--cl-accent', d.accent);
+    el.clIcon.textContent = d.icon;
+    el.clTitle.textContent = d.name.toUpperCase();
+    el.clSub.textContent = d.blurb;
+    el.clDecks.innerHTML = '';
+    d.decks.forEach((deck) => {
+      const n = Career.items(deck).length;
+      const b = document.createElement('button');
+      b.className = 'cl-deck';
+      b.dataset.deck = deck.id;
+      b.innerHTML = `<span class="cl-deck-ic">${deck.icon}</span>` +
+        `<span class="cl-deck-txt"><b>${escapeHtml(deck.name)}</b><em>${escapeHtml(deck.blurb)}</em></span>` +
+        `<span class="cl-deck-n">${n}</span>`;
+      b.addEventListener('click', () => selectDeck(deck.id, false));
+      el.clDecks.appendChild(b);
+    });
+    if (!keepDeck) { CL.deck = null; CL.items = []; resetField(); }
+  }
+
+  function selectDeck(deckId, autoScatter) {
+    const found = Career.getDeck(deckId);
+    if (!found) return;
+    if (!CL.domain || CL.domain.id !== found.domain.id) { renderDomains(found.domain.id); selectDomain(found.domain.id, true); }
+    CL.deck = found.deck;
+    CL.items = Career.items(found.deck);
+    el.clDecks.querySelectorAll('.cl-deck').forEach((b) => b.classList.toggle('on', b.dataset.deck === deckId));
+    el.clSub.textContent = `${found.deck.name} · ${CL.items.length} items`;
+    resetField();
+    if (autoScatter) startScatter();
+  }
+
+  function resetField() {
+    stopScatter();
+    CL.idx = -1;
+    el.clField.innerHTML = '';
+    el.clQuiz.classList.add('hidden');
+    el.clEmpty.classList.toggle('hidden', !!CL.deck);
+    if (CL.deck) el.clEmpty.classList.add('hidden');
+    el.clCurrent.textContent = CL.deck ? CL.deck.name : '—';
+    el.clCurrentSub.textContent = CL.deck ? CL.deck.blurb : '';
+    el.clBar.style.width = '0%';
+    el.clCount.textContent = `0 / ${CL.items.length}`;
+    el.clGroup.textContent = '';
+  }
+
+  // Scatter positions: a golden-angle spiral fills the field evenly, but items
+  // are *dealt* to those slots with a coprime stride so each new one lands far
+  // from the last — it spreads across the whole field from the very first bone
+  // instead of piling up in the middle.
+  function coprimeStride(n) {
+    const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+    let s = Math.max(1, Math.round(n * 0.618));
+    for (let k = 0; k < n; k++) { if (gcd(s, n) === 1) return s; s++; if (s >= n) s = 1; }
+    return 1;
+  }
+  function scatterPos(i, n) {
+    if (CL._posN !== n) { CL._posN = n; CL._stride = coprimeStride(n); }
+    const slot = (i * CL._stride) % n;              // deal, don't fill in order
+    const a = slot * 2.39996;                       // golden angle
+    const r = Math.sqrt((slot + 0.6) / n);
+    const jit = (k) => ((Math.sin(k * 12.9898) * 43758.5453) % 1) * 3.2;
+    return {
+      x: Math.max(5, Math.min(95, 50 + Math.cos(a) * r * 45 + jit(i))),
+      y: Math.max(6, Math.min(94, 50 + Math.sin(a) * r * 42 + jit(i + 7))),
+    };
+  }
+  function sizeClass(n) { return n > 130 ? ' xs' : n > 60 ? ' sm' : ''; }
+
+  function emitItem(i) {
+    const item = CL.items[i];
+    if (!item) return;
+    const p = scatterPos(i, CL.items.length);
+    const chip = document.createElement('div');
+    chip.className = 'cl-chip' + sizeClass(CL.items.length);
+    chip.dataset.i = String(i);
+    chip.style.left = p.x + '%';
+    chip.style.top = p.y + '%';
+    chip.innerHTML = (item.badge ? `<b class="cl-badge">${escapeHtml(item.badge)}</b>` : '') +
+      `<span class="cl-chip-l">${escapeHtml(item.label)}</span>`;
+    chip.addEventListener('click', () => focusItem(i));
+    el.clField.appendChild(chip);
+    requestAnimationFrame(() => chip.classList.add('in'));
+    focusItem(i, true);
+  }
+
+  function focusItem(i, fromScatter) {
+    CL.idx = i;
+    const item = CL.items[i];
+    if (!item) return;
+    el.clField.querySelectorAll('.cl-chip.now').forEach((c) => c.classList.remove('now'));
+    const chip = el.clField.querySelector(`.cl-chip[data-i="${i}"]`);
+    if (chip) { chip.classList.add('now'); }
+    el.clCurrent.textContent = item.label;
+    el.clCurrentSub.textContent = item.sub || '';
+    el.clGroup.textContent = item.group || '';
+    el.clCount.textContent = `${i + 1} / ${CL.items.length}`;
+    el.clBar.style.width = ((i + 1) / CL.items.length * 100) + '%';
+    // Announce each new region as it begins — useful, not chatty.
+    if (fromScatter && item.group && item.group !== CL._lastGroup) {
+      CL._lastGroup = item.group;
+      speak(item.group);
+    }
+  }
+
+  function startScatter() {
+    if (!CL.deck || !CL.items.length) return;
+    if (CL.idx >= CL.items.length - 1) { el.clField.innerHTML = ''; CL.idx = -1; CL._lastGroup = ''; }
+    CL.running = true;
+    el.clEmpty.classList.add('hidden');
+    el.clQuiz.classList.add('hidden');
+    el.clPause.textContent = '⏸ Pause';
+    const tick = () => {
+      if (!CL.running) return;
+      const next = CL.idx + 1;
+      if (next >= CL.items.length) { finishScatter(); return; }
+      emitItem(next);
+      CL.timer = setTimeout(tick, CL.speed);
+    };
+    CL.timer = setTimeout(tick, 120);
+  }
+  function stopScatter() {
+    CL.running = false;
+    if (CL.timer) { clearTimeout(CL.timer); CL.timer = null; }
+    if (el.clPause) el.clPause.textContent = '▶ Resume';
+  }
+  function finishScatter() {
+    stopScatter();
+    const who = addressWord() ? ', ' + addressWord() : '';
+    const line = `All ${CL.items.length} ${CL.deck.name.replace(/^The\s+\d+\s+/, '').toLowerCase()} are on the field${who}. Say "quiz me" and I'll test you.`;
+    addMessage('jarvis', line); speak(`All ${CL.items.length} are laid out${who}. Shall I quiz you?`);
+  }
+  function stepBy(d) {
+    stopScatter();
+    const target = Math.max(0, Math.min(CL.items.length - 1, CL.idx + d));
+    // Emit any items we haven't drawn yet.
+    for (let i = el.clField.childElementCount; i <= target; i++) emitItem(i);
+    focusItem(target);
+    const item = CL.items[target];
+    if (item) speak(item.label.replace(/·\s*L$/, ' left').replace(/·\s*R$/, ' right'));
+  }
+
+  /* ---- Quiz ---- */
+  function startQuiz() {
+    if (!CL.deck || !CL.items.length) { toast('Pick a module first.'); return; }
+    stopScatter();
+    CL.quiz = { score: 0, asked: 0 };
+    el.clQuiz.classList.remove('hidden');
+    nextQuestion();
+  }
+  function nextQuestion() {
+    const pool = CL.items;
+    let answer = pool[Math.floor(Math.random() * pool.length)];
+    // Don't ask the same thing twice in a row.
+    for (let k = 0; k < 12 && pool.length > 1 && answer.label === CL._lastAsked; k++) {
+      answer = pool[Math.floor(Math.random() * pool.length)];
+    }
+    CL._lastAsked = answer.label;
+    // A subtitle is only a fair question if it identifies exactly one item
+    // ("smell · sensory" does; a bone's region "hand" does not — several share
+    // it). Unique subtitle → ask by definition; shared → ask by region, with
+    // distractors drawn from OTHER regions so the question has one answer.
+    if (CL._subUnique === undefined || CL._subDeck !== CL.deck.id) {
+      CL._subDeck = CL.deck.id;
+      const subs = pool.map((x) => x.sub).filter(Boolean);
+      CL._subUnique = subs.length === pool.length && new Set(subs).size === pool.length;
+    }
+    const byDefinition = CL._subUnique && !!answer.sub;
+    const src = byDefinition
+      ? pool.filter((x) => x.label !== answer.label && x.group === answer.group)
+      : pool.filter((x) => x.group !== answer.group);
+    const fallback = pool.filter((x) => x.label !== answer.label);
+    const from = src.length >= 3 ? src : fallback;
+    const opts = [answer];
+    let guard = 0;
+    while (opts.length < 4 && from.length && guard++ < 200) {
+      const c = from[Math.floor(Math.random() * from.length)];
+      if (!opts.some((o) => o.label === c.label)) opts.push(c);
+    }
+    opts.sort(() => Math.random() - 0.5);
+    el.clQuizQ.innerHTML = byDefinition
+      ? `Which is <b>${escapeHtml(answer.sub)}</b>?`
+      : `Which of these belongs to the <b>${escapeHtml(answer.group || CL.deck.name)}</b>?`;
+    el.clQuizOpts.innerHTML = '';
+    opts.forEach((o) => {
+      const b = document.createElement('button');
+      b.className = 'cl-opt';
+      b.textContent = o.label;
+      b.addEventListener('click', () => answerQuestion(b, o.label === answer.label, answer));
+      el.clQuizOpts.appendChild(b);
+    });
+    el.clQuizScore.textContent = CL.quiz.asked ? `Score ${CL.quiz.score} / ${CL.quiz.asked}` : 'Answer to begin.';
+  }
+  function answerQuestion(btn, correct, answer) {
+    CL.quiz.asked++;
+    if (correct) { CL.quiz.score++; btn.classList.add('right'); }
+    else {
+      btn.classList.add('wrong');
+      [...el.clQuizOpts.children].forEach((b) => { if (b.textContent === answer.label) b.classList.add('right'); });
+    }
+    [...el.clQuizOpts.children].forEach((b) => { b.disabled = true; });
+    const hit = CL.items.findIndex((x) => x.label === answer.label);
+    if (hit >= 0) { for (let i = el.clField.childElementCount; i <= hit; i++) emitItem(i); focusItem(hit); }
+    el.clQuizScore.textContent = `Score ${CL.quiz.score} / ${CL.quiz.asked}` + (correct ? ' · correct' : ` · it was ${answer.label}`);
+    setTimeout(nextQuestion, correct ? 750 : 1600);
+  }
+
+  function initCareerLab() {
+    if (!Career || !el.careerLab) return;
+    el.careerBtn.addEventListener('click', () => openCareerLab());
+    el.clClose.addEventListener('click', closeCareerLab);
+    el.clScatter.addEventListener('click', () => { el.clField.innerHTML = ''; CL.idx = -1; CL._lastGroup = ''; startScatter(); });
+    el.clPause.addEventListener('click', () => { if (CL.running) stopScatter(); else startScatter(); });
+    el.clPrev.addEventListener('click', () => stepBy(-1));
+    el.clNext.addEventListener('click', () => stepBy(1));
+    el.clQuizBtn.addEventListener('click', startQuiz);
+    el.clReset.addEventListener('click', resetField);
+    el.clSpeed.addEventListener('input', () => { CL.speed = 1720 - parseInt(el.clSpeed.value, 10); });
+    CL.speed = 1720 - parseInt(el.clSpeed.value, 10);
+    if (Panels) Panels.enable(el.careerLab.querySelector('.cl-panel'), { id: 'careerLab', handle: '.cl-head' });
+  }
+
+  // Map free text to a study deck.
+  function matchDeck(text) {
+    const t = text.toLowerCase();
+    if (/\bbones?\b|\bskeleton\b|\bskeletal\b/.test(t)) return 'bones';
+    if (/\bcranial nerves?\b|\bnerves?\b/.test(t)) return 'nerves';
+    if (/\borgan systems?\b|\bbody systems?\b/.test(t)) return 'systems';
+    if (/\bvitals?\b|\blab (values|ranges)\b|\breference ranges?\b/.test(t)) return 'vitals';
+    if (/\bperiodic table\b|\belements?\b/.test(t)) return 'elements';
+    if (/\bpolyatomic\b|\bions?\b/.test(t)) return 'ions';
+    if (/\bbig[- ]?o\b|\bcomplexit(y|ies)\b/.test(t)) return 'bigo';
+    if (/\bdata structures?\b/.test(t)) return 'ds';
+    if (/\balgorithms?\b|\bcs concepts?\b/.test(t)) return 'concepts';
+    if (/\bmechanics?\b|\bmaterials?\b|\bstress\b|\bstrain\b/.test(t)) return 'mechanics';
+    if (/\belectrical\b|\bcircuits?\b|\bohm\b/.test(t)) return 'electrical';
+    if (/\bconstants?\b/.test(t)) return careerDomain() && careerDomain().id === 'engineering' ? 'engconst' : 'constants';
+    return null;
+  }
+  const CAREER_WORDS = [
+    [/\b(doctor|physician|surgeon|medical|medicine|med school|nurse|anatomy|pre[- ]?med)\b/i, 'medicine'],
+    [/\b(chemist|chemistry|biochem|pharmac)/i, 'chemistry'],
+    [/\b(computer science|software|programmer|developer|coding|cs student|swe)\b/i, 'cs'],
+    [/\b(engineer|engineering|mechanical|electrical|civil)\b/i, 'engineering'],
+  ];
+
   /* ---------------- Boot ---------------- */
   function boot() {
     Core.init(el.reactor);
@@ -3583,6 +4031,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     initTelemetry();
     applyPlatform();
     initDashboard();
+    initCareerLab();
     initAmbient();
     // Re-evaluate PC/mobile layout on resize when in auto mode.
     window.addEventListener('resize', () => {

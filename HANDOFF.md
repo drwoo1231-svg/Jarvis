@@ -152,6 +152,38 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   the handler also creates a Google Calendar reminder (connected) or offers a
   calendar-event chip (not connected) so the phone notifies at the time.
   Honest wording throughout; brain prompt updated.
+
+### v3.1 — Career Lab + X-ray scanner v2
+- `public/career.js` (`window.JarvisCareer`): domain-tailored knowledge base.
+  Four domains (medicine / chemistry / cs / engineering), each with decks.
+  `skeletonGroups()` generates all **206** bones individually (verified: 8 + 14
+  + 6 + 1 + 26 + 25 + 4 + 6 + 16 + 10 + 28 + 2 + 8 + 14 + 10 + 28), plus 118
+  elements, 12 cranial nerves, organ systems, vitals, ions, Big-O, structures,
+  mechanics, electrical. API: `getDomain`, `getDeck(deckId)`, `items(deck)`,
+  `count(deckId)`.
+- Career Lab UI lives in `#careerLab` (index.html) and the `CL` state object in
+  app.js: `openCareerLab(deckId, autoScatter)`, `selectDomain`, `selectDeck`,
+  `startScatter`/`stopScatter`/`stepBy`, `startQuiz`/`nextQuestion`.
+  `scatterPos(i,n)` deals items to golden-angle spiral slots using a **coprime
+  stride** so consecutive items land far apart (fills the whole field from the
+  first item instead of piling up centre).
+- Quiz picks its question type by whether the deck's `sub` is unique across the
+  deck: unique → "Which is <sub>?" with same-group distractors; shared (e.g. a
+  bone's region) → "Which belongs to the <group>?" with **other-group**
+  distractors, so there is exactly one right answer.
+- Career is stored as `cfg.career`, chosen in onboarding (`#careerPick`),
+  Settings (`#setCareer`) or by speech ("I want to be a doctor" → CAREER_WORDS);
+  `buildClientSystemPrompt` injects a "# The User's Field" block so the LLM
+  tailors every answer.
+- X-ray v2: `startXray` adds a sweep line + HUD readout; `drawBoxes` snaps
+  `.ident-box.lock` reticles on with staggered timing and corner brackets;
+  `confDialHTML`/`runConfDial` render an animated radial confidence gauge and
+  `identHeadHTML` the headline result.
+- **Two real CSS bugs fixed:** `.prob-row .pbar` is a `<span>` and lacked
+  `display:block`, so every probability bar had rendered 0-wide since v2.6
+  (now guarded by a test asserting bar width ≈ percentage); and `.msg` /
+  `.analysis-card` lacked `flex:0 0 auto` inside the flex-column `.log`, so
+  they were squashed once the log filled.
 - Layout / widgets (v2.7): `lock the layout`, `unlock the layout`,
   `reset my layout`, `snap to grid`, `open the widget library`,
   `show/hide the <clock|weather|system|applications|calculator|notes|world map|music|log> widget`,
