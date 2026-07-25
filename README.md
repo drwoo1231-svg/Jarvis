@@ -41,7 +41,7 @@ same code runs beautifully on your computer too. No app store required.
   for that discipline:
   | | | |
   |---|---|---|
-  | **C1** | Medicine | the articulated **human skeleton** |
+  | **C1** | Medicine | the **human skeleton** inside a translucent body scan |
   | **C2** | Computer Science | processor & memory architecture |
   | **C3** | Chemistry | the atom — nucleus, shells, valence |
   | **C4** | Engineering | the four-stroke engine |

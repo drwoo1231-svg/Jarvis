@@ -190,6 +190,19 @@
       <div id="dispBody" class="disp-body"></div>
     </div>
 
+    <!-- X-ray scan panel (sits beside the core, not in the conversation) -->
+    <div id="scanPanel" class="scan-panel hidden">
+      <button id="scanClose" class="icon-btn scan-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.3 19.7 2.88 18.3 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"/></svg>
+      </button>
+      <div class="scan-tag" id="scanTag">◉ X-RAY SCAN</div>
+      <div class="analysis-media ident-media" id="scanMedia"><img id="scanImg" alt="" /></div>
+      <div class="scan-body">
+        <div class="analysis-text" id="scanText"></div>
+        <div class="analysis-actions" id="scanActions"></div>
+      </div>
+    </div>
+
     <!-- In-app music player (spinning disk next to the core) -->
     <div id="nowPlaying" class="nowplaying hidden">
       <div class="np-panel">
@@ -368,6 +381,8 @@
               <div class="cl-progress"><span class="cl-progress-bar" id="clBar"></span></div>
               <div class="cl-counts"><span id="clCount">0 / 0</span><span id="clGroup"></span></div>
             </div>
+
+            <div class="cl-explain hidden" id="clExplain"></div>
 
             <div class="cl-quiz hidden" id="clQuiz">
               <div class="cl-quiz-q" id="clQuizQ">—</div>

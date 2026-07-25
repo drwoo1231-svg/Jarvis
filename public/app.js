@@ -117,6 +117,14 @@
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
+    scanPanel: $('scanPanel'),
+    scanClose: $('scanClose'),
+    scanTag: $('scanTag'),
+    scanMedia: $('scanMedia'),
+    scanImg: $('scanImg'),
+    scanText: $('scanText'),
+    scanActions: $('scanActions'),
+
     projectView: $('projectView'),
     pvCode: $('pvCode'),
     pvTitle: $('pvTitle'),
@@ -155,6 +163,7 @@
     clBar: $('clBar'),
     clCount: $('clCount'),
     clGroup: $('clGroup'),
+    clExplain: $('clExplain'),
     clQuiz: $('clQuiz'),
     clQuizQ: $('clQuizQ'),
     clQuizOpts: $('clQuizOpts'),
@@ -184,7 +193,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v3.2 · Project Atlas — interactive C1–C4 diagrams';
+  const APP_VERSION = 'v3.3 · new core, body-scan skeleton, scan panel';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -1036,7 +1045,10 @@ The interface is a movable holographic operating system. Every panel is draggabl
 
     // Awaiting a filing decision after an analysis?
     if (pendingSave) {
-      if (/(first project|the project|^project\b|to the project)/.test(low0)) { addMessage('user', text); doSaveResearch(pendingSave, 'first-project'); return; }
+      // "project c1".."c4" opens the Project Atlas — don't mistake it for a
+      // filing answer just because it starts with "project".
+      const isAtlasCmd = /\bproject\s*[·:\-]?\s*c\s*[1-4]\b/i.test(text);
+      if (!isAtlasCmd && /(first project|the project|^project\b|to the project)/.test(low0)) { addMessage('user', text); doSaveResearch(pendingSave, 'first-project'); return; }
       if (/^(yes|yeah|yep|yup|sure|ok|okay|please|do it|as usual|save it|affirmative|go ahead|ya|yea)\b/.test(low0)) { addMessage('user', text); doSaveResearch(pendingSave, 'research'); return; }
       if (/^(no|nope|nah|don'?t|cancel|skip|forget it|leave it)\b/.test(low0)) { addMessage('user', text); pendingSave = null; const l = `Very well — I'll not file it${titledName() ? ', ' + titledName() : ''}.`; addMessage('jarvis', l); speak(l); return; }
       pendingSave = null; // anything else: drop the prompt and handle normally
@@ -2607,6 +2619,20 @@ The interface is a movable holographic operating system. Every panel is draggabl
     return [...map.entries()].map(([label, prob]) => ({ label, prob })).sort((a, b) => b.prob - a.prob).slice(0, 5);
   }
 
+  /* ---- Scan panel: the X-ray scan renders beside the core ---- */
+  function openScanPanel(dataUrl, title) {
+    el.scanImg.src = dataUrl;
+    el.scanTag.textContent = '◉ X-RAY SCAN · ' + (title || 'subject');
+    el.scanText.innerHTML = '';
+    el.scanActions.innerHTML = '';
+    const boxes = el.scanMedia.querySelector('.ident-boxes'); if (boxes) boxes.remove();
+    const fx = el.scanMedia.querySelector('.xray-fx'); if (fx) fx.remove();
+    el.scanPanel.classList.remove('hidden');
+    if (Panels) Panels.front('scanPanel');
+    return { media: el.scanMedia, img: el.scanImg, textEl: el.scanText, actions: el.scanActions };
+  }
+  function closeScanPanel() { el.scanPanel.classList.add('hidden'); }
+
   /* ---- Visible X-ray scan overlay ---- */
   function startXray(media, img) {
     if (img) img.classList.add('xray');
@@ -2703,14 +2729,8 @@ The interface is a movable holographic operating system. Every panel is draggabl
     closeHoloScanner();
     const who = titledName();
     const tail = who ? ', ' + who : '';
-    renderAnalysisCard({ title: name || 'Unidentified subject', image: dataUrl, extract: '' }, { image: true });
-    const cards = el.log.querySelectorAll('.analysis-card');
-    const card = cards[cards.length - 1];
-    const media = card.querySelector('.analysis-media');
-    const img = card.querySelector('.analysis-media img');
-    const textEl = card.querySelector('.analysis-text');
-    const actions = card.querySelector('.analysis-actions');
-    actions.innerHTML = '';
+    // The scan lives beside the core, not down in the conversation.
+    const { media, img, textEl, actions } = openScanPanel(dataUrl, name || 'Unidentified subject');
     const started = Date.now();
     startXray(media, img);
 
@@ -2778,16 +2798,11 @@ The interface is a movable holographic operating system. Every panel is draggabl
   async function analyzeImage(dataUrl, mime, name) {
     const who = titledName();
     closeHoloScanner();
-    renderAnalysisCard({ title: name || 'Uploaded image', image: dataUrl, extract: '' }, { image: true });
+    const { textEl, actions } = openScanPanel(dataUrl, name || 'Uploaded image');
+    textEl.textContent = 'Awaiting your confirmation…';
     const line = `Is this the image you'd like me to analyse${who ? ', ' + who : ''}?`;
     addMessage('jarvis', line);
     speak(line);
-    // The card's "Yes" path will run the actual vision analysis.
-    const cards = el.log.querySelectorAll('.analysis-card');
-    const card = cards[cards.length - 1];
-    const actions = card.querySelector('.analysis-actions');
-    const textEl = card.querySelector('.analysis-text');
-    actions.innerHTML = '';
     const yes = document.createElement('button');
     yes.className = 'affirm';
     yes.textContent = 'Yes, analyse it';
@@ -2814,7 +2829,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     });
     const no = document.createElement('button');
     no.textContent = 'No';
-    no.addEventListener('click', () => card.remove());
+    no.addEventListener('click', closeScanPanel);
     actions.appendChild(yes);
     actions.appendChild(no);
   }
@@ -3251,6 +3266,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
 
     // Display panel + Now Playing
     el.dispClose.addEventListener('click', closeDisplay);
+    el.scanClose.addEventListener('click', closeScanPanel);
     el.npClose.addEventListener('click', closeNowPlaying);
 
     // Simulated incoming call
@@ -3404,6 +3420,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     // Make every panel draggable. Overlay panels drag from their body; widgets
     // drag from their title bar; music drags from the NOW PLAYING tag.
     Panels.enable(el.displayPanel, { id: 'displayPanel' });
+    Panels.enable(el.scanPanel, { id: 'scanPanel', handle: '.scan-tag' });
     const npPanel = el.nowPlaying.querySelector('.np-panel');
     if (npPanel) Panels.enable(npPanel, { id: 'nowPlaying', handle: '.np-tag' });
     const holoPanel = el.holoScanner.querySelector('.holo-panel');
@@ -3842,6 +3859,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     CL.idx = -1;
     el.clField.innerHTML = '';
     el.clQuiz.classList.add('hidden');
+    if (el.clExplain) el.clExplain.classList.add('hidden');
     el.clEmpty.classList.toggle('hidden', !!CL.deck);
     if (CL.deck) el.clEmpty.classList.add('hidden');
     el.clCurrent.textContent = CL.deck ? CL.deck.name : '—';
@@ -3885,7 +3903,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     chip.style.top = p.y + '%';
     chip.innerHTML = (item.badge ? `<b class="cl-badge">${escapeHtml(item.badge)}</b>` : '') +
       `<span class="cl-chip-l">${escapeHtml(item.label)}</span>`;
-    chip.addEventListener('click', () => focusItem(i));
+    chip.addEventListener('click', () => { focusItem(i); explainItem(i); });
     el.clField.appendChild(chip);
     requestAnimationFrame(() => chip.classList.add('in'));
     focusItem(i, true);
@@ -3945,6 +3963,97 @@ The interface is a movable holographic operating system. Every panel is draggabl
     focusItem(target);
     const item = CL.items[target];
     if (item) speak(item.label.replace(/·\s*L$/, ' left').replace(/·\s*R$/, ' right'));
+  }
+
+  /* ---- Clicking a scattered item explains it: visual + essential notes ----
+     Bones map onto the C1 atlas regions (which carry real clinical notes);
+     anything else falls back to its own subtitle plus an encyclopaedia entry
+     and picture. */
+  function atlasPartFor(item) {
+    const raw = (item.label || '').replace(/\s*·\s*[LR]$/, '').trim();
+    const l = raw.toLowerCase(), g = (item.group || '').toLowerCase();
+    const direct = { femur: 'femur', patella: 'patella', tibia: 'tibia', fibula: 'fibula',
+      humerus: 'humerus', radius: 'radius', ulna: 'ulna', mandible: 'mandible', sternum: 'sternum',
+      clavicle: 'clavicle', scapula: 'scapula', sacrum: 'sacrum', coccyx: 'sacrum' };
+    if (direct[l]) return direct[l];
+    if (/^rib\b/.test(l)) return 'ribs';
+    if (/hip bone|coxal/.test(l)) return 'pelvis';
+    if (/^c\d|atlas|axis/.test(l) && /cervical|vertebral/.test(g)) return 'cervical';
+    if (/^t\d/.test(l)) return 'thoracic';
+    if (/^l\d/.test(l)) return 'lumbar';
+    if (/cranium|facial/.test(g)) return 'cranium';
+    if (/ossicles/.test(g)) return 'cranium';
+    if (/carpals|metacarpals|hand/.test(g)) return 'hand';
+    if (/tarsals|metatarsals|foot/.test(g)) return 'foot';
+    if (/thoracic cage/.test(g)) return 'ribs';
+    if (/pectoral/.test(g)) return 'clavicle';
+    if (/pelvic/.test(g)) return 'pelvis';
+    return null;
+  }
+  // A holographic close-up of the matching atlas region, rendered offscreen.
+  function atlasCloseupSVG(partId) {
+    if (!Atlas) return '';
+    const proj = Atlas.get('c1');
+    if (!proj || !proj.parts[partId]) return '';
+    const host = document.createElement('div');
+    host.style.cssText = 'position:absolute;left:-9999px;top:0;width:400px;height:940px';
+    host.innerHTML = proj.svg();
+    document.body.appendChild(host);
+    let out = '';
+    try {
+      const node = host.querySelector(`.ap[data-part="${partId}"]`);
+      if (node) {
+        const b = node.getBBox();
+        const pad = Math.max(b.width, b.height) * 0.14 + 8;
+        out = `<svg viewBox="${(b.x - pad).toFixed(1)} ${(b.y - pad).toFixed(1)} ${(b.width + pad * 2).toFixed(1)} ${(b.height + pad * 2).toFixed(1)}" class="atlas-svg closeup" xmlns="http://www.w3.org/2000/svg">${node.outerHTML}</svg>`;
+      }
+    } catch { /* no geometry available */ }
+    host.remove();
+    return out;
+  }
+
+  async function explainItem(i) {
+    const item = CL.items[i];
+    if (!item) return;
+    const box = el.clExplain;
+    if (!box) return;
+    const partId = CL.domain && CL.domain.id === 'medicine' ? atlasPartFor(item) : null;
+    const meta = partId && Atlas ? Atlas.get('c1').parts[partId] : null;
+    const clean = (item.label || '').replace(/\s*·\s*L$/, ' (left)').replace(/\s*·\s*R$/, ' (right)');
+
+    box.classList.remove('hidden');
+    box.innerHTML =
+      `<button class="cl-x-close" aria-label="Close">×</button>` +
+      `<div class="cl-x-visual">${partId ? atlasCloseupSVG(partId) : '<span class="cl-x-load">Retrieving imagery…</span>'}</div>` +
+      `<div class="cl-x-name">${escapeHtml(clean)}</div>` +
+      `<div class="cl-x-sub">${escapeHtml(item.sub || item.group || '')}${meta ? ' · ' + escapeHtml(meta.name) : ''}</div>` +
+      `<div class="cl-x-h">◈ ESSENTIAL NOTES</div>` +
+      `<ul class="cl-x-notes">${(meta ? meta.notes : []).map((n) => `<li>${escapeHtml(n)}</li>`).join('') || '<li class="cl-x-load">Looking it up…</li>'}</ul>`;
+    box.querySelector('.cl-x-close').addEventListener('click', () => box.classList.add('hidden'));
+
+    const who = addressWord() ? ', ' + addressWord() : '';
+    if (meta) {
+      addMessage('jarvis', `${clean}${who}. ${meta.fn} ${meta.notes[0]}`);
+      speak(`${clean}. ${meta.fn}`);
+    } else {
+      speak(clean);
+    }
+
+    // Always try for a real picture + encyclopaedia summary alongside.
+    try {
+      const q = meta ? (meta.ref || meta.name) : (item.sub && CL.deck.id === 'elements' ? item.sub : clean);
+      const ref = await fetchImage(q);
+      const vis = box.querySelector('.cl-x-visual');
+      if (ref && ref.image && vis) {
+        vis.innerHTML = (partId ? atlasCloseupSVG(partId) : '') +
+          `<img src="${ref.image}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"/>`;
+      } else if (vis && !partId) vis.innerHTML = '<span class="cl-x-load">No imagery found.</span>';
+      if (!meta && ref && ref.extract) {
+        const ul = box.querySelector('.cl-x-notes');
+        if (ul) ul.innerHTML = ref.extract.split(/(?<=\.)\s+/).slice(0, 5)
+          .map((n) => `<li>${escapeHtml(n.trim())}</li>`).join('');
+      }
+    } catch { /* imagery is a bonus */ }
   }
 
   /* ---- Quiz ---- */

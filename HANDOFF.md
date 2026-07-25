@@ -341,3 +341,26 @@ Gemini's free key at aistudio.google.com/apikey).
 dry-witted British-butler voice, address the user by their configured name +
 honorific, and — above all — be HONEST about platform limits rather than
 shipping fake features.*
+
+### v3.3 — new core visual, body-scan skeleton, scan panel, scatter explainer
+- `jarvis-core.js`: the globe is now a **lat/long dot grid** (`seedSphere()` builds
+  latitude bands, denser at the equator) with a glowing orb behind it, a
+  horizontal + vertical light flare, bright nodes riding the rings, and the
+  **J.A.R.V.I.S. wordmark** drawn on canvas (`drawWordmark`/`spacedText`) with a
+  state label (ONLINE / LISTENING / THINKING …) fed by `setState`. The mic button
+  moved to the base of the core stage so the wordmark stays legible — its
+  `transform` states must keep `translateX(-50%)`.
+- C1 skeleton gained a translucent **body silhouette** (`bodyHalf(k)` in
+  atlas.js, mirrored) plus scan-frame corner brackets and a floor glow, all
+  `pointer-events:none` so hit-testing is unchanged.
+- **X-ray scans now render beside the core**, not in the conversation:
+  `#scanPanel` + `openScanPanel()/closeScanPanel()`; `identifyImage` and
+  `analyzeImage` both target it. It is draggable (`Panels.enable`, handle
+  `.scan-tag`).
+- Clicking a scattered Career-Lab chip calls `explainItem(i)` → `#clExplain`
+  with a holographic close-up (`atlasCloseupSVG`, via `atlasPartFor()` which
+  maps any of the 206 bones onto a C1 atlas region), the name/group, and the
+  essential notes; non-medicine decks fall back to a Wikipedia picture+extract.
+- **Command collision fixed:** the post-analysis "Research files or First
+  Project?" prompt matched `/^project\b/` and swallowed `project c1`. The
+  filing branch now excludes `project c1..c4` (regression-tested).

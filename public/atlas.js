@@ -24,8 +24,35 @@
     ew = ew || w * 1.9;
     return E(x1, y1, ew / 2, ew / 2.4) + E(x2, y2, ew / 2, ew / 2.4) + L(x1, y1, x2, y2, w);
   }
+  // Translucent body silhouette wrapped around the bones, as in a full-body
+  // scan. Drawn as one half and mirrored; non-interactive.
+  function bodyHalf(k) {
+    const X = (v) => (200 + k * (v - 200)).toFixed(1);
+    return `M200 14 C${X(232)} 14 ${X(266)} 44 ${X(266)} 80 C${X(266)} 106 ${X(256)} 126 ${X(246)} 140 ` +
+      `C${X(240)} 150 ${X(236)} 157 ${X(234)} 164 C${X(258)} 173 ${X(296)} 186 ${X(316)} 208 ` +
+      `C${X(328)} 224 ${X(334)} 250 ${X(336)} 280 C${X(338)} 330 ${X(336)} 386 ${X(334)} 432 ` +
+      `C${X(333)} 470 ${X(330)} 505 ${X(327)} 542 C${X(325)} 566 ${X(320)} 586 ${X(310)} 598 ` +
+      `C${X(300)} 608 ${X(292)} 602 ${X(291)} 584 C${X(288)} 530 ${X(285)} 478 ${X(282)} 428 ` +
+      `C${X(279)} 376 ${X(276)} 322 ${X(272)} 282 C${X(266)} 302 ${X(260)} 344 ${X(258)} 384 ` +
+      `C${X(256)} 406 ${X(258)} 428 ${X(264)} 446 C${X(280)} 460 ${X(296)} 478 ${X(296)} 512 ` +
+      `C${X(296)} 566 ${X(290)} 620 ${X(284)} 666 C${X(280)} 698 ${X(276)} 728 ${X(274)} 768 ` +
+      `C${X(272)} 812 ${X(270)} 848 ${X(268)} 872 C${X(268)} 886 ${X(276)} 894 ${X(290)} 896 ` +
+      `L${X(290)} 906 L${X(214)} 906 L${X(212)} 886 C${X(210)} 848 ${X(208)} 808 ${X(206)} 768 ` +
+      `C${X(204)} 700 ${X(202)} 622 200 558 Z`;
+  }
+
   function skeletonSVG() {
     let s = '';
+
+    // ---- Body silhouette + scan framing (decorative) ----
+    s += `<g class="body-scan" aria-hidden="true">` +
+      `<ellipse cx="200" cy="912" rx="118" ry="15" class="body-base"/>` +
+      P(bodyHalf(1), 'class="body-sil"') + P(bodyHalf(-1), 'class="body-sil"') +
+      `</g>`;
+    s += `<g class="scan-frame" aria-hidden="true">` +
+      P('M62 40 L62 12 L118 12') + P('M338 40 L338 12 L282 12') +
+      P('M62 890 L62 918 L118 918') + P('M338 890 L338 918 L282 918') +
+      `</g>`;
 
     // ---- Skull ----
     s += part('cranium',

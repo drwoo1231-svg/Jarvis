@@ -353,10 +353,13 @@ select.text-field {
   height: 100%;
 }
 .mic-btn {
-  position: relative;
-  z-index: 2;
+  /* Sits at the base of the core so the J.A.R.V.I.S. wordmark at the centre
+     of the reactor stays legible. */
+  position: absolute;
+  left: 50%; bottom: 2%; transform: translateX(-50%);
+  z-index: 3;
   display: grid; place-items: center;
-  width: 92px; height: 92px;
+  width: 68px; height: 68px;
   color: var(--cyan);
   background: radial-gradient(circle at 50% 40%, rgba(56,225,255,0.22), rgba(2,12,24,0.85));
   border: 1.5px solid var(--cyan-dim);
@@ -365,7 +368,7 @@ select.text-field {
   box-shadow: 0 0 26px rgba(56,225,255,0.4), inset 0 0 20px rgba(56,225,255,0.25);
   transition: transform 0.15s, box-shadow 0.3s;
 }
-.mic-btn:active { transform: scale(0.94); }
+.mic-btn:active { transform: translateX(-50%) scale(0.94); }
 .mic-btn.listening {
   color: #fff;
   border-color: var(--cyan);
@@ -373,8 +376,8 @@ select.text-field {
   animation: mic-pulse 1.4s ease-in-out infinite;
 }
 @keyframes mic-pulse {
-  0%,100% { transform: scale(1); }
-  50%     { transform: scale(1.05); }
+  0%,100% { transform: translateX(-50%) scale(1); }
+  50%     { transform: translateX(-50%) scale(1.05); }
 }
 
 /* HUD corner brackets */
@@ -1722,3 +1725,85 @@ body[data-core="warning"]   { --ring: 255,90,90; }
   .pv-scanline { animation: none; }
   .pv-svg svg, .atlas-svg .ap { transition: none; }
 }
+
+/* ---- C1 body-scan aesthetic: translucent silhouette around the bones ---- */
+.body-scan, .scan-frame { pointer-events: none; }
+.body-sil {
+  fill: color-mix(in srgb, var(--pv-accent) 7%, transparent);
+  stroke: color-mix(in srgb, var(--pv-accent) 34%, transparent);
+  stroke-width: 1.3; stroke-linejoin: round;
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--pv-accent) 40%, transparent));
+}
+.body-base {
+  fill: color-mix(in srgb, var(--pv-accent) 26%, transparent);
+  filter: blur(7px);
+}
+.scan-frame path {
+  fill: none; stroke: color-mix(in srgb, var(--pv-accent) 85%, transparent);
+  stroke-width: 3; stroke-linecap: square;
+  filter: drop-shadow(0 0 7px var(--pv-accent));
+}
+/* bones read brighter inside the body, like a radiograph */
+.atlas-svg .ap { --bone-glow: 6px; }
+#pvSvg .atlas-svg .ap:not(.hot):not(.sel) {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--pv-accent) 85%, transparent));
+}
+
+/* ---- X-ray scan panel — lives beside the core, not in the conversation ---- */
+.scan-panel {
+  position: fixed; z-index: 63; pointer-events: auto;
+  left: 0; right: 0; margin-inline: auto;
+  bottom: calc(90px + var(--safe-bottom));
+  width: min(340px, 92vw);
+  border-radius: 18px; border: 1px solid var(--cyan-dim);
+  background: linear-gradient(160deg, rgba(8,26,48,0.97), rgba(3,12,26,0.97));
+  box-shadow: 0 0 54px rgba(56,182,255,0.35), inset 0 0 30px rgba(56,182,255,0.08);
+  backdrop-filter: blur(10px); overflow: hidden; animation: rise .3s ease;
+}
+.platform-pc .scan-panel { left: 34px; right: auto; margin-inline: 0; top: 120px; bottom: auto; width: 350px; }
+.scan-close { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; z-index: 5; }
+.scan-tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--cyan-soft);
+  padding: 11px 13px 9px; cursor: grab; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-bottom: 1px solid rgba(70,182,255,0.14);
+}
+.scan-panel .analysis-media { border-radius: 0; }
+.scan-panel .analysis-media img { max-height: 240px; }
+.scan-body { padding: 12px 13px 13px; max-height: 46vh; overflow-y: auto; }
+.scan-body .analysis-text { font-size: 13px; line-height: 1.5; }
+.scan-body .analysis-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.platform-pc .scan-body { max-height: 40vh; }
+
+/* ---- Career Lab: click a scattered item to have it explained ---- */
+.cl-explain {
+  position: relative; border-radius: 14px; padding: 13px 14px 14px;
+  border: 1px solid color-mix(in srgb, var(--cl-accent) 45%, transparent);
+  background: linear-gradient(150deg, rgba(7,22,42,0.96), rgba(3,11,24,0.96));
+  box-shadow: 0 0 34px color-mix(in srgb, var(--cl-accent) 26%, transparent);
+  max-height: 46%; overflow-y: auto; animation: rise .22s ease;
+}
+.cl-x-close {
+  position: absolute; top: 8px; right: 10px; border: 0; background: transparent;
+  color: var(--text-dim); font-size: 20px; line-height: 1; cursor: pointer;
+}
+.cl-x-close:hover { color: var(--danger); }
+.cl-x-visual {
+  display: flex; gap: 10px; align-items: center; justify-content: center;
+  height: 132px; margin-bottom: 11px; border-radius: 11px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--cl-accent) 30%, transparent);
+  background: radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--cl-accent) 14%, transparent), rgba(2,8,18,0.92) 74%);
+  --pv-accent: var(--cl-accent);
+}
+.cl-x-visual svg { height: 100%; width: auto; max-width: 48%; padding: 8px 0; }
+.cl-x-visual .hitlayer { display: none; }
+.cl-x-visual img { height: 100%; width: auto; max-width: 52%; object-fit: cover; border-radius: 8px; border: 1px solid var(--glass-brd); }
+.cl-x-load { font-family: var(--mono); font-size: 10.5px; color: var(--text-dim); }
+.cl-x-name { font-size: 17px; font-weight: 700; color: #fff; }
+.cl-x-sub { font-size: 11.5px; color: var(--cl-accent); text-transform: capitalize; margin-top: 2px; }
+.cl-x-h { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--text-dim); margin: 11px 0 6px; }
+.cl-x-notes { list-style: none; margin: 0; padding: 0; }
+.cl-x-notes li {
+  position: relative; padding: 6px 0 6px 15px; font-size: 12px; line-height: 1.5; color: var(--text);
+  border-bottom: 1px dashed rgba(70,182,255,0.12);
+}
+.cl-x-notes li::before { content: '▸'; position: absolute; left: 0; color: var(--cl-accent); }
