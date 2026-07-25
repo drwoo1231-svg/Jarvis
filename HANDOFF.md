@@ -184,6 +184,27 @@ Device commands run **synchronously inside the tap** so iOS actually opens apps.
   (now guarded by a test asserting bar width ≈ percentage); and `.msg` /
   `.analysis-card` lacked `flex:0 0 auto` inside the flex-column `.log`, so
   they were squashed once the log filled.
+
+### v3.2 — Project Atlas (C1–C4)
+- `public/atlas.js` (`window.JarvisAtlas`): four interactive diagrams, each
+  generated as SVG in JS (loops build ribs/vertebrae/fingers/electrons) with
+  `.ap[data-part]` groups, plus a metadata table per part
+  (`name`, `fn`, `ref`, `notes[]` — 47 parts, all with ≥4 notes; a test asserts
+  no part is undocumented and no SVG group lacks metadata).
+  C1 skeleton (20 parts), C2 CPU/memory (11), C3 atom (7), C4 engine (9).
+- app.js `PV` state: `openProject(code)` (also sets `cfg.career`),
+  `bindParts()`, `selectPart(id,node,ev)`, `zoomToPart(node,ev)`,
+  `closeupOf(node)`. Command: `project c1`…`c4` or a bare `c1`.
+- `addHitLayer()` clones every shape into an invisible `stroke-width:16`
+  hit layer so thin bones/ribs are hoverable; stroke-only shapes keep
+  `fill:none` there, or the rib cage would swallow the spine behind it.
+- `zoomToPart` narrows the bbox to the clicked side for mirrored pairs
+  (both femurs live in one group, so the full bbox barely zooms).
+- **Layout gotcha, hit twice:** an `<svg>` with `width/height:100%` inside a
+  `display:grid; place-items:center` parent cannot resolve its height and
+  renders far too large (it blew the skeleton out of frame, and cropped the
+  dossier close-up). Both `.pv-svg svg` and `.pv-closeup svg` are now
+  absolutely positioned with `inset`. Don't reintroduce grid centring there.
 - Layout / widgets (v2.7): `lock the layout`, `unlock the layout`,
   `reset my layout`, `snap to grid`, `open the widget library`,
   `show/hide the <clock|weather|system|applications|calculator|notes|world map|music|log> widget`,

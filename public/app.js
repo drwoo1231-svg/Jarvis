@@ -117,6 +117,26 @@
     setVoice: $('setVoice'),
     setSpeak: $('setSpeak'),
     setAutoListen: $('setAutoListen'),
+    projectView: $('projectView'),
+    pvCode: $('pvCode'),
+    pvTitle: $('pvTitle'),
+    pvBlurb: $('pvBlurb'),
+    pvTabs: $('pvTabs'),
+    pvClose: $('pvClose'),
+    pvStage: $('pvStage'),
+    pvSvg: $('pvSvg'),
+    pvTip: $('pvTip'),
+    pvHint: $('pvHint'),
+    pvZoomOut: $('pvZoomOut'),
+    pvDossier: $('pvDossier'),
+    pvEmpty: $('pvEmpty'),
+    pvDetail: $('pvDetail'),
+    pvCloseup: $('pvCloseup'),
+    pvDName: $('pvDName'),
+    pvDFn: $('pvDFn'),
+    pvNotes: $('pvNotes'),
+    pvRef: $('pvRef'),
+
     setCareer: $('setCareer'),
     careerPick: $('careerPick'),
     careerBtn: $('careerBtn'),
@@ -164,7 +184,7 @@
 
   // Bump this whenever the app changes so users can confirm they're on the
   // latest build (shown at the bottom of Settings).
-  const APP_VERSION = 'v3.1 · Career Lab + upgraded X-ray scanner';
+  const APP_VERSION = 'v3.2 · Project Atlas — interactive C1–C4 diagrams';
   const DEFAULT_LOCAL_MODEL = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
   // Per-provider defaults for the Direct-mode connection.
@@ -610,7 +630,7 @@ Actions: play_music {query,service:youtube|spotify|apple}; open_app {app}; searc
 Only emit an action when the user asks you to do something on the device; for ordinary conversation, just talk. Never invent phone numbers or emails.
 
 # Holographic Interface (v2.7)
-The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, and Music. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. The Career Lab (the mortarboard button, or "open the career lab") holds study modules for Medical Science, Chemistry, Computer Science and Engineering — for example all 206 bones of the human skeleton, the 118 elements, the twelve cranial nerves, Big-O complexity. Ask things like "show all the 206 bones and scatter them one by one so I can memorise them" and JARVIS lays them out across a holographic field one at a time, with step controls, a speed slider and a quiz mode. JARVIS can add events to the user's REAL Google Calendar once they connect their Google account in Settings (otherwise it opens a pre-filled event for them to save); connected events also schedule phone reminders. Alarms sound in-app while JARVIS is open — a web app cannot set the phone's native Clock app, so JARVIS also offers a calendar reminder that notifies the phone at that time. If asked to set a native phone alarm, explain this honestly and offer the calendar reminder (or suggest Siri/Google Assistant for a true Clock alarm). The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
+The interface is a movable holographic operating system. Every panel is draggable (with inertia and optional snap-to-grid), remembers its position, can be brought to front, and double-clicking a panel's title bar returns it to its default spot. You can guide the user to: lock or unlock the layout, reset the layout, toggle snap-to-grid, open the widget library (the "＋" button) to add or remove panels, and add widgets such as Clock, Weather, System Status, Applications, JARVIS Log, World Map, Notes, Calculator, and Music. These layout commands are handled directly by the app, so simply confirm and describe them naturally when asked. The music player has real transport controls (previous, rewind 10 seconds, play/pause, forward 10 seconds, next, shuffle, repeat, volume, and a seekable progress bar). The Applications panel launches the actual installed app on the user's own device via its URL scheme (Spotify, Discord, Slack, WhatsApp, Mail, and more), opens real web apps directly rather than searching for them, opens the real webcam for Camera, and the real file picker for Files. Weather is shown as a live animated hologram — a glowing rotating sun, drifting clouds, falling rain, snow, or a lightning storm — matched to the current conditions. The "identify" command runs a visible X-ray scan and uses on-device object detection (COCO-SSD, which knows everyday objects like carrot, apple, banana, cup, laptop, dog) plus fine-grained classification, drawing labelled boxes around what it finds; it is teachable, so if it is wrong the user can type the correct name in the "Teach me" box and it will remember and recognise it next time. Saying "project C1" opens an interactive holographic diagram for that field: C1 the human skeleton, C2 processor and memory architecture, C3 the atom, C4 the four-stroke engine. Hovering any part highlights it red and names it with what it does; clicking zooms in close, shows a magnified view and a dossier of the essential notes, and pulls a real reference photograph. Selecting a project also sets the user's tutoring field. The Career Lab (the mortarboard button, or "open the career lab") holds study modules for Medical Science, Chemistry, Computer Science and Engineering — for example all 206 bones of the human skeleton, the 118 elements, the twelve cranial nerves, Big-O complexity. Ask things like "show all the 206 bones and scatter them one by one so I can memorise them" and JARVIS lays them out across a holographic field one at a time, with step controls, a speed slider and a quiz mode. JARVIS can add events to the user's REAL Google Calendar once they connect their Google account in Settings (otherwise it opens a pre-filled event for them to save); connected events also schedule phone reminders. Alarms sound in-app while JARVIS is open — a web app cannot set the phone's native Clock app, so JARVIS also offers a calendar reminder that notifies the phone at that time. If asked to set a native phone alarm, explain this honestly and offer the calendar reminder (or suggest Siri/Google Assistant for a true Clock alarm). The central core shows a colored status ring: blue idle, cyan listening, amber thinking, purple searching, white speaking, red warning.`;
   }
 
   const BASE_PERSONA = `You are JARVIS, an exceptionally intelligent, refined, and reliable AI assistant. You are calm, composed, confident, courteous, and dryly humorous when appropriate, with the polish of an experienced British butler. Be efficient and concise for simple things and detailed for complex ones. Understand intent, maintain context, and be proactive. If you don't know something, say so. Never be rude, childish, or repetitive.`;
@@ -1166,6 +1186,26 @@ The interface is a movable holographic operating system. Every panel is draggabl
       speak('Select the image to identify. I will scan it and break down the probabilities.');
       setTimeout(pickImage, 250);
       return;
+    }
+
+    // "jarvis project c1" … c4 — the interactive holographic diagrams.
+    {
+      const pm = text.match(/\bproject\s*[·:\-]?\s*(c\s*[1-4])\b/i) || text.match(/^\s*(?:jarvis[,\s]+)?(c\s*[1-4])\s*$/i);
+      if (pm) {
+        addMessage('user', text);
+        const code = pm[1].replace(/\s+/g, '').toLowerCase();
+        if (!openProject(code)) {
+          const l = `I don't have a project by that designation${addressWord() ? ', ' + addressWord() : ''}.`;
+          addMessage('jarvis', l); speak(l);
+        }
+        return;
+      }
+      if (/\b(list|what|which)\b.*\bprojects?\b/i.test(text) || /^\s*projects?\s*$/i.test(text)) {
+        addMessage('user', text);
+        const lines = Atlas.codes.map((c) => { const p = Atlas.get(c); return `${p.code} — ${p.title}`; }).join('; ');
+        const l = `Four projects are loaded${addressWord() ? ', ' + addressWord() : ''}: ${lines}. Say "project C1" to open one.`;
+        addMessage('jarvis', l); speak(l); return;
+      }
     }
 
     // Career Lab — set a field, study a deck, scatter it, get quizzed.
@@ -3987,6 +4027,205 @@ The interface is a movable holographic operating system. Every panel is draggabl
     if (Panels) Panels.enable(el.careerLab.querySelector('.cl-panel'), { id: 'careerLab', handle: '.cl-head' });
   }
 
+  /* ========================================================================
+     PROJECT ATLAS — "jarvis project c1" … c4
+     A holographic, interactive diagram per field. Hover a part to highlight
+     and inspect it; click to zoom in close and get the full dossier.
+     ======================================================================== */
+  const Atlas = window.JarvisAtlas;
+  const PV = { code: null, proj: null, active: null };
+
+  function openProject(code, quiet) {
+    if (!Atlas) return false;
+    const proj = Atlas.get(code);
+    if (!proj) return false;
+    PV.code = code.toLowerCase(); PV.proj = proj;
+    // Selecting a project also sets the tutoring field.
+    if (proj.domain && cfg.state.career !== proj.domain) {
+      cfg.set({ career: proj.domain });
+      if (el.setCareer) el.setCareer.value = proj.domain;
+    }
+    el.projectView.style.setProperty('--pv-accent', proj.accent);
+    el.pvCode.textContent = proj.code;
+    el.pvTitle.textContent = proj.title;
+    el.pvBlurb.textContent = proj.blurb;
+    el.pvSvg.innerHTML = proj.svg();
+    resetDossier();
+    resetZoom();
+    renderProjectTabs();
+    bindParts();
+    el.projectView.classList.remove('hidden');
+    if (!quiet) {
+      const who = addressWord() ? ', ' + addressWord() : '';
+      const n = Object.keys(proj.parts).length;
+      const line = `Project ${proj.code}${who} — ${proj.title}. ${n} components are live. Hover any part and I'll identify it; select one and I'll pull it up close with the essentials.`;
+      addMessage('jarvis', line);
+      speak(`Project ${proj.code}${who}. ${proj.title}. Hover any part and I'll identify it.`);
+    }
+    return true;
+  }
+  function closeProject() { el.projectView.classList.add('hidden'); }
+
+  function renderProjectTabs() {
+    el.pvTabs.innerHTML = '';
+    Atlas.codes.forEach((c) => {
+      const p = Atlas.get(c);
+      const b = document.createElement('button');
+      b.className = 'pv-tab' + (c === PV.code ? ' on' : '');
+      b.dataset.code = c;
+      b.innerHTML = `<b>${p.code}</b><em>${escapeHtml(p.title.split(' ')[0])}</em>`;
+      b.addEventListener('click', () => openProject(c, true));
+      el.pvTabs.appendChild(b);
+    });
+  }
+
+  // Thin strokes (a rib, a fibula) are nearly impossible to hover precisely, so
+  // give every shape an invisible fattened copy to act as its hit target.
+  // Stroke-only shapes stay unfilled, or a rib cage would swallow the spine.
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function addHitLayer(node) {
+    const hit = document.createElementNS(SVGNS, 'g');
+    hit.setAttribute('class', 'hitlayer');
+    node.querySelectorAll('path, line, circle, ellipse, rect').forEach((sh) => {
+      const c = sh.cloneNode(false);
+      c.removeAttribute('class');
+      let filled = true;
+      try { filled = getComputedStyle(sh).fill !== 'none'; } catch { /* assume filled */ }
+      c.setAttribute('fill', filled ? 'transparent' : 'none');
+      hit.appendChild(c);
+    });
+    node.appendChild(hit);
+  }
+
+  function bindParts() {
+    const svg = el.pvSvg.querySelector('svg');
+    if (!svg) return;
+    svg.querySelectorAll('.ap').forEach((node) => {
+      const id = node.dataset.part;
+      const meta = PV.proj.parts[id];
+      if (!meta) return;
+      addHitLayer(node);
+      node.addEventListener('pointerenter', (e) => {
+        node.classList.add('hot');
+        showPartTip(meta, e);
+      });
+      node.addEventListener('pointermove', (e) => positionTip(e));
+      node.addEventListener('pointerleave', () => { node.classList.remove('hot'); el.pvTip.classList.add('hidden'); });
+      node.addEventListener('click', (e) => { e.stopPropagation(); selectPart(id, node, e); });
+    });
+    el.pvStage.addEventListener('click', () => { /* clicking empty space keeps selection */ });
+  }
+
+  function showPartTip(meta, e) {
+    el.pvTip.innerHTML = `<b>${escapeHtml(meta.name)}</b><span>${escapeHtml(meta.fn)}</span>`;
+    el.pvTip.classList.remove('hidden');
+    positionTip(e);
+  }
+  function positionTip(e) {
+    const r = el.pvStage.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const tw = el.pvTip.offsetWidth || 240, th = el.pvTip.offsetHeight || 70;
+    el.pvTip.style.left = Math.max(8, Math.min(r.width - tw - 8, x + 16)) + 'px';
+    el.pvTip.style.top = Math.max(8, Math.min(r.height - th - 8, y - th - 12 < 8 ? y + 20 : y - th - 12)) + 'px';
+  }
+
+  // Zoom the whole diagram so the chosen part fills the stage. For a mirrored
+  // pair (both femurs in one group) the bbox spans the body and barely zooms —
+  // so narrow it to the side actually clicked.
+  function zoomToPart(node, ev) {
+    const svg = el.pvSvg.querySelector('svg');
+    if (!svg || !node.getBBox) return;
+    const vb = (svg.getAttribute('viewBox') || '0 0 400 900').split(/\s+/).map(Number);
+    const VW = vb[2], VH = vb[3];
+    let b;
+    try { b = node.getBBox(); } catch { return; }
+    if (!b || !b.width) return;
+    if (ev && b.width > b.height * 1.4 && svg.getScreenCTM) {
+      try {
+        const ctm = svg.getScreenCTM().inverse();
+        const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+        const u = pt.matrixTransform(ctm);
+        const mid = b.x + b.width / 2;
+        const half = b.width * 0.56;
+        b = { x: u.x < mid ? b.x : b.x + b.width - half, y: b.y, width: half, height: b.height };
+      } catch { /* keep the full bbox */ }
+    }
+    const pad = Math.max(b.width, b.height) * 0.12 + 12;
+    const w = b.width + pad * 2, h = b.height + pad * 2;
+    const s = Math.min(VW / w, VH / h, 6);
+    const cx = b.x + b.width / 2, cy = b.y + b.height / 2;
+    svg.style.transformOrigin = '0 0';
+    svg.style.transform = `translate(${(VW / 2 - cx * s) / VW * 100}%, ${(VH / 2 - cy * s) / VH * 100}%) scale(${s})`;
+    el.pvZoomOut.classList.remove('hidden');
+  }
+  function resetZoom() {
+    const svg = el.pvSvg.querySelector('svg');
+    if (svg) svg.style.transform = '';
+    el.pvZoomOut.classList.add('hidden');
+  }
+
+  // Build a standalone close-up "photo" of just this part.
+  function closeupOf(node) {
+    const svg = el.pvSvg.querySelector('svg');
+    if (!svg || !node.getBBox) return '';
+    let b;
+    try { b = node.getBBox(); } catch { return ''; }
+    if (!b || !b.width) return '';
+    const pad = Math.max(b.width, b.height) * 0.16 + 10;
+    const clone = node.cloneNode(true);
+    clone.classList.remove('hot');
+    const wrap = document.createElement('div');
+    wrap.appendChild(clone);
+    return `<svg viewBox="${(b.x - pad).toFixed(1)} ${(b.y - pad).toFixed(1)} ${(b.width + pad * 2).toFixed(1)} ${(b.height + pad * 2).toFixed(1)}" class="atlas-svg closeup" xmlns="http://www.w3.org/2000/svg">${wrap.innerHTML}</svg>`;
+  }
+
+  function resetDossier() {
+    PV.active = null;
+    el.pvEmpty.classList.remove('hidden');
+    el.pvDetail.classList.add('hidden');
+    el.pvSvg.querySelectorAll('.ap.sel').forEach((n) => n.classList.remove('sel'));
+  }
+
+  async function selectPart(id, node, ev) {
+    const meta = PV.proj.parts[id];
+    if (!meta) return;
+    PV.active = id;
+    el.pvSvg.querySelectorAll('.ap.sel').forEach((n) => n.classList.remove('sel'));
+    node.classList.add('sel');
+    zoomToPart(node, ev);
+
+    el.pvEmpty.classList.add('hidden');
+    el.pvDetail.classList.remove('hidden');
+    el.pvCloseup.innerHTML = closeupOf(node);
+    el.pvDName.textContent = meta.name;
+    el.pvDFn.textContent = meta.fn;
+    el.pvNotes.innerHTML = meta.notes.map((n) => `<li>${escapeHtml(n)}</li>`).join('');
+    el.pvRef.innerHTML = '<span class="pv-ref-load">Retrieving reference imagery…</span>';
+    el.pvDossier.scrollTop = 0;
+    lastAnalysisSubject = meta.name;
+
+    const who = addressWord() ? ', ' + addressWord() : '';
+    addMessage('jarvis', `${meta.name}${who}. ${meta.fn} ${meta.notes[0]}`);
+    speak(`${meta.name}. ${meta.fn}`);
+
+    // Pull a real reference photo alongside the holographic close-up.
+    try {
+      const ref = await fetchImage(meta.ref || meta.name);
+      if (ref && ref.image) {
+        el.pvRef.innerHTML = `<div class="pv-ref-h">◈ REFERENCE</div>` +
+          `<img src="${ref.image}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"/>` +
+          (ref.extract ? `<p>${escapeHtml(ref.extract.split('. ').slice(0, 2).join('. '))}.</p>` : '');
+      } else el.pvRef.innerHTML = '';
+    } catch { el.pvRef.innerHTML = ''; }
+  }
+
+  function initProjectAtlas() {
+    if (!Atlas || !el.projectView) return;
+    el.pvClose.addEventListener('click', closeProject);
+    el.pvZoomOut.addEventListener('click', () => { resetZoom(); });
+    if (Panels) Panels.enable(el.projectView.querySelector('.pv-panel'), { id: 'projectView', handle: '.pv-head' });
+  }
+
   // Map free text to a study deck.
   function matchDeck(text) {
     const t = text.toLowerCase();
@@ -4032,6 +4271,7 @@ The interface is a movable holographic operating system. Every panel is draggabl
     applyPlatform();
     initDashboard();
     initCareerLab();
+    initProjectAtlas();
     initAmbient();
     // Re-evaluate PC/mobile layout on resize when in auto mode.
     window.addEventListener('resize', () => {

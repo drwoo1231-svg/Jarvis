@@ -36,6 +36,21 @@ same code runs beautifully on your computer too. No app store required.
   a reference photo beside the core, and drops into **focus mode** (Google) if
   unsure. **It learns:** if it's wrong, type the correct name in the *"Teach me"*
   box and JARVIS remembers it on-device — recognising it next time.
+- 🧬 **Projects C1–C4 — interactive holographic diagrams.** Say **"jarvis
+  project c1"** (or c2/c3/c4) and JARVIS brings up a live, explorable diagram
+  for that discipline:
+  | | | |
+  |---|---|---|
+  | **C1** | Medicine | the articulated **human skeleton** |
+  | **C2** | Computer Science | processor & memory architecture |
+  | **C3** | Chemistry | the atom — nucleus, shells, valence |
+  | **C4** | Engineering | the four-stroke engine |
+
+  **Hover any part** and it lights up **red**, lifts, dims everything else and
+  tells you what it is and what it does. **Click it** and JARVIS zooms the
+  diagram in on that part, renders a magnified close-up, and briefs you with
+  the **essential notes** a student of that field actually needs — plus a real
+  reference photograph. Picking a project also sets your tutoring field.
 - 🎓 **Career Lab — JARVIS tutors your field.** Tell it what you're training as
   (**Medicine · Chemistry · Computer Science · Engineering**) at setup, in
   Settings, or just say *"I want to be a doctor"* — and every explanation is
