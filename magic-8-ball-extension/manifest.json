@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Magic 8 Ball",
+  "version": "1.0.0",
+  "description": "Ask a question, shake the ball, get an answer. The 20 classic replies, no permissions beyond saving your history locally.",
+  "action": {
+    "default_title": "Magic 8 Ball",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["storage"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+8"
+      },
+      "description": "Open the Magic 8 Ball"
+    }
+  }
+}
