@@ -48,6 +48,12 @@ void loadAssets() {
   fTech = createFont("Orbitron-Bold.ttf", 30, true);
 
   holoShader = loadShader("hologram.glsl");
+  try {
+    holoShader.init();   // compile now, so a graphics card that can't run it is caught here
+  } catch (RuntimeException e) {
+    println("Hologram shader not supported here - using simple holograms instead.\n" + e.getMessage());
+    holoShader = null;
+  }
 
   glow = makeGlow(128);
   vignette = makeVignette(320, 180);

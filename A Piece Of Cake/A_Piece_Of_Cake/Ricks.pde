@@ -214,15 +214,25 @@ class HoloRick {
   }
 
   void holoPass(float alpha) {
-    holoShader.set("time", T + seed);
-    holoShader.set("reveal", reveal);
-    holoShader.set("glitch", glitch);
-    holoShader.set("alpha", alpha);
-    holoShader.set("tint", tr, tg, tb);
-    shader(holoShader);
     float k = alpha < 0.5 ? 1.025 : 1;   // bloom pass is drawn slightly bigger
-    image(buf, x - BUF_AX * s * k, y - BUF_AY * s * k, BUF_W * s * k, BUF_H * s * k);
-    resetShader();
+    float x0 = x - BUF_AX * s * k, y0 = y - BUF_AY * s * k, w = BUF_W * s * k, h = BUF_H * s * k;
+    if (holoShader != null) {
+      holoShader.set("time", T + seed);
+      holoShader.set("reveal", reveal);
+      holoShader.set("glitch", glitch);
+      holoShader.set("alpha", alpha);
+      holoShader.set("tint", tr, tg, tb);
+      shader(holoShader);
+      image(buf, x0, y0, w, h);
+      resetShader();
+    } else {
+      // no shader support: tinted + flickering, still materializing from the feet up
+      int cut = (int) ((1 - reveal) * BUF_H);
+      float flick = 0.85 + 0.15 * sin(T * 37 + seed) * sin(T * 11);
+      tint(140 + tr * 115, 140 + tg * 115, 140 + tb * 115, 230 * alpha * flick);
+      image(buf, x0, y0 + cut * h / BUF_H, w, h - cut * h / BUF_H, 0, cut, BUF_W, BUF_H);
+      noTint();
+    }
   }
 }
 

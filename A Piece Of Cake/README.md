@@ -13,9 +13,11 @@ that they take turns telling Rick jokes in comic speech boxes.
 
 ## Run it
 
-1. Install [Processing 4](https://processing.org/download) (tested against 4.5.6).
-2. **File → Open…** → `A Piece Of Cake/A_Piece_Of_Cake/A_Piece_Of_Cake.pde`
-3. Make sure the mode (top right) says **Java** and press **▶ Run**.
+1. Install [Processing 4](https://processing.org/download) (built and tested for **4.5.6**).
+2. Unzip / download this whole `A Piece Of Cake` folder.
+3. In Processing: **File → Open…** → `A Piece Of Cake/A_Piece_Of_Cake/A_Piece_Of_Cake.pde`
+   (or just double-click that file). All 10 tabs open together.
+4. Make sure the mode (top right) says **Java** and press **▶ Run**.
 
 > The sketch folder inside uses underscores because Processing sketch names
 > can't contain spaces. Keep the `data/` folder next to the `.pde` files, since
@@ -86,6 +88,9 @@ press Run to redraw Rick's PNG parts.
 
 - **Blank window or OpenGL error.** The sketch uses the built-in `P2D`
   renderer. Update your graphics drivers, or try running it in Processing's
-  *Present* mode.
+  *Present* mode. If your graphics card can't compile the hologram shader, the
+  console says so and the Ricks are drawn as plain tinted holograms instead.
+- **"The file needs to be inside a sketch folder"**: open the `.pde` that sits
+  in the `A_Piece_Of_Cake` folder, and keep the folder name exactly as it is.
 - **No sound.** If Java can't find an audio device, the console says so and the
   sketch runs silently. Press `M` in case it's muted.
