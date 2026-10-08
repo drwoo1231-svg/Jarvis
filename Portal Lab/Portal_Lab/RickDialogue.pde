@@ -32,7 +32,11 @@ class RickDialogue {
   PFont font, nameFont;
   float stare;                 // seconds you've been staring at his hologram
   float lastStareLine = -999;
-  final PVector holoPos = new PVector(-1100, -980, -120);
+  final PVector holoHome = new PVector(-1100, -980, -120);
+  PVector holoPos = holoHome.copy();          // where his head is right now
+  PVector holoTarget = holoHome.copy();
+  float holoAway;                             // > 0 while he's been portalled somewhere else
+  ArrayList<Float> camJumps = new ArrayList<Float>(), dispenses = new ArrayList<Float>();
 
   RickDialogue() {
     face = makeRickFace(false);
@@ -94,10 +98,25 @@ class RickDialogue {
     // things thrown through his face
     for (ThrowableObject o : objects.list) {
       if (o.held || o.gone > 0 || o.vel.mag() < 250) continue;
-      if (PVector.dist(o.pos, holoPos) < 140) event("holohit", 25, HOLO_HIT);
+      if (PVector.dist(o.pos, holoPos) < 160) {
+        if (o.type == OB_PICKLE) event("holopickle", 40, HOLO_PICKLE);
+        else event("holohit", 25, HOLO_HIT);
+      }
     }
     // wandered off into the universe
     if (cam.pos.mag() > 9000) event("faraway", 90, FAR_AWAY);
+    // went down into the void pit / up to the high platform
+    if (cam.pos.y > 150 && abs(cam.pos.x) < 380 && cam.pos.z > 180 && cam.pos.z < 920) event("pit", 120, IN_PIT);
+    if (cam.pos.y < -2350 && abs(cam.pos.x) < 650 && cam.pos.z > 450 && cam.pos.z < 1550) event("high", 180, HIGH_UP);
+    // portalled away: drift over to the other portal, then home again
+    if (holoAway > 0) {
+      holoAway -= dt;
+      if (holoAway <= 0) {
+        holoTarget.set(holoHome);
+        event("holoback", 0, HOLO_BACK);
+      }
+    }
+    holoPos.lerp(holoTarget, 1 - exp(-dt * (holoAway > 0 ? 4 : 1.5)));
   }
 
   boolean staringAtWall() {
@@ -453,6 +472,7 @@ boolean floorCeilingPair() {
 
 void onPortalPlaced(Portal q) {
   markAction();
+  checkPortalUnderRick(q);
   if (portals.p[0].active && portals.p[1].active) {
     if (floorCeilingPair()) rick.event("floorceil", 180, FLOOR_CEILING);
     else if (portals.distance() < 420) rick.event("close", 120, TOO_CLOSE);
@@ -468,15 +488,18 @@ void onPortalFizzled(String why, RayHit h) {
 
 void onCameraTeleported(Portal from) {
   markAction();
+  noteCameraJump();
   rick.event("camjump", 50, CAM_JUMP);
 }
 
 void onPortalManipulated(Portal q) {
   markAction();
+  checkPortalUnderRick(q);
   rick.event("manip", 90, MANIPULATED);
 }
 
 void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
+  if (chain >= 10) { rick.event("loop10", 120, LOOP_TEN); return; }
   if (chain >= 4) { rick.event("loop", 60, LOOPING); return; }
   if (o.type == OB_PICKLE) { rick.event("pickle", 60, PICKLE_JUMP); return; }
   if (o.type == OB_BATTERY) { rick.event("battery", 60, BATTERY_JUMP); return; }
@@ -520,6 +543,7 @@ void onObjectThrown(ThrowableObject o) {
 
 void onObjectDispensed(ThrowableObject o) {
   markAction();
+  noteDispense();
   rick.event("dispense", 30, DISPENSED);
 }
 
@@ -529,4 +553,56 @@ void onLowStability() {
 
 void onTerminalOpened() {
   rick.event("terminal", 120, TERMINAL);
+}
+
+// ---------------------------------------------------------------- extra weird interactions
+String[] HOLO_PICKLE = { "Don't throw the pickle at me! ...Wait. Is that- no. Just a pickle. Probably." };
+String[] HOLO_SUCK = {
+  "Are you trying to portal ME? I'm light, genius. Light doesn't fa-  AAAA-",
+  "Whoa whoa whoa, not the projector! Okay. Okay. Nice view, actually."
+};
+String[] HOLO_LONELY = { "Are you trying to portal me? There's no second portal. You just put a hole under a hologram. Bold." };
+String[] HOLO_BACK = { "And I'm back. Don't do that again. Do it again." };
+String[] IN_PIT = { "You're IN the void pit. The sign said DO NOT LEAN. You went full opposite of leaning." };
+String[] HIGH_UP = { "Nice view up here. Don't look down. Actually do - it's the void, it's pretty." };
+String[] HOPPING = { "Stop portal-hopping, you'll get spatial whiplash. Trust me. I have it permanently." };
+String[] DISPENSER_SPAM = { "Stop spamming the dispenser! Matter doesn't grow on trees. Well. Technically it does. Shut up." };
+String[] GARY_ANVIL = { "You hit Gary with an anvil. Gary's lawyer will be in touch.", "Anvil versus Gary. Gary lost. Gary always loses. That's why we love Gary." };
+String[] LOOP_TEN = { "Ten loops. This is my favourite show now. Don't touch anything." };
+
+// a portal opened on the floor right under his hologram
+void checkPortalUnderRick(Portal q) {
+  if (q.n.y > -0.9) return;
+  if (dist(q.c.x, q.c.z, rick.holoHome.x, rick.holoHome.z) > 380) return;
+  Portal o = portals.other(q);
+  if (!o.active) {
+    rick.event("hololonely", 60, HOLO_LONELY);
+    return;
+  }
+  rick.eventCooldown = 0;
+  rick.event("holosuck", 20, HOLO_SUCK);
+  PVector t = PVector.add(o.c, PVector.mult(o.n, 320));
+  t.y -= 120;
+  rick.holoTarget.set(t);
+  rick.holoAway = 14;
+  q.splash(PVector.add(q.c, PVector.mult(q.n, 20)), 1.2);
+  o.splash(PVector.add(o.c, PVector.mult(o.n, 20)), 1.2);
+  sfx.play(sfx.teleport, 0.7, 0.7);
+}
+
+void noteCameraJump() {
+  rick.camJumps.add(T);
+  while (rick.camJumps.size() > 0 && T - rick.camJumps.get(0) > 20) rick.camJumps.remove(0);
+  if (rick.camJumps.size() >= 5) rick.event("hopping", 90, HOPPING);
+}
+
+void noteDispense() {
+  rick.dispenses.add(T);
+  while (rick.dispenses.size() > 0 && T - rick.dispenses.get(0) > 10) rick.dispenses.remove(0);
+  if (rick.dispenses.size() >= 5) rick.event("dispspam", 60, DISPENSER_SPAM);
+}
+
+void onObjectsCollide(ThrowableObject a, ThrowableObject b, float speed) {
+  boolean garyAnvil = (a.type == OB_ANVIL && b.type == OB_DUMMY) || (a.type == OB_DUMMY && b.type == OB_ANVIL);
+  if (garyAnvil && speed > 3) rick.event("garyanvil", 45, GARY_ANVIL);
 }

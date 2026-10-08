@@ -501,6 +501,7 @@ class ObjectLab {
           a.vel.sub(PVector.mult(nrm, jimp / ma));
           b.vel.add(PVector.mult(nrm, jimp / mb));
           if (-rel > 300) sfx.play(sfx.thud, constrain(-rel / 2000, 0.05, 0.5), random(1, 1.4));
+          if (-rel > 300) onObjectsCollide(a, b, -rel / M);
         }
       }
     }
