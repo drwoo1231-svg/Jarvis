@@ -16,6 +16,7 @@ class PlayerCamera {
   boolean resetRef = true;
   com.jogamp.newt.opengl.GLWindow win;
   boolean movedThisFrame;
+  float teleportFlash;
 
   PlayerCamera(float x, float y, float z) {
     pos.set(x, y, z);
@@ -72,13 +73,23 @@ class PlayerCamera {
     for (int i = 0; i < n; i++) {
       PVector before = pos.copy();
       pos.add(step);
-      if (!noclip) lab.collideSphere(pos, vel, RADIUS, null);
+      if (!noclip) lab.collideSphere(pos, vel, RADIUS, portals);
       onMoved(before);
     }
   }
 
-  // hook for later stages (portal crossing)
+  // did that step carry us through a portal?
   void onMoved(PVector before) {
+    Portal q = portals.crossed(before, pos);
+    if (q == null) return;
+    PVector newFwd = portals.mapDir(q, fwd);
+    pos.set(portals.mapPoint(q, pos, RADIUS * 0.5 + 2));
+    vel.set(portals.mapDir(q, vel));
+    lookAlong(newFwd);
+    portals.exitFx(q, pos, 1);
+    sfx.play(sfx.teleport, 0.7, 1);
+    teleportFlash = 1;
+    onCameraTeleported(q);
   }
 
   void apply() {

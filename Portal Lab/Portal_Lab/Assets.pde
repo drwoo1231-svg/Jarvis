@@ -1,6 +1,6 @@
 // Procedurally generated textures - the sketch needs no data folder.
 
-PImage texFloor, texPanel, texMetal, texHazard, texGlow, texRing;
+PImage texFloor, texPanel, texMetal, texHazard, texGlow, texRing, texRingDash;
 
 void makeTextures() {
   texFloor = makePlate(256, color(92, 99, 112), true);
@@ -9,6 +9,26 @@ void makeTextures() {
   texHazard = makeHazard(128);
   texGlow = makeGlowTex(64);
   texRing = makeRingTex(128);
+  texRingDash = makeDashRing(256);
+}
+
+// ring broken into dashes, so you can see it spin
+PImage makeDashRing(int s) {
+  PImage img = createImage(s, s, ARGB);
+  img.loadPixels();
+  for (int y = 0; y < s; y++) {
+    for (int x = 0; x < s; x++) {
+      float dx = x + 0.5 - s / 2.0, dy = y + 0.5 - s / 2.0;
+      float d = sqrt(dx * dx + dy * dy) / (s / 2.0);
+      float ang = atan2(dy, dx);
+      float dash = 0.5 + 0.5 * sin(ang * 7);
+      float a = exp(-sq((d - 0.86) * 22)) * (0.25 + 0.75 * smooth01((dash - 0.3) * 3));
+      a += exp(-sq((d - 0.95) * 40)) * 0.5;
+      img.pixels[y * s + x] = color(255, 255 * min(1, a));
+    }
+  }
+  img.updatePixels();
+  return img;
 }
 
 // metal floor plate: seams, bolts, diamond tread, brushed noise

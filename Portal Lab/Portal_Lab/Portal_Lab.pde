@@ -16,6 +16,11 @@ final float M = 100;              // units per metre
 PlayerCamera cam;
 Laboratory lab;
 Galaxy galaxy;
+Particles parts;
+PortalPair portals;
+PortalGun gun;
+HUD hud;
+Sfx sfx;
 
 float T;                          // seconds since start
 float dt = 1 / 60.0;
@@ -35,8 +40,13 @@ void setup() {
   textureMode(NORMAL);
   textureWrap(REPEAT);
   makeTextures();
+  sfx = new Sfx();
   galaxy = new Galaxy();
   lab = new Laboratory();
+  parts = new Particles();
+  portals = new PortalPair();
+  gun = new PortalGun();
+  hud = new HUD();
   cam = new PlayerCamera(0, -180, 1750);
   lastMs = millis();
 }
@@ -50,6 +60,10 @@ void draw() {
   cam.update(dt);
   galaxy.update(dt);
   lab.update(dt);
+  gun.update(dt);
+  portals.update(dt);
+  parts.update(dt);
+  hud.update(dt);
 
   // ---- 3D
   background(0);
@@ -57,16 +71,22 @@ void draw() {
   cam.apply();
   galaxy.drawSky(cam.pos);
   lab.lightsOn();
+  portals.lights();
   lab.drawSolid();
   galaxy.drawWorld();
+  noLights();
+  portals.drawSolid();
   beginGlowPass();
   lab.drawGlow();
   galaxy.drawDust();
+  portals.drawGlow();
+  gun.draw();
+  parts.draw();
   endGlowPass();
 
   // ---- 2D overlay
   begin2D();
-  drawStageHud();
+  hud.draw();
   end2D();
 }
 
@@ -91,20 +111,6 @@ void begin2D() {
 
 void end2D() {
   hint(ENABLE_DEPTH_TEST);
-}
-
-void drawStageHud() {
-  fill(170, 255, 200);
-  textSize(14);
-  textAlign(LEFT, TOP);
-  text("PORTAL LAB  -  " + nf(frameRate, 0, 0) + " FPS", 14, 12);
-  if (!cam.captured) {
-    textAlign(CENTER, CENTER);
-    textSize(18);
-    fill(170, 255, 200, 150 + 100 * sin(T * 4));
-    text("CLICK TO CONTROL THE CAMERA", width / 2, height - 40);
-  }
-  cam.drawCrosshair();
 }
 
 // ------------------------------------------------------------------ input
@@ -143,6 +149,17 @@ void mousePressed() {
     cam.capture(true);
     return;
   }
+  if (mouseButton == LEFT) gun.fire();
+}
+
+// ------------------------------------------------------------------ events
+void onPortalPlaced(Portal q) {
+}
+
+void onPortalFizzled(String why, RayHit h) {
+}
+
+void onCameraTeleported(Portal from) {
 }
 
 void mouseMoved() {
