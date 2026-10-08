@@ -274,16 +274,33 @@ int realButton() {
 }
 
 int lastWheelMs;
+float wheelAcc;
+boolean wheelPixels;
 void mouseWheel(processing.event.MouseEvent e) {
-  // macOS trackpads send pixel deltas (often 5-50 per event, many per swipe): one step per notch / flick
-  float c = Math.signum(e.getCount());
-  if (c == 0 || millis() - lastWheelMs < 70) return;
-  lastWheelMs = millis();
+  // notched wheels send +-1 per notch; macOS trackpads / Magic Mouse send pixel deltas (3-50) dozens of
+  // times per swipe, momentum included - those step once per ~60 px of finger travel, not once per event
+  int now = millis();
+  int c = e.getCount();
+  if (c == 0) return;
+  boolean fresh = now - lastWheelMs > 180;        // first event of a new swipe / burst of notches
+  if (fresh) {
+    wheelAcc = 0;
+    wheelPixels = false;
+  }
+  lastWheelMs = now;
+  if (abs(c) >= 3) wheelPixels = true;
+  float step = Math.signum(c);
+  if (wheelPixels && !fresh) {
+    wheelAcc += c;
+    if (abs(wheelAcc) < 60) return;
+    step = Math.signum(wheelAcc);
+    wheelAcc = 0;
+  }
   markAction();
   if (manip.active()) {
-    manip.rotateStep(radians(15) * c);
+    manip.rotateStep(radians(15) * step);
   } else {
-    objects.throwPower = constrain(objects.throwPower - c, 2, 40);
+    objects.throwPower = constrain(objects.throwPower - step, 2, 40);
     hud.toast("THROW POWER " + i0(objects.throwPower) + " m/s", color(170, 255, 220));
   }
 }

@@ -283,16 +283,33 @@ int realButton() {
 }
 
 int lastWheelMs;
+float wheelAcc;
+boolean wheelPixels;
 void mouseWheel(processing.event.MouseEvent e) {
-  // macOS trackpads send pixel deltas (often 5-50 per event, many per swipe): one step per notch / flick
-  float c = Math.signum(e.getCount());
-  if (c == 0 || millis() - lastWheelMs < 70) return;
-  lastWheelMs = millis();
+  // notched wheels send +-1 per notch; macOS trackpads / Magic Mouse send pixel deltas (3-50) dozens of
+  // times per swipe, momentum included - those step once per ~60 px of finger travel, not once per event
+  int now = millis();
+  int c = e.getCount();
+  if (c == 0) return;
+  boolean fresh = now - lastWheelMs > 180;        // first event of a new swipe / burst of notches
+  if (fresh) {
+    wheelAcc = 0;
+    wheelPixels = false;
+  }
+  lastWheelMs = now;
+  if (abs(c) >= 3) wheelPixels = true;
+  float step = Math.signum(c);
+  if (wheelPixels && !fresh) {
+    wheelAcc += c;
+    if (abs(wheelAcc) < 60) return;
+    step = Math.signum(wheelAcc);
+    wheelAcc = 0;
+  }
   markAction();
   if (manip.active()) {
-    manip.rotateStep(radians(15) * c);
+    manip.rotateStep(radians(15) * step);
   } else {
-    objects.throwPower = constrain(objects.throwPower - c, 2, 40);
+    objects.throwPower = constrain(objects.throwPower - step, 2, 40);
     hud.toast("THROW POWER " + i0(objects.throwPower) + " m/s", color(170, 255, 220));
   }
 }
@@ -4879,6 +4896,7 @@ class ThrowableObject {
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
   float driftT;                 // seconds spent drifting slowly outside the lab
+  PVector prePush = new PVector();   // position before this sub-step's collision pushes
   float echoT;                  // zero-g core: countdown to diving back into the portal it just left
   Portal echoInto;
   boolean echoReturn;           // this trip is the echo itself (one echo per jump)
@@ -5395,6 +5413,7 @@ class ObjectLab {
   }
 
   void collidePairs() {
+    for (ThrowableObject o : list) o.prePush.set(o.pos);
     for (int i = 0; i < list.size(); i++) {
       ThrowableObject a = list.get(i);
       if (a.gone > 0) continue;
@@ -5425,6 +5444,13 @@ class ObjectLab {
         }
       }
     }
+    // a push that carried a centre across a linked portal's mouth is a trip through it
+    for (int i = 0; i < list.size(); i++) {
+      ThrowableObject o = list.get(i);
+      if (o.gone > 0) continue;
+      Portal q = portals.crossed(o.prePush, o.pos);
+      if (q != null) o.teleport(q);
+    }
   }
 
   // flying into things nudges them
@@ -5436,7 +5462,13 @@ class ObjectLab {
       if (d.magSq() < rr * rr && d.magSq() > 1e-4) {
         float dist = d.mag();
         d.div(dist);
+        o.prePush.set(o.pos);
         PVector rest = safeMove(o, PVector.mult(d, rr - dist));
+        Portal q = portals.crossed(o.prePush, o.pos);
+        if (q != null) {
+          o.teleport(q);                  // shoved through a portal by the camera
+          continue;
+        }
         if (rest.magSq() > 0.01) {
           // pinned against a wall: the camera is what gives way
           cam.pos.sub(rest);

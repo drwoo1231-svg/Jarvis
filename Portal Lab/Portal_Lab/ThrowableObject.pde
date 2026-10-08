@@ -36,6 +36,7 @@ class ThrowableObject {
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
   float driftT;                 // seconds spent drifting slowly outside the lab
+  PVector prePush = new PVector();   // position before this sub-step's collision pushes
   float echoT;                  // zero-g core: countdown to diving back into the portal it just left
   Portal echoInto;
   boolean echoReturn;           // this trip is the echo itself (one echo per jump)
@@ -552,6 +553,7 @@ class ObjectLab {
   }
 
   void collidePairs() {
+    for (ThrowableObject o : list) o.prePush.set(o.pos);
     for (int i = 0; i < list.size(); i++) {
       ThrowableObject a = list.get(i);
       if (a.gone > 0) continue;
@@ -582,6 +584,13 @@ class ObjectLab {
         }
       }
     }
+    // a push that carried a centre across a linked portal's mouth is a trip through it
+    for (int i = 0; i < list.size(); i++) {
+      ThrowableObject o = list.get(i);
+      if (o.gone > 0) continue;
+      Portal q = portals.crossed(o.prePush, o.pos);
+      if (q != null) o.teleport(q);
+    }
   }
 
   // flying into things nudges them
@@ -593,7 +602,13 @@ class ObjectLab {
       if (d.magSq() < rr * rr && d.magSq() > 1e-4) {
         float dist = d.mag();
         d.div(dist);
+        o.prePush.set(o.pos);
         PVector rest = safeMove(o, PVector.mult(d, rr - dist));
+        Portal q = portals.crossed(o.prePush, o.pos);
+        if (q != null) {
+          o.teleport(q);                  // shoved through a portal by the camera
+          continue;
+        }
         if (rest.magSq() > 0.01) {
           // pinned against a wall: the camera is what gives way
           cam.pos.sub(rest);
