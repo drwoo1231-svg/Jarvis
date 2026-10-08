@@ -121,3 +121,120 @@ PVector[] planeAxes(PVector n) {
   PVector y = n.cross(x).normalize();
   return new PVector[] { x, y };
 }
+
+// ====================================================================
+// Portal manipulation: look at a portal + E to select it, then the portal
+// follows the crosshair across valid surfaces. Q / R rotate it in its own
+// plane (that changes which way things come out), LEFT CLICK confirms,
+// RIGHT CLICK puts it back where it was.
+
+class PortalManipulator {
+  Portal sel;
+  PVector oc = new PVector(), on = new PVector(), ou = new PVector();
+  Box obox;
+  int oface;
+  float spin;
+  boolean valid = true;
+  String status = "";
+  PVector ghost;
+
+  boolean active() { return sel != null; }
+
+  void select(Portal q) {
+    sel = q;
+    oc.set(q.c);
+    on.set(q.n);
+    ou.set(q.u);
+    obox = q.box;
+    oface = q.face;
+    // keep its current rotation relative to the default orientation for this surface
+    PVector ud = abs(q.n.y) > 0.5 ? PVector.sub(cam.fwd, PVector.mult(q.n, cam.fwd.dot(q.n))) : new PVector(0, -1, 0);
+    if (ud.magSq() < 1e-4) ud = new PVector(0, 0, -1);
+    ud.normalize();
+    PVector rd = q.n.cross(ud);
+    spin = atan2(q.u.dot(rd), q.u.dot(ud));
+    sfx.play(sfx.select, 0.6, 1);
+    hud.toast("PORTAL " + q.label() + " SELECTED", q.colLight);
+    q.splash(PVector.add(q.c, PVector.mult(q.n, 10)), 0.4);
+  }
+
+  void update(float dt) {
+    if (sel == null) return;
+    if (kRotL) spin -= 1.7 * dt;
+    if (kRotR) spin += 1.7 * dt;
+    RayHit h = lab.raycast(cam.pos, cam.fwd, 20000);
+    Placement pl = portals.tryPlace(sel.id, h, cam.fwd, spin);
+    if (pl.fail == null) {
+      sel.c.set(pl.c);
+      sel.n.set(pl.n);
+      sel.u.set(pl.u);
+      sel.r = sel.n.cross(sel.u);
+      sel.box = pl.box;
+      sel.face = pl.face;
+      valid = true;
+      status = "REPOSITIONING";
+      ghost = null;
+    } else {
+      valid = false;
+      status = pl.fail;
+      ghost = h.hit() ? h.p.copy() : null;
+    }
+  }
+
+  void rotateStep(float a) {
+    spin += a;
+  }
+
+  void confirm() {
+    if (sel == null) return;
+    sfx.play(sfx.confirm, 0.6, 1);
+    sel.splash(PVector.add(sel.c, PVector.mult(sel.n, 10)), 0.7);
+    hud.toast("PORTAL " + sel.label() + " LOCKED IN", sel.colLight);
+    Portal q = sel;
+    sel = null;
+    onPortalManipulated(q);
+  }
+
+  void cancel() {
+    if (sel == null) return;
+    sel.c.set(oc);
+    sel.n.set(on);
+    sel.u.set(ou);
+    sel.r = sel.n.cross(sel.u);
+    sel.box = obox;
+    sel.face = oface;
+    sfx.play(sfx.cancel, 0.6, 1);
+    hud.toast("CANCELLED - PORTAL " + sel.label() + " RESTORED", color(200, 220, 255));
+    sel = null;
+  }
+
+  // holographic selection brackets + an arrow showing the portal's "up"
+  void drawGlow() {
+    if (sel == null) return;
+    Portal q = sel;
+    pushMatrix();
+    q.applyFrame(6);
+    noFill();
+    int c = valid ? color(200, 255, 240) : color(255, 110, 90);
+    stroke(c, 220);
+    strokeWeight(2.5);
+    float k = 1.25 + 0.05 * sin(T * 6);
+    for (int i = 0; i < 4; i++) {
+      float a0 = HALF_PI * i + T * 0.8, a1 = a0 + 0.9;
+      beginShape();
+      for (int j = 0; j <= 10; j++) {
+        float a = lerp(a0, a1, j / 10.0);
+        vertex(cos(a) * PORTAL_HW * k, sin(a) * PORTAL_HH * k, 0);
+      }
+      endShape();
+    }
+    // up arrow
+    float top = PORTAL_HH * 1.42;
+    line(0, PORTAL_HH * 1.1, 0, 0, top, 0);
+    line(-14, top - 16, 0, 0, top, 0);
+    line(14, top - 16, 0, 0, top, 0);
+    noStroke();
+    popMatrix();
+    if (ghost != null && !valid) glowSprite(ghost.x, ghost.y, ghost.z, 60, color(255, 90, 70), 200);
+  }
+}

@@ -198,6 +198,13 @@ class Portal {
   }
 }
 
+class Placement {
+  PVector c, n, u;
+  Box box;
+  int face;
+  String fail;
+}
+
 // ====================================================================
 // The pair of portals and everything that needs both of them.
 
@@ -211,8 +218,20 @@ class PortalPair implements PassFilter {
 
   // try to open portal `which` on a ray hit; returns null on success or the reason it failed
   String place(int which, RayHit h, PVector shotDir) {
-    if (!h.hit()) return "NO SURFACE";
-    if (!h.box.portalable(h.face)) return "SURFACE REJECTS PORTALS";
+    Placement pl = tryPlace(which, h, shotDir, 0);
+    if (pl.fail != null) return pl.fail;
+    Portal q = p[which];
+    q.set(pl.c, pl.n, pl.u, pl.box, pl.face);
+    q.spin = 0;
+    openFx(q);
+    return null;
+  }
+
+  // work out where a portal would go (without moving it)
+  Placement tryPlace(int which, RayHit h, PVector shotDir, float spin) {
+    Placement pl = new Placement();
+    if (!h.hit()) { pl.fail = "NO SURFACE"; return pl; }
+    if (!h.box.portalable(h.face)) { pl.fail = "SURFACE REJECTS PORTALS"; return pl; }
     PVector n = h.n.copy();
     PVector u;
     if (abs(n.y) > 0.5) {
@@ -223,9 +242,12 @@ class PortalPair implements PassFilter {
     } else {
       u = new PVector(0, -1, 0);                     // walls: upright
     }
+    if (spin != 0) {
+      PVector rr = n.cross(u);
+      u = PVector.add(PVector.mult(u, cos(spin)), PVector.mult(rr, sin(spin))).normalize();
+    }
     PVector c = h.p.copy();
-    if (!fit(c, n, u, h.box, h.face)) return "NOT ENOUGH ROOM";
-    // don't overlap the other portal on the same face
+    if (!fit(c, n, u, h.box, h.face)) { pl.fail = "NOT ENOUGH ROOM"; return pl; }
     Portal o = p[1 - which];
     if (o.active && o.box == h.box && o.face == h.face) {
       PVector d = PVector.sub(c, o.c);
@@ -234,14 +256,15 @@ class PortalPair implements PassFilter {
         if (d.magSq() < 1) d = u.copy();
         d.normalize().mult(need);
         c = PVector.add(o.c, d);
-        if (!fit(c, n, u, h.box, h.face) || PVector.dist(c, o.c) < need * 0.98) return "TOO CLOSE TO PORTAL " + o.label();
+        if (!fit(c, n, u, h.box, h.face) || PVector.dist(c, o.c) < need * 0.98) { pl.fail = "TOO CLOSE TO PORTAL " + o.label(); return pl; }
       }
     }
-    Portal q = p[which];
-    q.set(c, n, u, h.box, h.face);
-    q.spin = 0;
-    openFx(q);
-    return null;
+    pl.c = c;
+    pl.n = n;
+    pl.u = u;
+    pl.box = h.box;
+    pl.face = h.face;
+    return pl;
   }
 
   // slide the centre so the whole oval fits on the face; false if the face is too small
@@ -352,6 +375,20 @@ class PortalPair implements PassFilter {
     parts.burst(where, int(24 * strength), 380, to.col, 0.7, 20);
     to.splash(PVector.add(to.c, PVector.mult(to.n, 12)), strength);
   }
+
+  // the rotation a portal trip applies (for an object's orientation)
+  PMatrix3D mapMatrix(Portal from) {
+    Portal to = other(from);
+    PVector[] a = { from.r, from.u, from.n };
+    PVector[] b = { PVector.mult(to.r, -1), to.u, PVector.mult(to.n, -1) };
+    float[][] m = new float[3][3];
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
+        m[i][j] = comp(b[0], i) * comp(a[0], j) + comp(b[1], i) * comp(a[1], j) + comp(b[2], i) * comp(a[2], j);
+    return new PMatrix3D(m[0][0], m[0][1], m[0][2], 0, m[1][0], m[1][1], m[1][2], 0, m[2][0], m[2][1], m[2][2], 0, 0, 0, 0, 1);
+  }
+
+  float comp(PVector v, int i) { return i == 0 ? v.x : i == 1 ? v.y : v.z; }
 
   float distance() { return PVector.dist(p[0].c, p[1].c); }
 

@@ -19,15 +19,20 @@ Galaxy galaxy;
 Particles parts;
 PortalPair portals;
 PortalGun gun;
+PortalManipulator manip;
+ObjectLab objects;
+PortalPhysics physics;
 HUD hud;
 Sfx sfx;
+
+int lastActionMs;                 // for Rick's idle timer (millis based)
 
 float T;                          // seconds since start
 float dt = 1 / 60.0;
 int lastMs;
 
 // held keys
-boolean kW, kA, kS, kD, kUp, kDown, kFast, kLookL, kLookR, kLookU, kLookD;
+boolean kW, kA, kS, kD, kUp, kDown, kFast, kLookL, kLookR, kLookU, kLookD, kRotL, kRotR;
 
 void settings() {
   size(1280, 720, P3D);
@@ -47,7 +52,11 @@ void setup() {
   parts = new Particles();
   portals = new PortalPair();
   gun = new PortalGun();
+  manip = new PortalManipulator();
+  physics = new PortalPhysics();
   hud = new HUD();
+  sphereDetail(12);
+  objects = new ObjectLab();
   cam = new PlayerCamera(0, -180, 1750);
   lastMs = millis();
 }
@@ -62,9 +71,13 @@ void draw() {
   galaxy.update(dt);
   lab.update(dt);
   gun.update(dt);
+  manip.update(dt);
   portals.update(dt);
+  physics.update(dt);
+  objects.update(dt);
   parts.update(dt);
   hud.update(dt);
+  if (cam.movedThisFrame) markAction();
 
   // ---- 3D
   background(0);
@@ -74,6 +87,7 @@ void draw() {
   lab.lightsOn();
   portals.lights();
   lab.drawSolid();
+  objects.draw();
   galaxy.drawWorld();
   noLights();
   portals.drawSolid();
@@ -81,6 +95,8 @@ void draw() {
   lab.drawGlow();
   galaxy.drawDust();
   portals.drawGlow();
+  objects.drawGlow();
+  manip.drawGlow();
   gun.draw();
   parts.draw();
   endGlowPass();
@@ -122,6 +138,48 @@ void keyPressed() {
     return;
   }
   setKey(true);
+  char k = Character.toLowerCase(key);
+  if (k == 'e') interact();
+  if (k == 'r' && !manip.active()) {
+    if (objects.heldObj != null) markAction();
+    objects.release();
+  }
+}
+
+// E: grab the object you're looking at, select the portal you're looking at,
+// or use the machine you're looking at
+void interact() {
+  markAction();
+  if (manip.active()) {
+    manip.confirm();
+    return;
+  }
+  if (objects.heldObj != null) {
+    objects.release();
+    return;
+  }
+  ThrowableObject o = objects.pick(1200);
+  Portal q = portals.rayPick(cam.pos, cam.fwd, 4000);
+  float to = o != null ? PVector.dist(cam.pos, o.pos) : 1e9;
+  float tq = q != null ? PVector.dist(cam.pos, q.c) : 1e9;
+  if (o != null && to <= tq) {
+    objects.grab(o);
+    return;
+  }
+  if (q != null) {
+    manip.select(q);
+    return;
+  }
+  RayHit h = lab.raycast(cam.pos, cam.fwd, 900);
+  if (h.hit() && h.box.name.equals("MATTER DISPENSER")) {
+    objects.dispense();
+    return;
+  }
+  hud.toast("NOTHING TO GRAB THERE", color(170, 190, 200));
+}
+
+void markAction() {
+  lastActionMs = millis();
 }
 
 void keyReleased() {
@@ -135,6 +193,8 @@ void setKey(boolean down) {
   if (k == 's') kS = down;
   if (k == 'd') kD = down;
   if (k == ' ') kUp = down;
+  if (k == 'q') kRotL = down;
+  if (k == 'r') kRotR = down && manip.active();
   if (key == CODED) {
     if (keyCode == CONTROL) kDown = down;
     if (keyCode == SHIFT) kFast = down;
@@ -150,7 +210,26 @@ void mousePressed() {
     cam.capture(true);
     return;
   }
-  if (mouseButton == LEFT) gun.fire();
+  markAction();
+  if (mouseButton == LEFT) {
+    if (manip.active()) manip.confirm();
+    else if (objects.heldObj != null) objects.throwHeld();
+    else gun.fire();
+  }
+  if (mouseButton == RIGHT) {
+    if (manip.active()) manip.cancel();
+    else if (objects.heldObj != null) objects.release();
+  }
+}
+
+void mouseWheel(processing.event.MouseEvent e) {
+  float c = e.getCount();
+  if (manip.active()) {
+    manip.rotateStep(radians(15) * c);
+  } else {
+    objects.throwPower = constrain(objects.throwPower - c, 2, 40);
+    hud.toast("THROW POWER " + nf(objects.throwPower, 0, 0) + " m/s", color(170, 255, 220));
+  }
 }
 
 // ------------------------------------------------------------------ events
@@ -163,6 +242,39 @@ void onPortalFizzled(String why, RayHit h) {
 void onCameraTeleported(Portal from) {
 }
 
+void onPortalManipulated(Portal q) {
+}
+
+void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
+}
+
+void onQuantumBounce(ThrowableObject o) {
+}
+
+void onQuantumTunnel(ThrowableObject o) {
+}
+
+void onObjectShattered(ThrowableObject o) {
+}
+
+void onObjectExploded(ThrowableObject o) {
+}
+
+void onObjectLost(ThrowableObject o) {
+}
+
+void onObjectGrabbed(ThrowableObject o) {
+}
+
+void onObjectThrown(ThrowableObject o) {
+}
+
+void onObjectDispensed(ThrowableObject o) {
+}
+
+void onLowStability() {
+}
+
 void mouseMoved() {
   cam.mouseMovedTo(mouseX, mouseY);
 }
@@ -172,6 +284,6 @@ void mouseDragged() {
 }
 
 void focusLost() {
-  kW = kA = kS = kD = kUp = kDown = kFast = kLookL = kLookR = kLookU = kLookD = false;
+  kW = kA = kS = kD = kUp = kDown = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
   if (cam != null) cam.capture(false);
 }

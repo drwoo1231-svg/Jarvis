@@ -397,6 +397,45 @@ class Laboratory {
     return contact;
   }
 
+  // bounce a moving body off the lab: restitution e, friction mu (per second), substep h.
+  // Returns the hardest impact speed this step (0 = no contact); nOut = contact normal.
+  float collideBody(PVector p, PVector v, float r, float e, float mu, float h, PassFilter skip, PVector nOut) {
+    float impact = 0;
+    for (Box b : boxes) {
+      if (p.x < b.x0 - r || p.x > b.x1 + r || p.y < b.y0 - r || p.y > b.y1 + r || p.z < b.z0 - r || p.z > b.z1 + r) continue;
+      float qx = constrain(p.x, b.x0, b.x1), qy = constrain(p.y, b.y0, b.y1), qz = constrain(p.z, b.z0, b.z1);
+      float dx = p.x - qx, dy = p.y - qy, dz = p.z - qz;
+      float d2 = dx * dx + dy * dy + dz * dz;
+      if (d2 > r * r) continue;
+      PVector n;
+      float pen;
+      if (d2 > 1e-6) {
+        float d = sqrt(d2);
+        n = new PVector(dx / d, dy / d, dz / d);
+        pen = r - d;
+      } else {
+        float[] ds = { p.x - b.x0, b.x1 - p.x, p.y - b.y0, b.y1 - p.y, p.z - b.z0, b.z1 - p.z };
+        int best = 0;
+        for (int i = 1; i < 6; i++) if (ds[i] < ds[best]) best = i;
+        n = faceNormal(best);
+        pen = ds[best] + r;
+      }
+      if (skip != null && skip.passes(b, dominantFace(n), p, r)) continue;
+      p.add(PVector.mult(n, pen));
+      float vn = v.dot(n);
+      if (vn < 0) {
+        impact = max(impact, -vn);
+        PVector vt = PVector.sub(v, PVector.mult(n, vn));
+        vt.mult(exp(-mu * h * 6));
+        float out = -vn * e;
+        if (out < 40) out = 0;                     // settle instead of jittering
+        v.set(PVector.add(vt, PVector.mult(n, out)));
+        nOut.set(n);
+      }
+    }
+    return impact;
+  }
+
   int dominantFace(PVector n) {
     float ax = abs(n.x), ay = abs(n.y), az = abs(n.z);
     if (ax >= ay && ax >= az) return n.x < 0 ? FACE_NX : FACE_PX;
