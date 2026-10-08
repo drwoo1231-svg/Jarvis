@@ -884,6 +884,7 @@ class HUD {
   PFont mono, monoSmall, sans, sansBig;
   boolean showControls = true, debug, terminalOpen;
   float terminalAnim;
+  float lastJumpToast = -99;
   float[] tagX = new float[2], tagY = new float[2];
   boolean[] tagOn = new boolean[2];
   String aimText = "", aimSub = "";
@@ -1109,10 +1110,10 @@ class HUD {
     text("PORTAL " + q.label() + " SELECTED", x + 14, y + 10);
     textFont(monoSmall, 14);
     fill(200, 240, 255);
-    text("MOVE        aim at a surface", x + 14, y + 36);
-    text("ROTATE      Q / R  (or wheel)", x + 14, y + 54);
-    text("CONFIRM     LEFT CLICK", x + 14, y + 72);
-    text("CANCEL      RIGHT CLICK", x + 14, y + 90);
+    text("MOVE / REPOSITION   aim at a surface", x + 14, y + 36);
+    text("ROTATE              Q / R  (or wheel)", x + 14, y + 54);
+    text("CONFIRM             LEFT CLICK", x + 14, y + 72);
+    text("CANCEL              RIGHT CLICK", x + 14, y + 90);
     fill(manip.valid ? color(140, 255, 170) : color(255, 120, 100));
     text(manip.status, x + 14, y + 108);
   }
@@ -4542,6 +4543,10 @@ class ThrowableObject {
     from.splash(PVector.add(from.c, PVector.mult(from.n, 10)), 0.6);
     sfx.play(sfx.teleport, 0.55, random(0.9, 1.15));
     physics.recordTeleport(this, from, to);
+    if (T - hud.lastJumpToast > 1.2) {
+      hud.lastJumpToast = T;
+      hud.toast(name + "   IN " + nf(speedIn, 0, 1) + " m/s  ->  OUT " + nf(speedOut, 0, 1) + " m/s", to.colLight);
+    }
     onObjectTeleported(this, from, chain);
     if (type == OB_UNSTABLE && teleports % 3 == 0) {
       // three hops and it gives up on existing for a bit

@@ -210,6 +210,10 @@ class ThrowableObject {
     from.splash(PVector.add(from.c, PVector.mult(from.n, 10)), 0.6);
     sfx.play(sfx.teleport, 0.55, random(0.9, 1.15));
     physics.recordTeleport(this, from, to);
+    if (T - hud.lastJumpToast > 1.2) {
+      hud.lastJumpToast = T;
+      hud.toast(name + "   IN " + nf(speedIn, 0, 1) + " m/s  ->  OUT " + nf(speedOut, 0, 1) + " m/s", to.colLight);
+    }
     onObjectTeleported(this, from, chain);
     if (type == OB_UNSTABLE && teleports % 3 == 0) {
       // three hops and it gives up on existing for a bit
