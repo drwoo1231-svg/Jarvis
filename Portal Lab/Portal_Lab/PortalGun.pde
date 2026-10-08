@@ -18,6 +18,7 @@ class PortalGun {
     cooldown = 0.28;
     shotsFired++;
     RayHit h = aimRay();
+    checkShotThroughRick(h);
     PVector muzzle = PVector.add(cam.pos, PVector.mult(cam.fwd, 34));
     muzzle.add(PVector.mult(cam.right, 24)).sub(PVector.mult(cam.up, 20));   // off-axis, so the bolt visibly crosses into the centre
     PVector target = h.hit() ? h.p : PVector.add(cam.pos, PVector.mult(cam.fwd, 9000));
@@ -225,6 +226,7 @@ class PortalManipulator {
       sel.r = sel.n.cross(sel.u);
       sel.box = pl.box;
       sel.face = pl.face;
+      onHoloPortalMoved(sel);
       valid = true;
       status = "REPOSITIONING";
       ghost = null;

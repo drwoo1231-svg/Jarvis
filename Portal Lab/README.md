@@ -79,7 +79,13 @@ The matter dispenser (press **E** on it) makes more, up to 12 extra objects.
 - Throw the microverse battery through to boost the generators.
 - Throw something through Rick's hologram.
 - Open a floor portal right under Rick's hologram (with the other portal
-  already placed). He goes through and has opinions about it.
+  already placed). He goes through and has opinions about it. Put the other
+  portal on the **ceiling** (he hangs upside down), out on a **floating
+  platform** (terrible reception), or put **both** portals under him. Then drag
+  the exit portal around while he's standing in it.
+- Shoot the portal gun straight through his head, fly into his face, park
+  something on his projector, or bank-shot an object through a portal into
+  his face.
 - Drop the anvil on Gary, the crash-test dummy.
 - Hit the matter dispenser five times in a row.
 - Select a wall portal (**E**), spin it upside down with **Q / R** and lock it in.
@@ -127,21 +133,25 @@ S   = E_available / E_required    (generators ≈ 1180 PJ, + battery boosts)
 
 ## Rick
 
-If you go **20 seconds** without doing anything useful, Rick says:
+If you go **20 seconds** without doing anything useful, Rick says (every time,
+sometimes with a follow-up):
 
 > **RICK:** "Dazing off? Lazy a\*\*."
 
 - **The timer:** it uses `millis()`, so it doesn't depend on frame rate. It
   starts over when Rick speaks and whenever you move, shoot, grab, throw, open
-  the computer or move a portal. Just looking around doesn't count.
-- **What he says:** the classic line comes first and every third time. Other
-  idle lines fill the gaps, plus about 40 kinds of reactions to whatever weird
+  the computer or move a portal (dragging one around counts). Just looking
+  around doesn't count, and it pauses while the window is in the background.
+- **What he says:** the classic line is always first; on later idles another
+  line follows it. On top of that there are about 60 kinds of reactions to whatever weird
   experiment you're running: infinite loops, dropping things into the void
   pit, the hologram falling through a portal, Gary versus the anvil, spamming
   the dispenser, staring at a wall, flipping portals upside down, hugging one
   object for too long.
 - **No spam:** each reaction has its own cooldown, and there's a shared
-  6-second gap between any two lines.
+  6-second gap between any two lines. Big moments (first portal, a ten-loop,
+  portal-hopping...) wait for the current line instead of being dropped, and
+  things that happen on their own never cut off the idle line.
 
 ## Troubleshooting
 

@@ -24,6 +24,7 @@ class RickDialogue {
   String text = "";
   float age, life;
   boolean showing;
+  boolean idleLine;            // the line on screen is an idle complaint
   int lastIdleMs;              // when Rick last complained about idling
   int idleCount;
   float eventCooldown;         // keeps event jokes from spamming
@@ -33,6 +34,14 @@ class RickDialogue {
   float stare;                 // seconds you've been staring at his hologram
   float holdTime;              // seconds the current object has been held
   float lastStareLine = -999;
+  float stare2, lastStareLine2 = -999;         // the long stare
+  boolean holoFlip, holoGlitch, pingPong;      // hanging upside down / bad reception out in space / bouncing between two portals
+  Portal holoAt;                               // the portal he came out of while portalled away
+  float blockT;                                // something has been sitting on his projector this long
+  // a milestone line that arrived while he was busy: said as soon as the current line has been read
+  String pendKey;
+  String[] pendLines;
+  float pendRepeat, pendT;
   final PVector holoHome = new PVector(-1100, -980, -120);
   PVector holoPos = holoHome.copy();          // where his head is right now
   PVector holoTarget = holoHome.copy();
@@ -55,15 +64,30 @@ class RickDialogue {
     age = 0;
     life = 2.6 + line.length() / 17.0;
     showing = true;
+    idleLine = false;
     lastIdleMs = millis();                  // whatever he says, the 20 s idle window starts over
     sfx.play(line.contains("*burp*") ? sfx.burp : sfx.pop, line.contains("*burp*") ? 0.7 : 0.35, 0.8);
   }
 
   // event joke: once per `key` per `repeat` seconds, never more often than every 6 s overall
   void event(String key, float repeat, String[] lines) {
-    if (eventCooldown > 0) return;
+    event(key, repeat, lines, false);
+  }
+
+  // priority: milestone / combo lines that mustn't be swallowed by the cooldown - they wait their turn instead
+  void event(String key, float repeat, String[] lines, boolean priority) {
     Float last = seen.get(key);
     if (last != null && T - last < repeat) return;
+    boolean idleUp = showing && idleLine && lastActionMs < lastIdleMs;   // things happening by themselves don't cut off "Lazy a**"
+    if (eventCooldown > 0 || idleUp) {
+      if (priority) {
+        pendKey = key;
+        pendLines = lines;
+        pendRepeat = repeat;
+        pendT = T;
+      }
+      return;
+    }
     seen.put(key, T);
     int i = pick.containsKey(key) ? pick.get(key) : 0;
     pick.put(key, i + 1);
@@ -73,58 +97,104 @@ class RickDialogue {
 
   void update(float dt) {
     eventCooldown -= dt;
-    if (showing && hud.terminalAnim < 0.5) {   // the TAB computer covers the screen: hold the line until it closes
+    if (pendKey != null) {
+      if (T - pendT > 8) pendKey = null;                                   // too late, the moment has passed
+      else if (!showing || age * 38 > text.length() + 38) {               // the current line is typed out and read
+        String k = pendKey;
+        pendKey = null;
+        eventCooldown = 0;
+        idleLine = false;
+        event(k, pendRepeat, pendLines, false);
+      }
+    }
+    if (showing) {
       age += dt;
       if (age > life) showing = false;
     }
     // the idle timer
     if (idleSeconds() > IDLE_LIMIT && !showing) {
       idleCount++;
-      String line;
-      if (idleCount % 3 == 1) line = MAIN_IDLE_LINE;              // the classic, first and every third time
-      else if (staringAtWall()) line = "Congratulations. You're staring at a wall.";
-      else line = IDLE_LINES[(idleCount / 3 + idleCount) % IDLE_LINES.length];
-      say(line);
+      // always the user's exact line; from the second time on, with a little extra
+      String variant;
+      if (hud.terminalAnim > 0.5) variant = TERMINAL_IDLE[idleCount % TERMINAL_IDLE.length];
+      else if (staringAtWall()) variant = "Congratulations. You're staring at a wall.";
+      else variant = IDLE_LINES[(idleCount / 3 + idleCount) % IDLE_LINES.length];
+      say(idleCount % 3 == 1 ? MAIN_IDLE_LINE : MAIN_IDLE_LINE + " " + variant);
+      idleLine = true;
       lastIdleMs = millis();                                      // 20 s timer starts over
     }
     // staring at the hologram
     PVector toHolo = PVector.sub(holoPos, cam.pos);
     float d = toHolo.mag();
-    if (d < 2500 && toHolo.normalize().dot(cam.fwd) > 0.995) stare += dt;
-    else stare = 0;
-    if (stare > 2.5 && T - lastStareLine > 60) {
+    if (d < 2500 && toHolo.normalize().dot(cam.fwd) > 0.995) {
+      stare += dt;
+      stare2 += dt;
+    } else {
+      stare = 0;
+      stare2 = 0;
+    }
+    if (stare > 2.5 && !showing && T - lastStareLine > 60) {
       lastStareLine = T;
       stare = 0;
       say("What? Never seen a holographic genius before?");
     }
+    if (stare2 > 9 && !showing && T - lastStareLine2 > 180) {
+      lastStareLine2 = T;
+      stare2 = 0;
+      say(STARE_LONG[(int) random(STARE_LONG.length)]);
+    }
+    // flew right into his head
+    if (d < 170) event("inholo", 90, IN_HOLO);
     // things thrown through his face
     for (ThrowableObject o : objects.list) {
       if (o.held || o.gone > 0 || o.vel.mag() < 250) continue;
       if (PVector.dist(o.pos, holoPos) < 160) {
-        if (o.type == OB_PICKLE) event("holopickle", 40, HOLO_PICKLE);
+        if (T - o.lastTeleportT < 2.5) event("holobank", 90, HOLO_BANKSHOT);
+        else if (o.type == OB_PICKLE) event("holopickle", 40, HOLO_PICKLE);
+        else if (o.type == OB_DUMMY) event("holgary", 60, HOLO_GARY);
+        else if (o.type == OB_BATTERY) event("holbatt", 60, HOLO_BATTERY);
+        else if (o.type == OB_UNSTABLE) event("holunst", 60, HOLO_UNSTABLE);
+        else if (o.type == OB_ANVIL) event("holanvil", 60, HOLO_ANVIL);
         else event("holohit", 25, HOLO_HIT);
       }
     }
+    // holding the pickle up to his face
+    if (objects.heldObj != null && objects.heldObj.type == OB_PICKLE && PVector.dist(objects.heldObj.pos, holoPos) < 260) event("pickleface", 120, PICKLE_FACE);
+    // something parked on his projector spot
+    boolean blocked = false;
+    for (ThrowableObject o : objects.list) {
+      if (!o.held && o.gone <= 0 && o.pos.y > -120 && o.vel.mag() < 40 && dist(o.pos.x, o.pos.z, holoHome.x, holoHome.z) < 90) blocked = true;
+    }
+    blockT = (blocked && holoAway <= 0) ? blockT + dt : 0;
+    if (blockT > 2) event("projblock", 90, PROJECTOR_BLOCKED);
+    // no-clipped into a wall
+    if (cam.noclip && lab.insideAnyBox(cam.pos) != null) event("inwall", 120, IN_WALL);
     // clinging to one object for ages
     if (objects.heldObj != null) holdTime += dt;
     else holdTime = 0;
     if (holdTime > 40 && eventCooldown <= 0) {
       String nm = objects.heldObj.name;
       event("clingy", 120, new String[] {
-        "You've been holding that " + nm + " for forty seconds. Put a ring on it or put it down.",
+        "You've been holding that " + nm + " for " + i0(holdTime) + " seconds. Put a ring on it or put it down.",
         "Still holding the " + nm + "? It's not a teddy bear. Well, unless it's Gary. Even then, no." });
     }
     // wandered off into the universe
     if (cam.pos.mag() > 9000) event("faraway", 90, FAR_AWAY);
     // went down into the void pit / up to the high platform
     if (cam.pos.y > 150 && abs(cam.pos.x) < 380 && cam.pos.z > 180 && cam.pos.z < 920) event("pit", 120, IN_PIT);
-    if (cam.pos.y < -2350 && abs(cam.pos.x) < 650 && cam.pos.z > 450 && cam.pos.z < 1550) event("high", 180, HIGH_UP);
+    if (cam.pos.y < -2500 && abs(cam.pos.x) < 650 && cam.pos.z > 450 && cam.pos.z < 1550) event("high", 180, HIGH_UP);
     // portalled away: drift over to the other portal, then home again
     if (holoAway > 0) {
       holoAway -= dt;
+      if (pingPong && portals.linked()) {
+        Portal a = portals.p[(int) (T * 1.6) % 2];
+        holoTarget.set(a.c.x, a.c.y - 380, a.c.z);
+      }
       if (holoAway <= 0) {
         holoTarget.set(holoHome);
-        event("holoback", 0, HOLO_BACK);
+        holoFlip = holoGlitch = pingPong = false;
+        holoAt = null;
+        event("holoback", 0, HOLO_BACK, true);
       }
     }
     holoPos.lerp(holoTarget, 1 - exp(-dt * (holoAway > 0 ? 4 : 1.5)));
@@ -147,14 +217,22 @@ class RickDialogue {
     float s = 420;
     PVector r = PVector.mult(cam.right, s / 2), u = PVector.mult(cam.up, s / 2);
     boolean open = talking() && (int) (T * 9) % 2 == 0;
+    float alpha = 200 + 55 * sin(T * 13) * sin(T * 3.1);
+    if (holoGlitch && holoAway > 0) {                 // bad reception out in space
+      if (random(1) < 0.2) return;
+      x += random(-25, 25);
+      alpha = random(60, 200);
+    }
+    if (blockT > 0.5 && random(1) < 0.3) alpha = random(30, 120);   // something's on the projector
+    float v0 = holoFlip ? 1 : 0, v1 = 1 - v0;          // hanging from the ceiling
     noStroke();
-    tint(255, 200 + 55 * sin(T * 13) * sin(T * 3.1));
+    tint(255, alpha);
     beginShape(QUADS);
     texture(open ? holoTalk : holo);
-    vertex(x - r.x + u.x, y - r.y + u.y, z - r.z + u.z, 0, 0);
-    vertex(x + r.x + u.x, y + r.y + u.y, z + r.z + u.z, 1, 0);
-    vertex(x + r.x - u.x, y + r.y - u.y, z + r.z - u.z, 1, 1);
-    vertex(x - r.x - u.x, y - r.y - u.y, z - r.z - u.z, 0, 1);
+    vertex(x - r.x + u.x, y - r.y + u.y, z - r.z + u.z, 0, v0);
+    vertex(x + r.x + u.x, y + r.y + u.y, z + r.z + u.z, 1, v0);
+    vertex(x + r.x - u.x, y + r.y - u.y, z + r.z - u.z, 1, v1);
+    vertex(x - r.x - u.x, y - r.y - u.y, z - r.z - u.z, 0, v1);
     endShape();
     noTint();
     glowSprite(x, y, z, 420, color(60, 200, 255), 70);
@@ -170,10 +248,11 @@ class RickDialogue {
 
   // the cartoon speech box (2D)
   void draw() {
-    if (!showing || hud.terminalAnim > 0.5) return;
+    if (!showing) return;
     float pop = easeOutBack(min(1, age / 0.25));
     float fade = constrain((life - age) / 0.35, 0, 1);
-    float px = width - 120, py = height - 150;          // portrait centre
+    // portrait centre; with the TAB computer open he moves into its empty lower-left corner
+    float k = constrain(hud.terminalAnim, 0, 1), px = lerp(width - 120, 760, k), py = lerp(height - 150, height - 140, k);
     // portrait
     pushMatrix();
     translate(px, py + sin(T * 3) * 3);
@@ -471,7 +550,7 @@ String[] BATTERY_JUMP = { "You just gave a tiny civilisation a hyperspace commut
 String[] ANTIGRAV_JUMP = { "Anti-gravity through a portal. Now it falls the OTHER way. Or double anti. Look, I'm busy." };
 String[] DUMMY_JUMP = { "Gary's spinning. Gary's fine. Gary signed a waiver." };
 String[] DISPENSED = { "Ooh, what'd you get? ...Disappointing.", "The dispenser picks randomly. Like evolution. Or my ex-wives' lawyers.", "Free stuff! It's not free. Nothing's free. *burp*" };
-String[] TERMINAL = { "Done reading the equations? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
+String[] TERMINAL = { "Reading the equations, huh? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
 String[] MANIPULATED = { "Dragging portals around like furniture. Interior designer of the multiverse.", "Nice placement. Feng shui for spacetime." };
 String[] HOLO_HIT = { "Hey! That went right through my face. Rude.", "I'm a hologram, genius. Throw it at something that can feel it." };
 String[] FAR_AWAY = { "Where are you going? The lab's back there. The universe is mostly empty - I've checked." };
@@ -483,13 +562,13 @@ boolean floorCeilingPair() {
 
 void onPortalPlaced(Portal q) {
   markAction();
-  checkPortalUnderRick(q);
+  if (checkPortalUnderRick(q)) return;      // the hologram gag is the line this time
   if (portals.p[0].active && portals.p[1].active) {
-    if (floorCeilingPair()) rick.event("floorceil", 180, FLOOR_CEILING);
-    else if (portals.distance() < 420) rick.event("close", 120, TOO_CLOSE);
-    else rick.event("linked", 240, LINKED);
+    if (floorCeilingPair()) rick.event("floorceil", 180, FLOOR_CEILING, true);
+    else if (portals.distance() < 420) rick.event("close", 120, TOO_CLOSE, true);
+    else rick.event("linked", 240, LINKED, true);
   } else {
-    rick.event("first", 100000, FIRST_PORTAL);
+    rick.event("first", 100000, FIRST_PORTAL, true);
   }
 }
 
@@ -524,7 +603,8 @@ void onNoclipToggled(boolean on) {
 }
 
 void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
-  if (chain >= 10) { rick.event("loop10", 120, LOOP_TEN); return; }
+  if (chain >= 10) { rick.event("loop10", 120, LOOP_TEN, true); return; }
+  if (chain >= 4 && o.type == OB_PICKLE) { rick.event("pickleloop", 120, PICKLE_LOOP); return; }
   if (chain >= 4) { rick.event("loop", 60, LOOPING); return; }
   if (o.type == OB_PICKLE) { rick.event("pickle", 60, PICKLE_JUMP); return; }
   if (o.type == OB_BATTERY) { rick.event("battery", 60, BATTERY_JUMP); return; }
@@ -564,7 +644,8 @@ void onObjectExploded(ThrowableObject o) {
 }
 
 void onObjectLost(ThrowableObject o) {
-  rick.event("lost", 40, LOST);
+  if (o.dispensed) rick.event("lostdisp", 40, LOST_DISPENSED);
+  else rick.event("lost", 40, LOST);
 }
 
 void onObjectGrabbed(ThrowableObject o) {
@@ -629,36 +710,135 @@ String[] MUTED = {
 String[] DEBUG_ON = { "Ooh, nerd numbers. Look at you reading frame rates like a real scientist. Adorable." };
 String[] NOCLIP_ON = { "No-clip? Walking through walls? I was doing that before it was a cheat code. It was called 'Tuesday'." };
 
-// a portal opened on the floor right under his hologram
-void checkPortalUnderRick(Portal q) {
-  if (q.n.y > -0.9) return;
-  if (dist(q.c.x, q.c.z, rick.holoHome.x, rick.holoHome.z) > 380) return;
+// a portal opened on the floor right under his hologram; true if Rick reacted to it
+boolean checkPortalUnderRick(Portal q) {
+  if (q.n.y > -0.9) return false;
+  if (dist(q.c.x, q.c.z, rick.holoHome.x, rick.holoHome.z) > 380) return false;
   Portal o = portals.other(q);
   if (!o.active) {
     rick.event("hololonely", 60, HOLO_LONELY);
-    return;
+    return true;
   }
   rick.eventCooldown = 0;
-  rick.event("holosuck", 20, HOLO_SUCK);
-  PVector t = PVector.add(o.c, PVector.mult(o.n, 320));
-  t.y -= 120;
-  rick.holoTarget.set(t);
-  rick.holoAway = 14;
+  rick.holoFlip = rick.holoGlitch = rick.pingPong = false;
+  rick.holoAt = null;
+  if (o.n.y < -0.9 && dist(o.c.x, o.c.z, rick.holoHome.x, rick.holoHome.z) <= 380) {
+    // both portals under him: he falls through himself, back and forth
+    rick.pingPong = true;
+    rick.holoAway = 10;
+    rick.event("holodouble", 60, HOLO_DOUBLE);
+  } else {
+    String bn = o.box.name;
+    boolean ceil = o.n.y > 0.9;                       // comes out of the ceiling: hangs upside down
+    boolean space = bn.startsWith("ORBITAL") || bn.equals("OBSERVATION DECK") || bn.equals("HIGH PLATFORM") || bn.equals("SUB-DECK");
+    rick.holoFlip = ceil;
+    rick.holoGlitch = space;                          // out of the lab: terrible reception
+    rick.holoAt = o;
+    if (ceil) rick.event("holoceil", 20, HOLO_CEILING);
+    else if (space) rick.event("holospace", 20, HOLO_SPACE);
+    else rick.event("holosuck", 20, HOLO_SUCK);
+    rick.holoTarget.set(holoSpotAt(o));
+    rick.holoAway = 14;
+  }
   q.splash(PVector.add(q.c, PVector.mult(q.n, 20)), 1.2);
   o.splash(PVector.add(o.c, PVector.mult(o.n, 20)), 1.2);
   sfx.play(sfx.teleport, 0.7, 0.7);
+  return true;
 }
+
+// where his head floats after coming out of portal o
+PVector holoSpotAt(Portal o) {
+  PVector t = PVector.add(o.c, PVector.mult(o.n, 320));
+  t.y -= 120;
+  return t;
+}
+
+// the exit portal he's parked at is being dragged around: he gets dragged with it
+void onHoloPortalMoved(Portal sel) {
+  if (rick.holoAway <= 0 || sel != rick.holoAt) return;
+  rick.holoTarget.set(holoSpotAt(sel));
+  rick.holoFlip = sel.n.y > 0.9;
+  rick.holoAway = max(rick.holoAway, 4);
+  rick.event("holodrag", 60, HOLO_DRAG);
+}
+
+// the portal gun's aim line went straight through his head
+void checkShotThroughRick(RayHit h) {
+  PVector toH = PVector.sub(rick.holoPos, cam.pos);
+  float along = toH.dot(cam.fwd);
+  if (along > 0 && along < (h.hit() ? h.t : 9000) && PVector.sub(toH, PVector.mult(cam.fwd, along)).mag() < 150) {
+    rick.event("shotholo", 60, SHOT_HOLO);
+  }
+}
+
+String[] IN_HOLO = {
+  "Get out of my face. No, literally - you're IN my face. It's all pixels and resentment in here.",
+  "Personal space! I can see your camera lens from the inside of my nose."
+};
+String[] HOLO_BANKSHOT = {
+  "You bank-shot that through a PORTAL to hit me? ...Okay, that's actually good. Still rude.",
+  "Trick shot through spacetime, right in my face. I'd clap, but I'm just a head."
+};
+String[] HOLO_GARY = { "Gary! Buddy! You went straight through me. We've talked about boundaries, Gary." };
+String[] HOLO_BATTERY = { "Watch it! There are people in there. They just saw a giant floating head. That's their new religion now. Great." };
+String[] HOLO_UNSTABLE = { "The UNSTABLE one? At my FACE? I've dated people with better aim and worse intentions." };
+String[] HOLO_ANVIL = { "You threw an anvil at a hologram. You're bullying photons. Fifty kilos of photon bullying." };
+String[] SHOT_HOLO = {
+  "Did you just shoot me with my own portal gun? It went straight through. It tickles. Stop it.",
+  "Portals go on WALLS. I'm a face. Faces aren't walls. Mostly."
+};
+String[] HOLO_CEILING = {
+  "Why am I upside down? I don't even HAVE blood and it's rushing to my head. *burp* Upwards.",
+  "Great, I'm a bat now. A genius bat. Flip me back before I start liking it."
+};
+String[] HOLO_SPACE = {
+  "You portalled me into SPACE? The signal out here is garbage. Can you hear m- kssshhh- ...idiot.",
+  "Floating in the void. Very peaceful. Very lonely. Bring me back before I start writing poetry."
+};
+String[] HOLO_DOUBLE = {
+  "Two portals under me? Now I'm falling through myself. Forever. This is either hell or a screensaver.",
+  "Back and forth, back and forth. I'm a hologram on a trampoline. Get me off this thing."
+};
+String[] HOLO_DRAG = {
+  "Stop dragging me around! I'm a hologram, not a carry-on bag.",
+  "Oh sure, move the exit while I'm standing in it. That's how you get Rick smeared across a wall."
+};
+String[] PROJECTOR_BLOCKED = {
+  "Something's sitting on my projector. I can feel it. It feels like a cube with no ambition. Move it.",
+  "Get that off my projector or I'm gonna gl-gl-glitch out and k-k-keep doing this f-f-forever."
+};
+String[] PICKLE_FACE = {
+  "Get that pickle out of my face. I said OUT. ...Why is it warm? Pickles shouldn't be warm.",
+  "Don't wave the pickle at me. It knows what it did. I know what it did. We don't talk about it."
+};
+String[] PICKLE_LOOP = {
+  "The pickle's in the loop. Every lap it gets a little smarter. Don't make eye contact with the pickle.",
+  "Round and round goes the pickle. If it starts talking, I was never here."
+};
+String[] IN_WALL = {
+  "You're inside the wall. Don't touch anything - it's mostly wires and bad decisions in there. Mine.",
+  "No-clipping through my walls? That's breaking and entering. Mostly entering."
+};
+String[] STARE_LONG = {
+  "Okay, this is getting weird. Blink. Do cameras blink? Blink anyway.",
+  "You've been staring at me for ten seconds. In hologram years we're basically married."
+};
+String[] TERMINAL_IDLE = {
+  "Reading isn't doing, genius. Close the computer and go break something.",
+  "Still on the equations? The mu is decorative. Half the Greek letters are decorative."
+};
+String[] LOST_DISPENSED = { "Dispenser junk, lost to the void. Easy come, easy go. Mostly go." };
 
 void noteCameraJump() {
   rick.camJumps.add(T);
   while (rick.camJumps.size() > 0 && T - rick.camJumps.get(0) > 20) rick.camJumps.remove(0);
-  if (rick.camJumps.size() >= 5) rick.event("hopping", 90, HOPPING);
+  if (rick.camJumps.size() >= 5) rick.event("hopping", 90, HOPPING, true);
 }
 
 void noteDispense() {
   rick.dispenses.add(T);
   while (rick.dispenses.size() > 0 && T - rick.dispenses.get(0) > 10) rick.dispenses.remove(0);
-  if (rick.dispenses.size() >= 5) rick.event("dispspam", 60, DISPENSER_SPAM);
+  if (rick.dispenses.size() >= 5) rick.event("dispspam", 60, DISPENSER_SPAM, true);
 }
 
 void onObjectsCollide(ThrowableObject a, ThrowableObject b, float speed) {

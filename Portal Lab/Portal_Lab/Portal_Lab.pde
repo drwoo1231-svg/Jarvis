@@ -82,6 +82,7 @@ void draw() {
   parts.update(dt);
   terminal.update(dt);
   hud.update(dt);
+  if (windowAway) markAction();
   rick.update(dt);
   if (cam.movedThisFrame) markAction();
 
@@ -295,7 +296,16 @@ void mouseDragged() {
   cam.mouseMovedTo(mouseX, mouseY);
 }
 
+// while the window is in the background Rick doesn't count you as idle (and doesn't pop up every 20 s)
+boolean windowAway;
+
 void focusLost() {
+  windowAway = true;
   kW = kA = kS = kD = kUp = kDown = kDown2 = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
   if (cam != null) cam.capture(false);
+}
+
+void focusGained() {
+  windowAway = false;
+  markAction();
 }
