@@ -156,10 +156,10 @@ void keyPressed() {
     if (hud.terminalOpen) onTerminalOpened();
   }
   // F3 (NEWT reports it as code 99; 114 is the AWT code) - the ` key works too
-  if ((key == CODED && (keyCode == 99 || keyCode == 114)) || key == '`') hud.debug = !hud.debug;
+  if ((key == CODED && (keyCode == 99 || keyCode == 114)) || key == '`') { hud.debug = !hud.debug; onDebugToggled(hud.debug); }
   if (k == 'h') hud.showControls = !hud.showControls;
-  if (k == 'n' && hud.debug) cam.noclip = !cam.noclip;
-  if (k == 'm') sfx.muted = !sfx.muted;
+  if (k == 'n' && hud.debug) { cam.noclip = !cam.noclip; onNoclipToggled(cam.noclip); }
+  if (k == 'm') { sfx.muted = !sfx.muted; onMuteToggled(sfx.muted); }
   if (k == 'r' && !manip.active()) {
     if (objects.heldObj != null) markAction();
     objects.release();

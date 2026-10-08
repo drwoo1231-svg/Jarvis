@@ -82,6 +82,8 @@ The matter dispenser (press **E** on it) makes more, up to 12 extra objects.
   already placed). He goes through and has opinions about it.
 - Drop the anvil on Gary, the crash-test dummy.
 - Hit the matter dispenser five times in a row.
+- Select a wall portal (**E**), spin it upside down with **Q / R** and lock it in.
+- Mute the lab. Rick is a speech box.
 - Portal-hop yourself five times in 20 seconds.
 - Watch the toast after every jump: it shows the speed going **in** and coming
   **out**. Ordinary objects keep their speed exactly; the weird ones don't.
@@ -136,7 +138,8 @@ If you go **20 seconds** without doing anything useful, Rick says:
   idle lines fill the gaps, plus about 40 kinds of reactions to whatever weird
   experiment you're running: infinite loops, dropping things into the void
   pit, the hologram falling through a portal, Gary versus the anvil, spamming
-  the dispenser, staring at a wall.
+  the dispenser, staring at a wall, flipping portals upside down, hugging one
+  object for too long.
 - **No spam:** each reaction has its own cooldown, and there's a shared
   6-second gap between any two lines.
 

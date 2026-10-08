@@ -31,6 +31,7 @@ class RickDialogue {
   java.util.HashMap<String, Integer> pick = new java.util.HashMap<String, Integer>();
   PFont font, nameFont;
   float stare;                 // seconds you've been staring at his hologram
+  float holdTime;              // seconds the current object has been held
   float lastStareLine = -999;
   final PVector holoHome = new PVector(-1100, -980, -120);
   PVector holoPos = holoHome.copy();          // where his head is right now
@@ -102,6 +103,15 @@ class RickDialogue {
         if (o.type == OB_PICKLE) event("holopickle", 40, HOLO_PICKLE);
         else event("holohit", 25, HOLO_HIT);
       }
+    }
+    // clinging to one object for ages
+    if (objects.heldObj != null) holdTime += dt;
+    else holdTime = 0;
+    if (holdTime > 40 && eventCooldown <= 0) {
+      String nm = objects.heldObj.name;
+      event("clingy", 120, new String[] {
+        "You've been holding that " + nm + " for forty seconds. Put a ring on it or put it down.",
+        "Still holding the " + nm + "? It's not a teddy bear. Well, unless it's Gary. Even then, no." });
     }
     // wandered off into the universe
     if (cam.pos.mag() > 9000) event("faraway", 90, FAR_AWAY);
@@ -495,7 +505,21 @@ void onCameraTeleported(Portal from) {
 void onPortalManipulated(Portal q) {
   markAction();
   checkPortalUnderRick(q);
+  if (abs(q.n.y) < 0.5 && q.u.y > 0.7) rick.event("upsidedown", 90, UPSIDE_DOWN);
+  else if (abs(q.n.y) < 0.5 && abs(q.u.y) < 0.35) rick.event("sideways", 90, SIDEWAYS);
   rick.event("manip", 90, MANIPULATED);
+}
+
+void onMuteToggled(boolean muted) {
+  if (muted) rick.event("mute", 120, MUTED);
+}
+
+void onDebugToggled(boolean on) {
+  if (on) rick.event("debug", 180, DEBUG_ON);
+}
+
+void onNoclipToggled(boolean on) {
+  if (on) rick.event("noclip", 120, NOCLIP_ON);
 }
 
 void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
@@ -569,6 +593,17 @@ String[] HOPPING = { "Stop portal-hopping, you'll get spatial whiplash. Trust me
 String[] DISPENSER_SPAM = { "Stop spamming the dispenser! Matter doesn't grow on trees. Well. Technically it does. Shut up." };
 String[] GARY_ANVIL = { "You hit Gary with an anvil. Gary's lawyer will be in touch.", "Anvil versus Gary. Gary lost. Gary always loses. That's why we love Gary." };
 String[] LOOP_TEN = { "Ten loops. This is my favourite show now. Don't touch anything." };
+String[] UPSIDE_DOWN = {
+  "You flipped the portal upside down. Now everything that comes out is Australian.",
+  "Upside-down portal. The other side of that hole is now emotionally upside down too. Good job."
+};
+String[] SIDEWAYS = { "A sideways portal. Very avant-garde. Very 'I took one art class at community college'." };
+String[] MUTED = {
+  "You muted the lab? I'm a speech box, genius. You can't mute TEXT.",
+  "Muted again. I'm still talking. I'm always talking. It's like a curse, but for you."
+};
+String[] DEBUG_ON = { "Ooh, nerd numbers. Look at you reading frame rates like a real scientist. Adorable." };
+String[] NOCLIP_ON = { "No-clip? Walking through walls? I was doing that before it was a cheat code. It was called 'Tuesday'." };
 
 // a portal opened on the floor right under his hologram
 void checkPortalUnderRick(Portal q) {
