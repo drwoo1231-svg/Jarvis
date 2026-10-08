@@ -41,14 +41,19 @@ class PlayerCamera {
     updateBasis();
   }
 
-  // same, but when the new direction is (nearly) straight up/down, use the old
-  // screen-up carried through the portal to decide which way you're facing
+  // same, but when the new direction is (nearly) straight up/down - where the
+  // heading is undefined - take it from the old screen-up carried through the portal
   void lookAlong(PVector d, PVector upHint) {
     PVector n = d.copy().normalize();
     pitch = asin(constrain(-n.y, -1, 1));
-    float sp = sin(pitch), cp = cos(pitch);
-    float fx = n.x * cp - upHint.x * sp, fz = n.z * cp - upHint.z * sp;
-    if (fx * fx + fz * fz > 1e-8) yaw = atan2(fx, -fz);
+    PVector h = new PVector(n.x, 0, n.z);
+    float hm = h.mag();
+    // looking up: flat-forward = -screenUp ; looking down: flat-forward = +screenUp
+    PVector hu = new PVector(upHint.x, 0, upHint.z).mult(n.y < 0 ? -1 : 1);
+    float w = constrain(1 - hm / 0.15, 0, 1);            // only within ~8 degrees of vertical
+    if (hm > 1e-6) h.div(hm);
+    if (hu.magSq() > 1e-12) h = PVector.add(PVector.mult(h, 1 - w), PVector.mult(hu.normalize(), w));
+    if (h.magSq() > 1e-12) yaw = atan2(h.x, -h.z);
     updateBasis();
   }
 

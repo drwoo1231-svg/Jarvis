@@ -282,6 +282,29 @@ class PortalPair implements PassFilter {
     float a = constrain(c.dot(e1), rect[0] + ext1, rect[1] - ext1);
     float bb = constrain(c.dot(e2), rect[2] + ext2, rect[3] - ext2);
     float plane = b.facePlane(face);
+    // slide out from under anything standing on (or hanging over) this face:
+    // test panels on the floor, the back wall under the ceiling, ...
+    PVector nn = faceNormal(face);
+    float side = nn.x + nn.y + nn.z;
+    PVector nAx = new PVector(abs(nn.x), abs(nn.y), abs(nn.z));
+    for (int iter = 0; iter < 4; iter++) {
+      boolean moved = false;
+      for (Box o : lab.boxes) {
+        if (o == b) continue;
+        float lo = o.x0 * nAx.x + o.y0 * nAx.y + o.z0 * nAx.z, hi = o.x1 * nAx.x + o.y1 * nAx.y + o.z1 * nAx.z;
+        float probe = plane + side;
+        if (probe <= lo || probe >= hi) continue;
+        float o1a = e1.x * o.x0 + e1.y * o.y0 + e1.z * o.z0, o1b = e1.x * o.x1 + e1.y * o.y1 + e1.z * o.z1;
+        float o2a = e2.x * o.x0 + e2.y * o.y0 + e2.z * o.z0, o2b = e2.x * o.x1 + e2.y * o.y1 + e2.z * o.z1;
+        float p1 = min(a + ext1 - o1a, o1b - (a - ext1)), p2 = min(bb + ext2 - o2a, o2b - (bb - ext2));
+        if (p1 <= 0 || p2 <= 0) continue;
+        if (p1 < p2) a += (a < (o1a + o1b) / 2) ? -p1 : p1;
+        else bb += (bb < (o2a + o2b) / 2) ? -p2 : p2;
+        moved = true;
+      }
+      if (!moved) break;
+      if (a < rect[0] + ext1 - 0.01 || a > rect[1] - ext1 + 0.01 || bb < rect[2] + ext2 - 0.01 || bb > rect[3] - ext2 + 0.01 || iter == 3) return false;
+    }
     // rebuild the centre from the two in-plane coords and the plane
     PVector nAxis = new PVector(abs(n.x), abs(n.y), abs(n.z));
     c.set(PVector.add(PVector.mult(e1, a), PVector.mult(e2, bb)));
