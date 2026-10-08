@@ -34,6 +34,7 @@ class ThrowableObject {
   float quantumTimer = random(4, 9);
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
+  PVector safe = new PVector();  // last position that was outside every wall
   int massRoll;                 // unstable object's displayed mass changes
 
   ThrowableObject(int type, float x, float y, float z) {
@@ -47,6 +48,7 @@ class ThrowableObject {
     grav = OB_GRAV[type];
     home.set(x, y, z);
     pos.set(x, y, z);
+    safe.set(x, y, z);
     rot.rotateY(random(TWO_PI));
   }
 
@@ -59,6 +61,7 @@ class ThrowableObject {
 
   void respawn() {
     pos.set(home);
+    safe.set(home);
     vel.set(0, 0, 0);
     angVel.set(0, 0, 0);
     spawnFx = 1;
@@ -73,13 +76,25 @@ class ThrowableObject {
   void step(float h) {
     if (gone > 0) return;
     if (held) {
-      PVector target = PVector.add(cam.pos, PVector.mult(cam.fwd, objects.holdDist + radius));
-      // tractor beam: if a wall is in the way for too long, just bring it through
-      if (PVector.dist(target, pos) > 250) stuck += h;
-      else stuck = 0;
+      // hold point: in front of the camera, but never inside / behind a wall
+      float reach = objects.holdDist + radius;
+      RayHit wall = lab.raycast(cam.pos, cam.fwd, reach + radius + 4);
+      if (wall.hit()) reach = max(cam.RADIUS + radius * 0.5, wall.t - radius - 4);
+      PVector target = PVector.add(cam.pos, PVector.mult(cam.fwd, reach));
+      // tractor beam: if it can't reach you (or a wall hides it) for half a second, bring it through
+      boolean far = PVector.dist(target, pos) > 250;
+      boolean hidden = false;
+      if (!far && frameCount % 6 == 0) {
+        PVector toObj = PVector.sub(pos, cam.pos);
+        RayHit los = lab.raycast(cam.pos, toObj.copy().normalize(), max(1, toObj.mag() - radius));
+        hidden = los.hit();
+      }
+      if (far || hidden) stuck += far ? h : 0.1;
+      else if (PVector.dist(target, pos) < 120) stuck = 0;
       if (stuck > 0.5) {
         parts.burst(pos, 12, 200, color(140, 255, 220), 0.4, 10);
         pos.set(target);
+        safe.set(target);
         vel.set(cam.vel);
         stuck = 0;
       }
@@ -97,7 +112,8 @@ class ThrowableObject {
     pos.add(PVector.mult(vel, h));
 
     PVector n = new PVector();
-    float impact = lab.collideBody(pos, vel, radius, bounce, friction, h, portals, n);
+    float impact = lab.collideBody(pos, vel, radius, bounce, friction, h, portals, n, safe);
+    if (lab.insideAnyBox(pos) == null) safe.set(pos);
     if (impact > 0) {
       // roll: spin to match the surface
       PVector rollW = n.cross(vel).div(radius);
@@ -146,6 +162,7 @@ class ThrowableObject {
       // superposition: it both went through and didn't. Mostly didn't.
       PVector l = from.toLocal(pos);
       pos.set(from.toWorld(new PVector(l.x, l.y, radius + 3)));
+      safe.set(pos);
       PVector lv = from.dirToLocal(vel);
       vel.set(from.dirToWorld(new PVector(lv.x, lv.y, -lv.z)));
       from.splash(pos, 0.6);
@@ -156,6 +173,7 @@ class ThrowableObject {
     // come out exactly as far past B as it went past A (adding a gap here would
     // hand the object free potential energy on every floor-to-floor loop)
     pos.set(portals.mapPoint(from, pos, 0.5));
+    safe.set(pos);
     vel.set(portals.mapDir(from, vel));
     angVel.set(portals.mapDir(from, angVel));
     rot.preApply(portals.mapMatrix(from));
@@ -224,6 +242,7 @@ class ThrowableObject {
         RayHit rh = lab.raycast(pos, jump.copy().normalize(), jump.mag() + radius);
         if (!rh.hit()) {
           pos.set(tryPos);
+          safe.set(tryPos);
           parts.burst(pos, 16, 200, color(180, 140, 255), 0.5, 14);
           sfx.play(sfx.pop, 0.35, 1.5);
           onQuantumTunnel(this);

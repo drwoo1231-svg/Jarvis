@@ -469,6 +469,13 @@ class Laboratory {
   // bounce a moving body off the lab: restitution e, friction mu (per second), substep h.
   // Returns the hardest impact speed this step (0 = no contact); nOut = contact normal.
   float collideBody(PVector p, PVector v, float r, float e, float mu, float h, PassFilter skip, PVector nOut) {
+    return collideBody(p, v, r, e, mu, h, skip, nOut, null);
+  }
+
+  // safe = a recent position known to be outside every box: if the centre has
+  // ended up inside a box, it leaves through the side it came from (never
+  // squeezed out of the far side of a thin wall)
+  float collideBody(PVector p, PVector v, float r, float e, float mu, float h, PassFilter skip, PVector nOut, PVector safe) {
     float impact = 0;
     for (Box b : boxes) {
       if (p.x < b.x0 - r || p.x > b.x1 + r || p.y < b.y0 - r || p.y > b.y1 + r || p.z < b.z0 - r || p.z > b.z1 + r) continue;
@@ -484,8 +491,16 @@ class Laboratory {
         pen = r - d;
       } else {
         float[] ds = { p.x - b.x0, b.x1 - p.x, p.y - b.y0, b.y1 - p.y, p.z - b.z0, b.z1 - p.z };
-        int best = 0;
-        for (int i = 1; i < 6; i++) if (ds[i] < ds[best]) best = i;
+        int best = -1;
+        if (safe != null) {
+          // only faces that the safe position is outside of
+          boolean[] ok = { safe.x < b.x0, safe.x > b.x1, safe.y < b.y0, safe.y > b.y1, safe.z < b.z0, safe.z > b.z1 };
+          for (int i = 0; i < 6; i++) if (ok[i] && (best < 0 || ds[i] < ds[best])) best = i;
+        }
+        if (best < 0) {
+          best = 0;
+          for (int i = 1; i < 6; i++) if (ds[i] < ds[best]) best = i;
+        }
         n = faceNormal(best);
         pen = ds[best] + r;
       }
@@ -503,6 +518,11 @@ class Laboratory {
       }
     }
     return impact;
+  }
+
+  Box insideAnyBox(PVector p) {
+    for (Box b : boxes) if (p.x > b.x0 && p.x < b.x1 && p.y > b.y0 && p.y < b.y1 && p.z > b.z0 && p.z < b.z1) return b;
+    return null;
   }
 
   int dominantFace(PVector n) {
