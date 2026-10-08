@@ -121,6 +121,10 @@ class Laboratory {
     add("QUANTUM PEDESTAL", 1580, -100, 380, 1700, 0, 500, K_METAL);
     add("QUANTUM PEDESTAL", 1780, -100, 580, 1900, 0, 700, K_METAL);
     add("QUANTUM PEDESTAL", 1580, -100, 760, 1700, 0, 880, K_METAL);
+    add("TESLA COIL", -1420, -520, -1700, -1280, 0, -1560, K_METAL).hide();
+    add("SERVER RACK", 1000, -420, 1250, 1110, 0, 1450, K_METAL);
+    add("SERVER RACK", 1000, -420, 1500, 1110, 0, 1700, K_METAL);
+    add("CHEMISTRY BENCH", -900, -95, 1300, -350, 0, 1480, K_METAL);
     add("GENERATOR", -1830, -900, 1770, -1670, 0, 1930, K_METAL).hide();
     add("GENERATOR", 1670, -900, 1770, 1830, 0, 1930, K_METAL).hide();
 
@@ -300,6 +304,35 @@ class Laboratory {
       drawCylinder(95, 40, 14);
       popMatrix();
     }
+    // tesla coil: stacked rings on a column
+    pushMatrix();
+    translate(-1350, -260, -1630);
+    fill(60, 64, 74);
+    drawCylinder(35, 520, 12);
+    translate(0, -270, 0);
+    fill(190, 200, 215);
+    emissive(40, 60, 90);
+    scale(90);
+    shape(ring);
+    scale(0.7);
+    translate(0, 0.6, 0);
+    shape(ring);
+    emissive(0);
+    popMatrix();
+    // beakers on the chemistry bench
+    for (int i = 0; i < 5; i++) {
+      pushMatrix();
+      translate(-820 + i * 110, -125, 1390 + (i % 2) * 40);
+      fill(200, 230, 255, 140);
+      drawCylinder(22, 60, 10);
+      translate(0, 12, 0);
+      int c = i % 3 == 0 ? color(90, 255, 120) : i % 3 == 1 ? color(255, 90, 200) : color(90, 200, 255);
+      fill(c);
+      emissive(red(c) * 0.5, green(c) * 0.5, blue(c) * 0.5);
+      drawCylinder(19, 32, 10);
+      emissive(0);
+      popMatrix();
+    }
     // console screens frame
     pushMatrix();
     translate(1300, -110, -1835);
@@ -357,8 +390,44 @@ class Laboratory {
       }
       noStroke();
     }
-    // gyroscope core glow
+    // gyroscope core glow + crystals orbiting it
     glowSprite(0, -420, -1200, 420 + 50 * sin(T * 2), color(80, 170, 255), 150);
+    for (int i = 0; i < 6; i++) {
+      float a = T * 0.7 + i * TWO_PI / 6;
+      float x = cos(a) * 380, z = -1200 + sin(a) * 380, y = -420 + sin(T * 1.3 + i) * 60;
+      glowSprite(x, y, z, 70, i % 2 == 0 ? color(120, 220, 255) : color(200, 140, 255), 200);
+      glowSprite(x, y, z, 18, color(255), 255);
+    }
+    // tesla coil lightning
+    if (random(1) < 0.55) {
+      stroke(170, 210, 255, 230);
+      strokeWeight(2.2);
+      noFill();
+      float px = -1350, py = -540, pz = -1630;
+      PVector end = new PVector(-1350 + random(-420, 420), random(-700, -60), -1630 + random(-380, 380));
+      beginShape();
+      for (int k = 0; k <= 8; k++) {
+        float t = k / 8.0;
+        float jx = k == 0 || k == 8 ? 0 : random(-40, 40), jy = k == 0 || k == 8 ? 0 : random(-40, 40);
+        vertex(lerp(px, end.x, t) + jx, lerp(py, end.y, t) + jy, lerp(pz, end.z, t) + jx);
+      }
+      endShape();
+      noStroke();
+      glowSprite(end.x, end.y, end.z, 90, color(150, 200, 255), 200);
+      if (random(1) < 0.08 && PVector.dist(cam.pos, new PVector(px, py, pz)) < 1800) sfx.play(sfx.zap, 0.18, random(0.8, 1.3));
+    }
+    glowSprite(-1350, -540, -1630, 260, color(120, 170, 255), 120);
+    // server rack status lights
+    for (int r = 0; r < 2; r++) {
+      for (int i = 0; i < 18; i++) {
+        boolean on = noise(i * 3.1 + r * 10, T * 2.5) > 0.5;
+        if (!on) continue;
+        float y = -380 + (i % 9) * 40, z = 1270 + r * 250 + (i / 9) * 120;
+        glowSprite(995, y, z + 30, 26, i % 4 == 0 ? color(255, 120, 80) : color(100, 255, 160), 230);
+      }
+    }
+    // bubbles over the beakers
+    if (frameCount % 4 == 0) parts.emit(-820 + int(random(5)) * 110, -170, 1400, random(-6, 6), -60, random(-6, 6), 1.2, 9, color(160, 255, 200), 0, 0.3);
     for (Sign s : signs) s.draw();
   }
 
