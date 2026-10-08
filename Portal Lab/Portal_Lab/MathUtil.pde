@@ -12,4 +12,10 @@ float smooth01(float t) {
 }
 
 String f1(float v) { return nf(v, 0, 1); }
+
+// metres with 2 decimals, never "-0.00"
+String fm(float v) {
+  if (abs(v) < 0.005) v = 0;
+  return nf(v, 0, 2);
+}
 String f2(float v) { return nf(v, 0, 2); }

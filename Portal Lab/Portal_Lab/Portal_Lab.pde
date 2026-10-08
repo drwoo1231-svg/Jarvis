@@ -22,6 +22,7 @@ PortalGun gun;
 PortalManipulator manip;
 ObjectLab objects;
 PortalPhysics physics;
+ResearchTerminal terminal;
 HUD hud;
 Sfx sfx;
 
@@ -57,6 +58,7 @@ void setup() {
   hud = new HUD();
   sphereDetail(12);
   objects = new ObjectLab();
+  terminal = new ResearchTerminal();
   cam = new PlayerCamera(0, -180, 1750);
   lastMs = millis();
 }
@@ -76,6 +78,7 @@ void draw() {
   physics.update(dt);
   objects.update(dt);
   parts.update(dt);
+  terminal.update(dt);
   hud.update(dt);
   if (cam.movedThisFrame) markAction();
 
@@ -97,9 +100,11 @@ void draw() {
   portals.drawGlow();
   objects.drawGlow();
   manip.drawGlow();
+  terminal.drawGlow();
   gun.draw();
   parts.draw();
   endGlowPass();
+  hud.capturePortalTags();
 
   // ---- 2D overlay
   begin2D();
@@ -140,6 +145,16 @@ void keyPressed() {
   setKey(true);
   char k = Character.toLowerCase(key);
   if (k == 'e') interact();
+  if (key == TAB) {
+    hud.terminalOpen = !hud.terminalOpen;
+    markAction();
+    if (hud.terminalOpen) onTerminalOpened();
+  }
+  // F3 (NEWT reports it as code 99; 114 is the AWT code) - the ` key works too
+  if ((key == CODED && (keyCode == 99 || keyCode == 114)) || key == '`') hud.debug = !hud.debug;
+  if (k == 'h') hud.showControls = !hud.showControls;
+  if (k == 'n' && hud.debug) cam.noclip = !cam.noclip;
+  if (k == 'm') sfx.muted = !sfx.muted;
   if (k == 'r' && !manip.active()) {
     if (objects.heldObj != null) markAction();
     objects.release();
@@ -180,6 +195,10 @@ void interact() {
 
 void markAction() {
   lastActionMs = millis();
+}
+
+float idleSeconds() {
+  return (millis() - lastActionMs) / 1000.0;
 }
 
 void keyReleased() {
@@ -273,6 +292,9 @@ void onObjectDispensed(ThrowableObject o) {
 }
 
 void onLowStability() {
+}
+
+void onTerminalOpened() {
 }
 
 void mouseMoved() {
