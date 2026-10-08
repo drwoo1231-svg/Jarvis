@@ -87,6 +87,7 @@ class PlayerCamera {
     vel.set(portals.mapDir(q, vel));
     lookAlong(newFwd);
     portals.exitFx(q, pos, 1);
+    q.splash(PVector.add(q.c, PVector.mult(q.n, 10)), 0.8);
     sfx.play(sfx.teleport, 0.7, 1);
     teleportFlash = 1;
     onCameraTeleported(q);

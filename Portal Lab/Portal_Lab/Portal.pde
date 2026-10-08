@@ -70,28 +70,50 @@ class Portal {
     return a * a + b * b < 1;
   }
 
+  LiquidSurface liquid = new LiquidSurface();
+  float rippleAge = 99;         // seconds since something splashed through
+  float jig;                    // wobble impulse
+
   void update(float dt) {
     if (!active) return;
     age += dt;
-    open = min(1, open + dt / 0.45);
-    // ambient energy specks drifting in and out of the opening
-    if (open > 0.5 && random(1) < 0.75) {
+    open = min(1, open + dt / 0.55);
+    rippleAge += dt;
+    jig *= exp(-dt * 4);
+    if (open < 0.5) return;
+    // droplets flung off the spinning rim
+    if (random(1) < 0.55) {
       float a = random(TWO_PI);
-      boolean inward = random(1) < 0.6;
-      float rr = inward ? random(1.05, 1.35) : random(0.1, 0.4);
-      PVector p = toWorld(new PVector(cos(a) * PORTAL_HW * rr, sin(a) * PORTAL_HH * rr, 3));
-      PVector tangent = dirToWorld(new PVector(-sin(a) * PORTAL_HW, cos(a) * PORTAL_HH, 0)).normalize();
-      PVector radial = dirToWorld(new PVector(cos(a), sin(a), 0));
-      PVector v = PVector.mult(tangent, 120);
-      v.add(PVector.mult(radial, inward ? -110 : 130));
-      v.add(PVector.mult(n, inward ? random(0, 20) : random(30, 90)));
-      parts.emit(p, v, random(0.5, 1.0), random(8, 16), lerpColor(col, colLight, random(1)), 0, 1.2);
+      PVector p = toWorld(new PVector(cos(a) * PORTAL_HW, sin(a) * PORTAL_HH, 8));
+      PVector tangent = dirToWorld(new PVector(sin(a) * PORTAL_HW, -cos(a) * PORTAL_HH, 0)).normalize();
+      PVector radial = dirToWorld(new PVector(cos(a) * PORTAL_HH, sin(a) * PORTAL_HW, 0)).normalize();
+      PVector v = PVector.mult(tangent, random(120, 260));
+      v.add(PVector.mult(radial, random(30, 110))).add(PVector.mult(n, random(60, 160)));
+      parts.emit(p, v, random(0.5, 0.9), random(7, 13), lerpColor(col, colLight, random(0.6)), 650, 0.6);
+    }
+    // glowing motes being sucked into the eye
+    if (random(1) < 0.5) {
+      float a = random(TWO_PI);
+      float rr = random(0.5, 0.95);
+      PVector p = toWorld(new PVector(cos(a) * PORTAL_HW * rr, sin(a) * PORTAL_HH * rr, 30));
+      PVector v = dirToWorld(new PVector(-cos(a) * 140 + sin(a) * 160, -sin(a) * 140 - cos(a) * 160, -25));
+      parts.emit(p, v, random(0.35, 0.6), random(6, 11), colLight, 0, 0.5);
+    }
+  }
+
+  // something went through: ripple + splash
+  void splash(PVector where, float strength) {
+    rippleAge = 0;
+    jig = min(1.5, jig + strength);
+    for (int i = 0; i < 26 * strength; i++) {
+      PVector v = PVector.add(PVector.random3D().mult(random(150, 420)), PVector.mult(n, random(100, 380)));
+      parts.emit(where, v, random(0.4, 0.9), random(8, 18), lerpColor(col, colLight, random(1)), 650, 0.8);
     }
   }
 
   float pulse() { return 0.82 + 0.18 * sin(age * 6 + id * 2); }
 
-  float scaleNow() { return easeOutBack(open); }
+  float scaleNow() { return easeOutBack(open) * (1 + 0.05 * jig * sin(age * 22)); }
 
   // multiply the current matrix by the portal frame (local x = r, y = u, z = n)
   void applyFrame(float lift) {
@@ -102,70 +124,62 @@ class Portal {
                 0, 0, 0, 1);
   }
 
-  // opaque part: the swirling green disc (drawn in the solid pass, unlit)
+  // the liquid vortex (solid pass, unlit, depth-tested)
   void drawSolid() {
     if (!active || open <= 0.01) return;
     float s = scaleNow();
+    float lift = 0.8;
+    float ripR = rippleAge * 0.9, ripA = rippleAge < 3 ? 9 * exp(-rippleAge * 2.2) : 0;
+    float o = smooth01(open);
+    liquid.build(age, o, ripR, ripA);
+    PVector camL = toLocal(cam.pos);
+    camL.z -= lift;
+    camL.div(s);
     pushMatrix();
-    applyFrame(1.6);
+    applyFrame(lift);
     scale(s);
-    noStroke();
-    int seg = 40;
-    beginShape(TRIANGLE_FAN);
-    fill(colLight);
-    vertex(0, 0, 0);
-    for (int i = 0; i <= seg; i++) {
-      float a = TWO_PI * i / seg;
-      float w = 1 + 0.045 * (noise(cos(a) + 2, sin(a) + 2, age * 1.3 + id * 9) - 0.5) * 2;
-      fill(lerpColor(col, colDark, 0.35 + 0.25 * sin(a * 3 + age * 4)));
-      vertex(cos(a) * PORTAL_HW * w, sin(a) * PORTAL_HH * w, 0);
+    if (liquidShader != null) {
+      liquidShader.set("time", age);
+      liquidShader.set("open", o);
+      liquidShader.set("camLocal", camL.x, camL.y, camL.z);
+      liquidShader.set("colA", red(col) / 255.0, green(col) / 255.0, blue(col) / 255.0);
+      liquidShader.set("colB", red(colLight) / 255.0, green(colLight) / 255.0, blue(colLight) / 255.0);
+      liquidShader.set("colC", red(colDark) / 255.0, green(colDark) / 255.0, blue(colDark) / 255.0);
+      liquidShader.set("halfSize", PORTAL_HW, PORTAL_HH);
+      liquidShader.set("ripR", ripR);
+      liquidShader.set("ripA", ripA);
+      shader(liquidShader);
+      liquid.drawGPU();
+      resetShader();
+    } else {
+      liquid.drawCPU(this, camL, age);
     }
-    endShape();
-    // swirl ribbons, slightly above the disc
-    for (int arm = 0; arm < 4; arm++) {
-      float a0 = arm * HALF_PI - age * (3.2 + id * 0.6) + spin;
-      beginShape(TRIANGLE_STRIP);
-      for (int i = 0; i <= 26; i++) {
-        float t = i / 26.0;
-        float a = a0 + t * 4.4;
-        float rad = 0.08 + t * 0.9;
-        float w = 0.025 + 0.07 * sin(PI * t);
-        fill(lerpColor(colLight, col, t), 255 * (1 - t * 0.6));
-        vertex(cos(a) * PORTAL_HW * (rad - w), sin(a) * PORTAL_HH * (rad - w), 0.5);
-        vertex(cos(a) * PORTAL_HW * (rad + w), sin(a) * PORTAL_HH * (rad + w), 0.5);
-      }
-      endShape();
-    }
-    // dark rim
-    noFill();
-    stroke(colDark);
-    strokeWeight(3);
-    beginShape();
-    for (int i = 0; i <= seg; i++) {
-      float a = TWO_PI * i / seg;
-      vertex(cos(a) * PORTAL_HW * 1.01, sin(a) * PORTAL_HH * 1.01, 0.8);
-    }
-    endShape();
-    noStroke();
+    liquid.drawRim(this, camL, age, o);
     popMatrix();
   }
 
-  // additive part: glow, rotating rings, bright energy
+  // additive part: halo, floating energy rings above the whirlpool, opening flash
   void drawGlow() {
     if (!active || open <= 0.01) return;
     float s = scaleNow(), p = pulse();
     pushMatrix();
-    applyFrame(2.4);
+    applyFrame(1.5);
     scale(s);
-    planeQuad(texGlow, PORTAL_HW * 3.0, PORTAL_HH * 2.6, 0, col, 150 * p);
-    if (age < 0.6) planeQuad(texGlow, PORTAL_HW * 6, PORTAL_HH * 5, 0, colLight, 255 * (1 - age / 0.6));
-    for (int k = 0; k < 3; k++) {
-      float sc = 1.06 + k * 0.1 + 0.03 * sin(age * 3 + k);
-      float rot = age * (k % 2 == 0 ? 1.4 : -2.1) * (1 + k * 0.3) + spin;
-      planeQuad(texRingDash, PORTAL_HW * 2 * sc, PORTAL_HH * 2 * sc, rot, lerpColor(col, colLight, k * 0.4), (200 - k * 45) * p);
-    }
-    planeQuad(texGlow, PORTAL_HW * 1.1, PORTAL_HH * 1.1, 0, colLight, 120 * p);
+    planeQuad(texGlow, PORTAL_HW * 3.2, PORTAL_HH * 2.8, 0, col, 120 * p);
+    if (age < 0.7) planeQuad(texGlow, PORTAL_HW * 7, PORTAL_HH * 6, 0, colLight, 255 * (1 - age / 0.7));
+    planeQuad(texRingDash, PORTAL_HW * 2.3, PORTAL_HH * 2.3, age * 1.3, col, 110 * p);
     popMatrix();
+    // energy beads orbiting above the whirlpool, spiralling down into the eye
+    for (int k = 0; k < 10; k++) {
+      float ph = (age * 0.35 + k / 10.0) % 1.0;           // 0 = outer edge, 1 = in the eye
+      float rr = (1 - ph) * 0.95;
+      float a = k * TWO_PI / 10 - age * 2.4 - ph * 5;
+      float zh = (8 + 40 * sin(PI * (1 - ph)) * (1 - ph)) * s;
+      PVector w = toWorld(new PVector(cos(a) * PORTAL_HW * rr * s, sin(a) * PORTAL_HH * rr * s, zh + 2));
+      float fade = sin(PI * ph);
+      glowSprite(w.x, w.y, w.z, 26, colLight, 230 * fade);
+      glowSprite(w.x, w.y, w.z, 60, col, 90 * fade);
+    }
   }
 
   // a texture quad in the portal plane, elliptically stretched, rotated in texture space
@@ -336,6 +350,7 @@ class PortalPair implements PassFilter {
     Portal to = other(from);
     waves.add(new Shockwave(PVector.add(to.c, PVector.mult(to.n, 5)), to.r, to.u, PORTAL_HH * 1.6 * strength, 0.4, to.colLight));
     parts.burst(where, int(24 * strength), 380, to.col, 0.7, 20);
+    to.splash(PVector.add(to.c, PVector.mult(to.n, 12)), strength);
   }
 
   float distance() { return PVector.dist(p[0].c, p[1].c); }

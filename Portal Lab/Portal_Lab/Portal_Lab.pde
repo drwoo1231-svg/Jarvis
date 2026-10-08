@@ -40,6 +40,7 @@ void setup() {
   textureMode(NORMAL);
   textureWrap(REPEAT);
   makeTextures();
+  setupLiquidShader();
   sfx = new Sfx();
   galaxy = new Galaxy();
   lab = new Laboratory();
