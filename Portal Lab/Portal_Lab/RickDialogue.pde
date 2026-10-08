@@ -756,10 +756,12 @@ PVector holoSpotAt(Portal o) {
 // the exit portal he's parked at is being dragged around: he gets dragged with it
 void onHoloPortalMoved(Portal sel) {
   if (rick.holoAway <= 0 || sel != rick.holoAt) return;
-  rick.holoTarget.set(holoSpotAt(sel));
+  PVector t = holoSpotAt(sel);
+  if (PVector.dist(t, rick.holoTarget) < 1) return;          // selected (or only spun), not moved
+  rick.holoTarget.set(t);
   rick.holoFlip = sel.n.y > 0.9;
   rick.holoAway = max(rick.holoAway, 4);
-  rick.event("holodrag", 60, HOLO_DRAG);
+  if (PVector.dist(sel.c, manip.oc) > 150) rick.event("holodrag", 60, HOLO_DRAG);   // a real drag, not the snap to the crosshair on select
 }
 
 // the portal gun's aim line went straight through his head

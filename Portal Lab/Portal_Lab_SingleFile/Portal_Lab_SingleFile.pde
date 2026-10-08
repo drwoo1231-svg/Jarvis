@@ -3006,6 +3006,7 @@ class PortalManipulator {
   boolean valid = true;
   String status = "";
   PVector ghost;
+  PVector lastFwd = new PVector();   // where the crosshair pointed last frame
 
   boolean active() { return sel != null; }
 
@@ -3016,6 +3017,7 @@ class PortalManipulator {
     ou.set(q.u);
     obox = q.box;
     oface = q.face;
+    lastFwd.set(cam.fwd);
     // keep its current rotation relative to the default orientation for this surface
     PVector ud = abs(q.n.y) > 0.5 ? PVector.sub(cam.fwd, PVector.mult(q.n, cam.fwd.dot(q.n))) : new PVector(0, -1, 0);
     if (ud.magSq() < 1e-4) ud = new PVector(0, 0, -1);
@@ -3029,6 +3031,9 @@ class PortalManipulator {
 
   void update(float dt) {
     if (sel == null) return;
+    // steering a selected portal is doing something, even across surfaces that reject it
+    if (PVector.dist(lastFwd, cam.fwd) > 0.001) markAction();
+    lastFwd.set(cam.fwd);
     if (kRotL) spin -= 1.7 * dt;
     if (kRotR) spin += 1.7 * dt;
     RayHit h = lab.raycast(cam.pos, cam.fwd, 20000);
@@ -4533,10 +4538,12 @@ PVector holoSpotAt(Portal o) {
 // the exit portal he's parked at is being dragged around: he gets dragged with it
 void onHoloPortalMoved(Portal sel) {
   if (rick.holoAway <= 0 || sel != rick.holoAt) return;
-  rick.holoTarget.set(holoSpotAt(sel));
+  PVector t = holoSpotAt(sel);
+  if (PVector.dist(t, rick.holoTarget) < 1) return;          // selected (or only spun), not moved
+  rick.holoTarget.set(t);
   rick.holoFlip = sel.n.y > 0.9;
   rick.holoAway = max(rick.holoAway, 4);
-  rick.event("holodrag", 60, HOLO_DRAG);
+  if (PVector.dist(sel.c, manip.oc) > 150) rick.event("holodrag", 60, HOLO_DRAG);   // a real drag, not the snap to the crosshair on select
 }
 
 // the portal gun's aim line went straight through his head
