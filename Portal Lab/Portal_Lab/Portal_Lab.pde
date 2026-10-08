@@ -23,6 +23,7 @@ PortalManipulator manip;
 ObjectLab objects;
 PortalPhysics physics;
 ResearchTerminal terminal;
+RickDialogue rick;
 HUD hud;
 Sfx sfx;
 
@@ -59,6 +60,7 @@ void setup() {
   sphereDetail(12);
   objects = new ObjectLab();
   terminal = new ResearchTerminal();
+  rick = new RickDialogue();
   cam = new PlayerCamera(0, -180, 1750);
   lastMs = millis();
 }
@@ -80,6 +82,7 @@ void draw() {
   parts.update(dt);
   terminal.update(dt);
   hud.update(dt);
+  rick.update(dt);
   if (cam.movedThisFrame) markAction();
 
   // ---- 3D
@@ -101,6 +104,7 @@ void draw() {
   objects.drawGlow();
   manip.drawGlow();
   terminal.drawGlow();
+  rick.drawHologram();
   gun.draw();
   parts.draw();
   endGlowPass();
@@ -109,6 +113,7 @@ void draw() {
   // ---- 2D overlay
   begin2D();
   hud.draw();
+  rick.draw();
   end2D();
 }
 
@@ -197,8 +202,10 @@ void markAction() {
   lastActionMs = millis();
 }
 
+// seconds since you last did something useful (or Rick last complained)
 float idleSeconds() {
-  return (millis() - lastActionMs) / 1000.0;
+  int since = max(lastActionMs, rick != null ? rick.lastIdleMs : 0);
+  return (millis() - since) / 1000.0;
 }
 
 void keyReleased() {
@@ -212,8 +219,9 @@ void setKey(boolean down) {
   if (k == 's') kS = down;
   if (k == 'd') kD = down;
   if (k == ' ') kUp = down;
-  if (k == 'q') kRotL = down;
+  if (k == 'q') kRotL = down && manip.active();
   if (k == 'r') kRotR = down && manip.active();
+  if (down && (kRotL || kRotR)) markAction();
   if (key == CODED) {
     if (keyCode == CONTROL) kDown = down;
     if (keyCode == SHIFT) kFast = down;
@@ -243,58 +251,13 @@ void mousePressed() {
 
 void mouseWheel(processing.event.MouseEvent e) {
   float c = e.getCount();
+  markAction();
   if (manip.active()) {
     manip.rotateStep(radians(15) * c);
   } else {
     objects.throwPower = constrain(objects.throwPower - c, 2, 40);
     hud.toast("THROW POWER " + nf(objects.throwPower, 0, 0) + " m/s", color(170, 255, 220));
   }
-}
-
-// ------------------------------------------------------------------ events
-void onPortalPlaced(Portal q) {
-}
-
-void onPortalFizzled(String why, RayHit h) {
-}
-
-void onCameraTeleported(Portal from) {
-}
-
-void onPortalManipulated(Portal q) {
-}
-
-void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
-}
-
-void onQuantumBounce(ThrowableObject o) {
-}
-
-void onQuantumTunnel(ThrowableObject o) {
-}
-
-void onObjectShattered(ThrowableObject o) {
-}
-
-void onObjectExploded(ThrowableObject o) {
-}
-
-void onObjectLost(ThrowableObject o) {
-}
-
-void onObjectGrabbed(ThrowableObject o) {
-}
-
-void onObjectThrown(ThrowableObject o) {
-}
-
-void onObjectDispensed(ThrowableObject o) {
-}
-
-void onLowStability() {
-}
-
-void onTerminalOpened() {
 }
 
 void mouseMoved() {
