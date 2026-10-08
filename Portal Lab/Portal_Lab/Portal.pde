@@ -378,6 +378,16 @@ class PortalPair implements PassFilter {
     return null;
   }
 
+  // a centre that sits just behind a linked portal's mouth (closer than one radius) without having crossed it
+  Portal behindMouth(PVector pt, float rad) {
+    if (!linked()) return null;
+    for (Portal q : p) {
+      PVector l = q.toLocal(pt);
+      if (l.z < 0 && l.z > -rad && q.insideOval(l.x, l.y, 1)) return q;
+    }
+    return null;
+  }
+
   // portal transform for a point, a direction
   PVector mapPoint(Portal from, PVector pt, float minOut) {
     Portal to = other(from);

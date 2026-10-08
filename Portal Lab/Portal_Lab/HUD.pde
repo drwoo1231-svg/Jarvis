@@ -290,16 +290,24 @@ class HUD {
     return fm(p.x / M) + ", " + fm(-p.y / M) + ", " + fm(p.z / M) + " m";
   }
 
+  // toasts go top-centre, in the gap between the research panel and the debug panel, so they never end up
+  // underneath Rick's speech box or the holding / portal-move panels
   void drawToasts() {
     textAlign(CENTER, CENTER);
+    float left = 14 + 300 + 16;
+    float right = debug ? width - 470 - 14 - 16 : width - left;
+    float cx = (left + right) / 2, maxW = right - left;
     for (int i = 0; i < toasts.size(); i++) {
       Toast t = toasts.get(i);
       float a = 255 * min(1, (2.6 - t.age) / 0.5) * min(1, t.age / 0.12);
       textFont(sans, 19);
+      float tw = textWidth(t.s);
+      if (tw > maxW) textSize(19 * maxW / tw);
+      float y = 34 + i * 28;
       fill(0, a * 0.6);
-      text(t.s, width / 2 + 2, height * 0.74 + i * 28 + 2);
+      text(t.s, cx + 2, y + 2);
       fill(red(t.c), green(t.c), blue(t.c), a);
-      text(t.s, width / 2, height * 0.74 + i * 28);
+      text(t.s, cx, y);
     }
   }
 

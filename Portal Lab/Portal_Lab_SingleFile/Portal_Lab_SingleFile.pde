@@ -1168,16 +1168,24 @@ class HUD {
     return fm(p.x / M) + ", " + fm(-p.y / M) + ", " + fm(p.z / M) + " m";
   }
 
+  // toasts go top-centre, in the gap between the research panel and the debug panel, so they never end up
+  // underneath Rick's speech box or the holding / portal-move panels
   void drawToasts() {
     textAlign(CENTER, CENTER);
+    float left = 14 + 300 + 16;
+    float right = debug ? width - 470 - 14 - 16 : width - left;
+    float cx = (left + right) / 2, maxW = right - left;
     for (int i = 0; i < toasts.size(); i++) {
       Toast t = toasts.get(i);
       float a = 255 * min(1, (2.6 - t.age) / 0.5) * min(1, t.age / 0.12);
       textFont(sans, 19);
+      float tw = textWidth(t.s);
+      if (tw > maxW) textSize(19 * maxW / tw);
+      float y = 34 + i * 28;
       fill(0, a * 0.6);
-      text(t.s, width / 2 + 2, height * 0.74 + i * 28 + 2);
+      text(t.s, cx + 2, y + 2);
       fill(red(t.c), green(t.c), blue(t.c), a);
-      text(t.s, width / 2, height * 0.74 + i * 28);
+      text(t.s, cx, y);
     }
   }
 
@@ -2547,6 +2555,16 @@ class PortalPair implements PassFilter {
         PVector l = q.toLocal(hit);
         if (q.insideOval(l.x, l.y, 1)) return q;
       }
+    }
+    return null;
+  }
+
+  // a centre that sits just behind a linked portal's mouth (closer than one radius) without having crossed it
+  Portal behindMouth(PVector pt, float rad) {
+    if (!linked()) return null;
+    for (Portal q : p) {
+      PVector l = q.toLocal(pt);
+      if (l.z < 0 && l.z > -rad && q.insideOval(l.x, l.y, 1)) return q;
     }
     return null;
   }
@@ -4394,6 +4412,7 @@ class ThrowableObject {
   PMatrix3D rot = new PMatrix3D();
   boolean held;
   boolean dispensed;
+  boolean expired;              // a dispensed extra that got lost: removed instead of respawned
   float spawnFx = 1;            // materialize animation 1 -> 0
   float unstable;               // glow / jitter amount
   int teleports, chain;
@@ -4402,6 +4421,7 @@ class ThrowableObject {
   float quantumTimer = random(4, 9);
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
+  float driftT;                 // seconds spent drifting slowly outside the lab
   PVector safe = new PVector();  // last position that was outside every wall
   int massRoll;                 // unstable object's displayed mass changes
 
@@ -4428,6 +4448,9 @@ class ThrowableObject {
   float speedMS() { return vel.mag() / M; }
 
   void respawn() {
+    if (objects != null && objects.heldObj == this) objects.heldObj = null;
+    stuck = 0;
+    driftT = 0;
     pos.set(home);
     safe.set(home);
     vel.set(0, 0, 0);
@@ -4496,6 +4519,14 @@ class ThrowableObject {
       }
     }
     Portal q = portals.crossed(before, pos);
+    if (q == null) {
+      // pushed just behind a portal's mouth by something else (a collision, the camera) without crossing it this step
+      Portal m = portals.behindMouth(pos, radius);
+      if (m != null) {
+        if (vel.dot(m.n) < 0) q = m;
+        else pos.add(PVector.mult(m.n, 0.5 - PVector.sub(pos, m.c).dot(m.n)));
+      }
+    }
     if (q != null) teleport(q);
 
     // integrate spin
@@ -4621,9 +4652,17 @@ class ThrowableObject {
         }
       }
     }
+    // drifting slowly out in space (zero-g things never fall far enough to count as lost)
+    boolean outside = abs(pos.x) > 4500 || abs(pos.z) > 3000 || pos.y < -3200 || pos.y > 2200;
+    if (!held && outside && vel.mag() < 150) driftT += dt;
+    else driftT = 0;
     // fell off into the universe?
-    if (pos.y > 5000 || abs(pos.x) > 12000 || abs(pos.z) > 12000 || pos.y < -9000) {
+    if (pos.y > 5000 || abs(pos.x) > 12000 || abs(pos.z) > 12000 || pos.y < -9000 || driftT > 6) {
       onObjectLost(this);
+      if (dispensed) {
+        expired = true;           // dispensed extras just go; the dispenser can always make more
+        return;
+      }
       respawn();
     }
     // re-orthonormalise the spin matrix now and then
@@ -4858,6 +4897,11 @@ class ObjectLab {
 
   void update(float dt) {
     for (ThrowableObject o : list) o.update(dt);
+    for (int i = list.size() - 1; i >= 0; i--) {
+      if (!list.get(i).expired) continue;
+      if (list.get(i) == heldObj) heldObj = null;
+      list.remove(i);
+    }
     // sub-step so fast things don't tunnel through walls
     float vmax = 0;
     for (ThrowableObject o : list) vmax = max(vmax, o.vel.mag());
@@ -4885,8 +4929,11 @@ class ObjectLab {
         PVector nrm = PVector.div(d, dist);
         float ma = a.held ? 1e4 : a.mass, mb = b.held ? 1e4 : b.mass;
         float pen = rr - dist;
-        a.pos.sub(PVector.mult(nrm, pen * mb / (ma + mb)));
-        b.pos.add(PVector.mult(nrm, pen * ma / (ma + mb)));
+        // separate them, but never shove either one into a wall: whatever is blocked goes to the other one
+        PVector ra = safeMove(a, PVector.mult(nrm, -pen * mb / (ma + mb)));
+        PVector rb = safeMove(b, PVector.mult(nrm, pen * ma / (ma + mb)));
+        if (rb.magSq() > 0) safeMove(a, PVector.mult(rb, -1));
+        if (ra.magSq() > 0) safeMove(b, PVector.mult(ra, -1));
         float rel = PVector.sub(b.vel, a.vel).dot(nrm);
         if (rel < 0) {
           float e = min(a.bounce, b.bounce);
@@ -4909,7 +4956,14 @@ class ObjectLab {
       if (d.magSq() < rr * rr && d.magSq() > 1e-4) {
         float dist = d.mag();
         d.div(dist);
-        o.pos.add(PVector.mult(d, rr - dist));
+        PVector rest = safeMove(o, PVector.mult(d, rr - dist));
+        if (rest.magSq() > 0.01) {
+          // pinned against a wall: the camera is what gives way
+          cam.pos.sub(rest);
+          float into = cam.vel.dot(d);
+          if (into > 0) cam.vel.sub(PVector.mult(d, into));
+          continue;
+        }
         // bounce off the camera like off a soft wall that may be moving
         float rel = PVector.sub(o.vel, cam.vel).dot(d);
         if (rel < 0) o.vel.sub(PVector.mult(d, rel * (1 + o.bounce)));
@@ -4917,6 +4971,19 @@ class ObjectLab {
         if (push > 0) o.vel.add(PVector.mult(d, push * 0.2 * min(1, 10 / o.mass)));
       }
     }
+  }
+
+  // move an object by delta but stop short of any wall (a linked portal's mouth lets it through);
+  // returns the part of the move that was blocked
+  PVector safeMove(ThrowableObject o, PVector delta) {
+    float L = delta.mag();
+    if (L < 1e-4) return new PVector();
+    PVector dir = PVector.div(delta, L);
+    RayHit h = lab.raycast(o.pos, dir, L + o.radius);
+    float ok = L;
+    if (h.hit() && !portals.passes(h.box, h.face, h.p, o.radius)) ok = constrain(h.t - o.radius, 0, L);
+    o.pos.add(PVector.mult(dir, ok));
+    return PVector.mult(dir, L - ok);
   }
 
   // nearest object under the crosshair (spheres, blocked by walls)
@@ -4978,7 +5045,7 @@ class ObjectLab {
     for (ThrowableObject o : list) if (o.dispensed) dispensedCount++;
     if (dispensedCount >= 12) {
       for (int i = 0; i < list.size(); i++) {
-        if (list.get(i).dispensed) {
+        if (list.get(i).dispensed && list.get(i) != heldObj) {
           list.remove(i);
           break;
         }
@@ -4990,6 +5057,7 @@ class ObjectLab {
     o.home.set(-1700, -330, 1600);
     o.vel.set(random(100, 260), -320, random(-260, -100));
     o.angVel = PVector.random3D().mult(6);
+    if (o.grav <= 0) o.vel.mult(0.25);   // zero-g / anti-grav: a gentle push, or it sails off into space
     sfx.play(sfx.spawn, 0.6, 1);
     parts.burst(o.pos, 40, 320, color(120, 255, 200), 0.7, 18);
     onObjectDispensed(o);
