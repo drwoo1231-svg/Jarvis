@@ -5,7 +5,8 @@
 class Galaxy {
   final float SKY = 45000;              // sky sphere radius (inside the far plane)
   PShape stars, dust;
-  PImage[] galTex = new PImage[3], nebTex = new PImage[3];
+  ArrayList<PVector> brightStars = new ArrayList<PVector>();
+  PImage[] galTex = new PImage[3], nebTex = new PImage[6];
   ArrayList<SkyBill> bills = new ArrayList<SkyBill>();
   PShape[] planet = new PShape[3];
   PVector[] planetDir = new PVector[3];
@@ -19,17 +20,31 @@ class Galaxy {
     sunDir.normalize();
     buildStars();
     for (int i = 0; i < 3; i++) galTex[i] = makeGalaxyTex(256, i);
-    for (int i = 0; i < 3; i++) nebTex[i] = makeNebulaTex(256, i);
-    int[][] nebCol = { { 120, 40, 170 }, { 30, 110, 170 }, { 170, 40, 90 }, { 40, 150, 120 }, { 90, 60, 200 }, { 200, 90, 40 } };
-    for (int i = 0; i < 9; i++) {
+    int[][][] pal = {
+      { { 140, 40, 200 }, { 255, 90, 160 } }, { { 30, 90, 200 }, { 80, 230, 255 } }, { { 200, 50, 80 }, { 255, 170, 90 } },
+      { { 20, 140, 120 }, { 120, 255, 200 } }, { { 90, 50, 220 }, { 170, 140, 255 } }, { { 180, 70, 30 }, { 255, 220, 140 } }
+    };
+    for (int i = 0; i < 6; i++) nebTex[i] = makeNebulaTex(256, i, pal[i][0], pal[i][1]);
+    randomSeed(5);
+    for (int i = 0; i < 12; i++) {
       PVector d = PVector.random3D();
-      int[] c = nebCol[i % nebCol.length];
-      bills.add(new SkyBill(nebTex[i % 3], d, random(22000, 40000), random(TWO_PI), color(c[0], c[1], c[2]), random(150, 230)));
+      bills.add(new SkyBill(nebTex[i % 6], d, random(26000, 52000), random(TWO_PI), color(255), random(170, 255)));
     }
-    for (int i = 0; i < 7; i++) {
+    // the milky band: a chain of soft clouds along a great circle
+    PVector ba = new PVector(1, 0.35, 0.2).normalize(), bb = ba.cross(new PVector(0, 0, 1)).normalize();
+    for (int i = 0; i < 16; i++) {
+      float t = TWO_PI * i / 16 + random(-0.1, 0.1);
+      PVector d = PVector.add(PVector.mult(ba, cos(t)), PVector.mult(bb, sin(t)));
+      bills.add(new SkyBill(nebTex[i % 2 == 0 ? 1 : 4], d, random(20000, 30000), random(TWO_PI), color(200, 210, 255), random(90, 140)));
+    }
+    for (int i = 0; i < 10; i++) {
       PVector d = PVector.random3D();
-      bills.add(new SkyBill(galTex[i % 3], d, random(3000, 8000), random(TWO_PI), color(255), random(170, 240)));
+      bills.add(new SkyBill(galTex[i % 3], d, random(4500, 11000), random(TWO_PI), color(255), random(190, 255)));
     }
+    // one big spiral galaxy hanging near the horizon
+    bills.add(new SkyBill(galTex[0], new PVector(-0.2, 0.05, 1).normalize(), 26000, 0.5, color(255), 255));
+    for (int i = 0; i < 40; i++) brightStars.add(PVector.random3D());
+    randomSeed(millis());
     planetDir[0] = new PVector(-0.75, -0.18, -0.65).normalize();
     planetDir[1] = new PVector(0.82, 0.25, 0.5).normalize();
     planetDir[2] = new PVector(0.3, -0.55, 0.78).normalize();
@@ -94,6 +109,13 @@ class Galaxy {
     hint(DISABLE_DEPTH_MASK);
     blendMode(ADD);
     for (SkyBill b : bills) b.draw(SKY);
+    // a few bright stars with diffraction spikes
+    for (int i = 0; i < brightStars.size(); i++) {
+      PVector p = PVector.mult(brightStars.get(i), SKY * 0.97);
+      float tw = 0.75 + 0.25 * sin(T * (1 + i % 5) + i);
+      skyGlow(p, 900 + (i % 4) * 300, i % 3 == 0 ? color(170, 200, 255) : color(255, 235, 210), 230 * tw);
+      skySpikes(p, 2600 + (i % 3) * 900, 160 * tw);
+    }
     // the nearby star that lights the lab
     PVector s = PVector.mult(sunDir, SKY * 0.98);
     skyGlow(s, 9000, color(255, 220, 170), 255);
@@ -150,6 +172,20 @@ class Galaxy {
     noTint();
   }
 
+  // thin cross-shaped flare through a bright star
+  void skySpikes(PVector p, float len, float a) {
+    PVector d = p.copy().normalize();
+    PVector ax = d.cross(new PVector(0, 1, 0));
+    if (ax.magSq() < 0.01) ax = d.cross(new PVector(1, 0, 0));
+    ax.normalize();
+    PVector ay = d.cross(ax).normalize();
+    stroke(220, 235, 255, a);
+    strokeWeight(1.2);
+    line(p.x - ax.x * len, p.y - ax.y * len, p.z - ax.z * len, p.x + ax.x * len, p.y + ax.y * len, p.z + ax.z * len);
+    line(p.x - ay.x * len, p.y - ay.y * len, p.z - ay.z * len, p.x + ay.x * len, p.y + ay.y * len, p.z + ay.z * len);
+    noStroke();
+  }
+
   // asteroids (world space, lit)
   void drawWorld() {
     for (Rock r : rocks) r.draw();
@@ -196,22 +232,27 @@ class Galaxy {
     return img;
   }
 
-  PImage makeNebulaTex(int s, int seed) {
-    noiseSeed(7 + seed);
+  // colourful wispy cloud: domain-warped noise, two-colour gradient, soft round edge
+  PImage makeNebulaTex(int s, int seed, int[] ca, int[] cb) {
+    noiseSeed(7 + seed * 13);
     PImage img = createImage(s, s, RGB);
     img.loadPixels();
     for (int y = 0; y < s; y++) {
       for (int x = 0; x < s; x++) {
         float dx = (x - s / 2) / (s * 0.5), dy = (y - s / 2) / (s * 0.5);
         float fall = constrain(1 - sqrt(dx * dx + dy * dy), 0, 1);
-        float n = 0, amp = 0.55, f = 0.012;
-        for (int o = 0; o < 4; o++) {
-          n += noise(x * f, y * f, seed * 3.1) * amp;
+        float wx = x + 60 * (noise(x * 0.01, y * 0.01, seed) - 0.5);
+        float wy = y + 60 * (noise(x * 0.01 + 7, y * 0.01, seed) - 0.5);
+        float n = 0, amp = 0.55, f = 0.011;
+        for (int o = 0; o < 5; o++) {
+          n += noise(wx * f, wy * f, seed * 3.1 + o) * amp;
           amp *= 0.5;
-          f *= 2.1;
+          f *= 2.05;
         }
-        float v = constrain((n - 0.38) * 2.4, 0, 1) * fall * fall;
-        img.pixels[y * s + x] = color(255 * v);
+        float v = constrain((n - 0.33) * 2.6, 0, 1) * pow(fall, 1.4);
+        float k = constrain((n - 0.4) * 3, 0, 1);
+        float r = lerp(ca[0], cb[0], k), g = lerp(ca[1], cb[1], k), b = lerp(ca[2], cb[2], k);
+        img.pixels[y * s + x] = color(r * v, g * v, b * v);
       }
     }
     img.updatePixels();
