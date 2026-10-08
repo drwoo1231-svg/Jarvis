@@ -17,6 +17,10 @@ class PlayerCamera {
   com.jogamp.newt.opengl.GLWindow win;
   boolean movedThisFrame;
   float teleportFlash;
+  boolean awaitCentre;                    // right after capture: skip stale events queued before the warp landed
+  int captureMs;
+  int askMs;                              // when a re-centre was requested and hasn't been seen to land yet
+  boolean warpBroken;                     // the OS ignores warpPointer (macOS without Accessibility permission)
 
   PlayerCamera(float x, float y, float z) {
     pos.set(x, y, z);
@@ -64,6 +68,7 @@ class PlayerCamera {
     if (kLookR) yaw += kl;
     if (kLookU) pitch += kl;
     if (kLookD) pitch -= kl;
+    edgeTurn(dt);
     updateBasis();
 
     PVector wish = new PVector();
@@ -74,7 +79,7 @@ class PlayerCamera {
     if (kD) wish.add(flatR);
     if (kA) wish.sub(flatR);
     if (kUp) wish.y -= 1;
-    if (kDown) wish.y += 1;
+    if (kDown || kDown2) wish.y += 1;
     movedThisFrame = wish.magSq() > 0;
     if (movedThisFrame) wish.normalize();
     float speed = (kFast ? 19 : 6.5) * M;
@@ -120,16 +125,20 @@ class PlayerCamera {
     resetRef = true;
     if (on) {
       noCursor();
+      awaitCentre = true;
+      captureMs = millis();
+      askMs = 0;
+      warpBroken = false;                 // give the warp another chance on every capture
       if (win != null) {
         try {
           win.confinePointer(true);
-          win.warpPointer(width / 2, height / 2);
         } catch (Exception e) {
           // some window systems refuse - arrow keys still look around
         }
       }
+      recentre();
     } else {
-      cursor(ARROW);
+      cursor();                           // the system arrow (cursor(ARROW) swaps in a low-res bitmap)
       if (win != null) {
         try {
           win.confinePointer(false);
@@ -139,8 +148,29 @@ class PlayerCamera {
     }
   }
 
+  // warpPointer works in surface pixels, which differ from sketch units at pixelDensity 2
+  void recentre() {
+    if (win == null) return;
+    try {
+      win.warpPointer(win.getSurfaceWidth() / 2, win.getSurfaceHeight() / 2);
+    } catch (Exception e) {
+    }
+  }
+
   void mouseMovedTo(float x, float y) {
     if (!captured) return;
+    if (askMs > 0 && abs(x - width / 2) < width * 0.1 && abs(y - height / 2) < height * 0.1) {
+      // the re-centre landed; one landing right on the centre also proves a "broken" warp works after all
+      if (warpBroken && abs(x - width / 2) <= 3 && abs(y - height / 2) <= 3 && millis() - askMs < 150) warpBroken = false;
+      askMs = 0;
+    }
+    if (awaitCentre) {
+      // events queued before the capture warp landed still carry the click position - wait for the centre
+      boolean atCentre = abs(x - width / 2) <= 3 && abs(y - height / 2) <= 3;
+      if (!atCentre && millis() - captureMs < 250) return;
+      awaitCentre = false;
+      resetRef = true;
+    }
     if (resetRef) {
       lastMX = x;
       lastMY = y;
@@ -156,12 +186,32 @@ class PlayerCamera {
     pitch -= dy * sensitivity;
     updateBasis();
     // only re-centre when the hidden pointer drifts near the edge
-    if (win != null && (x < width * 0.25 || x > width * 0.75 || y < height * 0.25 || y > height * 0.75)) {
-      try {
-        win.warpPointer(width / 2, height / 2);
-      } catch (Exception e) {
-      }
+    if (win != null && !warpBroken && nearEdge(x, y)) {
+      recentre();
+      if (askMs == 0) askMs = max(1, millis());   // a working warp lands (and reports back) within a frame or two
     }
+  }
+
+  // fallback when the pointer can't be re-centred: keep turning while it sits near a window edge
+  boolean nearEdge(float x, float y) {
+    return x < width * 0.25 || x > width * 0.75 || y < height * 0.25 || y > height * 0.75;
+  }
+
+  void edgeTurn(float dt) {
+    if (!captured || win == null) return;
+    boolean edge = nearEdge(mouseX, mouseY);
+    // asked for a re-centre long ago and the pointer is still out at the edge: the OS ignores the warp
+    if (!warpBroken && askMs > 0 && millis() - askMs > 400 && edge) warpBroken = true;
+    // keep checking now and then, in case it starts working
+    if (warpBroken && edge && millis() - askMs > 600) {
+      recentre();
+      askMs = max(1, millis());
+    }
+    if (!warpBroken) return;
+    float ex = (mouseX - width * 0.5) / (width * 0.5), ey = (mouseY - height * 0.5) / (height * 0.5);
+    float sx = constrain((abs(ex) - 0.8) / 0.2, 0, 1), sy = constrain((abs(ey) - 0.8) / 0.2, 0, 1);
+    yaw += Math.signum(ex) * sx * 2.4 * dt;
+    pitch -= Math.signum(ey) * sy * 1.6 * dt;
   }
 
   void drawCrosshair() {

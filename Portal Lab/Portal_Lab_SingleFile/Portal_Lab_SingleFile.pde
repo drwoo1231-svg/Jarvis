@@ -43,7 +43,7 @@ float dt = 1 / 60.0;
 int lastMs;
 
 // held keys
-boolean kW, kA, kS, kD, kUp, kDown, kFast, kLookL, kLookR, kLookU, kLookD, kRotL, kRotR;
+boolean kW, kA, kS, kD, kUp, kDown, kDown2, kFast, kLookL, kLookR, kLookU, kLookD, kRotL, kRotR;
 
 void settings() {
   size(1280, 720, P3D);
@@ -157,7 +157,7 @@ void keyPressed() {
     return;
   }
   setKey(true);
-  char k = Character.toLowerCase(key);
+  char k = plainKey();
   if (k == 'e') interact();
   if (key == TAB) {
     hud.terminalOpen = !hud.terminalOpen;
@@ -221,13 +221,24 @@ void keyReleased() {
   setKey(false);
 }
 
+// the key as a plain lower-case letter. While CTRL (our "down" key) is held, Windows and Linux deliver
+// letters as control characters / CODED keys - but keyCode is still the plain key
+char plainKey() {
+  if (key == CODED || key < 32) {
+    if (keyCode >= 'A' && keyCode <= 'Z') return (char) (keyCode + ('a' - 'A'));
+    if (keyCode == ' ') return ' ';
+  }
+  return Character.toLowerCase(key);
+}
+
 void setKey(boolean down) {
-  char k = Character.toLowerCase(key);
+  char k = plainKey();
   if (k == 'w') kW = down;
   if (k == 'a') kA = down;
   if (k == 's') kS = down;
   if (k == 'd') kD = down;
   if (k == ' ') kUp = down;
+  if (k == 'c') kDown2 = down;                // C descends too (CTRL clashes with macOS shortcuts)
   if (k == 'q') kRotL = down && manip.active();
   if (k == 'r') kRotR = down && manip.active();
   if (down && (kRotL || kRotR)) markAction();
@@ -247,6 +258,7 @@ void mousePressed() {
     return;
   }
   markAction();
+  mouseButton = realButton();
   if (mouseButton == LEFT) {
     if (manip.active()) manip.confirm();
     else if (objects.heldObj != null) objects.throwHeld();
@@ -258,8 +270,23 @@ void mousePressed() {
   }
 }
 
+// the physical button: on macOS Processing turns CTRL+left-click into RIGHT, but CTRL is our "down" key
+int realButton() {
+  Object n = mouseEvent != null ? mouseEvent.getNative() : null;
+  if (n instanceof com.jogamp.newt.event.MouseEvent) {
+    short b = ((com.jogamp.newt.event.MouseEvent) n).getButton();
+    if (b == com.jogamp.newt.event.MouseEvent.BUTTON1) return LEFT;
+    if (b == com.jogamp.newt.event.MouseEvent.BUTTON3) return RIGHT;
+  }
+  return mouseButton;
+}
+
+int lastWheelMs;
 void mouseWheel(processing.event.MouseEvent e) {
-  float c = e.getCount();
+  // macOS trackpads send pixel deltas (often 5-50 per event, many per swipe): one step per notch / flick
+  float c = Math.signum(e.getCount());
+  if (c == 0 || millis() - lastWheelMs < 70) return;
+  lastWheelMs = millis();
   markAction();
   if (manip.active()) {
     manip.rotateStep(radians(15) * c);
@@ -278,7 +305,7 @@ void mouseDragged() {
 }
 
 void focusLost() {
-  kW = kA = kS = kD = kUp = kDown = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
+  kW = kA = kS = kD = kUp = kDown = kDown2 = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
   if (cam != null) cam.capture(false);
 }
 
@@ -997,6 +1024,12 @@ class HUD {
       textAlign(CENTER, CENTER);
       fill(170, 255, 200, 150 + 100 * sin(T * 4));
       text("CLICK TO CONTROL THE CAMERA   (ESC RELEASES THE MOUSE)", width / 2, height - 22);
+    } else if (cam.warpBroken) {
+      textFont(monoSmall, 13);
+      textAlign(CENTER, CENTER);
+      fill(255, 220, 120, 210);
+      text("MOUSE CAN'T BE RE-CENTRED: push it to the window edge to keep turning (or use the arrow keys)", width / 2, height - 30);
+      text(platform == MACOS ? "macOS fix: System Settings > Privacy & Security > Accessibility > allow Processing, then restart the sketch" : "", width / 2, height - 13);
     }
     cam.drawCrosshair();
   }
@@ -1120,9 +1153,9 @@ class HUD {
 
   void drawControls() {
     String[][] rows = {
-      { "WASD", "MOVE" }, { "SPACE", "UP" }, { "CTRL", "DOWN" }, { "SHIFT", "SPEED BOOST" }, { "MOUSE", "LOOK" },
+      { "WASD", "MOVE" }, { "SPACE", "UP" }, { "C / CTRL", "DOWN" }, { "SHIFT", "SPEED BOOST" }, { "MOUSE", "LOOK" },
       { "M1", "FIRE PORTAL / THROW" }, { "E", "INTERACT / GRAB / SELECT" }, { "R", "RELEASE OBJECT" }, { "Q/R", "ROTATE PORTAL" },
-      { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
+      { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3 / `", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
     };
     float w = 270, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
     holoBox(x, y, w, h);
@@ -2009,6 +2042,10 @@ class PlayerCamera {
   com.jogamp.newt.opengl.GLWindow win;
   boolean movedThisFrame;
   float teleportFlash;
+  boolean awaitCentre;                    // right after capture: skip stale events queued before the warp landed
+  int captureMs;
+  int askMs;                              // when a re-centre was requested and hasn't been seen to land yet
+  boolean warpBroken;                     // the OS ignores warpPointer (macOS without Accessibility permission)
 
   PlayerCamera(float x, float y, float z) {
     pos.set(x, y, z);
@@ -2056,6 +2093,7 @@ class PlayerCamera {
     if (kLookR) yaw += kl;
     if (kLookU) pitch += kl;
     if (kLookD) pitch -= kl;
+    edgeTurn(dt);
     updateBasis();
 
     PVector wish = new PVector();
@@ -2066,7 +2104,7 @@ class PlayerCamera {
     if (kD) wish.add(flatR);
     if (kA) wish.sub(flatR);
     if (kUp) wish.y -= 1;
-    if (kDown) wish.y += 1;
+    if (kDown || kDown2) wish.y += 1;
     movedThisFrame = wish.magSq() > 0;
     if (movedThisFrame) wish.normalize();
     float speed = (kFast ? 19 : 6.5) * M;
@@ -2112,16 +2150,20 @@ class PlayerCamera {
     resetRef = true;
     if (on) {
       noCursor();
+      awaitCentre = true;
+      captureMs = millis();
+      askMs = 0;
+      warpBroken = false;                 // give the warp another chance on every capture
       if (win != null) {
         try {
           win.confinePointer(true);
-          win.warpPointer(width / 2, height / 2);
         } catch (Exception e) {
           // some window systems refuse - arrow keys still look around
         }
       }
+      recentre();
     } else {
-      cursor(ARROW);
+      cursor();                           // the system arrow (cursor(ARROW) swaps in a low-res bitmap)
       if (win != null) {
         try {
           win.confinePointer(false);
@@ -2131,8 +2173,29 @@ class PlayerCamera {
     }
   }
 
+  // warpPointer works in surface pixels, which differ from sketch units at pixelDensity 2
+  void recentre() {
+    if (win == null) return;
+    try {
+      win.warpPointer(win.getSurfaceWidth() / 2, win.getSurfaceHeight() / 2);
+    } catch (Exception e) {
+    }
+  }
+
   void mouseMovedTo(float x, float y) {
     if (!captured) return;
+    if (askMs > 0 && abs(x - width / 2) < width * 0.1 && abs(y - height / 2) < height * 0.1) {
+      // the re-centre landed; one landing right on the centre also proves a "broken" warp works after all
+      if (warpBroken && abs(x - width / 2) <= 3 && abs(y - height / 2) <= 3 && millis() - askMs < 150) warpBroken = false;
+      askMs = 0;
+    }
+    if (awaitCentre) {
+      // events queued before the capture warp landed still carry the click position - wait for the centre
+      boolean atCentre = abs(x - width / 2) <= 3 && abs(y - height / 2) <= 3;
+      if (!atCentre && millis() - captureMs < 250) return;
+      awaitCentre = false;
+      resetRef = true;
+    }
     if (resetRef) {
       lastMX = x;
       lastMY = y;
@@ -2148,12 +2211,32 @@ class PlayerCamera {
     pitch -= dy * sensitivity;
     updateBasis();
     // only re-centre when the hidden pointer drifts near the edge
-    if (win != null && (x < width * 0.25 || x > width * 0.75 || y < height * 0.25 || y > height * 0.75)) {
-      try {
-        win.warpPointer(width / 2, height / 2);
-      } catch (Exception e) {
-      }
+    if (win != null && !warpBroken && nearEdge(x, y)) {
+      recentre();
+      if (askMs == 0) askMs = max(1, millis());   // a working warp lands (and reports back) within a frame or two
     }
+  }
+
+  // fallback when the pointer can't be re-centred: keep turning while it sits near a window edge
+  boolean nearEdge(float x, float y) {
+    return x < width * 0.25 || x > width * 0.75 || y < height * 0.25 || y > height * 0.75;
+  }
+
+  void edgeTurn(float dt) {
+    if (!captured || win == null) return;
+    boolean edge = nearEdge(mouseX, mouseY);
+    // asked for a re-centre long ago and the pointer is still out at the edge: the OS ignores the warp
+    if (!warpBroken && askMs > 0 && millis() - askMs > 400 && edge) warpBroken = true;
+    // keep checking now and then, in case it starts working
+    if (warpBroken && edge && millis() - askMs > 600) {
+      recentre();
+      askMs = max(1, millis());
+    }
+    if (!warpBroken) return;
+    float ex = (mouseX - width * 0.5) / (width * 0.5), ey = (mouseY - height * 0.5) / (height * 0.5);
+    float sx = constrain((abs(ex) - 0.8) / 0.2, 0, 1), sy = constrain((abs(ey) - 0.8) / 0.2, 0, 1);
+    yaw += Math.signum(ex) * sx * 2.4 * dt;
+    pitch -= Math.signum(ey) * sy * 1.6 * dt;
   }
 
   void drawCrosshair() {

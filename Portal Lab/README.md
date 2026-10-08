@@ -29,7 +29,7 @@ without quitting.
 | Key | Action |
 |---|---|
 | **W A S D** | move |
-| **SPACE / CTRL** | up / down |
+| **SPACE** / **C** or **CTRL** | up / down (CTRL works while moving and clicking too, even on a Mac) |
 | **SHIFT** | speed boost |
 | **MOUSE** | look (arrow keys also look around) |
 | **M1 (left click)** | fire a portal (shots alternate A → B → A …) / throw the held object. The portal gun is a small floating aiming device, not a weapon in your hands. |
@@ -37,7 +37,7 @@ without quitting.
 | **R** / right click | release the held object |
 | **Q / R** (or wheel) | rotate the selected portal |
 | **Left click / right click** | confirm / cancel a portal move |
-| **Wheel** | throw power (2–40 m/s) |
+| **Wheel** | throw power (2–40 m/s); one step per notch or trackpad swipe |
 | **TAB** | portal research computer, full screen |
 | **F3** (or **`**) | debug panel (on a Mac laptop you may need **fn + F3**) |
 | **H** | hide / show the controls panel |
@@ -147,6 +147,13 @@ If you go **20 seconds** without doing anything useful, Rick says:
 
 - **Mouse look doesn't turn:** click inside the window first. If your system
   blocks pointer capture, the arrow keys look around too.
+- **Mac: the view stops turning after about 100°**, and a yellow hint appears
+  at the bottom. macOS is blocking the sketch from re-centring the hidden mouse
+  pointer. Allow **Processing** in *System Settings → Privacy & Security →
+  Accessibility*, then restart the sketch. Until then, pushing the mouse
+  against the window edge keeps turning.
+- **Mac: F3 opens Mission Control** instead of the debug panel: use **fn + F3**
+  or the **`** key.
 - **The portal looks flatter than in the screenshots:** your GPU couldn't
   compile the liquid-portal shader. The console says so, and the CPU fallback is
   used instead.

@@ -34,7 +34,7 @@ float dt = 1 / 60.0;
 int lastMs;
 
 // held keys
-boolean kW, kA, kS, kD, kUp, kDown, kFast, kLookL, kLookR, kLookU, kLookD, kRotL, kRotR;
+boolean kW, kA, kS, kD, kUp, kDown, kDown2, kFast, kLookL, kLookR, kLookU, kLookD, kRotL, kRotR;
 
 void settings() {
   size(1280, 720, P3D);
@@ -148,7 +148,7 @@ void keyPressed() {
     return;
   }
   setKey(true);
-  char k = Character.toLowerCase(key);
+  char k = plainKey();
   if (k == 'e') interact();
   if (key == TAB) {
     hud.terminalOpen = !hud.terminalOpen;
@@ -212,13 +212,24 @@ void keyReleased() {
   setKey(false);
 }
 
+// the key as a plain lower-case letter. While CTRL (our "down" key) is held, Windows and Linux deliver
+// letters as control characters / CODED keys - but keyCode is still the plain key
+char plainKey() {
+  if (key == CODED || key < 32) {
+    if (keyCode >= 'A' && keyCode <= 'Z') return (char) (keyCode + ('a' - 'A'));
+    if (keyCode == ' ') return ' ';
+  }
+  return Character.toLowerCase(key);
+}
+
 void setKey(boolean down) {
-  char k = Character.toLowerCase(key);
+  char k = plainKey();
   if (k == 'w') kW = down;
   if (k == 'a') kA = down;
   if (k == 's') kS = down;
   if (k == 'd') kD = down;
   if (k == ' ') kUp = down;
+  if (k == 'c') kDown2 = down;                // C descends too (CTRL clashes with macOS shortcuts)
   if (k == 'q') kRotL = down && manip.active();
   if (k == 'r') kRotR = down && manip.active();
   if (down && (kRotL || kRotR)) markAction();
@@ -238,6 +249,7 @@ void mousePressed() {
     return;
   }
   markAction();
+  mouseButton = realButton();
   if (mouseButton == LEFT) {
     if (manip.active()) manip.confirm();
     else if (objects.heldObj != null) objects.throwHeld();
@@ -249,8 +261,23 @@ void mousePressed() {
   }
 }
 
+// the physical button: on macOS Processing turns CTRL+left-click into RIGHT, but CTRL is our "down" key
+int realButton() {
+  Object n = mouseEvent != null ? mouseEvent.getNative() : null;
+  if (n instanceof com.jogamp.newt.event.MouseEvent) {
+    short b = ((com.jogamp.newt.event.MouseEvent) n).getButton();
+    if (b == com.jogamp.newt.event.MouseEvent.BUTTON1) return LEFT;
+    if (b == com.jogamp.newt.event.MouseEvent.BUTTON3) return RIGHT;
+  }
+  return mouseButton;
+}
+
+int lastWheelMs;
 void mouseWheel(processing.event.MouseEvent e) {
-  float c = e.getCount();
+  // macOS trackpads send pixel deltas (often 5-50 per event, many per swipe): one step per notch / flick
+  float c = Math.signum(e.getCount());
+  if (c == 0 || millis() - lastWheelMs < 70) return;
+  lastWheelMs = millis();
   markAction();
   if (manip.active()) {
     manip.rotateStep(radians(15) * c);
@@ -269,6 +296,6 @@ void mouseDragged() {
 }
 
 void focusLost() {
-  kW = kA = kS = kD = kUp = kDown = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
+  kW = kA = kS = kD = kUp = kDown = kDown2 = kFast = kLookL = kLookR = kLookU = kLookD = kRotL = kRotR = false;
   if (cam != null) cam.capture(false);
 }

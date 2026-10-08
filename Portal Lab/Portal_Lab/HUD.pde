@@ -119,6 +119,12 @@ class HUD {
       textAlign(CENTER, CENTER);
       fill(170, 255, 200, 150 + 100 * sin(T * 4));
       text("CLICK TO CONTROL THE CAMERA   (ESC RELEASES THE MOUSE)", width / 2, height - 22);
+    } else if (cam.warpBroken) {
+      textFont(monoSmall, 13);
+      textAlign(CENTER, CENTER);
+      fill(255, 220, 120, 210);
+      text("MOUSE CAN'T BE RE-CENTRED: push it to the window edge to keep turning (or use the arrow keys)", width / 2, height - 30);
+      text(platform == MACOS ? "macOS fix: System Settings > Privacy & Security > Accessibility > allow Processing, then restart the sketch" : "", width / 2, height - 13);
     }
     cam.drawCrosshair();
   }
@@ -242,9 +248,9 @@ class HUD {
 
   void drawControls() {
     String[][] rows = {
-      { "WASD", "MOVE" }, { "SPACE", "UP" }, { "CTRL", "DOWN" }, { "SHIFT", "SPEED BOOST" }, { "MOUSE", "LOOK" },
+      { "WASD", "MOVE" }, { "SPACE", "UP" }, { "C / CTRL", "DOWN" }, { "SHIFT", "SPEED BOOST" }, { "MOUSE", "LOOK" },
       { "M1", "FIRE PORTAL / THROW" }, { "E", "INTERACT / GRAB / SELECT" }, { "R", "RELEASE OBJECT" }, { "Q/R", "ROTATE PORTAL" },
-      { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
+      { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3 / `", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
     };
     float w = 270, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
     holoBox(x, y, w, h);
