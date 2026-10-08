@@ -10,6 +10,8 @@ class PortalGun {
   int shotsFired;
   String lastResult = "";
   final float SPEED = 7500;     // projectile speed, units/s (75 m/s)
+  float device;                 // 0..1 visibility of the floating aiming device
+  float recoil;
 
   void fire() {
     if (cooldown > 0) return;
@@ -21,6 +23,8 @@ class PortalGun {
     PVector target = h.hit() ? h.p : PVector.add(cam.pos, PVector.mult(cam.fwd, 9000));
     shots.add(new Shot(muzzle, target, h, next, cam.fwd.copy()));
     next = 1 - next;
+    device = 1.6;
+    recoil = 1;
     parts.burst(muzzle, 10, 160, portals.p[shots.get(shots.size() - 1).which].col, 0.25, 10);
     sfx.play(sfx.fire, 0.6, random(0.95, 1.05));
   }
@@ -32,6 +36,9 @@ class PortalGun {
 
   void update(float dt) {
     cooldown -= dt;
+    if (manip.active()) device = max(device, 1);
+    device = max(0, device - dt);
+    recoil *= exp(-dt * 9);
     for (int i = shots.size() - 1; i >= 0; i--) {
       Shot s = shots.get(i);
       s.update(dt);
@@ -41,6 +48,36 @@ class PortalGun {
 
   void draw() {
     for (Shot s : shots) s.draw();
+    drawDevice();
+  }
+
+  // the portal gun as a small floating emitter that fades in when you use it
+  void drawDevice() {
+    float a = min(1, device);
+    if (a <= 0.01) return;
+    int c = manip.active() ? manip.sel.colLight : portals.p[next].col;
+    PVector p = PVector.add(cam.pos, PVector.mult(cam.fwd, 58 - recoil * 6));
+    p.add(PVector.mult(cam.right, 21 + sin(T * 2) * 0.6)).sub(PVector.mult(cam.up, 14 + cos(T * 2.3) * 0.6));
+    glowSprite(p.x, p.y, p.z, 16 + recoil * 10, c, 230 * a);
+    glowSprite(p.x, p.y, p.z, 5, color(255), 255 * a);
+    // two little rings spinning round the emitter
+    noFill();
+    strokeWeight(1.3);
+    for (int k = 0; k < 2; k++) {
+      stroke(c, 200 * a);
+      beginShape();
+      for (int i = 0; i <= 24; i++) {
+        float t = TWO_PI * i / 24;
+        float sp = T * (k == 0 ? 5 : -4);
+        PVector ax = k == 0 ? cam.right : cam.up;
+        PVector bx = cam.fwd;
+        float rx = cos(t) * 5.5, ry = sin(t) * 5.5;
+        PVector q = PVector.add(p, PVector.mult(ax, rx * cos(sp))).add(PVector.mult(bx, rx * sin(sp))).add(PVector.mult(k == 0 ? cam.up : cam.right, ry));
+        vertex(q.x, q.y, q.z);
+      }
+      endShape();
+    }
+    noStroke();
   }
 
   class Shot {

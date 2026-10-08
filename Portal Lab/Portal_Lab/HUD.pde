@@ -311,7 +311,7 @@ class HUD {
     imageMode(CENTER);
     blendMode(ADD);
     tint(255, 255 * k);
-    image(terminal.g, width / 2, height / 2 - 10, w, h);
+    image(terminal.img, width / 2, height / 2 - 10, w, h);
     noTint();
     blendMode(BLEND);
     imageMode(CORNER);

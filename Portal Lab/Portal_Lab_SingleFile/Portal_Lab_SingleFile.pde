@@ -1148,7 +1148,7 @@ class HUD {
     imageMode(CENTER);
     blendMode(ADD);
     tint(255, 255 * k);
-    image(terminal.g, width / 2, height / 2 - 10, w, h);
+    image(terminal.img, width / 2, height / 2 - 10, w, h);
     noTint();
     blendMode(BLEND);
     imageMode(CORNER);
@@ -2072,7 +2072,8 @@ class PlayerCamera {
 
   void drawCrosshair() {
     float cx = width / 2, cy = height / 2;
-    stroke(170, 255, 200, 200);
+    int c = portals.p[gun.next].colLight;
+    stroke(red(c), green(c), blue(c), 210);
     strokeWeight(1.5);
     noFill();
     ellipse(cx, cy, 14, 14);
@@ -2081,6 +2082,10 @@ class PlayerCamera {
     line(cx, cy - 12, cx, cy - 5);
     line(cx, cy + 5, cx, cy + 12);
     noStroke();
+    fill(red(c), green(c), blue(c), 200);
+    textSize(11);
+    textAlign(LEFT, BOTTOM);
+    text(gun.next == 0 ? "A" : "B", cx + 9, cy - 6);
   }
 }
 
@@ -2521,6 +2526,8 @@ class PortalGun {
   int shotsFired;
   String lastResult = "";
   final float SPEED = 7500;     // projectile speed, units/s (75 m/s)
+  float device;                 // 0..1 visibility of the floating aiming device
+  float recoil;
 
   void fire() {
     if (cooldown > 0) return;
@@ -2532,6 +2539,8 @@ class PortalGun {
     PVector target = h.hit() ? h.p : PVector.add(cam.pos, PVector.mult(cam.fwd, 9000));
     shots.add(new Shot(muzzle, target, h, next, cam.fwd.copy()));
     next = 1 - next;
+    device = 1.6;
+    recoil = 1;
     parts.burst(muzzle, 10, 160, portals.p[shots.get(shots.size() - 1).which].col, 0.25, 10);
     sfx.play(sfx.fire, 0.6, random(0.95, 1.05));
   }
@@ -2543,6 +2552,9 @@ class PortalGun {
 
   void update(float dt) {
     cooldown -= dt;
+    if (manip.active()) device = max(device, 1);
+    device = max(0, device - dt);
+    recoil *= exp(-dt * 9);
     for (int i = shots.size() - 1; i >= 0; i--) {
       Shot s = shots.get(i);
       s.update(dt);
@@ -2552,6 +2564,36 @@ class PortalGun {
 
   void draw() {
     for (Shot s : shots) s.draw();
+    drawDevice();
+  }
+
+  // the portal gun as a small floating emitter that fades in when you use it
+  void drawDevice() {
+    float a = min(1, device);
+    if (a <= 0.01) return;
+    int c = manip.active() ? manip.sel.colLight : portals.p[next].col;
+    PVector p = PVector.add(cam.pos, PVector.mult(cam.fwd, 58 - recoil * 6));
+    p.add(PVector.mult(cam.right, 21 + sin(T * 2) * 0.6)).sub(PVector.mult(cam.up, 14 + cos(T * 2.3) * 0.6));
+    glowSprite(p.x, p.y, p.z, 16 + recoil * 10, c, 230 * a);
+    glowSprite(p.x, p.y, p.z, 5, color(255), 255 * a);
+    // two little rings spinning round the emitter
+    noFill();
+    strokeWeight(1.3);
+    for (int k = 0; k < 2; k++) {
+      stroke(c, 200 * a);
+      beginShape();
+      for (int i = 0; i <= 24; i++) {
+        float t = TWO_PI * i / 24;
+        float sp = T * (k == 0 ? 5 : -4);
+        PVector ax = k == 0 ? cam.right : cam.up;
+        PVector bx = cam.fwd;
+        float rx = cos(t) * 5.5, ry = sin(t) * 5.5;
+        PVector q = PVector.add(p, PVector.mult(ax, rx * cos(sp))).add(PVector.mult(bx, rx * sin(sp))).add(PVector.mult(k == 0 ? cam.up : cam.right, ry));
+        vertex(q.x, q.y, q.z);
+      }
+      endShape();
+    }
+    noStroke();
   }
 
   class Shot {
@@ -3108,6 +3150,7 @@ class PortalPhysics {
 
 class ResearchTerminal {
   PGraphics g;
+  PImage img;                  // GPU-friendly copy: only re-uploaded when it changes
   float refresh;
   PFont head, mono, small, val;
   float[] history = new float[160];
@@ -3116,6 +3159,7 @@ class ResearchTerminal {
 
   ResearchTerminal() {
     g = createGraphics(1024, 640);
+    img = createImage(1024, 640, RGB);
     head = createFont("SansSerif.bold", 30, true);
     mono = createFont("Monospaced.bold", 17, true);
     small = createFont("Monospaced", 13, true);
@@ -3125,11 +3169,18 @@ class ResearchTerminal {
   void update(float dt) {
     refresh -= dt;
     if (refresh <= 0) {
-      refresh = 0.15;
+      refresh = hud.terminalOpen ? 0.2 : 0.3;
       history[histPos] = physics.linked ? physics.stability : -1;
       histPos = (histPos + 1) % history.length;
-      render();
+      if (visible()) render();
     }
+  }
+
+  // only redraw the screen when someone can actually see it
+  boolean visible() {
+    if (hud.terminalOpen || img.width == 0 || frameCount < 5) return true;
+    PVector d = new PVector(X - cam.pos.x, Y - cam.pos.y, Z - cam.pos.z);
+    return d.mag() < 6000 && d.normalize().dot(cam.fwd) > 0.2;
   }
 
   String m(float units) { return fm(units / M); }
@@ -3198,6 +3249,10 @@ class ResearchTerminal {
     g.fill(255, 190, 70, 200);
     g.text("Portal mechanics on this screen are fictional. The arithmetic is real.", 24, g.height - 26);
     g.endDraw();
+    g.loadPixels();
+    img.loadPixels();
+    arrayCopy(g.pixels, img.pixels);
+    img.updatePixels();
   }
 
   float portalLine(Portal q, float y) {
@@ -3307,7 +3362,7 @@ class ResearchTerminal {
     noStroke();
     tint(255, 235 + 20 * sin(T * 11) * sin(T * 3.7));
     beginShape(QUADS);
-    texture(g);
+    texture(img);
     vertex(-W / 2, -H / 2, 0, 0, 0);
     vertex(W / 2, -H / 2, 0, 1, 0);
     vertex(W / 2, H / 2, 0, 1, 1);

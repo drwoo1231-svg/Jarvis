@@ -150,7 +150,8 @@ class PlayerCamera {
 
   void drawCrosshair() {
     float cx = width / 2, cy = height / 2;
-    stroke(170, 255, 200, 200);
+    int c = portals.p[gun.next].colLight;
+    stroke(red(c), green(c), blue(c), 210);
     strokeWeight(1.5);
     noFill();
     ellipse(cx, cy, 14, 14);
@@ -159,5 +160,9 @@ class PlayerCamera {
     line(cx, cy - 12, cx, cy - 5);
     line(cx, cy + 5, cx, cy + 12);
     noStroke();
+    fill(red(c), green(c), blue(c), 200);
+    textSize(11);
+    textAlign(LEFT, BOTTOM);
+    text(gun.next == 0 ? "A" : "B", cx + 9, cy - 6);
   }
 }

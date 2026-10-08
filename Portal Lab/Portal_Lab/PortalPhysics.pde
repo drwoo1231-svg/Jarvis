@@ -84,6 +84,7 @@ class PortalPhysics {
 
 class ResearchTerminal {
   PGraphics g;
+  PImage img;                  // GPU-friendly copy: only re-uploaded when it changes
   float refresh;
   PFont head, mono, small, val;
   float[] history = new float[160];
@@ -92,6 +93,7 @@ class ResearchTerminal {
 
   ResearchTerminal() {
     g = createGraphics(1024, 640);
+    img = createImage(1024, 640, RGB);
     head = createFont("SansSerif.bold", 30, true);
     mono = createFont("Monospaced.bold", 17, true);
     small = createFont("Monospaced", 13, true);
@@ -101,11 +103,18 @@ class ResearchTerminal {
   void update(float dt) {
     refresh -= dt;
     if (refresh <= 0) {
-      refresh = 0.15;
+      refresh = hud.terminalOpen ? 0.2 : 0.3;
       history[histPos] = physics.linked ? physics.stability : -1;
       histPos = (histPos + 1) % history.length;
-      render();
+      if (visible()) render();
     }
+  }
+
+  // only redraw the screen when someone can actually see it
+  boolean visible() {
+    if (hud.terminalOpen || img.width == 0 || frameCount < 5) return true;
+    PVector d = new PVector(X - cam.pos.x, Y - cam.pos.y, Z - cam.pos.z);
+    return d.mag() < 6000 && d.normalize().dot(cam.fwd) > 0.2;
   }
 
   String m(float units) { return fm(units / M); }
@@ -174,6 +183,10 @@ class ResearchTerminal {
     g.fill(255, 190, 70, 200);
     g.text("Portal mechanics on this screen are fictional. The arithmetic is real.", 24, g.height - 26);
     g.endDraw();
+    g.loadPixels();
+    img.loadPixels();
+    arrayCopy(g.pixels, img.pixels);
+    img.updatePixels();
   }
 
   float portalLine(Portal q, float y) {
@@ -283,7 +296,7 @@ class ResearchTerminal {
     noStroke();
     tint(255, 235 + 20 * sin(T * 11) * sin(T * 3.7));
     beginShape(QUADS);
-    texture(g);
+    texture(img);
     vertex(-W / 2, -H / 2, 0, 0, 0);
     vertex(W / 2, -H / 2, 0, 1, 0);
     vertex(W / 2, H / 2, 0, 1, 1);
