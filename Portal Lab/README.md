@@ -6,7 +6,9 @@ a huge laboratory adrift in the middle of the universe. You get a portal gun,
 a pile of weird objects, and a holographic computer that does the (fictional)
 spacetime maths in real time. If you stand around doing nothing, Rick notices.
 
-- No libraries and no `data` folder: every texture, the hologram shader and all
+![Portal Lab: a wall portal and a floor portal next to the void pit, with Rick commenting](preview.png)
+
+- No libraries and no `data` folder: every texture, the liquid-portal shader and all
   the sounds are generated in code.
 - `size(1280, 720, P3D)`.
 
@@ -30,7 +32,7 @@ without quitting.
 | **SPACE / CTRL** | up / down |
 | **SHIFT** | speed boost |
 | **MOUSE** | look (arrow keys also look around) |
-| **M1 (left click)** | fire a portal (shots alternate A → B → A …) / throw the held object |
+| **M1 (left click)** | fire a portal (shots alternate A → B → A …) / throw the held object. The portal gun is a small floating aiming device, not a weapon in your hands. |
 | **E** | interact: grab the object you're looking at, select the portal you're looking at, use the matter dispenser |
 | **R** / right click | release the held object |
 | **Q / R** (or wheel) | rotate the selected portal |
@@ -42,6 +44,26 @@ without quitting.
 | **M** | mute |
 | **N** | no-clip (only while debug is on) |
 | **ESC** | release the mouse |
+
+## The objects
+
+| Object | Mass | Notes |
+|---|---|---|
+| NORMAL CUBE | 5 kg | boring, reliable |
+| METAL BALL | 8 kg | dense, rolls far |
+| ANTI-GRAVITY BALL | 2 kg | falls *up*; gravity flips every time it goes through a portal |
+| UNSTABLE OBJECT | ??? | gets a random kick each jump and goes off every third one |
+| QUANTUM ROCK | 4 kg | status: PROBABLY SAFE. Sometimes comes back out of the portal it went into, and tunnels short hops on its own |
+| MICROVERSE BATTERY | 1.5 kg | boosts the generators when it goes through |
+| ERLENMEYER FLASK | 0.6 kg | fragile |
+| SMALL ROCK | 1 kg | it's a rock |
+| CRASH TEST DUMMY 'GARY' | 20 kg | survived 412 tests; spins through portals |
+| PICKLE | 0.3 kg | probably just a pickle |
+| HYPER-ELASTIC BALL | 0.8 kg | almost perfect bounce, +12% speed per portal |
+| HEAVY ANVIL | 50 kg | 50 kg of bad ideas |
+| ZERO-G CORE | 2.5 kg | ignores gravity entirely |
+
+The matter dispenser (press **E** on it) makes more, up to 12 extra objects.
 
 ## Things to try
 
@@ -56,6 +78,13 @@ without quitting.
   drop. Below 50%, things come out of the portal *wrong*.
 - Throw the microverse battery through to boost the generators.
 - Throw something through Rick's hologram.
+- Open a floor portal right under Rick's hologram (with the other portal
+  already placed). He goes through and has opinions about it.
+- Drop the anvil on Gary, the crash-test dummy.
+- Hit the matter dispenser five times in a row.
+- Portal-hop yourself five times in 20 seconds.
+- Watch the toast after every jump: it shows the speed going **in** and coming
+  **out**. Ordinary objects keep their speed exactly; the weird ones don't.
 - Do nothing for 20 seconds.
 
 ## What's in each tab
@@ -104,14 +133,18 @@ If you go **20 seconds** without doing anything useful, Rick says:
   starts over when Rick speaks and whenever you move, shoot, grab, throw, open
   the computer or move a portal. Just looking around doesn't count.
 - **What he says:** the classic line comes first and every third time. Other
-  idle lines fill the gaps, plus about 30 kinds of reactions to whatever weird
-  experiment you're running.
+  idle lines fill the gaps, plus about 40 kinds of reactions to whatever weird
+  experiment you're running: infinite loops, dropping things into the void
+  pit, the hologram falling through a portal, Gary versus the anvil, spamming
+  the dispenser, staring at a wall.
+- **No spam:** each reaction has its own cooldown, and there's a shared
+  6-second gap between any two lines.
 
 ## Troubleshooting
 
 - **Mouse look doesn't turn:** click inside the window first. If your system
   blocks pointer capture, the arrow keys look around too.
 - **The portal looks flatter than in the screenshots:** your GPU couldn't
-  compile the hologram shader. The console says so, and the CPU fallback is
+  compile the liquid-portal shader. The console says so, and the CPU fallback is
   used instead.
 - **No sound:** Java found no audio device. The sketch keeps running silently.
