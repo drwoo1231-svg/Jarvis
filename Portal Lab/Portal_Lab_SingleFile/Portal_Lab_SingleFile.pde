@@ -2004,6 +2004,17 @@ class PlayerCamera {
     updateBasis();
   }
 
+  // same, but when the new direction is (nearly) straight up/down, use the old
+  // screen-up carried through the portal to decide which way you're facing
+  void lookAlong(PVector d, PVector upHint) {
+    PVector n = d.copy().normalize();
+    pitch = asin(constrain(-n.y, -1, 1));
+    float sp = sin(pitch), cp = cos(pitch);
+    float fx = n.x * cp - upHint.x * sp, fz = n.z * cp - upHint.z * sp;
+    if (fx * fx + fz * fz > 1e-8) yaw = atan2(fx, -fz);
+    updateBasis();
+  }
+
   void update(float dt) {
     // keyboard look (fallback for touchpads / when the mouse can't be captured)
     float kl = 1.9 * dt;
@@ -2030,12 +2041,11 @@ class PlayerCamera {
     vel.lerp(target, k);
 
     // move in small steps so we never tunnel through a thin wall
-    PVector step = PVector.mult(vel, dt);
-    int n = max(1, ceil(step.mag() / (RADIUS * 0.5)));
-    step.div(n);
+    int n = max(1, ceil(vel.mag() * dt / (RADIUS * 0.5)));
+    float h = dt / n;
     for (int i = 0; i < n; i++) {
       PVector before = pos.copy();
-      pos.add(step);
+      pos.add(PVector.mult(vel, h));          // vel can change mid-frame (portal, wall)
       if (!noclip) lab.collideSphere(pos, vel, RADIUS, portals);
       onMoved(before);
     }
@@ -2046,9 +2056,10 @@ class PlayerCamera {
     Portal q = portals.crossed(before, pos);
     if (q == null) return;
     PVector newFwd = portals.mapDir(q, fwd);
-    pos.set(portals.mapPoint(q, pos, RADIUS * 0.5 + 2));
+    PVector newUp = portals.mapDir(q, up);
+    pos.set(portals.mapPoint(q, pos, 0.5));
     vel.set(portals.mapDir(q, vel));
-    lookAlong(newFwd);
+    lookAlong(newFwd, newUp);
     portals.exitFx(q, pos, 1);
     q.splash(PVector.add(q.c, PVector.mult(q.n, 10)), 0.8);
     sfx.play(sfx.teleport, 0.7, 1);
@@ -4426,7 +4437,9 @@ class ThrowableObject {
       onQuantumBounce(this);
       return;
     }
-    pos.set(portals.mapPoint(from, pos, radius + 3));
+    // come out exactly as far past B as it went past A (adding a gap here would
+    // hand the object free potential energy on every floor-to-floor loop)
+    pos.set(portals.mapPoint(from, pos, 0.5));
     vel.set(portals.mapDir(from, vel));
     angVel.set(portals.mapDir(from, angVel));
     rot.preApply(portals.mapMatrix(from));
@@ -4790,8 +4803,11 @@ class ObjectLab {
         float dist = d.mag();
         d.div(dist);
         o.pos.add(PVector.mult(d, rr - dist));
+        // bounce off the camera like off a soft wall that may be moving
+        float rel = PVector.sub(o.vel, cam.vel).dot(d);
+        if (rel < 0) o.vel.sub(PVector.mult(d, rel * (1 + o.bounce)));
         float push = cam.vel.dot(d);
-        if (push > 0) o.vel.add(PVector.mult(d, push * 1.2 * min(1, 10 / o.mass)));
+        if (push > 0) o.vel.add(PVector.mult(d, push * 0.2 * min(1, 10 / o.mass)));
       }
     }
   }

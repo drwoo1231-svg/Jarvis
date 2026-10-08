@@ -153,7 +153,9 @@ class ThrowableObject {
       onQuantumBounce(this);
       return;
     }
-    pos.set(portals.mapPoint(from, pos, radius + 3));
+    // come out exactly as far past B as it went past A (adding a gap here would
+    // hand the object free potential energy on every floor-to-floor loop)
+    pos.set(portals.mapPoint(from, pos, 0.5));
     vel.set(portals.mapDir(from, vel));
     angVel.set(portals.mapDir(from, angVel));
     rot.preApply(portals.mapMatrix(from));
@@ -517,8 +519,11 @@ class ObjectLab {
         float dist = d.mag();
         d.div(dist);
         o.pos.add(PVector.mult(d, rr - dist));
+        // bounce off the camera like off a soft wall that may be moving
+        float rel = PVector.sub(o.vel, cam.vel).dot(d);
+        if (rel < 0) o.vel.sub(PVector.mult(d, rel * (1 + o.bounce)));
         float push = cam.vel.dot(d);
-        if (push > 0) o.vel.add(PVector.mult(d, push * 1.2 * min(1, 10 / o.mass)));
+        if (push > 0) o.vel.add(PVector.mult(d, push * 0.2 * min(1, 10 / o.mass)));
       }
     }
   }

@@ -41,6 +41,17 @@ class PlayerCamera {
     updateBasis();
   }
 
+  // same, but when the new direction is (nearly) straight up/down, use the old
+  // screen-up carried through the portal to decide which way you're facing
+  void lookAlong(PVector d, PVector upHint) {
+    PVector n = d.copy().normalize();
+    pitch = asin(constrain(-n.y, -1, 1));
+    float sp = sin(pitch), cp = cos(pitch);
+    float fx = n.x * cp - upHint.x * sp, fz = n.z * cp - upHint.z * sp;
+    if (fx * fx + fz * fz > 1e-8) yaw = atan2(fx, -fz);
+    updateBasis();
+  }
+
   void update(float dt) {
     // keyboard look (fallback for touchpads / when the mouse can't be captured)
     float kl = 1.9 * dt;
@@ -67,12 +78,11 @@ class PlayerCamera {
     vel.lerp(target, k);
 
     // move in small steps so we never tunnel through a thin wall
-    PVector step = PVector.mult(vel, dt);
-    int n = max(1, ceil(step.mag() / (RADIUS * 0.5)));
-    step.div(n);
+    int n = max(1, ceil(vel.mag() * dt / (RADIUS * 0.5)));
+    float h = dt / n;
     for (int i = 0; i < n; i++) {
       PVector before = pos.copy();
-      pos.add(step);
+      pos.add(PVector.mult(vel, h));          // vel can change mid-frame (portal, wall)
       if (!noclip) lab.collideSphere(pos, vel, RADIUS, portals);
       onMoved(before);
     }
@@ -83,9 +93,10 @@ class PlayerCamera {
     Portal q = portals.crossed(before, pos);
     if (q == null) return;
     PVector newFwd = portals.mapDir(q, fwd);
-    pos.set(portals.mapPoint(q, pos, RADIUS * 0.5 + 2));
+    PVector newUp = portals.mapDir(q, up);
+    pos.set(portals.mapPoint(q, pos, 0.5));
     vel.set(portals.mapDir(q, vel));
-    lookAlong(newFwd);
+    lookAlong(newFwd, newUp);
     portals.exitFx(q, pos, 1);
     q.splash(PVector.add(q.c, PVector.mult(q.n, 10)), 0.8);
     sfx.play(sfx.teleport, 0.7, 1);
