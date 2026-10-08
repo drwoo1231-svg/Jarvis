@@ -36,6 +36,9 @@ class ThrowableObject {
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
   float driftT;                 // seconds spent drifting slowly outside the lab
+  float echoT;                  // zero-g core: countdown to diving back into the portal it just left
+  Portal echoInto;
+  boolean echoReturn;           // this trip is the echo itself (one echo per jump)
   PVector safe = new PVector();  // last position that was outside every wall
   int massRoll;                 // unstable object's displayed mass changes
 
@@ -193,6 +196,14 @@ class ThrowableObject {
     float stab = physics.stability;
     // weird stuff
     if (type == OB_BOUNCY) vel.mult(1.12);
+    if (type == OB_ANVIL) vel.mult(0.55);          // "portal friction": too heavy to get through at full speed
+    if (type == OB_FLOATER) {
+      if (echoReturn) echoReturn = false;
+      else if (random(1) < 0.35) {
+        echoT = 0.45;                               // it'll change its mind in a moment
+        echoInto = to;
+      }
+    }
     if (type == OB_ANTIGRAV) grav = -grav;
     if (type == OB_DUMMY) angVel.add(PVector.random3D().mult(14));
     if (type == OB_UNSTABLE) {
@@ -266,6 +277,20 @@ class ThrowableObject {
         }
       }
     }
+    // the zero-g core changes its mind and dives back into the portal it just came out of
+    if (echoT > 0) {
+      echoT -= dt;
+      if (held) echoT = 0;
+      else if (echoT <= 0) {
+        if (portals.linked() && echoInto != null && echoInto.active) {
+          vel.set(PVector.sub(echoInto.c, pos).normalize().mult(max(vel.mag(), 350)));
+          echoReturn = true;
+          parts.burst(pos, 14, 200, color(150, 220, 255), 0.4, 12);
+          onZeroGEcho(this);
+        }
+        echoInto = null;
+      }
+    }
     // drifting slowly out in space (zero-g things never fall far enough to count as lost)
     boolean outside = abs(pos.x) > 4500 || abs(pos.z) > 3000 || pos.y < -3200 || pos.y > 2200;
     if (!held && outside && vel.mag() < 150) driftT += dt;
@@ -327,9 +352,8 @@ class ThrowableObject {
       emissive(0);
       break;
     case OB_QUANTUM:
-      fill(120, 100, 150);
       scale(radius);
-      shape(galaxy.rockMesh[1]);
+      shape(galaxy.rockQuantum);
       break;
     case OB_BATTERY:
       fill(40, 44, 54);
@@ -343,9 +367,8 @@ class ThrowableObject {
       drawFlask();
       break;
     case OB_ROCK:
-      fill(110, 100, 92);
       scale(radius);
-      shape(galaxy.rockMesh[0]);
+      shape(galaxy.rockSmall);
       break;
     case OB_DUMMY:
       drawDummy();

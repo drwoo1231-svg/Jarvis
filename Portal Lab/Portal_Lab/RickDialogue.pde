@@ -55,6 +55,7 @@ class RickDialogue {
     age = 0;
     life = 2.6 + line.length() / 17.0;
     showing = true;
+    lastIdleMs = millis();                  // whatever he says, the 20 s idle window starts over
     sfx.play(line.contains("*burp*") ? sfx.burp : sfx.pop, line.contains("*burp*") ? 0.7 : 0.35, 0.8);
   }
 
@@ -72,7 +73,7 @@ class RickDialogue {
 
   void update(float dt) {
     eventCooldown -= dt;
-    if (showing) {
+    if (showing && hud.terminalAnim < 0.5) {   // the TAB computer covers the screen: hold the line until it closes
       age += dt;
       if (age > life) showing = false;
     }
@@ -169,7 +170,7 @@ class RickDialogue {
 
   // the cartoon speech box (2D)
   void draw() {
-    if (!showing) return;
+    if (!showing || hud.terminalAnim > 0.5) return;
     float pop = easeOutBack(min(1, age / 0.25));
     float fade = constrain((life - age) / 0.35, 0, 1);
     float px = width - 120, py = height - 150;          // portrait centre
@@ -208,12 +209,12 @@ class RickDialogue {
     translate(-(bx + w), -(by + h * 0.65));
     noStroke();
     fill(0, 120 * fade);
-    rect(bx + 7, by + 7, w, h, 22);
+    roundBox(bx + 7, by + 7, w, h, 22);
     stroke(20, 20, 26, 255 * fade);
     strokeWeight(4);
     fill(255, 252, 240, 250 * fade);
     triangle(bx + w - 6, by + h * 0.45, bx + w - 6, by + h * 0.8, bx + w + 48, by + h * 0.72);
-    rect(bx, by, w, h, 22);
+    roundBox(bx, by, w, h, 22);
     noStroke();
     triangle(bx + w - 9, by + h * 0.47, bx + w - 9, by + h * 0.78, bx + w + 40, by + h * 0.71);
     // name
@@ -470,7 +471,7 @@ String[] BATTERY_JUMP = { "You just gave a tiny civilisation a hyperspace commut
 String[] ANTIGRAV_JUMP = { "Anti-gravity through a portal. Now it falls the OTHER way. Or double anti. Look, I'm busy." };
 String[] DUMMY_JUMP = { "Gary's spinning. Gary's fine. Gary signed a waiver." };
 String[] DISPENSED = { "Ooh, what'd you get? ...Disappointing.", "The dispenser picks randomly. Like evolution. Or my ex-wives' lawyers.", "Free stuff! It's not free. Nothing's free. *burp*" };
-String[] TERMINAL = { "Reading the equations, huh? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
+String[] TERMINAL = { "Done reading the equations? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
 String[] MANIPULATED = { "Dragging portals around like furniture. Interior designer of the multiverse.", "Nice placement. Feng shui for spacetime." };
 String[] HOLO_HIT = { "Hey! That went right through my face. Rude.", "I'm a hologram, genius. Throw it at something that can feel it." };
 String[] FAR_AWAY = { "Where are you going? The lab's back there. The universe is mostly empty - I've checked." };
@@ -529,7 +530,21 @@ void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
   if (o.type == OB_BATTERY) { rick.event("battery", 60, BATTERY_JUMP); return; }
   if (o.type == OB_ANTIGRAV) { rick.event("antigrav", 60, ANTIGRAV_JUMP); return; }
   if (o.type == OB_DUMMY) { rick.event("dummy", 60, DUMMY_JUMP); return; }
+  if (o.type == OB_ANVIL) { rick.event("anvilslow", 60, ANVIL_SLOW); return; }
   rick.event("objjump", 45, OBJ_JUMP);
+}
+
+String[] ANVIL_SLOW = {
+  "The anvil came out slower. Portal friction. That's not a real thing. The anvil made it a real thing. Out of spite.",
+  "Fifty kilos through a hole in space and it lost half its speed. Even physics is tired of that anvil."
+};
+String[] ZERO_G_ECHO = {
+  "The zero-g core went back for seconds. No gravity, no commitment. Relatable.",
+  "It changed its mind. Zero gravity, zero decisiveness. Like a Jerry in a ball."
+};
+
+void onZeroGEcho(ThrowableObject o) {
+  rick.event("zgecho", 60, ZERO_G_ECHO);
 }
 
 void onQuantumBounce(ThrowableObject o) {
@@ -573,6 +588,15 @@ void onObjectDispensed(ThrowableObject o) {
 
 void onLowStability() {
   rick.event("lowstab", 60, LOW_STAB);
+}
+
+String[] SHOT_LOST = {
+  "You shot a portal into space. It'll land somewhere in about four billion years. Someone's gonna be SO confused.",
+  "Missed the entire lab. The ENTIRE lab. It's a big lab, Morty- I mean, whoever you are."
+};
+
+void onShotLost() {
+  rick.event("shotlost", 90, SHOT_LOST);
 }
 
 void onTerminalOpened() {

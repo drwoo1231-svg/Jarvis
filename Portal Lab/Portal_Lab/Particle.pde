@@ -1,26 +1,44 @@
-// Pooled particle system (fixed arrays, no per-frame allocation) and
-// in-plane shockwave rings. Everything here is drawn additively.
+// Particle (one spark), the pooled Particles system (every Particle made once,
+// no per-frame allocation) and in-plane shockwave rings. All drawn additively.
 
+// one spark of light
+class Particle {
+  float x, y, z, vx, vy, vz;
+  float life, maxLife, size, grav, drag;
+  int col;
+
+  void step(float dt) {
+    float k = exp(-drag * dt);
+    vx *= k;
+    vy = vy * k + grav * dt;
+    vz *= k;
+    x += vx * dt;
+    y += vy * dt;
+    z += vz * dt;
+  }
+}
+
+// the pool: every Particle is made once up front; the live ones are pool[0 .. count-1]
 class Particles {
   final int CAP = 1400;
-  float[] x = new float[CAP], y = new float[CAP], z = new float[CAP];
-  float[] vx = new float[CAP], vy = new float[CAP], vz = new float[CAP];
-  float[] life = new float[CAP], maxLife = new float[CAP], size = new float[CAP];
-  float[] grav = new float[CAP], drag = new float[CAP];
-  int[] col = new int[CAP];
+  Particle[] pool = new Particle[CAP];
   int count;
 
+  Particles() {
+    for (int i = 0; i < CAP; i++) pool[i] = new Particle();
+  }
+
   void emit(float px, float py, float pz, float pvx, float pvy, float pvz, float plife, float psize, int pcol, float pgrav, float pdrag) {
-    int i;
-    if (count < CAP) i = count++;
-    else i = (int) random(CAP);              // full: overwrite a random one
-    x[i] = px; y[i] = py; z[i] = pz;
-    vx[i] = pvx; vy[i] = pvy; vz[i] = pvz;
-    life[i] = maxLife[i] = plife;
-    size[i] = psize;
-    col[i] = pcol;
-    grav[i] = pgrav;
-    drag[i] = pdrag;
+    Particle q;
+    if (count < CAP) q = pool[count++];
+    else q = pool[(int) random(CAP)];        // full: overwrite a random one
+    q.x = px; q.y = py; q.z = pz;
+    q.vx = pvx; q.vy = pvy; q.vz = pvz;
+    q.life = q.maxLife = plife;
+    q.size = psize;
+    q.col = pcol;
+    q.grav = pgrav;
+    q.drag = pdrag;
   }
 
   void emit(PVector p, PVector v, float plife, float psize, int pcol, float pgrav, float pdrag) {
@@ -37,27 +55,17 @@ class Particles {
 
   void update(float dt) {
     for (int i = count - 1; i >= 0; i--) {
-      life[i] -= dt;
-      if (life[i] <= 0) {
+      Particle q = pool[i];
+      q.life -= dt;
+      if (q.life <= 0) {
+        // swap the dead one past the end of the live range
         count--;
-        copy(count, i);
+        pool[i] = pool[count];
+        pool[count] = q;
         continue;
       }
-      float k = exp(-drag[i] * dt);
-      vx[i] *= k;
-      vy[i] = vy[i] * k + grav[i] * dt;
-      vz[i] *= k;
-      x[i] += vx[i] * dt;
-      y[i] += vy[i] * dt;
-      z[i] += vz[i] * dt;
+      q.step(dt);
     }
-  }
-
-  void copy(int from, int to) {
-    x[to] = x[from]; y[to] = y[from]; z[to] = z[from];
-    vx[to] = vx[from]; vy[to] = vy[from]; vz[to] = vz[from];
-    life[to] = life[from]; maxLife[to] = maxLife[from]; size[to] = size[from];
-    col[to] = col[from]; grav[to] = grav[from]; drag[to] = drag[from];
   }
 
   // one batch of camera-facing textured quads
@@ -69,16 +77,17 @@ class Particles {
     beginShape(QUADS);
     texture(texGlow);
     for (int i = 0; i < count; i++) {
-      float a = life[i] / maxLife[i];
-      float s = size[i] * (0.4 + 0.6 * a) * 0.5;
-      int c = col[i];
+      Particle q = pool[i];
+      float a = q.life / q.maxLife;
+      float s = q.size * (0.4 + 0.6 * a) * 0.5;
+      int c = q.col;
       tint((c >> 16) & 255, (c >> 8) & 255, c & 255, 255 * min(1, a * 1.6));
       float ax = (rx + ux) * s, ay = (ry + uy) * s, az = (rz + uz) * s;
       float bx = (rx - ux) * s, by = (ry - uy) * s, bz = (rz - uz) * s;
-      vertex(x[i] - ax, y[i] - ay, z[i] - az, 0, 0);
-      vertex(x[i] + bx, y[i] + by, z[i] + bz, 1, 0);
-      vertex(x[i] + ax, y[i] + ay, z[i] + az, 1, 1);
-      vertex(x[i] - bx, y[i] - by, z[i] - bz, 0, 1);
+      vertex(q.x - ax, q.y - ay, q.z - az, 0, 0);
+      vertex(q.x + bx, q.y + by, q.z + bz, 1, 0);
+      vertex(q.x + ax, q.y + ay, q.z + az, 1, 1);
+      vertex(q.x - bx, q.y - by, q.z - bz, 0, 1);
     }
     endShape();
     noTint();

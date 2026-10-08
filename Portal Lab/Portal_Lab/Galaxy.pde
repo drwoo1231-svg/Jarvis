@@ -14,6 +14,7 @@ class Galaxy {
   PImage ringTex;
   PVector sunDir = new PVector(0.55, -0.35, -0.75);
   PShape[] rockMesh = new PShape[3];
+  PShape rockQuantum, rockSmall;      // the lab's own rocks (their colour is baked in)
   Rock[] rocks = new Rock[70];
 
   Galaxy() {
@@ -55,6 +56,8 @@ class Galaxy {
     }
     ringTex = makeRingBands();
     for (int i = 0; i < 3; i++) rockMesh[i] = makeRock(i);
+    rockQuantum = makeRock(1, color(120, 100, 150));
+    rockSmall = makeRock(0, color(110, 100, 92));
     for (int i = 0; i < rocks.length; i++) rocks[i] = new Rock(i);
     buildDust();
   }
@@ -306,6 +309,10 @@ class Galaxy {
 
   // low-poly rock: icosahedron, subdivided once, pushed around with noise
   PShape makeRock(int seed) {
+    return makeRock(seed, seed == 1 ? color(120, 100, 90) : color(105, 102, 110));
+  }
+
+  PShape makeRock(int seed, int fillC) {
     noiseSeed(90 + seed);
     float t = (1 + sqrt(5)) / 2;
     ArrayList<PVector> v = new ArrayList<PVector>();
@@ -325,7 +332,7 @@ class Galaxy {
     PShape s = createShape();
     s.beginShape(TRIANGLES);
     s.noStroke();
-    s.fill(seed == 1 ? color(120, 100, 90) : color(105, 102, 110));
+    s.fill(fillC);
     for (PVector[] tr : tris) {
       PVector[] q = new PVector[3];
       for (int k = 0; k < 3; k++) {

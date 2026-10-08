@@ -19,7 +19,7 @@ class PortalGun {
     shotsFired++;
     RayHit h = aimRay();
     PVector muzzle = PVector.add(cam.pos, PVector.mult(cam.fwd, 34));
-    muzzle.add(PVector.mult(cam.right, 13)).sub(PVector.mult(cam.up, 12));
+    muzzle.add(PVector.mult(cam.right, 24)).sub(PVector.mult(cam.up, 20));   // off-axis, so the bolt visibly crosses into the centre
     PVector target = h.hit() ? h.p : PVector.add(cam.pos, PVector.mult(cam.fwd, 9000));
     shots.add(new Shot(muzzle, target, h, next, cam.fwd.copy()));
     next = 1 - next;
@@ -58,7 +58,7 @@ class PortalGun {
     int c = manip.active() ? manip.sel.colLight : portals.p[next].col;
     PVector p = PVector.add(cam.pos, PVector.mult(cam.fwd, 58 - recoil * 6));
     p.add(PVector.mult(cam.right, 21 + sin(T * 2) * 0.6)).sub(PVector.mult(cam.up, 14 + cos(T * 2.3) * 0.6));
-    glowSprite(p.x, p.y, p.z, 16 + recoil * 10, c, 230 * a);
+    glowSprite(p.x, p.y, p.z, 11 + recoil * 7, c, 210 * a);
     glowSprite(p.x, p.y, p.z, 5, color(255), 255 * a);
     // two little rings spinning round the emitter
     noFill();
@@ -122,6 +122,10 @@ class PortalGun {
       Portal q = portals.p[which];
       if (!hit.hit()) {
         lastResult = "SHOT LOST IN SPACE";
+        hud.toast("SHOT LOST IN SPACE", color(255, 150, 110));
+        sfx.play(sfx.fizzle, 0.35, 0.8);
+        giveLetterBack();
+        onShotLost();
         return;
       }
       String fail = portals.place(which, hit, aimDir);
@@ -139,14 +143,26 @@ class PortalGun {
         PVector[] ax = planeAxes(hit.n);
         portals.waves.add(new Shockwave(at, ax[0], ax[1], 70, 0.3, color(255, 140, 80)));
         sfx.play(sfx.fizzle, 0.6, 1);
+        giveLetterBack();
         onPortalFizzled(fail, hit);
       }
     }
 
+    // a shot that didn't open anything doesn't use up its letter (unless a newer shot is already flying)
+    void giveLetterBack() {
+      if (shots.get(shots.size() - 1) == this) next = which;
+    }
+
     void draw() {
       int c = portals.p[which].col;
-      glowSprite(pos.x, pos.y, pos.z, 90, c, 200);
-      glowSprite(pos.x, pos.y, pos.z, 26, color(240, 255, 230), 255);
+      // about the same size on screen at any distance, so it reads as a bolt all the way to the wall
+      float s = constrain(PVector.dist(pos, cam.pos) * 0.11, 22, 700);
+      for (int k = 6; k >= 1; k--) {                          // comet tail
+        PVector t = PVector.sub(pos, PVector.mult(dir, min(k * s * 0.22, travelled)));
+        glowSprite(t.x, t.y, t.z, s * (0.8 - k * 0.1), c, 170 - k * 24);
+      }
+      glowSprite(pos.x, pos.y, pos.z, s, c, 235);
+      glowSprite(pos.x, pos.y, pos.z, s * 0.32, color(240, 255, 230), 255);
     }
   }
 }
@@ -202,6 +218,7 @@ class PortalManipulator {
     RayHit h = lab.raycast(cam.pos, cam.fwd, 20000);
     Placement pl = portals.tryPlace(sel.id, h, cam.fwd, spin);
     if (pl.fail == null) {
+      if (PVector.dist(sel.c, pl.c) > 0.5 || PVector.dist(sel.u, pl.u) > 0.01) markAction();   // dragging it around counts as doing something
       sel.c.set(pl.c);
       sel.n.set(pl.n);
       sel.u.set(pl.u);

@@ -15,19 +15,66 @@
 PShader liquidShader;
 
 final float LQ_BOWL = 34, LQ_RIDGE = 6.5, LQ_WOB = 2.5;
-final int LQ_RINGS = 26, LQ_SEG = 88;
+final int LQ_RINGS = 26, LQ_SEG = 88;          // CPU fallback mesh (rebuilt every frame)
+final int LQ_GPU_RINGS = 48, LQ_GPU_SEG = 168;  // GPU mesh (built once; the vertex shader moves it)
 
+// the mesh is a flat unit disc (position.xy = q); the vertex shader wobbles its rim and
+// lifts it into the whirlpool with the same height function the fragment shader shades
 String[] LIQUID_VERT = {
   "#define PROCESSING_TEXTURE_SHADER",
   "uniform mat4 transformMatrix;",
+  "uniform float time;",
+  "uniform float open;",
+  "uniform vec2 halfSize;",
+  "uniform float ripR;",
+  "uniform float ripA;",
   "attribute vec4 position;",
   "attribute vec2 texCoord;",
   "varying vec2 vQ;",
+  "float sstep(float e0, float e1, float x) { float t = clamp((x - e0) / (e1 - e0), 0.0, 1.0); return t * t * (3.0 - 2.0 * t); }",
+  "float rimWob(float th) { return 1.0 + 0.03 * sin(5.0 * th + 2.0 * time) + 0.02 * sin(9.0 * th - 3.0 * time); }",
+  "float hgt(vec2 q) {",
+  "  float r = length(q);",
+  "  float th = atan(q.y, q.x);",
+  "  float ph = 3.0 * th + 7.0 * log(r + 0.08) + time * 2.6;",
+  "  float bowl = 34.0 * sstep(0.0, 0.55, r) * pow(max(1.0 - r * r, 0.0), 0.6);",
+  "  float ridge = 6.5 * sin(ph) * sstep(0.06, 0.35, r) * (1.0 - r);",
+  "  float wob = 2.5 * sin(5.0 * q.x + 1.3 * time + sin(4.0 * q.y + time)) * sin(5.0 * q.y - 1.1 * time) * (1.0 - r);",
+  "  float dr = (r - ripR) * 6.0;",
+  "  float rip = ripA * sin(30.0 * (r - ripR)) * exp(-dr * dr);",
+  "  return (bowl + ridge + wob + rip) * open + 2.0;",
+  "}",
   "void main() {",
-  "  vQ = texCoord;",
-  "  gl_Position = transformMatrix * position;",
+  "  vec2 q = position.xy + vec2(1e-5, 0.0);",      // the centre vertex must not hit atan(0, 0)
+  "  float w = rimWob(atan(q.y, q.x));",
+  "  vQ = q * w;",
+  "  gl_Position = transformMatrix * vec4(q * w * halfSize, hgt(q), 1.0);",
   "}"
 };
+
+PShape liquidMesh;             // static unit disc, built once
+
+void buildLiquidMesh(int rings, int seg) {
+  liquidMesh = createShape();
+  liquidMesh.beginShape(TRIANGLES);
+  liquidMesh.noStroke();
+  liquidMesh.texture(texGlow);   // any texture: it makes Processing use the (texture-type) liquid shader
+  for (int i = 0; i < rings; i++) {
+    float r0 = pow(i / (float) rings, 0.85), r1 = pow((i + 1) / (float) rings, 0.85);
+    for (int j = 0; j < seg; j++) {
+      float a0 = TWO_PI * j / seg, a1 = TWO_PI * (j + 1) / seg;
+      float x00 = cos(a0) * r0, y00 = sin(a0) * r0, x01 = cos(a1) * r0, y01 = sin(a1) * r0;
+      float x10 = cos(a0) * r1, y10 = sin(a0) * r1, x11 = cos(a1) * r1, y11 = sin(a1) * r1;
+      liquidMesh.vertex(x00, y00, 0, x00, y00);
+      liquidMesh.vertex(x10, y10, 0, x10, y10);
+      liquidMesh.vertex(x11, y11, 0, x11, y11);
+      liquidMesh.vertex(x00, y00, 0, x00, y00);
+      liquidMesh.vertex(x11, y11, 0, x11, y11);
+      liquidMesh.vertex(x01, y01, 0, x01, y01);
+    }
+  }
+  liquidMesh.endShape();
+}
 
 String[] LIQUID_FRAG = {
   "#ifdef GL_ES",
@@ -115,9 +162,11 @@ void setupLiquidShader() {
     saveStrings(f.getAbsolutePath(), LIQUID_FRAG);
     liquidShader = loadShader(f.getAbsolutePath(), v.getAbsolutePath());
     liquidShader.init();            // compile now so a failure is caught here
+    buildLiquidMesh(LQ_GPU_RINGS, LQ_GPU_SEG);
   } catch (Exception e) {
     println("Liquid portal shader not available (" + e.getMessage() + ") - shading portals on the CPU.");
     liquidShader = null;
+    liquidMesh = null;
   }
 }
 
@@ -172,17 +221,13 @@ class LiquidSurface {
     }
   }
 
-  // GPU path: positions + (q.x, q.y) in the texture channel; the shader does the rest
-  void drawGPU() {
-    noStroke();
-    for (int i = 0; i < LQ_RINGS; i++) {
-      beginShape(TRIANGLE_STRIP);
-      texture(texGlow);           // any texture: it just routes q through texCoord
-      for (int j = 0; j <= LQ_SEG; j++) {
-        vertex(px[i + 1][j], py[i + 1][j], pz[i + 1][j], qu[i + 1][j], qv[i + 1][j]);
-        vertex(px[i][j], py[i][j], pz[i][j], qu[i][j], qv[i][j]);
-      }
-      endShape();
+  // GPU path: the shader moves the liquid itself, so only the rim tube needs this frame's outline
+  void buildRim(float t) {
+    for (int j = 0; j <= LQ_SEG; j++) {
+      float th = TWO_PI * j / LQ_SEG;
+      float w = lqRimWob(th, t);
+      rimX[j] = cos(th) * w * PORTAL_HW;
+      rimY[j] = sin(th) * w * PORTAL_HH;
     }
   }
 
@@ -229,31 +274,53 @@ class LiquidSurface {
     vertex(px[i][j], py[i][j], pz[i][j]);
   }
 
-  // glossy tube of liquid running round the edge
+  // glossy tube of liquid running round the edge. Its normals never change, so they're worked out once
+  final int RIM_SIDES = 9;
+  float[][] rnx = new float[RIM_SIDES + 1][LQ_SEG + 1], rny = new float[RIM_SIDES + 1][LQ_SEG + 1], rnz = new float[RIM_SIDES + 1][LQ_SEG + 1];
+
+  LiquidSurface() {
+    for (int k = 0; k <= RIM_SIDES; k++) {
+      float f = TWO_PI * k / RIM_SIDES;
+      for (int j = 0; j <= LQ_SEG; j++) {
+        float th = TWO_PI * j / LQ_SEG;
+        float ox = cos(th) * PORTAL_HH, oy = sin(th) * PORTAL_HW;   // ellipse outward normal
+        float om = sqrt(ox * ox + oy * oy);
+        rnx[k][j] = ox / om * cos(f);
+        rny[k][j] = oy / om * cos(f);
+        rnz[k][j] = sin(f);
+      }
+    }
+  }
+
   void drawRim(Portal p, PVector camL, float t, float open) {
-    final int SIDES = 9;
     float tube = 8.5 * open;
-    PVector L1 = new PVector(-0.35, 0.55, 0.75).normalize();
+    float lm = sqrt(0.35 * 0.35 + 0.55 * 0.55 + 0.75 * 0.75);
+    float lx = -0.35 / lm, ly = 0.55 / lm, lz = 0.75 / lm;
+    float cr = red(p.col), cg = green(p.col), cb = blue(p.col);
+    float lr = red(p.colLight), lg = green(p.colLight), lb = blue(p.colLight);
     noStroke();
-    for (int k = 0; k < SIDES; k++) {
-      float f0 = TWO_PI * k / SIDES, f1 = TWO_PI * (k + 1) / SIDES;
+    for (int k = 0; k < RIM_SIDES; k++) {
       beginShape(QUAD_STRIP);
       for (int j = 0; j <= LQ_SEG; j++) {
         float th = TWO_PI * j / LQ_SEG;
-        PVector out = new PVector(cos(th) * PORTAL_HH, sin(th) * PORTAL_HW, 0).normalize();   // ellipse outward normal
         float flow = 0.5 + 0.5 * sin(th * 6 - t * 7);
         for (int s = 0; s < 2; s++) {
-          float f = s == 0 ? f0 : f1;
-          PVector nrm = new PVector(out.x * cos(f), out.y * cos(f), sin(f));
-          float x = rimX[j] + nrm.x * tube, y = rimY[j] + nrm.y * tube, z = 4 + nrm.z * tube;
-          PVector v = new PVector(camL.x - x, camL.y - y, camL.z - z).normalize();
-          float diff = max(nrm.dot(L1), 0);
-          float spec = pow(max(nrm.dot(PVector.add(L1, v).normalize()), 0), 50);
-          float fres = pow(1 - max(nrm.dot(v), 0), 2.5);
+          float nx = rnx[k + s][j], ny = rny[k + s][j], nz = rnz[k + s][j];
+          float x = rimX[j] + nx * tube, y = rimY[j] + ny * tube, z = 4 + nz * tube;
+          float vx = camL.x - x, vy = camL.y - y, vz = camL.z - z;
+          float vm = max(1e-6, sqrt(vx * vx + vy * vy + vz * vz));
+          vx /= vm;
+          vy /= vm;
+          vz /= vm;
+          float hx = lx + vx, hy = ly + vy, hz = lz + vz;
+          float hm = max(1e-6, sqrt(hx * hx + hy * hy + hz * hz));
+          float diff = max(nx * lx + ny * ly + nz * lz, 0);
+          float spec = pow(max((nx * hx + ny * hy + nz * hz) / hm, 0), 50);
+          float fres = pow(1 - max(nx * vx + ny * vy + nz * vz, 0), 2.5);
           float kk = 0.45 + 0.6 * diff + 0.25 * flow;
-          fill(red(p.col) * kk + 255 * spec + red(p.colLight) * fres * 0.6,
-               green(p.col) * kk + 255 * spec + green(p.colLight) * fres * 0.6,
-               blue(p.col) * kk + 255 * spec + blue(p.colLight) * fres * 0.6);
+          fill(cr * kk + 255 * spec + lr * fres * 0.6,
+               cg * kk + 255 * spec + lg * fres * 0.6,
+               cb * kk + 255 * spec + lb * fres * 0.6);
           vertex(x, y, z);
         }
       }

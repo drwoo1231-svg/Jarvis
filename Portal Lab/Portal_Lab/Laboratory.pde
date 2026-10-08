@@ -69,12 +69,14 @@ class Laboratory {
   PShape shFloor, shPanel, shMetal, shHazard, shDeco;
   ArrayList<float[]> edges = new ArrayList<float[]>();      // glowing edge strips x0,y0,z0,x1,y1,z1
   ArrayList<Sign> signs = new ArrayList<Sign>();
-  PShape ring;
+  PShape ringGen, ringGyro, ringTesla;   // one per material: P3D bakes fill/emissive into a PShape
 
   Laboratory() {
     build();
     meshAll();
-    ring = makeTorus(1, 0.035, 48, 6);
+    ringGen = makeTorus(1, 0.035, 48, 6, color(120, 130, 140), color(10, 90, 40));
+    ringGyro = makeTorus(1, 0.035, 48, 6, color(200, 210, 230), color(30, 70, 110));
+    ringTesla = makeTorus(1, 0.035, 48, 6, color(190, 200, 215), color(40, 60, 90));
   }
 
   Box add(String name, float x0, float y0, float z0, float x1, float y1, float z1, int k) {
@@ -203,10 +205,12 @@ class Laboratory {
   }
 
   // ring (torus) mesh of radius 1 for machines
-  PShape makeTorus(float R, float r, int seg, int sides) {
+  PShape makeTorus(float R, float r, int seg, int sides, int fillC, int emisC) {
     PShape s = createShape();
     s.beginShape(QUADS);
     s.noStroke();
+    s.fill(fillC);
+    s.emissive(emisC);
     for (int i = 0; i < seg; i++) {
       float a0 = TWO_PI * i / seg, a1 = TWO_PI * (i + 1) / seg;
       for (int j = 0; j < sides; j++) {
@@ -266,10 +270,7 @@ class Laboratory {
         rotateY(T * (1.2 + i * 0.7) * s);
         rotateX(sin(T + i) * 0.25);
         scale(150 + i * 10);
-        fill(120, 130, 140);
-        emissive(10, 90, 40);
-        shape(ring);
-        emissive(0);
+        shape(ringGen);
         popMatrix();
       }
       popMatrix();
@@ -283,10 +284,7 @@ class Laboratory {
       if (i == 1) { rotateZ(T * 1.1); rotateX(HALF_PI); }
       if (i == 2) { rotateY(T * 0.6); rotateZ(HALF_PI); }
       scale(260 - i * 55);
-      fill(200, 210, 230);
-      emissive(30, 70, 110);
-      shape(ring);
-      emissive(0);
+      shape(ringGyro);
       popMatrix();
     }
     fill(30, 40, 60);
@@ -310,14 +308,11 @@ class Laboratory {
     fill(60, 64, 74);
     drawCylinder(35, 520, 12);
     translate(0, -270, 0);
-    fill(190, 200, 215);
-    emissive(40, 60, 90);
     scale(90);
-    shape(ring);
+    shape(ringTesla);
     scale(0.7);
     translate(0, 0.6, 0);
-    shape(ring);
-    emissive(0);
+    shape(ringTesla);
     popMatrix();
     // beakers on the chemistry bench
     for (int i = 0; i < 5; i++) {

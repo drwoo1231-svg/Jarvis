@@ -85,6 +85,7 @@ class PortalPhysics {
 class ResearchTerminal {
   PGraphics g;
   PImage img;                  // GPU-friendly copy: only re-uploaded when it changes
+  PImage bg;                   // the background grid never changes: drawn once
   float refresh;
   PFont head, mono, small, val;
   float[] history = new float[160];
@@ -98,6 +99,14 @@ class ResearchTerminal {
     mono = createFont("Monospaced.bold", 17, true);
     small = createFont("Monospaced", 13, true);
     val = createFont("Monospaced.bold", 14, true);
+    g.beginDraw();
+    g.background(4, 18, 22);
+    g.stroke(30, 90, 90, 60);       // faint grid
+    g.strokeWeight(1);
+    for (int x = 0; x < g.width; x += 32) g.line(x, 0, x, g.height);
+    for (int y = 0; y < g.height; y += 32) g.line(0, y, g.width, y);
+    g.endDraw();
+    bg = g.get();
   }
 
   void update(float dt) {
@@ -124,12 +133,7 @@ class ResearchTerminal {
     PortalPhysics ph = physics;
     Portal a = portals.p[0], b = portals.p[1];
     g.beginDraw();
-    g.background(4, 18, 22);
-    // faint grid
-    g.stroke(30, 90, 90, 60);
-    g.strokeWeight(1);
-    for (int x = 0; x < g.width; x += 32) g.line(x, 0, x, g.height);
-    for (int y = 0; y < g.height; y += 32) g.line(0, y, g.width, y);
+    g.background(bg);
     g.noStroke();
     // header
     g.fill(120, 255, 200);
@@ -178,8 +182,8 @@ class ResearchTerminal {
     drawStabilityGraph(706, 404, 296, 120);
     g.fill(110, 200, 180);
     g.textFont(small);
-    g.text("GENERATORS " + nf(ph.Eavail, 0, 0) + " PJ", 706, 534);
-    g.text("BATTERY BOOST " + nf(ph.boost, 0, 0) + " PJ   JUMPS " + ph.jumps, 706, 552);
+    g.text("GENERATORS " + i0(ph.Eavail) + " PJ", 706, 534);
+    g.text("BATTERY BOOST " + i0(ph.boost) + " PJ   JUMPS " + ph.jumps, 706, 552);
     g.fill(255, 190, 70, 200);
     g.text("Portal mechanics on this screen are fictional. The arithmetic is real.", 24, g.height - 26);
     g.endDraw();

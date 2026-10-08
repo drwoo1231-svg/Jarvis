@@ -283,7 +283,7 @@ void mouseWheel(processing.event.MouseEvent e) {
     manip.rotateStep(radians(15) * c);
   } else {
     objects.throwPower = constrain(objects.throwPower - c, 2, 40);
-    hud.toast("THROW POWER " + nf(objects.throwPower, 0, 0) + " m/s", color(170, 255, 220));
+    hud.toast("THROW POWER " + i0(objects.throwPower) + " m/s", color(170, 255, 220));
   }
 }
 

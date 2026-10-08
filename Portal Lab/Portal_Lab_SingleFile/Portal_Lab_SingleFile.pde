@@ -292,7 +292,7 @@ void mouseWheel(processing.event.MouseEvent e) {
     manip.rotateStep(radians(15) * c);
   } else {
     objects.throwPower = constrain(objects.throwPower - c, 2, 40);
-    hud.toast("THROW POWER " + nf(objects.throwPower, 0, 0) + " m/s", color(170, 255, 220));
+    hud.toast("THROW POWER " + i0(objects.throwPower) + " m/s", color(170, 255, 220));
   }
 }
 
@@ -444,18 +444,24 @@ PImage makeSign(String title, String sub, int c) {
   g.background(0);
   g.textFont(createFont("SansSerif.bold", 40, true));
   g.textAlign(CENTER, CENTER);
+  // shrink long titles so they fit inside the frame
+  float maxW = g.width - 40;
+  g.textSize(40);
+  float ts = min(40, 40 * maxW / max(1, g.textWidth(title)));
   for (int i = 4; i >= 1; i--) {               // soft glow
     g.fill(red(c), green(c), blue(c), 40);
-    g.textSize(40 + i * 0.8);
+    g.textSize(ts + i * 0.8);
     g.text(title, g.width / 2, 46);
   }
-  g.textSize(40);
+  g.textSize(ts);
   g.fill(255);
   g.text(title, g.width / 2, 46);
   g.fill(c);
   g.text(title, g.width / 2, 46);
   if (sub != null) {
     g.textFont(createFont("Monospaced.bold", 22, true));
+    g.textSize(22);
+    g.textSize(min(22, 22 * maxW / max(1, g.textWidth(sub))));
     g.fill(red(c) * 0.8, green(c) * 0.8, blue(c) * 0.8);
     g.text(sub, g.width / 2, 106);
   }
@@ -502,6 +508,7 @@ class Galaxy {
   PImage ringTex;
   PVector sunDir = new PVector(0.55, -0.35, -0.75);
   PShape[] rockMesh = new PShape[3];
+  PShape rockQuantum, rockSmall;      // the lab's own rocks (their colour is baked in)
   Rock[] rocks = new Rock[70];
 
   Galaxy() {
@@ -543,6 +550,8 @@ class Galaxy {
     }
     ringTex = makeRingBands();
     for (int i = 0; i < 3; i++) rockMesh[i] = makeRock(i);
+    rockQuantum = makeRock(1, color(120, 100, 150));
+    rockSmall = makeRock(0, color(110, 100, 92));
     for (int i = 0; i < rocks.length; i++) rocks[i] = new Rock(i);
     buildDust();
   }
@@ -794,6 +803,10 @@ class Galaxy {
 
   // low-poly rock: icosahedron, subdivided once, pushed around with noise
   PShape makeRock(int seed) {
+    return makeRock(seed, seed == 1 ? color(120, 100, 90) : color(105, 102, 110));
+  }
+
+  PShape makeRock(int seed, int fillC) {
     noiseSeed(90 + seed);
     float t = (1 + sqrt(5)) / 2;
     ArrayList<PVector> v = new ArrayList<PVector>();
@@ -813,7 +826,7 @@ class Galaxy {
     PShape s = createShape();
     s.beginShape(TRIANGLES);
     s.noStroke();
-    s.fill(seed == 1 ? color(120, 100, 90) : color(105, 102, 110));
+    s.fill(fillC);
     for (PVector[] tr : tris) {
       PVector[] q = new PVector[3];
       for (int k = 0; k < 3; k++) {
@@ -1037,11 +1050,11 @@ class HUD {
   void holoBox(float x, float y, float w, float h) {
     noStroke();
     fill(0, 30, 28, 150);
-    rect(x, y, w, h, 6);
+    roundBox(x, y, w, h, 6);
     stroke(80, 255, 200, 170);
     strokeWeight(1.2);
     noFill();
-    rect(x, y, w, h, 6);
+    roundBox(x, y, w, h, 6);
     stroke(80, 255, 200, 255);
     strokeWeight(2.5);
     line(x, y + 14, x, y);
@@ -1085,10 +1098,10 @@ class HUD {
     fill(200, 240, 255);
     text("ANGLE:     " + (physics.linked ? nf(physics.theta, 0, 1) + " deg" : "-"), x + 16, ly);
     ly += 25;
-    text("OBJECTS: " + objects.list.size() + "     FPS: " + nf(frameRate, 0, 0), x + 16, ly);
+    text("OBJECTS: " + objects.list.size() + "     FPS: " + i0(frameRate), x + 16, ly);
     ly += 19;
     fill(170, 255, 220);
-    text("NEXT SHOT: PORTAL " + (gun.next == 0 ? "A" : "B") + "   THROW " + nf(objects.throwPower, 0, 0) + " m/s", x + 16, ly);
+    text("NEXT SHOT: PORTAL " + (gun.next == 0 ? "A" : "B") + "   THROW " + i0(objects.throwPower) + " m/s", x + 16, ly);
   }
 
   void drawTags() {
@@ -1123,7 +1136,7 @@ class HUD {
   void drawHolding() {
     ThrowableObject o = objects.heldObj;
     String s = "HOLDING " + o.name + "  (" + o.massLabel() + ")";
-    String t = "LEFT CLICK THROW  -  R / RIGHT CLICK RELEASE  -  WHEEL POWER " + nf(objects.throwPower, 0, 0) + " m/s";
+    String t = "LEFT CLICK THROW  -  R / RIGHT CLICK RELEASE  -  WHEEL POWER " + i0(objects.throwPower) + " m/s";
     textAlign(CENTER, TOP);
     textFont(sans, 17);
     fill(170, 255, 230);
@@ -1135,7 +1148,7 @@ class HUD {
 
   void drawManip() {
     Portal q = manip.sel;
-    float w = 330, h = 128, x = width / 2 - w / 2, y = height / 2 + 40;
+    float w = 330, h = 128, x = 14, y = 262;            // left column: clear of Rick's speech box
     holoBox(x, y, w, h);
     textAlign(LEFT, TOP);
     textFont(mono, 16);
@@ -1157,7 +1170,7 @@ class HUD {
       { "M1", "FIRE PORTAL / THROW" }, { "E", "INTERACT / GRAB / SELECT" }, { "R", "RELEASE OBJECT" }, { "Q/R", "ROTATE PORTAL" },
       { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3 / `", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
     };
-    float w = 270, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
+    float w = 300, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
     holoBox(x, y, w, h);
     textAlign(LEFT, TOP);
     textFont(monoSmall, 13);
@@ -1165,7 +1178,7 @@ class HUD {
       fill(120, 255, 200);
       text(rows[i][0], x + 14, y + 9 + i * 17);
       fill(200, 240, 255);
-      text(rows[i][1], x + 86, y + 9 + i * 17);
+      text(rows[i][1], x + 100, y + 9 + i * 17);
     }
   }
 
@@ -1175,7 +1188,7 @@ class HUD {
       "DEBUG (F3)",
       "FPS            " + nf(frameRate, 0, 1) + "   frame " + nf(dt * 1000, 0, 1) + " ms",
       "CAMERA XYZ     " + v3(cam.pos),
-      "CAMERA DIR     " + nf(cam.fwd.x, 0, 2) + ", " + nf(cam.fwd.y, 0, 2) + ", " + nf(cam.fwd.z, 0, 2) + "  yaw " + nf(degrees(cam.yaw) % 360, 0, 0) + " pitch " + nf(degrees(cam.pitch), 0, 0),
+      "CAMERA DIR     " + nf(cam.fwd.x, 0, 2) + ", " + nf(cam.fwd.y, 0, 2) + ", " + nf(cam.fwd.z, 0, 2) + "  yaw " + i0(degrees(cam.yaw) % 360) + " pitch " + i0(degrees(cam.pitch)),
       "PORTAL A XYZ   " + (a.active ? v3(a.c) : "-"),
       "PORTAL B XYZ   " + (b.active ? v3(b.c) : "-"),
       "PORTAL DIST    " + (physics.linked ? nf(physics.D, 0, 2) + " m" : "-"),
@@ -1328,12 +1341,14 @@ class Laboratory {
   PShape shFloor, shPanel, shMetal, shHazard, shDeco;
   ArrayList<float[]> edges = new ArrayList<float[]>();      // glowing edge strips x0,y0,z0,x1,y1,z1
   ArrayList<Sign> signs = new ArrayList<Sign>();
-  PShape ring;
+  PShape ringGen, ringGyro, ringTesla;   // one per material: P3D bakes fill/emissive into a PShape
 
   Laboratory() {
     build();
     meshAll();
-    ring = makeTorus(1, 0.035, 48, 6);
+    ringGen = makeTorus(1, 0.035, 48, 6, color(120, 130, 140), color(10, 90, 40));
+    ringGyro = makeTorus(1, 0.035, 48, 6, color(200, 210, 230), color(30, 70, 110));
+    ringTesla = makeTorus(1, 0.035, 48, 6, color(190, 200, 215), color(40, 60, 90));
   }
 
   Box add(String name, float x0, float y0, float z0, float x1, float y1, float z1, int k) {
@@ -1462,10 +1477,12 @@ class Laboratory {
   }
 
   // ring (torus) mesh of radius 1 for machines
-  PShape makeTorus(float R, float r, int seg, int sides) {
+  PShape makeTorus(float R, float r, int seg, int sides, int fillC, int emisC) {
     PShape s = createShape();
     s.beginShape(QUADS);
     s.noStroke();
+    s.fill(fillC);
+    s.emissive(emisC);
     for (int i = 0; i < seg; i++) {
       float a0 = TWO_PI * i / seg, a1 = TWO_PI * (i + 1) / seg;
       for (int j = 0; j < sides; j++) {
@@ -1525,10 +1542,7 @@ class Laboratory {
         rotateY(T * (1.2 + i * 0.7) * s);
         rotateX(sin(T + i) * 0.25);
         scale(150 + i * 10);
-        fill(120, 130, 140);
-        emissive(10, 90, 40);
-        shape(ring);
-        emissive(0);
+        shape(ringGen);
         popMatrix();
       }
       popMatrix();
@@ -1542,10 +1556,7 @@ class Laboratory {
       if (i == 1) { rotateZ(T * 1.1); rotateX(HALF_PI); }
       if (i == 2) { rotateY(T * 0.6); rotateZ(HALF_PI); }
       scale(260 - i * 55);
-      fill(200, 210, 230);
-      emissive(30, 70, 110);
-      shape(ring);
-      emissive(0);
+      shape(ringGyro);
       popMatrix();
     }
     fill(30, 40, 60);
@@ -1569,14 +1580,11 @@ class Laboratory {
     fill(60, 64, 74);
     drawCylinder(35, 520, 12);
     translate(0, -270, 0);
-    fill(190, 200, 215);
-    emissive(40, 60, 90);
     scale(90);
-    shape(ring);
+    shape(ringTesla);
     scale(0.7);
     translate(0, 0.6, 0);
-    shape(ring);
-    emissive(0);
+    shape(ringTesla);
     popMatrix();
     // beakers on the chemistry bench
     for (int i = 0; i < 5; i++) {
@@ -1891,33 +1899,92 @@ String fm(float v) {
 }
 String f2(float v) { return nf(v, 0, 2); }
 
+// a whole number for display (nf(x, 0, 0) keeps up to three decimals)
+String i0(float v) {
+  return str(round(v));
+}
+
+// rounded rectangle in the current fill / stroke. rect(x, y, w, h, r) sends P3D through its slow
+// polygon tessellator every call; a convex fan (fill) plus a closed line loop (outline) does not
+void roundBox(float x, float y, float w, float h, float r) {
+  r = min(r, min(w, h) / 2);
+  if (g.fill) {
+    pushStyle();
+    noStroke();
+    beginShape(TRIANGLE_FAN);
+    vertex(x + w / 2, y + h / 2);
+    roundBoxPath(x, y, w, h, r);
+    vertex(x + w - r, y);              // close the fan
+    endShape();
+    popStyle();
+  }
+  if (g.stroke) {
+    pushStyle();
+    noFill();
+    beginShape();
+    roundBoxPath(x, y, w, h, r);
+    endShape(CLOSE);
+    popStyle();
+  }
+}
+
+void roundBoxPath(float x, float y, float w, float h, float r) {
+  for (int c = 0; c < 4; c++) {
+    float cx = (c == 0 || c == 1) ? x + w - r : x + r;
+    float cy = (c == 1 || c == 2) ? y + h - r : y + r;
+    float a0 = -HALF_PI + c * HALF_PI;
+    for (int i = 0; i <= 6; i++) {
+      float a = a0 + HALF_PI * i / 6;
+      vertex(cx + cos(a) * r, cy + sin(a) * r);
+    }
+  }
+}
+
 
 // ======================================================================
 // TAB: Particle.pde
 // ======================================================================
-// Pooled particle system (fixed arrays, no per-frame allocation) and
-// in-plane shockwave rings. Everything here is drawn additively.
+// Particle (one spark), the pooled Particles system (every Particle made once,
+// no per-frame allocation) and in-plane shockwave rings. All drawn additively.
 
+// one spark of light
+class Particle {
+  float x, y, z, vx, vy, vz;
+  float life, maxLife, size, grav, drag;
+  int col;
+
+  void step(float dt) {
+    float k = exp(-drag * dt);
+    vx *= k;
+    vy = vy * k + grav * dt;
+    vz *= k;
+    x += vx * dt;
+    y += vy * dt;
+    z += vz * dt;
+  }
+}
+
+// the pool: every Particle is made once up front; the live ones are pool[0 .. count-1]
 class Particles {
   final int CAP = 1400;
-  float[] x = new float[CAP], y = new float[CAP], z = new float[CAP];
-  float[] vx = new float[CAP], vy = new float[CAP], vz = new float[CAP];
-  float[] life = new float[CAP], maxLife = new float[CAP], size = new float[CAP];
-  float[] grav = new float[CAP], drag = new float[CAP];
-  int[] col = new int[CAP];
+  Particle[] pool = new Particle[CAP];
   int count;
 
+  Particles() {
+    for (int i = 0; i < CAP; i++) pool[i] = new Particle();
+  }
+
   void emit(float px, float py, float pz, float pvx, float pvy, float pvz, float plife, float psize, int pcol, float pgrav, float pdrag) {
-    int i;
-    if (count < CAP) i = count++;
-    else i = (int) random(CAP);              // full: overwrite a random one
-    x[i] = px; y[i] = py; z[i] = pz;
-    vx[i] = pvx; vy[i] = pvy; vz[i] = pvz;
-    life[i] = maxLife[i] = plife;
-    size[i] = psize;
-    col[i] = pcol;
-    grav[i] = pgrav;
-    drag[i] = pdrag;
+    Particle q;
+    if (count < CAP) q = pool[count++];
+    else q = pool[(int) random(CAP)];        // full: overwrite a random one
+    q.x = px; q.y = py; q.z = pz;
+    q.vx = pvx; q.vy = pvy; q.vz = pvz;
+    q.life = q.maxLife = plife;
+    q.size = psize;
+    q.col = pcol;
+    q.grav = pgrav;
+    q.drag = pdrag;
   }
 
   void emit(PVector p, PVector v, float plife, float psize, int pcol, float pgrav, float pdrag) {
@@ -1934,27 +2001,17 @@ class Particles {
 
   void update(float dt) {
     for (int i = count - 1; i >= 0; i--) {
-      life[i] -= dt;
-      if (life[i] <= 0) {
+      Particle q = pool[i];
+      q.life -= dt;
+      if (q.life <= 0) {
+        // swap the dead one past the end of the live range
         count--;
-        copy(count, i);
+        pool[i] = pool[count];
+        pool[count] = q;
         continue;
       }
-      float k = exp(-drag[i] * dt);
-      vx[i] *= k;
-      vy[i] = vy[i] * k + grav[i] * dt;
-      vz[i] *= k;
-      x[i] += vx[i] * dt;
-      y[i] += vy[i] * dt;
-      z[i] += vz[i] * dt;
+      q.step(dt);
     }
-  }
-
-  void copy(int from, int to) {
-    x[to] = x[from]; y[to] = y[from]; z[to] = z[from];
-    vx[to] = vx[from]; vy[to] = vy[from]; vz[to] = vz[from];
-    life[to] = life[from]; maxLife[to] = maxLife[from]; size[to] = size[from];
-    col[to] = col[from]; grav[to] = grav[from]; drag[to] = drag[from];
   }
 
   // one batch of camera-facing textured quads
@@ -1966,16 +2023,17 @@ class Particles {
     beginShape(QUADS);
     texture(texGlow);
     for (int i = 0; i < count; i++) {
-      float a = life[i] / maxLife[i];
-      float s = size[i] * (0.4 + 0.6 * a) * 0.5;
-      int c = col[i];
+      Particle q = pool[i];
+      float a = q.life / q.maxLife;
+      float s = q.size * (0.4 + 0.6 * a) * 0.5;
+      int c = q.col;
       tint((c >> 16) & 255, (c >> 8) & 255, c & 255, 255 * min(1, a * 1.6));
       float ax = (rx + ux) * s, ay = (ry + uy) * s, az = (rz + uz) * s;
       float bx = (rx - ux) * s, by = (ry - uy) * s, bz = (rz - uz) * s;
-      vertex(x[i] - ax, y[i] - ay, z[i] - az, 0, 0);
-      vertex(x[i] + bx, y[i] + by, z[i] + bz, 1, 0);
-      vertex(x[i] + ax, y[i] + ay, z[i] + az, 1, 1);
-      vertex(x[i] - bx, y[i] - by, z[i] - bz, 0, 1);
+      vertex(q.x - ax, q.y - ay, q.z - az, 0, 0);
+      vertex(q.x + bx, q.y + by, q.z + bz, 1, 0);
+      vertex(q.x + ax, q.y + ay, q.z + az, 1, 1);
+      vertex(q.x - bx, q.y - by, q.z - bz, 0, 1);
     }
     endShape();
     noTint();
@@ -2395,14 +2453,16 @@ class Portal {
     float lift = 0.8;
     float ripR = rippleAge * 0.9, ripA = rippleAge < 3 ? 9 * exp(-rippleAge * 2.2) : 0;
     float o = smooth01(open);
-    liquid.build(age, o, ripR, ripA);
+    boolean gpu = liquidShader != null && liquidMesh != null;
+    if (gpu) liquid.buildRim(age);             // the vertex shader shapes the liquid
+    else liquid.build(age, o, ripR, ripA);     // CPU fallback: whole height field
     PVector camL = toLocal(cam.pos);
     camL.z -= lift;
     camL.div(s);
     pushMatrix();
     applyFrame(lift);
     scale(s);
-    if (liquidShader != null) {
+    if (gpu) {
       liquidShader.set("time", age);
       liquidShader.set("open", o);
       liquidShader.set("camLocal", camL.x, camL.y, camL.z);
@@ -2413,7 +2473,7 @@ class Portal {
       liquidShader.set("ripR", ripR);
       liquidShader.set("ripA", ripA);
       shader(liquidShader);
-      liquid.drawGPU();
+      shape(liquidMesh);
       resetShader();
     } else {
       liquid.drawCPU(this, camL, age);
@@ -2431,7 +2491,17 @@ class Portal {
     scale(s);
     planeQuad(texGlow, PORTAL_HW * 3.2, PORTAL_HH * 2.8, 0, col, 120 * p);
     if (age < 0.7) planeQuad(texGlow, PORTAL_HW * 7, PORTAL_HH * 6, 0, colLight, 255 * (1 - age / 0.7));
-    planeQuad(texRingDash, PORTAL_HW * 2.3, PORTAL_HH * 2.3, age * 1.3, col, 110 * p);
+    popMatrix();
+    // rotating rings, out past the glossy rim: two counter-rotating in the plane, one tilted and precessing above it
+    pushMatrix();
+    applyFrame(12);
+    scale(s);
+    planeQuad(texRingDash, PORTAL_HW * 2.95, PORTAL_HH * 2.75, age * 1.3, col, 170 * p);
+    planeQuad(texRingDash, PORTAL_HW * 3.4, PORTAL_HH * 3.15, -age * 0.8, colLight, 110 * p);
+    translate(0, 0, 44);
+    rotateZ(age * 0.5);
+    rotateX(0.33);
+    planeQuad(texRingDash, PORTAL_HW * 2.7, PORTAL_HW * 2.7, age * 2.1, colLight, 120 * p);
     popMatrix();
     // energy beads orbiting above the whirlpool, spiralling down into the eye
     for (int k = 0; k < 10; k++) {
@@ -2737,7 +2807,7 @@ class PortalGun {
     shotsFired++;
     RayHit h = aimRay();
     PVector muzzle = PVector.add(cam.pos, PVector.mult(cam.fwd, 34));
-    muzzle.add(PVector.mult(cam.right, 13)).sub(PVector.mult(cam.up, 12));
+    muzzle.add(PVector.mult(cam.right, 24)).sub(PVector.mult(cam.up, 20));   // off-axis, so the bolt visibly crosses into the centre
     PVector target = h.hit() ? h.p : PVector.add(cam.pos, PVector.mult(cam.fwd, 9000));
     shots.add(new Shot(muzzle, target, h, next, cam.fwd.copy()));
     next = 1 - next;
@@ -2776,7 +2846,7 @@ class PortalGun {
     int c = manip.active() ? manip.sel.colLight : portals.p[next].col;
     PVector p = PVector.add(cam.pos, PVector.mult(cam.fwd, 58 - recoil * 6));
     p.add(PVector.mult(cam.right, 21 + sin(T * 2) * 0.6)).sub(PVector.mult(cam.up, 14 + cos(T * 2.3) * 0.6));
-    glowSprite(p.x, p.y, p.z, 16 + recoil * 10, c, 230 * a);
+    glowSprite(p.x, p.y, p.z, 11 + recoil * 7, c, 210 * a);
     glowSprite(p.x, p.y, p.z, 5, color(255), 255 * a);
     // two little rings spinning round the emitter
     noFill();
@@ -2840,6 +2910,10 @@ class PortalGun {
       Portal q = portals.p[which];
       if (!hit.hit()) {
         lastResult = "SHOT LOST IN SPACE";
+        hud.toast("SHOT LOST IN SPACE", color(255, 150, 110));
+        sfx.play(sfx.fizzle, 0.35, 0.8);
+        giveLetterBack();
+        onShotLost();
         return;
       }
       String fail = portals.place(which, hit, aimDir);
@@ -2857,14 +2931,26 @@ class PortalGun {
         PVector[] ax = planeAxes(hit.n);
         portals.waves.add(new Shockwave(at, ax[0], ax[1], 70, 0.3, color(255, 140, 80)));
         sfx.play(sfx.fizzle, 0.6, 1);
+        giveLetterBack();
         onPortalFizzled(fail, hit);
       }
     }
 
+    // a shot that didn't open anything doesn't use up its letter (unless a newer shot is already flying)
+    void giveLetterBack() {
+      if (shots.get(shots.size() - 1) == this) next = which;
+    }
+
     void draw() {
       int c = portals.p[which].col;
-      glowSprite(pos.x, pos.y, pos.z, 90, c, 200);
-      glowSprite(pos.x, pos.y, pos.z, 26, color(240, 255, 230), 255);
+      // about the same size on screen at any distance, so it reads as a bolt all the way to the wall
+      float s = constrain(PVector.dist(pos, cam.pos) * 0.11, 22, 700);
+      for (int k = 6; k >= 1; k--) {                          // comet tail
+        PVector t = PVector.sub(pos, PVector.mult(dir, min(k * s * 0.22, travelled)));
+        glowSprite(t.x, t.y, t.z, s * (0.8 - k * 0.1), c, 170 - k * 24);
+      }
+      glowSprite(pos.x, pos.y, pos.z, s, c, 235);
+      glowSprite(pos.x, pos.y, pos.z, s * 0.32, color(240, 255, 230), 255);
     }
   }
 }
@@ -2920,6 +3006,7 @@ class PortalManipulator {
     RayHit h = lab.raycast(cam.pos, cam.fwd, 20000);
     Placement pl = portals.tryPlace(sel.id, h, cam.fwd, spin);
     if (pl.fail == null) {
+      if (PVector.dist(sel.c, pl.c) > 0.5 || PVector.dist(sel.u, pl.u) > 0.01) markAction();   // dragging it around counts as doing something
       sel.c.set(pl.c);
       sel.n.set(pl.n);
       sel.u.set(pl.u);
@@ -3015,19 +3102,66 @@ class PortalManipulator {
 PShader liquidShader;
 
 final float LQ_BOWL = 34, LQ_RIDGE = 6.5, LQ_WOB = 2.5;
-final int LQ_RINGS = 26, LQ_SEG = 88;
+final int LQ_RINGS = 26, LQ_SEG = 88;          // CPU fallback mesh (rebuilt every frame)
+final int LQ_GPU_RINGS = 48, LQ_GPU_SEG = 168;  // GPU mesh (built once; the vertex shader moves it)
 
+// the mesh is a flat unit disc (position.xy = q); the vertex shader wobbles its rim and
+// lifts it into the whirlpool with the same height function the fragment shader shades
 String[] LIQUID_VERT = {
   "#define PROCESSING_TEXTURE_SHADER",
   "uniform mat4 transformMatrix;",
+  "uniform float time;",
+  "uniform float open;",
+  "uniform vec2 halfSize;",
+  "uniform float ripR;",
+  "uniform float ripA;",
   "attribute vec4 position;",
   "attribute vec2 texCoord;",
   "varying vec2 vQ;",
+  "float sstep(float e0, float e1, float x) { float t = clamp((x - e0) / (e1 - e0), 0.0, 1.0); return t * t * (3.0 - 2.0 * t); }",
+  "float rimWob(float th) { return 1.0 + 0.03 * sin(5.0 * th + 2.0 * time) + 0.02 * sin(9.0 * th - 3.0 * time); }",
+  "float hgt(vec2 q) {",
+  "  float r = length(q);",
+  "  float th = atan(q.y, q.x);",
+  "  float ph = 3.0 * th + 7.0 * log(r + 0.08) + time * 2.6;",
+  "  float bowl = 34.0 * sstep(0.0, 0.55, r) * pow(max(1.0 - r * r, 0.0), 0.6);",
+  "  float ridge = 6.5 * sin(ph) * sstep(0.06, 0.35, r) * (1.0 - r);",
+  "  float wob = 2.5 * sin(5.0 * q.x + 1.3 * time + sin(4.0 * q.y + time)) * sin(5.0 * q.y - 1.1 * time) * (1.0 - r);",
+  "  float dr = (r - ripR) * 6.0;",
+  "  float rip = ripA * sin(30.0 * (r - ripR)) * exp(-dr * dr);",
+  "  return (bowl + ridge + wob + rip) * open + 2.0;",
+  "}",
   "void main() {",
-  "  vQ = texCoord;",
-  "  gl_Position = transformMatrix * position;",
+  "  vec2 q = position.xy + vec2(1e-5, 0.0);",      // the centre vertex must not hit atan(0, 0)
+  "  float w = rimWob(atan(q.y, q.x));",
+  "  vQ = q * w;",
+  "  gl_Position = transformMatrix * vec4(q * w * halfSize, hgt(q), 1.0);",
   "}"
 };
+
+PShape liquidMesh;             // static unit disc, built once
+
+void buildLiquidMesh(int rings, int seg) {
+  liquidMesh = createShape();
+  liquidMesh.beginShape(TRIANGLES);
+  liquidMesh.noStroke();
+  liquidMesh.texture(texGlow);   // any texture: it makes Processing use the (texture-type) liquid shader
+  for (int i = 0; i < rings; i++) {
+    float r0 = pow(i / (float) rings, 0.85), r1 = pow((i + 1) / (float) rings, 0.85);
+    for (int j = 0; j < seg; j++) {
+      float a0 = TWO_PI * j / seg, a1 = TWO_PI * (j + 1) / seg;
+      float x00 = cos(a0) * r0, y00 = sin(a0) * r0, x01 = cos(a1) * r0, y01 = sin(a1) * r0;
+      float x10 = cos(a0) * r1, y10 = sin(a0) * r1, x11 = cos(a1) * r1, y11 = sin(a1) * r1;
+      liquidMesh.vertex(x00, y00, 0, x00, y00);
+      liquidMesh.vertex(x10, y10, 0, x10, y10);
+      liquidMesh.vertex(x11, y11, 0, x11, y11);
+      liquidMesh.vertex(x00, y00, 0, x00, y00);
+      liquidMesh.vertex(x11, y11, 0, x11, y11);
+      liquidMesh.vertex(x01, y01, 0, x01, y01);
+    }
+  }
+  liquidMesh.endShape();
+}
 
 String[] LIQUID_FRAG = {
   "#ifdef GL_ES",
@@ -3115,9 +3249,11 @@ void setupLiquidShader() {
     saveStrings(f.getAbsolutePath(), LIQUID_FRAG);
     liquidShader = loadShader(f.getAbsolutePath(), v.getAbsolutePath());
     liquidShader.init();            // compile now so a failure is caught here
+    buildLiquidMesh(LQ_GPU_RINGS, LQ_GPU_SEG);
   } catch (Exception e) {
     println("Liquid portal shader not available (" + e.getMessage() + ") - shading portals on the CPU.");
     liquidShader = null;
+    liquidMesh = null;
   }
 }
 
@@ -3172,17 +3308,13 @@ class LiquidSurface {
     }
   }
 
-  // GPU path: positions + (q.x, q.y) in the texture channel; the shader does the rest
-  void drawGPU() {
-    noStroke();
-    for (int i = 0; i < LQ_RINGS; i++) {
-      beginShape(TRIANGLE_STRIP);
-      texture(texGlow);           // any texture: it just routes q through texCoord
-      for (int j = 0; j <= LQ_SEG; j++) {
-        vertex(px[i + 1][j], py[i + 1][j], pz[i + 1][j], qu[i + 1][j], qv[i + 1][j]);
-        vertex(px[i][j], py[i][j], pz[i][j], qu[i][j], qv[i][j]);
-      }
-      endShape();
+  // GPU path: the shader moves the liquid itself, so only the rim tube needs this frame's outline
+  void buildRim(float t) {
+    for (int j = 0; j <= LQ_SEG; j++) {
+      float th = TWO_PI * j / LQ_SEG;
+      float w = lqRimWob(th, t);
+      rimX[j] = cos(th) * w * PORTAL_HW;
+      rimY[j] = sin(th) * w * PORTAL_HH;
     }
   }
 
@@ -3229,31 +3361,53 @@ class LiquidSurface {
     vertex(px[i][j], py[i][j], pz[i][j]);
   }
 
-  // glossy tube of liquid running round the edge
+  // glossy tube of liquid running round the edge. Its normals never change, so they're worked out once
+  final int RIM_SIDES = 9;
+  float[][] rnx = new float[RIM_SIDES + 1][LQ_SEG + 1], rny = new float[RIM_SIDES + 1][LQ_SEG + 1], rnz = new float[RIM_SIDES + 1][LQ_SEG + 1];
+
+  LiquidSurface() {
+    for (int k = 0; k <= RIM_SIDES; k++) {
+      float f = TWO_PI * k / RIM_SIDES;
+      for (int j = 0; j <= LQ_SEG; j++) {
+        float th = TWO_PI * j / LQ_SEG;
+        float ox = cos(th) * PORTAL_HH, oy = sin(th) * PORTAL_HW;   // ellipse outward normal
+        float om = sqrt(ox * ox + oy * oy);
+        rnx[k][j] = ox / om * cos(f);
+        rny[k][j] = oy / om * cos(f);
+        rnz[k][j] = sin(f);
+      }
+    }
+  }
+
   void drawRim(Portal p, PVector camL, float t, float open) {
-    final int SIDES = 9;
     float tube = 8.5 * open;
-    PVector L1 = new PVector(-0.35, 0.55, 0.75).normalize();
+    float lm = sqrt(0.35 * 0.35 + 0.55 * 0.55 + 0.75 * 0.75);
+    float lx = -0.35 / lm, ly = 0.55 / lm, lz = 0.75 / lm;
+    float cr = red(p.col), cg = green(p.col), cb = blue(p.col);
+    float lr = red(p.colLight), lg = green(p.colLight), lb = blue(p.colLight);
     noStroke();
-    for (int k = 0; k < SIDES; k++) {
-      float f0 = TWO_PI * k / SIDES, f1 = TWO_PI * (k + 1) / SIDES;
+    for (int k = 0; k < RIM_SIDES; k++) {
       beginShape(QUAD_STRIP);
       for (int j = 0; j <= LQ_SEG; j++) {
         float th = TWO_PI * j / LQ_SEG;
-        PVector out = new PVector(cos(th) * PORTAL_HH, sin(th) * PORTAL_HW, 0).normalize();   // ellipse outward normal
         float flow = 0.5 + 0.5 * sin(th * 6 - t * 7);
         for (int s = 0; s < 2; s++) {
-          float f = s == 0 ? f0 : f1;
-          PVector nrm = new PVector(out.x * cos(f), out.y * cos(f), sin(f));
-          float x = rimX[j] + nrm.x * tube, y = rimY[j] + nrm.y * tube, z = 4 + nrm.z * tube;
-          PVector v = new PVector(camL.x - x, camL.y - y, camL.z - z).normalize();
-          float diff = max(nrm.dot(L1), 0);
-          float spec = pow(max(nrm.dot(PVector.add(L1, v).normalize()), 0), 50);
-          float fres = pow(1 - max(nrm.dot(v), 0), 2.5);
+          float nx = rnx[k + s][j], ny = rny[k + s][j], nz = rnz[k + s][j];
+          float x = rimX[j] + nx * tube, y = rimY[j] + ny * tube, z = 4 + nz * tube;
+          float vx = camL.x - x, vy = camL.y - y, vz = camL.z - z;
+          float vm = max(1e-6, sqrt(vx * vx + vy * vy + vz * vz));
+          vx /= vm;
+          vy /= vm;
+          vz /= vm;
+          float hx = lx + vx, hy = ly + vy, hz = lz + vz;
+          float hm = max(1e-6, sqrt(hx * hx + hy * hy + hz * hz));
+          float diff = max(nx * lx + ny * ly + nz * lz, 0);
+          float spec = pow(max((nx * hx + ny * hy + nz * hz) / hm, 0), 50);
+          float fres = pow(1 - max(nx * vx + ny * vy + nz * vz, 0), 2.5);
           float kk = 0.45 + 0.6 * diff + 0.25 * flow;
-          fill(red(p.col) * kk + 255 * spec + red(p.colLight) * fres * 0.6,
-               green(p.col) * kk + 255 * spec + green(p.colLight) * fres * 0.6,
-               blue(p.col) * kk + 255 * spec + blue(p.colLight) * fres * 0.6);
+          fill(cr * kk + 255 * spec + lr * fres * 0.6,
+               cg * kk + 255 * spec + lg * fres * 0.6,
+               cb * kk + 255 * spec + lb * fres * 0.6);
           vertex(x, y, z);
         }
       }
@@ -3353,6 +3507,7 @@ class PortalPhysics {
 class ResearchTerminal {
   PGraphics g;
   PImage img;                  // GPU-friendly copy: only re-uploaded when it changes
+  PImage bg;                   // the background grid never changes: drawn once
   float refresh;
   PFont head, mono, small, val;
   float[] history = new float[160];
@@ -3366,6 +3521,14 @@ class ResearchTerminal {
     mono = createFont("Monospaced.bold", 17, true);
     small = createFont("Monospaced", 13, true);
     val = createFont("Monospaced.bold", 14, true);
+    g.beginDraw();
+    g.background(4, 18, 22);
+    g.stroke(30, 90, 90, 60);       // faint grid
+    g.strokeWeight(1);
+    for (int x = 0; x < g.width; x += 32) g.line(x, 0, x, g.height);
+    for (int y = 0; y < g.height; y += 32) g.line(0, y, g.width, y);
+    g.endDraw();
+    bg = g.get();
   }
 
   void update(float dt) {
@@ -3392,12 +3555,7 @@ class ResearchTerminal {
     PortalPhysics ph = physics;
     Portal a = portals.p[0], b = portals.p[1];
     g.beginDraw();
-    g.background(4, 18, 22);
-    // faint grid
-    g.stroke(30, 90, 90, 60);
-    g.strokeWeight(1);
-    for (int x = 0; x < g.width; x += 32) g.line(x, 0, x, g.height);
-    for (int y = 0; y < g.height; y += 32) g.line(0, y, g.width, y);
+    g.background(bg);
     g.noStroke();
     // header
     g.fill(120, 255, 200);
@@ -3446,8 +3604,8 @@ class ResearchTerminal {
     drawStabilityGraph(706, 404, 296, 120);
     g.fill(110, 200, 180);
     g.textFont(small);
-    g.text("GENERATORS " + nf(ph.Eavail, 0, 0) + " PJ", 706, 534);
-    g.text("BATTERY BOOST " + nf(ph.boost, 0, 0) + " PJ   JUMPS " + ph.jumps, 706, 552);
+    g.text("GENERATORS " + i0(ph.Eavail) + " PJ", 706, 534);
+    g.text("BATTERY BOOST " + i0(ph.boost) + " PJ   JUMPS " + ph.jumps, 706, 552);
     g.fill(255, 190, 70, 200);
     g.text("Portal mechanics on this screen are fictional. The arithmetic is real.", 24, g.height - 26);
     g.endDraw();
@@ -3645,6 +3803,7 @@ class RickDialogue {
     age = 0;
     life = 2.6 + line.length() / 17.0;
     showing = true;
+    lastIdleMs = millis();                  // whatever he says, the 20 s idle window starts over
     sfx.play(line.contains("*burp*") ? sfx.burp : sfx.pop, line.contains("*burp*") ? 0.7 : 0.35, 0.8);
   }
 
@@ -3662,7 +3821,7 @@ class RickDialogue {
 
   void update(float dt) {
     eventCooldown -= dt;
-    if (showing) {
+    if (showing && hud.terminalAnim < 0.5) {   // the TAB computer covers the screen: hold the line until it closes
       age += dt;
       if (age > life) showing = false;
     }
@@ -3759,7 +3918,7 @@ class RickDialogue {
 
   // the cartoon speech box (2D)
   void draw() {
-    if (!showing) return;
+    if (!showing || hud.terminalAnim > 0.5) return;
     float pop = easeOutBack(min(1, age / 0.25));
     float fade = constrain((life - age) / 0.35, 0, 1);
     float px = width - 120, py = height - 150;          // portrait centre
@@ -3798,12 +3957,12 @@ class RickDialogue {
     translate(-(bx + w), -(by + h * 0.65));
     noStroke();
     fill(0, 120 * fade);
-    rect(bx + 7, by + 7, w, h, 22);
+    roundBox(bx + 7, by + 7, w, h, 22);
     stroke(20, 20, 26, 255 * fade);
     strokeWeight(4);
     fill(255, 252, 240, 250 * fade);
     triangle(bx + w - 6, by + h * 0.45, bx + w - 6, by + h * 0.8, bx + w + 48, by + h * 0.72);
-    rect(bx, by, w, h, 22);
+    roundBox(bx, by, w, h, 22);
     noStroke();
     triangle(bx + w - 9, by + h * 0.47, bx + w - 9, by + h * 0.78, bx + w + 40, by + h * 0.71);
     // name
@@ -4060,7 +4219,7 @@ String[] BATTERY_JUMP = { "You just gave a tiny civilisation a hyperspace commut
 String[] ANTIGRAV_JUMP = { "Anti-gravity through a portal. Now it falls the OTHER way. Or double anti. Look, I'm busy." };
 String[] DUMMY_JUMP = { "Gary's spinning. Gary's fine. Gary signed a waiver." };
 String[] DISPENSED = { "Ooh, what'd you get? ...Disappointing.", "The dispenser picks randomly. Like evolution. Or my ex-wives' lawyers.", "Free stuff! It's not free. Nothing's free. *burp*" };
-String[] TERMINAL = { "Reading the equations, huh? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
+String[] TERMINAL = { "Done reading the equations? Half of them are real. Guess which half.", "Look at you doing maths. I'm so proud I could throw up. *burp*" };
 String[] MANIPULATED = { "Dragging portals around like furniture. Interior designer of the multiverse.", "Nice placement. Feng shui for spacetime." };
 String[] HOLO_HIT = { "Hey! That went right through my face. Rude.", "I'm a hologram, genius. Throw it at something that can feel it." };
 String[] FAR_AWAY = { "Where are you going? The lab's back there. The universe is mostly empty - I've checked." };
@@ -4119,7 +4278,21 @@ void onObjectTeleported(ThrowableObject o, Portal from, int chain) {
   if (o.type == OB_BATTERY) { rick.event("battery", 60, BATTERY_JUMP); return; }
   if (o.type == OB_ANTIGRAV) { rick.event("antigrav", 60, ANTIGRAV_JUMP); return; }
   if (o.type == OB_DUMMY) { rick.event("dummy", 60, DUMMY_JUMP); return; }
+  if (o.type == OB_ANVIL) { rick.event("anvilslow", 60, ANVIL_SLOW); return; }
   rick.event("objjump", 45, OBJ_JUMP);
+}
+
+String[] ANVIL_SLOW = {
+  "The anvil came out slower. Portal friction. That's not a real thing. The anvil made it a real thing. Out of spite.",
+  "Fifty kilos through a hole in space and it lost half its speed. Even physics is tired of that anvil."
+};
+String[] ZERO_G_ECHO = {
+  "The zero-g core went back for seconds. No gravity, no commitment. Relatable.",
+  "It changed its mind. Zero gravity, zero decisiveness. Like a Jerry in a ball."
+};
+
+void onZeroGEcho(ThrowableObject o) {
+  rick.event("zgecho", 60, ZERO_G_ECHO);
 }
 
 void onQuantumBounce(ThrowableObject o) {
@@ -4163,6 +4336,15 @@ void onObjectDispensed(ThrowableObject o) {
 
 void onLowStability() {
   rick.event("lowstab", 60, LOW_STAB);
+}
+
+String[] SHOT_LOST = {
+  "You shot a portal into space. It'll land somewhere in about four billion years. Someone's gonna be SO confused.",
+  "Missed the entire lab. The ENTIRE lab. It's a big lab, Morty- I mean, whoever you are."
+};
+
+void onShotLost() {
+  rick.event("shotlost", 90, SHOT_LOST);
 }
 
 void onTerminalOpened() {
@@ -4505,6 +4687,9 @@ class ThrowableObject {
   float gone;                   // > 0 while shattered / respawning
   float stuck;                  // held but not reaching the hold point
   float driftT;                 // seconds spent drifting slowly outside the lab
+  float echoT;                  // zero-g core: countdown to diving back into the portal it just left
+  Portal echoInto;
+  boolean echoReturn;           // this trip is the echo itself (one echo per jump)
   PVector safe = new PVector();  // last position that was outside every wall
   int massRoll;                 // unstable object's displayed mass changes
 
@@ -4662,6 +4847,14 @@ class ThrowableObject {
     float stab = physics.stability;
     // weird stuff
     if (type == OB_BOUNCY) vel.mult(1.12);
+    if (type == OB_ANVIL) vel.mult(0.55);          // "portal friction": too heavy to get through at full speed
+    if (type == OB_FLOATER) {
+      if (echoReturn) echoReturn = false;
+      else if (random(1) < 0.35) {
+        echoT = 0.45;                               // it'll change its mind in a moment
+        echoInto = to;
+      }
+    }
     if (type == OB_ANTIGRAV) grav = -grav;
     if (type == OB_DUMMY) angVel.add(PVector.random3D().mult(14));
     if (type == OB_UNSTABLE) {
@@ -4735,6 +4928,20 @@ class ThrowableObject {
         }
       }
     }
+    // the zero-g core changes its mind and dives back into the portal it just came out of
+    if (echoT > 0) {
+      echoT -= dt;
+      if (held) echoT = 0;
+      else if (echoT <= 0) {
+        if (portals.linked() && echoInto != null && echoInto.active) {
+          vel.set(PVector.sub(echoInto.c, pos).normalize().mult(max(vel.mag(), 350)));
+          echoReturn = true;
+          parts.burst(pos, 14, 200, color(150, 220, 255), 0.4, 12);
+          onZeroGEcho(this);
+        }
+        echoInto = null;
+      }
+    }
     // drifting slowly out in space (zero-g things never fall far enough to count as lost)
     boolean outside = abs(pos.x) > 4500 || abs(pos.z) > 3000 || pos.y < -3200 || pos.y > 2200;
     if (!held && outside && vel.mag() < 150) driftT += dt;
@@ -4796,9 +5003,8 @@ class ThrowableObject {
       emissive(0);
       break;
     case OB_QUANTUM:
-      fill(120, 100, 150);
       scale(radius);
-      shape(galaxy.rockMesh[1]);
+      shape(galaxy.rockQuantum);
       break;
     case OB_BATTERY:
       fill(40, 44, 54);
@@ -4812,9 +5018,8 @@ class ThrowableObject {
       drawFlask();
       break;
     case OB_ROCK:
-      fill(110, 100, 92);
       scale(radius);
-      shape(galaxy.rockMesh[0]);
+      shape(galaxy.rockSmall);
       break;
     case OB_DUMMY:
       drawDummy();

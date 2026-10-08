@@ -131,14 +131,16 @@ class Portal {
     float lift = 0.8;
     float ripR = rippleAge * 0.9, ripA = rippleAge < 3 ? 9 * exp(-rippleAge * 2.2) : 0;
     float o = smooth01(open);
-    liquid.build(age, o, ripR, ripA);
+    boolean gpu = liquidShader != null && liquidMesh != null;
+    if (gpu) liquid.buildRim(age);             // the vertex shader shapes the liquid
+    else liquid.build(age, o, ripR, ripA);     // CPU fallback: whole height field
     PVector camL = toLocal(cam.pos);
     camL.z -= lift;
     camL.div(s);
     pushMatrix();
     applyFrame(lift);
     scale(s);
-    if (liquidShader != null) {
+    if (gpu) {
       liquidShader.set("time", age);
       liquidShader.set("open", o);
       liquidShader.set("camLocal", camL.x, camL.y, camL.z);
@@ -149,7 +151,7 @@ class Portal {
       liquidShader.set("ripR", ripR);
       liquidShader.set("ripA", ripA);
       shader(liquidShader);
-      liquid.drawGPU();
+      shape(liquidMesh);
       resetShader();
     } else {
       liquid.drawCPU(this, camL, age);
@@ -167,7 +169,17 @@ class Portal {
     scale(s);
     planeQuad(texGlow, PORTAL_HW * 3.2, PORTAL_HH * 2.8, 0, col, 120 * p);
     if (age < 0.7) planeQuad(texGlow, PORTAL_HW * 7, PORTAL_HH * 6, 0, colLight, 255 * (1 - age / 0.7));
-    planeQuad(texRingDash, PORTAL_HW * 2.3, PORTAL_HH * 2.3, age * 1.3, col, 110 * p);
+    popMatrix();
+    // rotating rings, out past the glossy rim: two counter-rotating in the plane, one tilted and precessing above it
+    pushMatrix();
+    applyFrame(12);
+    scale(s);
+    planeQuad(texRingDash, PORTAL_HW * 2.95, PORTAL_HH * 2.75, age * 1.3, col, 170 * p);
+    planeQuad(texRingDash, PORTAL_HW * 3.4, PORTAL_HH * 3.15, -age * 0.8, colLight, 110 * p);
+    translate(0, 0, 44);
+    rotateZ(age * 0.5);
+    rotateX(0.33);
+    planeQuad(texRingDash, PORTAL_HW * 2.7, PORTAL_HW * 2.7, age * 2.1, colLight, 120 * p);
     popMatrix();
     // energy beads orbiting above the whirlpool, spiralling down into the eye
     for (int k = 0; k < 10; k++) {

@@ -60,8 +60,8 @@ without quitting.
 | CRASH TEST DUMMY 'GARY' | 20 kg | survived 412 tests; spins through portals |
 | PICKLE | 0.3 kg | probably just a pickle |
 | HYPER-ELASTIC BALL | 0.8 kg | almost perfect bounce, +12% speed per portal |
-| HEAVY ANVIL | 50 kg | 50 kg of bad ideas |
-| ZERO-G CORE | 2.5 kg | ignores gravity entirely |
+| HEAVY ANVIL | 50 kg | 50 kg of bad ideas; "portal friction" — comes out at 55% of the speed it went in |
+| ZERO-G CORE | 2.5 kg | ignores gravity entirely, and sometimes changes its mind and dives straight back through |
 
 The matter dispenser (press **E** on it) makes more, up to 12 extra objects.
 
@@ -98,10 +98,10 @@ The matter dispenser (press **E** on it) makes more, up to 12 extra objects.
 | `Laboratory.pde` | **Laboratory**: every wall, floor, platform and machine as `Box` colliders (shared by drawing, collisions and raycasts), equipment, holographic signs, lights |
 | `Galaxy.pde` | **Galaxy**: camera-centred sky (stars, Milky Way band, galaxies, nebulae, lit planets with rings), orbiting asteroids, cosmic dust |
 | `Portal.pde` | **Portal** (frame, transforms, glow) and **PortalPair** (placement with raycast + fitting, A/B, pass-through, crossing tests, the A→B mapping) |
-| `PortalLiquid.pde` | the 3D liquid-vortex look of a portal: displaced mesh, GLSL shader (with a CPU fallback), glossy rim |
+| `PortalLiquid.pde` | the 3D liquid-vortex look of a portal: a static mesh lifted into a whirlpool by the GLSL vertex shader and shaded per pixel (CPU fallback included), glossy rim |
 | `PortalGun.pde` | **PortalGun** (visible energy projectile, impacts) and **PortalManipulator** (select / move / rotate / confirm / cancel) |
 | `ThrowableObject.pde` | **ThrowableObject** (13 kinds, physics, weird teleport behaviour) and **ObjectLab** (all objects, grab/throw, dispenser) |
-| `Particle.pde` | **Particles** (pooled, capped at 1400) and in-plane **Shockwave** rings |
+| `Particle.pde` | **Particle**, the pooled **Particles** system (capped at 1400, no per-frame allocation) and in-plane **Shockwave** rings |
 | `PortalPhysics.pde` | **PortalPhysics** (live fictional equations) and **ResearchTerminal** (the big hologram computer and its TAB view) |
 | `HUD.pde` | **HUD**: research panel, aim info, portal tags, controls, F3 debug, toasts |
 | `RickDialogue.pde` | **RickDialogue**: idle timer, cartoon speech box, hologram head, every joke and event hook |

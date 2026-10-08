@@ -129,18 +129,24 @@ PImage makeSign(String title, String sub, int c) {
   g.background(0);
   g.textFont(createFont("SansSerif.bold", 40, true));
   g.textAlign(CENTER, CENTER);
+  // shrink long titles so they fit inside the frame
+  float maxW = g.width - 40;
+  g.textSize(40);
+  float ts = min(40, 40 * maxW / max(1, g.textWidth(title)));
   for (int i = 4; i >= 1; i--) {               // soft glow
     g.fill(red(c), green(c), blue(c), 40);
-    g.textSize(40 + i * 0.8);
+    g.textSize(ts + i * 0.8);
     g.text(title, g.width / 2, 46);
   }
-  g.textSize(40);
+  g.textSize(ts);
   g.fill(255);
   g.text(title, g.width / 2, 46);
   g.fill(c);
   g.text(title, g.width / 2, 46);
   if (sub != null) {
     g.textFont(createFont("Monospaced.bold", 22, true));
+    g.textSize(22);
+    g.textSize(min(22, 22 * maxW / max(1, g.textWidth(sub))));
     g.fill(red(c) * 0.8, green(c) * 0.8, blue(c) * 0.8);
     g.text(sub, g.width / 2, 106);
   }

@@ -132,11 +132,11 @@ class HUD {
   void holoBox(float x, float y, float w, float h) {
     noStroke();
     fill(0, 30, 28, 150);
-    rect(x, y, w, h, 6);
+    roundBox(x, y, w, h, 6);
     stroke(80, 255, 200, 170);
     strokeWeight(1.2);
     noFill();
-    rect(x, y, w, h, 6);
+    roundBox(x, y, w, h, 6);
     stroke(80, 255, 200, 255);
     strokeWeight(2.5);
     line(x, y + 14, x, y);
@@ -180,10 +180,10 @@ class HUD {
     fill(200, 240, 255);
     text("ANGLE:     " + (physics.linked ? nf(physics.theta, 0, 1) + " deg" : "-"), x + 16, ly);
     ly += 25;
-    text("OBJECTS: " + objects.list.size() + "     FPS: " + nf(frameRate, 0, 0), x + 16, ly);
+    text("OBJECTS: " + objects.list.size() + "     FPS: " + i0(frameRate), x + 16, ly);
     ly += 19;
     fill(170, 255, 220);
-    text("NEXT SHOT: PORTAL " + (gun.next == 0 ? "A" : "B") + "   THROW " + nf(objects.throwPower, 0, 0) + " m/s", x + 16, ly);
+    text("NEXT SHOT: PORTAL " + (gun.next == 0 ? "A" : "B") + "   THROW " + i0(objects.throwPower) + " m/s", x + 16, ly);
   }
 
   void drawTags() {
@@ -218,7 +218,7 @@ class HUD {
   void drawHolding() {
     ThrowableObject o = objects.heldObj;
     String s = "HOLDING " + o.name + "  (" + o.massLabel() + ")";
-    String t = "LEFT CLICK THROW  -  R / RIGHT CLICK RELEASE  -  WHEEL POWER " + nf(objects.throwPower, 0, 0) + " m/s";
+    String t = "LEFT CLICK THROW  -  R / RIGHT CLICK RELEASE  -  WHEEL POWER " + i0(objects.throwPower) + " m/s";
     textAlign(CENTER, TOP);
     textFont(sans, 17);
     fill(170, 255, 230);
@@ -230,7 +230,7 @@ class HUD {
 
   void drawManip() {
     Portal q = manip.sel;
-    float w = 330, h = 128, x = width / 2 - w / 2, y = height / 2 + 40;
+    float w = 330, h = 128, x = 14, y = 262;            // left column: clear of Rick's speech box
     holoBox(x, y, w, h);
     textAlign(LEFT, TOP);
     textFont(mono, 16);
@@ -252,7 +252,7 @@ class HUD {
       { "M1", "FIRE PORTAL / THROW" }, { "E", "INTERACT / GRAB / SELECT" }, { "R", "RELEASE OBJECT" }, { "Q/R", "ROTATE PORTAL" },
       { "WHEEL", "THROW POWER" }, { "TAB", "PORTAL COMPUTER" }, { "F3 / `", "DEBUG" }, { "H", "HIDE CONTROLS" }, { "ESC", "RELEASE MOUSE" }
     };
-    float w = 270, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
+    float w = 300, h = rows.length * 17 + 18, x = 14, y = height - h - 14;
     holoBox(x, y, w, h);
     textAlign(LEFT, TOP);
     textFont(monoSmall, 13);
@@ -260,7 +260,7 @@ class HUD {
       fill(120, 255, 200);
       text(rows[i][0], x + 14, y + 9 + i * 17);
       fill(200, 240, 255);
-      text(rows[i][1], x + 86, y + 9 + i * 17);
+      text(rows[i][1], x + 100, y + 9 + i * 17);
     }
   }
 
@@ -270,7 +270,7 @@ class HUD {
       "DEBUG (F3)",
       "FPS            " + nf(frameRate, 0, 1) + "   frame " + nf(dt * 1000, 0, 1) + " ms",
       "CAMERA XYZ     " + v3(cam.pos),
-      "CAMERA DIR     " + nf(cam.fwd.x, 0, 2) + ", " + nf(cam.fwd.y, 0, 2) + ", " + nf(cam.fwd.z, 0, 2) + "  yaw " + nf(degrees(cam.yaw) % 360, 0, 0) + " pitch " + nf(degrees(cam.pitch), 0, 0),
+      "CAMERA DIR     " + nf(cam.fwd.x, 0, 2) + ", " + nf(cam.fwd.y, 0, 2) + ", " + nf(cam.fwd.z, 0, 2) + "  yaw " + i0(degrees(cam.yaw) % 360) + " pitch " + i0(degrees(cam.pitch)),
       "PORTAL A XYZ   " + (a.active ? v3(a.c) : "-"),
       "PORTAL B XYZ   " + (b.active ? v3(b.c) : "-"),
       "PORTAL DIST    " + (physics.linked ? nf(physics.D, 0, 2) + " m" : "-"),
