@@ -13,6 +13,7 @@ class Rick {
   int lastSoundChar = -1;
   boolean drunkMode;             // half-closed eyes (intro / when you do badly)
   float burpT = -9;              // when the last burp happened (for the face)
+  float hicT = -9;               // when the last hiccup happened (for a little hop)
   // where the box goes
   int dock = DOCK_CORNER;
   float px, py;                  // DOCK_POINT: the point the tail points at (e.g. his mouth)
@@ -87,7 +88,10 @@ class Rick {
     for (int i = max(before, lastSoundChar + 1); i < now; i++) {
       lastSoundChar = i;
       if (text.startsWith("*burp*", i) || text.startsWith("*BURP*", i) || text.startsWith("*BUUURP*", i)) burp(text.startsWith("*BUUURP*", i));
-      else if (text.startsWith("*hic*", i)) sfx.play(sfx.hic, 0.7, random(0.95, 1.1));
+      else if (text.startsWith("*hic*", i)) {
+        sfx.play(sfx.hic, 0.7, random(0.95, 1.1));
+        hicT = T;
+      }
       else if (text.charAt(i) == ' ' && random(1) < 0.5) sfx.play(sfx.blip, 0.5, random(0.8, 1.3));
     }
   }
@@ -185,7 +189,8 @@ class Rick {
   // feet at (x, y); sway = lean in radians; flask = arm raise 0..1; tilt = head tilt
   void drawBody(float x, float y, float s, float sway, float flask, float tilt) {
     pushMatrix();
-    translate(x, y);
+    float hop = T - hicT < 0.3 ? sin((T - hicT) / 0.3 * PI) * 16 : 0;
+    translate(x, y - hop);
     scale(s);
     rotate(sway);
     strokeJoin(ROUND);

@@ -61,7 +61,7 @@ class ExploreScene extends Scene {
 
   void select(String id) {
     diaId = id;
-    view.set(diagram(id), 270, 138, 492);
+    view.set(diagram(id), 250, 140, 480);
     view.labelsOn = view.labelsOn;
     pinned = null;
     shown = null;
@@ -99,7 +99,7 @@ class ExploreScene extends Scene {
   }
 
   void drawInfo() {
-    float x = 940, y = 138, w = 316, h = 380;
+    float x = 960, y = 140, w = 300, h = 400;
     panel(x, y, w, h, C_PANEL, shown != null ? C_GOLD : C_EDGE, 18);
     textAlign(LEFT, TOP);
     if (shown == null) {
