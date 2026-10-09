@@ -1,0 +1,1645 @@
+{
+ "batch": "digestion_kidneys",
+ "topics": [
+  {
+   "topic": "digestion",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "digestion-1-L1",
+       "title": "One long tube",
+       "fact": "Digestion breaks food into molecules small enough to be absorbed. The digestive tract is one long tube: mouth -> esophagus -> stomach -> small intestine -> large intestine (colon, then rectum) -> anus. Chewing and saliva start the job (saliva's amylase starts on starch), and muscle waves (peristalsis) push food along.",
+       "rick": "It's a tube, Morty-brain. Food in one end, crap out the other. You're basically a fancy donut with *burp* anxiety.",
+       "diagram": "digestive",
+       "part": "esophagus"
+      },
+      {
+       "id": "digestion-1-L2",
+       "title": "Stomach: the acid blender",
+       "fact": "The stomach is a J-shaped muscular bag in the upper left abdomen. It stores a meal, churns it and mixes it with strong hydrochloric acid (which also kills many germs) and protein-digesting enzymes, turning it into a soupy mix called chyme. A thick mucus layer stops the stomach digesting itself.",
+       "rick": "A bag of acid you carry around all day. The only thing stopping it eating you is a layer of snot. Sleep well.",
+       "diagram": "digestive",
+       "part": "stomach"
+      },
+      {
+       "id": "digestion-1-L3",
+       "title": "The small intestine does the work",
+       "fact": "The small intestine is the longest part of the tract: several meters of coiled tube. Its first part is the duodenum. Here most digestion finishes and almost all nutrients are absorbed through millions of tiny finger-like villi that give it a huge surface area.",
+       "rick": "Most of the real digesting happens down here, not in the stomach. The stomach just takes the credit. Classic middle management.",
+       "diagram": "digestive",
+       "part": "small_intestine"
+      },
+      {
+       "id": "digestion-1-L4",
+       "title": "Helpers and the large intestine",
+       "fact": "Food never passes through the liver, gallbladder or pancreas, but they add juices. The liver (the largest internal organ) makes bile, which helps digest fat; the gallbladder stores bile; the pancreas makes digestive enzymes. The large intestine (colon) absorbs water and salts, forming stool that the rectum stores.",
+       "rick": "Liver makes bile, gallbladder hoards it, colon squeezes the water out of your leftovers. Glamorous. *burp* Welcome to medicine.",
+       "diagram": "digestive",
+       "part": "liver"
+      }
+     ],
+     "questions": [
+      {
+       "id": "digestion-1-01",
+       "type": "mcq",
+       "q": "Where are most nutrients absorbed?",
+       "choices": [
+        "Stomach",
+        "Small intestine",
+        "Large intestine",
+        "Esophagus"
+       ],
+       "answer": 1,
+       "explain": "The small intestine's villi give it an enormous surface area, so almost all sugars, amino acids and fats are absorbed there. The stomach mainly stores, churns and starts protein digestion; the large intestine mostly absorbs water and salts.",
+       "rick": "Small intestine. 'Small' means narrow, not unimportant. Unlike you, which is both."
+      },
+      {
+       "id": "digestion-1-02",
+       "type": "mcq",
+       "q": "What does the esophagus do?",
+       "choices": [
+        "Digests fat with enzymes",
+        "Absorbs water",
+        "Pushes swallowed food down to the stomach",
+        "Stores bile"
+       ],
+       "answer": 2,
+       "explain": "The esophagus is a muscular tube from the throat to the stomach. Waves of muscle contraction (peristalsis) push each swallow down, which is why you can swallow even upside down. It does no real digesting or absorbing.",
+       "rick": "It's a meat chute. You can swallow upside down thanks to peristalsis. Try it at a party, it'll replace your personality."
+      },
+      {
+       "id": "digestion-1-03",
+       "type": "mcq",
+       "q": "Which organ MAKES bile?",
+       "choices": [
+        "Gallbladder",
+        "Pancreas",
+        "Stomach",
+        "Liver"
+       ],
+       "answer": 3,
+       "explain": "The liver makes bile continuously. The gallbladder only stores and concentrates it, then squeezes it into the small intestine after a fatty meal. Mixing these two up is the classic beginner mistake.",
+       "rick": "The liver makes it, the gallbladder just stores it. The gallbladder is a glorified Tupperware, genius."
+      },
+      {
+       "id": "digestion-1-04",
+       "type": "mcq",
+       "q": "What is the main job of the large intestine (colon)?",
+       "choices": [
+        "Absorbing water and salts to form stool",
+        "Making digestive enzymes",
+        "Digesting protein with acid",
+        "Producing bile"
+       ],
+       "answer": 0,
+       "explain": "By the time leftovers reach the colon, most nutrients are gone. The colon absorbs much of the remaining water and salts, turning liquid waste into solid stool. Its bacteria also make some vitamins, like vitamin K.",
+       "rick": "The colon is a water reclamation plant for your garbage. Your body recycles better than you do, Morty-brain."
+      },
+      {
+       "id": "digestion-1-05",
+       "type": "mcq",
+       "q": "What in the stomach helps kill swallowed germs and digest protein?",
+       "choices": [
+        "Bile",
+        "Hydrochloric acid",
+        "Insulin",
+        "Saliva"
+       ],
+       "answer": 1,
+       "explain": "Stomach glands secrete hydrochloric acid, making gastric juice very acidic (pH about 2). The acid kills many microbes and activates the protein-digesting enzyme pepsin. Bile comes from the liver and works in the small intestine.",
+       "rick": "Hydrochloric acid, pH about 2. You've got a battery-acid tank under your ribs and you still lose fights with salsa."
+      },
+      {
+       "id": "digestion-1-06",
+       "type": "mcq",
+       "q": "Where does the digestion of starch begin?",
+       "choices": [
+        "Stomach",
+        "Small intestine",
+        "Mouth",
+        "Large intestine"
+       ],
+       "answer": 2,
+       "explain": "Saliva contains amylase, an enzyme that starts breaking starch into sugars while you chew; that's why bread starts to taste sweet if you chew it long enough. Pancreatic amylase finishes the job in the small intestine.",
+       "rick": "The mouth. Chew a cracker long enough and it gets sweet. Congrats, that's the first experiment you've ever done."
+      },
+      {
+       "id": "digestion-1-07",
+       "type": "mcq",
+       "q": "What are the waves of muscle contraction that push food along the gut called?",
+       "choices": [
+        "Peristalsis",
+        "Osmosis",
+        "Filtration",
+        "Respiration"
+       ],
+       "answer": 0,
+       "explain": "Peristalsis is a wave of smooth-muscle contraction: the muscle behind the food squeezes while the muscle ahead relaxes. It moves food from the esophagus all the way to the rectum. Osmosis is water moving across membranes.",
+       "rick": "Peristalsis. Your gut does the wave like a stadium crowd, *burp* except useful."
+      },
+      {
+       "id": "digestion-1-08",
+       "type": "mcq",
+       "q": "Which is the largest internal organ and the largest gland in the body?",
+       "choices": [
+        "Stomach",
+        "Pancreas",
+        "Large intestine",
+        "Liver"
+       ],
+       "answer": 3,
+       "explain": "The liver weighs about 1.5 kg and sits in the upper right abdomen under the diaphragm. Besides making bile, it stores sugar as glycogen, makes blood proteins such as albumin and breaks down toxins like alcohol.",
+       "rick": "The liver. Biggest gland you've got, and it handles my alcohol intake without complaining. Mostly."
+      },
+      {
+       "id": "digestion-1-09",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "stomach",
+       "q": "Click the stomach.",
+       "explain": "The stomach is the J-shaped bag in the upper left abdomen between the esophagus and the duodenum. It stores, churns and acidifies food before releasing it slowly into the small intestine.",
+       "rick": "The stomach. The acid blender. You found it. Want a *burp* sticker?"
+      },
+      {
+       "id": "digestion-1-10",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "liver",
+       "q": "Click the liver, the largest internal organ.",
+       "explain": "The liver is the big reddish-brown organ in the upper right abdomen, tucked under the diaphragm. It makes bile, processes absorbed nutrients and detoxifies drugs and alcohol.",
+       "rick": "The liver. My most overworked employee. It deserves a medal and a vacation."
+      },
+      {
+       "id": "digestion-1-11",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "small_intestine",
+       "q": "Click the coiled small intestine, where most nutrients are absorbed.",
+       "explain": "The coiled small intestine fills the middle of the abdomen. After the duodenum come the jejunum and ileum, lined with villi that absorb nearly all the nutrients from your food.",
+       "rick": "That pile of spaghetti is where the magic happens. Absorption, Morty-brain. Not the stomach."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "digestion-2-L1",
+       "title": "Who digests what",
+       "fact": "Carbs -> simple sugars (amylases, then brush-border enzymes like lactase). Proteins -> amino acids and small peptides (pepsin in the stomach, then pancreatic trypsin). Fats -> fatty acids and monoglycerides (pancreatic lipase). Bile has no enzymes: its bile salts emulsify fat into tiny droplets so lipase can work.",
+       "rick": "Three food groups, three demolition crews. Bile isn't an enzyme, it's dish soap. Learn the *burp* difference.",
+       "diagram": "digestive",
+       "part": "pancreas"
+      },
+      {
+       "id": "digestion-2-L2",
+       "title": "Inside the stomach",
+       "fact": "Gastric glands contain parietal cells, which secrete HCl (pH about 2) and intrinsic factor, and chief cells, which secrete pepsinogen. Acid converts pepsinogen into active pepsin. Mucus and bicarbonate protect the lining. The pyloric sphincter lets chyme into the duodenum a little at a time.",
+       "rick": "Parietal cells make acid, chief cells make pepsinogen, acid activates it. A self-assembling death soup, Morty-brain.",
+       "diagram": "digestive",
+       "part": "stomach"
+      },
+      {
+       "id": "digestion-2-L3",
+       "title": "Villi, lacteals and the ileum",
+       "fact": "The small intestine is duodenum (about 25 cm), jejunum and ileum. Circular folds, villi and microvilli (the brush border) multiply its surface area. Each villus has blood capillaries, which take up sugars and amino acids, and a lacteal (lymph capillary), which takes up fat. The ileum absorbs vitamin B12 and bile salts.",
+       "rick": "Folds on folds on folds. Your gut has more surface area than your personality. Way more.",
+       "diagram": "digestive",
+       "part": "small_intestine"
+      },
+      {
+       "id": "digestion-2-L4",
+       "title": "Bile, pancreatic juice, portal vein",
+       "fact": "The liver secretes bile; the gallbladder stores and concentrates it and, after a fatty meal, releases it into the duodenum via the common bile duct. The pancreas sends enzymes plus acid-neutralizing bicarbonate there too. Absorbed sugars and amino acids go first to the liver in the hepatic portal vein; most fat enters lymph.",
+       "rick": "Absorbed sugar and protein go to the liver first for inspection. Like customs, but for *burp* snacks.",
+       "diagram": "digestive",
+       "part": "gallbladder"
+      }
+     ],
+     "questions": [
+      {
+       "id": "digestion-2-01",
+       "type": "mcq",
+       "q": "Which enzyme starts protein digestion in the stomach?",
+       "choices": [
+        "Amylase",
+        "Pepsin",
+        "Lipase",
+        "Trypsin"
+       ],
+       "answer": 1,
+       "explain": "Chief cells release inactive pepsinogen, which stomach acid converts into pepsin, a protease. Trypsin also digests protein but comes from the pancreas and works in the small intestine. Amylase digests starch; lipase digests fat.",
+       "rick": "Pepsin. Made in the stomach, switched on by acid. Trypsin is the pancreas's version. Don't mix up your proteases."
+      },
+      {
+       "id": "digestion-2-02",
+       "type": "mcq",
+       "q": "Which stomach cells secrete hydrochloric acid?",
+       "choices": [
+        "Chief cells",
+        "Goblet cells",
+        "Parietal cells",
+        "Enterocytes"
+       ],
+       "answer": 2,
+       "explain": "Parietal cells in the gastric glands secrete H+ and Cl- (and intrinsic factor, needed for vitamin B12 absorption). Chief cells make pepsinogen, goblet cells make mucus, and enterocytes are the absorptive cells of the intestine.",
+       "rick": "Parietal cells pump acid. Chief cells make pepsinogen. Two cell types, Morty-brain. Even you can hold two things."
+      },
+      {
+       "id": "digestion-2-03",
+       "type": "mcq",
+       "q": "What does bile do to dietary fat?",
+       "choices": [
+        "Emulsifies it into tiny droplets",
+        "Breaks it down with bile enzymes",
+        "Converts it into glucose",
+        "Pumps it directly into the blood"
+       ],
+       "answer": 0,
+       "explain": "Bile salts act like detergent: they break big fat globules into tiny droplets (emulsification), massively increasing the surface area for pancreatic lipase. Bile contains no digestive enzymes; lipase does the actual chemical breakdown.",
+       "rick": "Bile is dish soap, not a chemist. It breaks up the grease, lipase does the real chemistry."
+      },
+      {
+       "id": "digestion-2-04",
+       "type": "mcq",
+       "q": "Most absorbed dietary fat enters which structure inside each villus?",
+       "choices": [
+        "Blood capillary",
+        "Hepatic artery",
+        "Lacteal",
+        "Goblet cell"
+       ],
+       "answer": 2,
+       "explain": "Fats are packaged into chylomicrons, which are too big for blood capillaries, so they enter the lacteal, a lymph capillary. Lymph then delivers them to the bloodstream via the thoracic duct. Sugars and amino acids enter the blood capillaries.",
+       "rick": "The lacteal. Fat takes the lymphatic back door because it's too big for the capillaries. Relatable, right?"
+      },
+      {
+       "id": "digestion-2-05",
+       "type": "mcq",
+       "q": "Which structures give the small intestine its huge absorptive surface?",
+       "choices": [
+        "Rugae",
+        "Haustra",
+        "Taeniae coli",
+        "Circular folds, villi and microvilli"
+       ],
+       "answer": 3,
+       "explain": "Circular folds, finger-like villi and the microvilli on each cell (the brush border) together increase the surface area hundreds of times. Rugae are folds of the stomach lining; haustra and taeniae coli are features of the colon.",
+       "rick": "Folds, villi, microvilli. Fractal toilet paper, basically. Rugae are in the stomach, genius."
+      },
+      {
+       "id": "digestion-2-06",
+       "type": "mcq",
+       "q": "Which vessel carries nutrient-rich blood from the intestines to the liver?",
+       "choices": [
+        "Hepatic vein",
+        "Hepatic artery",
+        "Inferior vena cava",
+        "Hepatic portal vein"
+       ],
+       "answer": 3,
+       "explain": "The hepatic portal vein drains the stomach, intestines, spleen and pancreas into the liver, so absorbed sugars, amino acids, drugs and toxins are processed before reaching the rest of the body (fat mostly bypasses it via lymph). Hepatic veins then drain to the inferior vena cava.",
+       "rick": "Portal vein. Absorbed sugars and amino acids get a liver background check before meeting the rest of you."
+      },
+      {
+       "id": "digestion-2-07",
+       "type": "mcq",
+       "q": "What in pancreatic juice neutralizes acidic chyme in the duodenum?",
+       "choices": [
+        "Bicarbonate",
+        "Bile pigments",
+        "Pepsin",
+        "Hydrochloric acid"
+       ],
+       "answer": 0,
+       "explain": "Pancreatic duct cells secrete bicarbonate-rich fluid that neutralizes stomach acid, protecting the duodenal lining and raising the pH to where pancreatic enzymes work best. Pepsin and HCl come from the stomach.",
+       "rick": "Bicarbonate. Baking soda, basically. Your pancreas runs a volcano science fair every time you eat."
+      },
+      {
+       "id": "digestion-2-08",
+       "type": "mcq",
+       "q": "Where are vitamin B12 (bound to intrinsic factor) and bile salts mainly absorbed?",
+       "choices": [
+        "Duodenum",
+        "Terminal ileum",
+        "Stomach",
+        "Sigmoid colon"
+       ],
+       "answer": 1,
+       "explain": "The terminal ileum has receptors for the B12-intrinsic factor complex and transporters that reclaim bile salts. Iron, by contrast, is absorbed mainly in the duodenum. Losing the ileum (surgery, Crohn disease) can cause B12 deficiency.",
+       "rick": "The ileum. Last stop on the small-intestine train. Miss it and your B12 is gone for good."
+      },
+      {
+       "id": "digestion-2-09",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "gallbladder",
+       "q": "Click the organ that stores and concentrates bile.",
+       "explain": "The gallbladder is a small pear-shaped sac under the liver. It stores bile between meals, concentrates it by removing water, and contracts after a fatty meal to push bile into the duodenum.",
+       "rick": "Gallbladder. Doesn't make anything, just stores and concentrates. A hoarder with a squeeze reflex."
+      },
+      {
+       "id": "digestion-2-10",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "duodenum",
+       "q": "Click the C-shaped first part of the small intestine.",
+       "explain": "The duodenum (about 25 cm) curves around the head of the pancreas. It receives chyme from the stomach plus bile and pancreatic juice, and it is the main site of iron absorption.",
+       "rick": "Duodenum. Where stomach acid meets bile and pancreatic juice. The mixing bowl of your gut."
+      },
+      {
+       "id": "digestion-2-11",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "pancreas",
+       "q": "Click the gland that makes most digestive enzymes and bicarbonate.",
+       "explain": "The pancreas lies behind the stomach with its head in the curve of the duodenum. Its exocrine cells make enzymes for carbs, proteins and fats plus bicarbonate; its islets make insulin and glucagon.",
+       "rick": "Pancreas. Digestive enzymes AND insulin. Two jobs, zero complaints. Be more like the pancreas."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "digestion-3-L1",
+       "title": "How parietal cells make acid",
+       "fact": "Parietal cells pump H+ into the lumen with the H+/K+ ATPase (the proton pump that PPIs block); Cl- follows. Three stimulators: gastrin (G cells of the antrum), histamine (ECL cells, via H2 receptors) and ACh (vagus, M3 receptors). Somatostatin from D cells inhibits. HCO3- exits into the blood (the alkaline tide).",
+       "rick": "Three gas pedals, one brake. Gastrin, histamine and ACh go; somatostatin stops. *burp* Simpler than my car.",
+       "diagram": "digestive",
+       "part": "stomach"
+      },
+      {
+       "id": "digestion-3-L2",
+       "title": "GI hormones",
+       "fact": "Gastrin (G cells, stomach) drives acid secretion. Secretin (S cells, duodenum) is released by acid and makes the pancreas secrete HCO3-. CCK (I cells, duodenum and jejunum) is released by fat and protein: it contracts the gallbladder, relaxes the sphincter of Oddi, triggers pancreatic enzyme release and slows gastric emptying.",
+       "rick": "Secretin is the fire extinguisher for acid, CCK is the dinner bell for fat. Memorize or perish.",
+       "diagram": "digestive",
+       "part": "duodenum"
+      },
+      {
+       "id": "digestion-3-L3",
+       "title": "Absorbing sugars and proteins",
+       "fact": "Glucose and galactose enter enterocytes with Na+ via SGLT1 (secondary active transport); fructose enters by GLUT5 (facilitated diffusion); all exit to the blood via GLUT2. Oral rehydration uses SGLT1: glucose drags Na+ and water in. Brush-border enteropeptidase turns trypsinogen into trypsin, which activates the other zymogens.",
+       "rick": "Sugar hitches a ride with sodium and water tags along. That trick has saved millions from diarrhea. *burp* Physics, baby.",
+       "diagram": "digestive",
+       "part": "small_intestine"
+      },
+      {
+       "id": "digestion-3-L4",
+       "title": "Gut arteries and the appendix",
+       "fact": "Celiac trunk: foregut (abdominal esophagus to mid-duodenum, liver, gallbladder, part of pancreas). Superior mesenteric artery (SMA): midgut (to proximal 2/3 of transverse colon). Inferior mesenteric (IMA): hindgut (to upper rectum). Appendicitis: periumbilical pain that moves to the right lower quadrant (McBurney point).",
+       "rick": "Celiac, SMA, IMA. Foregut, midgut, hindgut. Three pipes. Plumbers learn this in a week.",
+       "diagram": "digestive",
+       "part": "appendix"
+      }
+     ],
+     "questions": [
+      {
+       "id": "digestion-3-01",
+       "type": "mcq",
+       "q": "Which transporter directly secretes H+ into the gastric lumen?",
+       "choices": [
+        "Na+/K+ ATPase",
+        "H+/K+ ATPase",
+        "Carbonic anhydrase",
+        "Na+/H+ exchanger"
+       ],
+       "answer": 1,
+       "explain": "The H+/K+ ATPase on the parietal cell's apical membrane pumps H+ out in exchange for K+; proton pump inhibitors block it irreversibly. Carbonic anhydrase generates the H+ inside the cell but doesn't secrete it; the Na+/K+ ATPase sits on the basolateral side.",
+       "rick": "H+/K+ ATPase. The literal proton pump. Block it and the acid factory goes on strike."
+      },
+      {
+       "id": "digestion-3-02",
+       "type": "mcq",
+       "q": "Acid entering the duodenum makes S cells release which hormone, stimulating pancreatic HCO3- secretion?",
+       "choices": [
+        "Secretin",
+        "CCK",
+        "Gastrin",
+        "Motilin"
+       ],
+       "answer": 0,
+       "explain": "Secretin from duodenal S cells responds to low pH and tells pancreatic duct cells to secrete bicarbonate-rich fluid, while also reducing gastric acid secretion. CCK mainly drives enzyme release and gallbladder contraction; gastrin increases acid.",
+       "rick": "Secretin. Acid shows up, secretin calls the bicarbonate fire department. Fastest response time in your body."
+      },
+      {
+       "id": "digestion-3-03",
+       "type": "mcq",
+       "q": "Which hormone, released when fat and protein reach the duodenum, contracts the gallbladder?",
+       "choices": [
+        "Secretin",
+        "Gastrin",
+        "Cholecystokinin (CCK)",
+        "Somatostatin"
+       ],
+       "answer": 2,
+       "explain": "CCK from I cells of the duodenum and jejunum contracts the gallbladder, relaxes the sphincter of Oddi, stimulates pancreatic enzyme secretion and slows gastric emptying. That's why fatty meals can trigger pain from gallstones (biliary colic).",
+       "rick": "CCK. Cholecystokinin literally means 'bile-bladder mover'. The name IS the answer, Morty-brain. Read it."
+      },
+      {
+       "id": "digestion-3-04",
+       "type": "mcq",
+       "q": "Which transporter moves glucose from the intestinal lumen into enterocytes?",
+       "choices": [
+        "GLUT2",
+        "GLUT5",
+        "GLUT4",
+        "SGLT1"
+       ],
+       "answer": 3,
+       "explain": "SGLT1 couples glucose (and galactose) uptake to Na+ moving down the gradient kept by the basolateral Na+/K+ ATPase: secondary active transport. GLUT5 takes up fructose; GLUT2 is the basolateral exit; GLUT4 is the insulin-regulated transporter of muscle and fat.",
+       "rick": "SGLT1. Glucose rides in on sodium's coattails. Free energy from a gradient. I *burp* love free stuff."
+      },
+      {
+       "id": "digestion-3-05",
+       "type": "mcq",
+       "q": "Which brush-border enzyme first activates trypsinogen?",
+       "choices": [
+        "Enteropeptidase (enterokinase)",
+        "Pepsin",
+        "Chymotrypsin",
+        "Carboxypeptidase"
+       ],
+       "answer": 0,
+       "explain": "Enteropeptidase on the duodenal brush border converts trypsinogen into trypsin; trypsin then activates more trypsinogen and the other pancreatic zymogens. Keeping proteases inactive until they reach the gut protects the pancreas from digesting itself.",
+       "rick": "Enteropeptidase lights the fuse, trypsin sets off the rest. Premature ignition inside the pancreas? Pancreatitis, genius."
+      },
+      {
+       "id": "digestion-3-06",
+       "type": "mcq",
+       "q": "Which artery supplies the jejunum and ileum?",
+       "choices": [
+        "Celiac trunk",
+        "Superior mesenteric artery",
+        "Inferior mesenteric artery",
+        "Splenic artery"
+       ],
+       "answer": 1,
+       "explain": "The jejunum and ileum are midgut, supplied by the superior mesenteric artery, which covers the gut from the mid-duodenum to the proximal two-thirds of the transverse colon. The celiac trunk feeds the foregut; the IMA feeds the hindgut.",
+       "rick": "SMA. Midgut gets the middle artery. Embryology made it easy and you still hesitated."
+      },
+      {
+       "id": "digestion-3-07",
+       "type": "mcq",
+       "q": "Acute appendicitis pain typically starts around the umbilicus and then moves where?",
+       "choices": [
+        "Left lower quadrant",
+        "Epigastrium",
+        "Right lower quadrant (McBurney point)",
+        "Right upper quadrant"
+       ],
+       "answer": 2,
+       "explain": "Early visceral pain from the inflamed appendix is poorly localized and referred to the periumbilical area (T10). Once inflammation irritates the parietal peritoneum, pain localizes to the right lower quadrant at McBurney point, 1/3 of the way from the ASIS to the umbilicus.",
+       "rick": "Starts vague at the belly button, then parks itself in the right lower quadrant. Rude, but predictable."
+      },
+      {
+       "id": "digestion-3-08",
+       "type": "mcq",
+       "q": "Bile salts reabsorbed in the terminal ileum return to the liver by which route?",
+       "choices": [
+        "Thoracic duct",
+        "Hepatic artery",
+        "Inferior vena cava",
+        "Portal vein (enterohepatic circulation)"
+       ],
+       "answer": 3,
+       "explain": "About 95% of bile salts are reabsorbed in the terminal ileum, carried back to the liver in portal blood and re-secreted into bile: the enterohepatic circulation, which recycles the pool several times a day. Ileal disease breaks this loop and causes fat malabsorption.",
+       "rick": "Your body recycles bile salts better than you've ever recycled anything. Embarrassing for you."
+      },
+      {
+       "id": "digestion-3-09",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "cecum",
+       "q": "Click the blind pouch where the ileum empties into the large intestine.",
+       "explain": "The cecum is the first part of the large intestine, in the right lower quadrant. The ileum enters it through the ileocecal valve, and the appendix hangs from its posteromedial wall.",
+       "rick": "Cecum. A dead-end pouch with a worm attached. Evolution's cul-de-sac."
+      },
+      {
+       "id": "digestion-3-10",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "appendix",
+       "q": "Click the structure classically inflamed when pain settles at McBurney point.",
+       "explain": "The vermiform appendix is a narrow blind tube off the cecum, rich in lymphoid tissue. Obstruction (e.g. by a fecalith or lymphoid hyperplasia) leads to inflammation, appendicitis, with pain at McBurney point.",
+       "rick": "The appendix. Tiny, full of lymphoid tissue, and occasionally tries to kill you. Like a Meeseeks with a grudge."
+      },
+      {
+       "id": "digestion-3-11",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "transverse_colon",
+       "q": "Click the segment of colon that crosses the upper abdomen on its own mesentery.",
+       "explain": "The transverse colon runs from the hepatic flexure (right) to the splenic flexure (left), hung on the transverse mesocolon, so it's intraperitoneal and mobile. Proximal 2/3: SMA blood; distal 1/3: IMA blood.",
+       "rick": "Transverse colon. Hangs across your belly like a hammock full of *burp* regrets."
+      },
+      {
+       "id": "digestion-3-12",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "descending_colon",
+       "q": "Click the colon segment that runs DOWN the left flank, fixed to the back wall.",
+       "explain": "The descending colon runs down the left side from the splenic flexure to the sigmoid colon. Like the ascending colon, it's retroperitoneal; it's supplied by the inferior mesenteric artery.",
+       "rick": "Descending colon. Left side, going down, stuck to the back wall. The name does the work, genius."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "digestion-4-L1",
+       "title": "Peptic ulcer disease",
+       "fact": "Ulcers: acid and pepsin beat mucosal defenses. Causes: H. pylori (urease makes ammonia to buffer acid) and NSAIDs (COX block -> less protective prostaglandin). Posterior duodenal ulcers can erode the gastroduodenal artery. Gastrinoma (Zollinger-Ellison): multiple, refractory or jejunal ulcers; gastrin RISES after IV secretin.",
+       "rick": "A bacterium that survives an acid bath by brewing its own ammonia. H. pylori, you magnificent little weirdo.",
+       "diagram": "digestive",
+       "part": "duodenum"
+      },
+      {
+       "id": "digestion-4-L2",
+       "title": "Malabsorption",
+       "fact": "Celiac disease: gluten (gliadin) triggers immune attack; HLA-DQ2/DQ8; IgA anti-tissue transglutaminase. Biopsy: villous atrophy, crypt hyperplasia, intraepithelial lymphocytes, mostly distal duodenum/proximal jejunum. Linked to dermatitis herpetiformis, iron deficiency. Losing terminal ileum -> B12 deficiency, bile acid loss.",
+       "rick": "Celiac: your immune system nukes your own villi over a slice of bread. *burp* Overreaction of the century.",
+       "diagram": "digestive",
+       "part": "small_intestine"
+      },
+      {
+       "id": "digestion-4-L3",
+       "title": "Diarrhea: osmotic vs secretory",
+       "fact": "Osmotic diarrhea (e.g. lactose intolerance): unabsorbed solute holds water in the gut; it stops with fasting; stool osmotic gap is high. Secretory diarrhea: active Cl- secretion; it persists while fasting; gap under about 50 mOsm/kg. Cholera toxin locks Gs on -> high cAMP -> CFTR opens -> Cl- and water pour out.",
+       "rick": "Cholera floors the cAMP accelerator and your gut turns into a fire hose. Science is beautiful and disgusting.",
+       "diagram": "digestive",
+       "part": "small_intestine"
+      },
+      {
+       "id": "digestion-4-L4",
+       "title": "Bilirubin and jaundice",
+       "fact": "Heme -> biliverdin -> unconjugated bilirubin (on albumin). The liver conjugates it (UDP-glucuronosyltransferase, UGT) and excretes it in bile; gut bacteria make urobilinogen; stercobilin makes stool brown. Gilbert: mildly low UGT -> unconjugated jaundice on fasting or stress. Duct blockage: conjugated, dark urine, pale stool.",
+       "rick": "Gilbert syndrome: you turn yellow when you skip lunch. Harmless. Embarrassing. Very you.",
+       "diagram": "digestive",
+       "part": "liver"
+      }
+     ],
+     "questions": [
+      {
+       "id": "digestion-4-01",
+       "type": "mcq",
+       "q": "Recurrent ulcers, one in the jejunum, plus diarrhea. Serum gastrin RISES after IV secretin. Most likely diagnosis?",
+       "choices": [
+        "Gastrinoma (Zollinger-Ellison syndrome)",
+        "H. pylori gastritis",
+        "VIPoma",
+        "Chronic NSAID use"
+       ],
+       "answer": 0,
+       "explain": "Secretin normally suppresses gastrin release, but gastrinoma cells paradoxically release more. Excess gastrin drives huge acid output: multiple or jejunal ulcers, and diarrhea as acid inactivates pancreatic lipase. Tumors usually sit in the duodenum or pancreas; think MEN1.",
+       "rick": "Gastrinoma. Secretin should shut gastrin up, and the tumor does the opposite. Rebellious little neoplasm."
+      },
+      {
+       "id": "digestion-4-02",
+       "type": "mcq",
+       "q": "Iron-deficiency anemia, chronic diarrhea and itchy vesicles on the elbows. A duodenal biopsy most likely shows what?",
+       "choices": [
+        "Noncaseating granulomas",
+        "Villous atrophy with crypt hyperplasia",
+        "PAS-positive foamy macrophages",
+        "Normal villi"
+       ],
+       "answer": 1,
+       "explain": "Dermatitis herpetiformis plus malabsorption points to celiac disease: villous atrophy, crypt hyperplasia and intraepithelial lymphocytes. Iron deficiency follows duodenal damage (iron's main absorption site). Granulomas suggest Crohn disease; PAS+ macrophages, Whipple disease.",
+       "rick": "Itchy elbows plus bad poop? Gluten. The villi got flattened like Jerry's ego."
+      },
+      {
+       "id": "digestion-4-03",
+       "type": "mcq",
+       "q": "Cholera toxin causes massive watery diarrhea mainly by which mechanism?",
+       "choices": [
+        "Destroying the villi so nothing is absorbed",
+        "ADP-ribosylating Gi (the pertussis toxin mechanism)",
+        "ADP-ribosylating Gs: cAMP rises, CFTR secretes Cl-",
+        "Blocking SGLT1 so glucose stays in the lumen"
+       ],
+       "answer": 2,
+       "explain": "Cholera toxin locks Gs alpha in its active state, so adenylyl cyclase keeps making cAMP; PKA opens CFTR and Cl- (with Na+ and water) floods the lumen. The villi stay intact and SGLT1 still works, which is why oral glucose-salt rehydration saves lives.",
+       "rick": "Gs stuck on, cAMP through the roof, CFTR wide open. The villi are fine, so sugar-salt water still gets absorbed."
+      },
+      {
+       "id": "digestion-4-04",
+       "type": "mcq",
+       "q": "Which feature suggests OSMOTIC rather than secretory diarrhea?",
+       "choices": [
+        "Stool osmotic gap below 50 mOsm/kg",
+        "Large-volume stools continue during a 48 h fast",
+        "Caused by a toxin that raises enterocyte cAMP",
+        "Diarrhea stops when the patient fasts"
+       ],
+       "answer": 3,
+       "explain": "Osmotic diarrhea is driven by unabsorbed solute (lactose, sorbitol, magnesium), so it stops when intake stops, and the stool osmotic gap is high because of unmeasured solute. Secretory diarrhea comes from active ion secretion, persists while fasting and has a gap under about 50.",
+       "rick": "Stop eating, diarrhea stops? Osmotic. Keeps going anyway? Secretory. Even a Meeseeks could solve this one."
+      },
+      {
+       "id": "digestion-4-05",
+       "type": "mcq",
+       "q": "A newborn hasn't passed meconium by 48 h. Rectal suction biopsy shows no ganglion cells. What is the underlying cause?",
+       "choices": [
+        "CFTR mutation with thick, sticky meconium",
+        "Failed migration of neural crest cells",
+        "Hypertrophy of pyloric smooth muscle",
+        "In-utero vascular accident causing atresia"
+       ],
+       "answer": 1,
+       "explain": "Hirschsprung disease: neural crest cells fail to migrate down the gut, so the distal segment (always including the rectum) lacks Meissner and Auerbach plexuses, can't relax and acts as an obstruction. Linked to RET mutations and Down syndrome. CFTR mutations cause meconium ileus.",
+       "rick": "No ganglion cells, no relaxation, no poop. The neural crest got lost on the way. Should've *burp* used a portal."
+      },
+      {
+       "id": "digestion-4-06",
+       "type": "mcq",
+       "q": "After resection of the terminal ileum for Crohn disease, a patient is MOST at risk of which deficiency?",
+       "choices": [
+        "Iron",
+        "Folate",
+        "Vitamin B12",
+        "Vitamin C"
+       ],
+       "answer": 2,
+       "explain": "The terminal ileum is the only site of B12-intrinsic factor uptake and also reclaims bile acids. Losing it causes B12 deficiency, fat malabsorption and calcium oxalate stones (fat binds Ca2+, so free oxalate is absorbed). Iron is absorbed in the duodenum, folate in the jejunum.",
+       "rick": "Cut out the ileum and B12 has no door to walk through. Megaloblastic anemia, here we come."
+      },
+      {
+       "id": "digestion-4-07",
+       "type": "mcq",
+       "q": "A patient with a posterior duodenal ulcer vomits blood. Which artery has most likely been eroded?",
+       "choices": [
+        "Left gastric artery",
+        "Splenic artery",
+        "Superior mesenteric artery",
+        "Gastroduodenal artery"
+       ],
+       "answer": 3,
+       "explain": "The gastroduodenal artery runs right behind the first part of the duodenum, so a posterior duodenal ulcer can erode it and bleed massively. Ulcers on the lesser curvature of the stomach tend to erode the left gastric artery instead.",
+       "rick": "Gastroduodenal artery. Sits right behind the duodenum, waiting for an ulcer to chew through. Location, location, location."
+      },
+      {
+       "id": "digestion-4-08",
+       "type": "mcq",
+       "q": "A healthy 20-year-old gets mildly yellow when fasting or ill. Only unconjugated bilirubin is high; no hemolysis. Cause?",
+       "choices": [
+        "Mildly reduced UGT activity (Gilbert syndrome)",
+        "Absent UGT activity (Crigler-Najjar type I)",
+        "Defective excretion of conjugated bilirubin (Dubin-Johnson)",
+        "Obstruction of the common bile duct"
+       ],
+       "answer": 0,
+       "explain": "Gilbert syndrome is common and benign: reduced UDP-glucuronosyltransferase activity, so fasting, stress or illness causes mild unconjugated hyperbilirubinemia. Crigler-Najjar type I causes severe neonatal jaundice; Dubin-Johnson and duct obstruction raise CONJUGATED bilirubin.",
+       "rick": "Gilbert. Skip lunch, turn yellow, panic, be totally fine. You're the *burp* Jerry of livers."
+      },
+      {
+       "id": "digestion-4-09",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "esophagus",
+       "q": "Click the organ where chronic acid reflux can cause Barrett metaplasia.",
+       "explain": "In Barrett esophagus, chronic GERD replaces the distal esophagus's stratified squamous epithelium with intestinal-type columnar epithelium with goblet cells. It raises the risk of esophageal adenocarcinoma.",
+       "rick": "Esophagus. Bathe it in acid long enough and it starts cosplaying as intestine. Then it flirts with cancer."
+      },
+      {
+       "id": "digestion-4-10",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "sigmoid_colon",
+       "q": "Click the segment most often affected by diverticulosis in Western adults.",
+       "explain": "Diverticula are pouches of mucosa and submucosa pushed through weak spots where vessels pierce the muscle wall. High pressure inside the lumen (linked to low-fiber diets) makes the sigmoid colon the commonest site in Western countries.",
+       "rick": "Sigmoid colon. Highest pressure, most blowouts. Low fiber turns it into *burp* bubble wrap."
+      },
+      {
+       "id": "digestion-4-11",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "rectum",
+       "q": "Click the segment that is ALWAYS involved in Hirschsprung disease.",
+       "explain": "In Hirschsprung disease the aganglionic segment starts at the anal end and extends upward a variable distance, so the rectum is always involved; normal, dilated colon lies above it. Diagnosis is by rectal suction biopsy.",
+       "rick": "The rectum. Hirschsprung always starts at the exit and works its way up. Worst traffic jam in the multiverse."
+      },
+      {
+       "id": "digestion-4-12",
+       "type": "label",
+       "diagram": "digestive",
+       "part": "pancreas",
+       "q": "Click the organ whose head tumor causes painless jaundice with a palpable gallbladder.",
+       "explain": "Carcinoma of the pancreatic head compresses the common bile duct, causing painless obstructive (conjugated) jaundice and an enlarged, nontender gallbladder (Courvoisier sign). Body and tail tumors present later.",
+       "rick": "Pancreas head. Squeezes the bile duct, you turn yellow, the gallbladder balloons. Painless is not good news."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "topic": "kidneys",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "kidneys-1-L1",
+       "title": "Meet your kidneys",
+       "fact": "You have two bean-shaped kidneys, each roughly fist-sized (about 11 cm long). They sit at the back of the upper abdomen, one on each side of the spine, partly shielded by the lower ribs. Their main job is to filter the blood, removing wastes (mainly urea) plus extra water and salt as urine.",
+       "rick": "Two beans that clean your blood 24/7. They do more work in a day than you've done in your *burp* whole life.",
+       "diagram": "organ_map",
+       "part": "kidneys"
+      },
+      {
+       "id": "kidneys-1-L2",
+       "title": "The urinary tract",
+       "fact": "Urine made by the kidneys flows down two thin muscular tubes, the ureters, into the bladder, a stretchy muscular bag in the pelvis that stores it. When you urinate, it leaves through a single tube, the urethra. The urethra is much shorter in females, one reason bladder infections are more common in women.",
+       "rick": "Kidney, ureter, bladder, urethra. Plumbing, Morty-brain. Ureter comes first, alphabetically AND anatomically.",
+       "diagram": "organ_map",
+       "part": "bladder"
+      },
+      {
+       "id": "kidneys-1-L3",
+       "title": "Nephrons: the tiny filters",
+       "fact": "Each kidney contains about a million nephrons, its microscopic working units. In each one, blood is filtered at the glomerulus, a tiny ball of capillaries, into a cup called Bowman's capsule. The fluid then flows through a long tubule that takes back what the body needs (water, glucose, salts) and leaves wastes behind.",
+       "rick": "A million filters per kidney. Filter everything, then take back the good stuff. Wasteful? No, it's genius.",
+       "diagram": "nephron",
+       "part": "glomerulus"
+      },
+      {
+       "id": "kidneys-1-L4",
+       "title": "More than plumbing",
+       "fact": "Every day the kidneys filter about 180 L of fluid out of the blood but make only about 1-2 L of urine, because they reabsorb about 99% of it. They also balance salts and acid, help control blood pressure, make erythropoietin (EPO) to boost red blood cell production, and activate vitamin D.",
+       "rick": "180 liters filtered, 99% taken back. Best recycling program in the known multiverse. Way better than the Citadel's.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "kidneys-1-01",
+       "type": "mcq",
+       "q": "What is the main job of the kidneys?",
+       "choices": [
+        "Filtering blood and making urine",
+        "Digesting food",
+        "Pumping blood",
+        "Making bile"
+       ],
+       "answer": 0,
+       "explain": "The kidneys filter the blood, removing wastes such as urea plus extra water and salts, which leave the body as urine. They also adjust blood volume, salt and acid levels. Digestion, pumping blood and making bile belong to other organs.",
+       "rick": "Filter blood, make pee. That's the whole elevator pitch. Took you a full question to get there."
+      },
+      {
+       "id": "kidneys-1-02",
+       "type": "mcq",
+       "q": "Which tubes carry urine from the kidneys to the bladder?",
+       "choices": [
+        "Urethra",
+        "Ureters",
+        "Renal veins",
+        "Bile ducts"
+       ],
+       "answer": 1,
+       "explain": "Each kidney has one ureter, a muscular tube about 25-30 cm long that moves urine to the bladder by peristalsis. The urethra is the single tube that carries urine from the bladder out of the body. Mixing them up is the classic mistake.",
+       "rick": "Ureters, plural, kidney to bladder. Urethra, single, bladder to the outside world. Write it on your hand."
+      },
+      {
+       "id": "kidneys-1-03",
+       "type": "mcq",
+       "q": "Where is urine stored until you urinate?",
+       "choices": [
+        "Kidneys",
+        "Urethra",
+        "Bladder",
+        "Gallbladder"
+       ],
+       "answer": 2,
+       "explain": "The urinary bladder is a hollow, stretchy muscular organ in the pelvis. Its wall muscle (the detrusor) relaxes as it fills and contracts to empty it. The gallbladder stores bile, not urine, despite the name.",
+       "rick": "The bladder. Not the gallbladder, genius. One holds pee, one holds bile. Don't mix those up at a *burp* dinner party."
+      },
+      {
+       "id": "kidneys-1-04",
+       "type": "mcq",
+       "q": "Where are the kidneys located?",
+       "choices": [
+        "Low in the front of the pelvis",
+        "In the chest, just above the diaphragm",
+        "Just behind the belly button, in front of the intestines",
+        "At the back of the upper abdomen, either side of the spine"
+       ],
+       "answer": 3,
+       "explain": "The kidneys lie against the back wall of the abdomen, roughly from the 12th thoracic to the 3rd lumbar vertebra, behind the peritoneum. The right one sits a little lower because the liver is above it. The bladder is the organ low in the pelvis.",
+       "rick": "Back of your belly, either side of the spine. That's why a kidney punch hurts. Don't ask how *burp* I know."
+      },
+      {
+       "id": "kidneys-1-05",
+       "type": "mcq",
+       "q": "What are the microscopic filtering units of the kidney called?",
+       "choices": [
+        "Neurons",
+        "Nephrons",
+        "Alveoli",
+        "Villi"
+       ],
+       "answer": 1,
+       "explain": "Each kidney has about a million nephrons. Each nephron has a glomerulus (the filter) plus a tubule that fine-tunes the fluid into urine. Neurons are nerve cells, alveoli are air sacs in the lungs and villi line the small intestine.",
+       "rick": "Nephrons. 'Nephro' means kidney. Neurons are the things you're allegedly using right now."
+      },
+      {
+       "id": "kidneys-1-06",
+       "type": "mcq",
+       "q": "What is the glomerulus?",
+       "choices": [
+        "A tiny ball of capillaries that filters blood",
+        "The tube that carries urine out of the body",
+        "A gland on top of the kidney",
+        "A muscle that empties the bladder"
+       ],
+       "answer": 0,
+       "explain": "The glomerulus is a knot of leaky capillaries inside Bowman's capsule. Blood pressure pushes water and small molecules out of these capillaries into the capsule, the first step in making urine. Blood cells and most proteins stay in the blood.",
+       "rick": "A ball of capillaries working as a sieve. Biology invented the coffee filter before coffee existed."
+      },
+      {
+       "id": "kidneys-1-07",
+       "type": "mcq",
+       "q": "Which waste, made from protein breakdown, is the main nitrogen waste in urine?",
+       "choices": [
+        "Glucose",
+        "Cholesterol",
+        "Urea",
+        "Hemoglobin"
+       ],
+       "answer": 2,
+       "explain": "When amino acids are broken down, their nitrogen becomes ammonia, which the liver converts into less toxic urea. The kidneys excrete the urea in urine. Glucose is normally kept in the blood; glucose in urine is a sign of disease such as diabetes.",
+       "rick": "Urea. Your liver turns toxic ammonia into urea and your kidneys flush it. Teamwork. Unlike your group projects."
+      },
+      {
+       "id": "kidneys-1-08",
+       "type": "mcq",
+       "q": "Which hormone do the kidneys make to boost red blood cell production?",
+       "choices": [
+        "Insulin",
+        "Adrenaline",
+        "Thyroxine",
+        "Erythropoietin (EPO)"
+       ],
+       "answer": 3,
+       "explain": "When kidney cells sense low O2 delivery, they release erythropoietin (EPO), which tells the bone marrow to make more red blood cells. That's why people with chronic kidney disease often become anemic.",
+       "rick": "EPO. The same stuff cheating cyclists inject. Your kidneys are running a tiny doping lab."
+      },
+      {
+       "id": "kidneys-1-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "kidneys",
+       "q": "Click the kidneys.",
+       "explain": "The two bean-shaped kidneys sit against the back of the upper abdomen on either side of the spine. Together they filter about 180 L of fluid a day and turn about 1-2 L of it into urine.",
+       "rick": "The kidneys. You've got two and can live with one. Doesn't mean you should gamble with either."
+      },
+      {
+       "id": "kidneys-1-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "bladder",
+       "q": "Click the urinary bladder.",
+       "explain": "The bladder sits low in the pelvis behind the pubic bone. It stores urine arriving from the ureters, and its detrusor muscle contracts to empty it through the urethra.",
+       "rick": "Bladder. The holding tank. Its whole job is waiting until there's a bathroom. Respect the patience."
+      },
+      {
+       "id": "kidneys-1-11",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "glomerulus",
+       "q": "Click the glomerulus, the ball of capillaries that filters blood.",
+       "explain": "The glomerulus is a tuft of capillaries inside Bowman's capsule. Blood pressure pushes plasma water and small solutes through its walls; blood cells and most proteins stay behind in the blood.",
+       "rick": "Glomerulus. Fancy word for capillary ball. Say it three times and you'll *burp* sound like a doctor."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "kidneys-2-L1",
+       "title": "Inside a kidney",
+       "fact": "The kidney has an outer cortex (glomeruli and convoluted tubules) and an inner medulla of renal pyramids (loops of Henle and collecting ducts). Urine drains from each papilla into minor calyces -> major calyces -> renal pelvis -> ureter. The kidneys get about 20% of the cardiac output, roughly 1 L of blood per minute.",
+       "rick": "Cortex outside, medulla inside, pelvis is the drain. A kidney is a fancy colander, Morty-brain.",
+       "diagram": "organ_map",
+       "part": "kidneys"
+      },
+      {
+       "id": "kidneys-2-L2",
+       "title": "Filter, reabsorb, secrete",
+       "fact": "Urine = filtration (glomerulus -> Bowman's capsule), reabsorption (tubule -> blood) and secretion (blood -> tubule). Normal GFR is about 125 mL/min (180 L/day). Filtrate is like plasma without most of its proteins. The proximal tubule reabsorbs about 2/3 of the filtered Na+ and water and normally all the glucose and amino acids.",
+       "rick": "Filter, reabsorb, secrete. Three verbs. A Meeseeks could learn them, and it only lives for one task.",
+       "diagram": "nephron",
+       "part": "proximal_tubule"
+      },
+      {
+       "id": "kidneys-2-L3",
+       "title": "Loop of Henle and ADH",
+       "fact": "The loop of Henle makes the medulla salty: the descending limb lets water out but little salt; the thick ascending limb pumps NaCl out but is waterproof. With recycled urea, the deep medulla reaches about 1200 mOsm/kg. ADH (posterior pituitary) inserts aquaporin-2 into the collecting duct, so water exits into the salty medulla.",
+       "rick": "Make the neighborhood salty, then open the water gates. Concentrated urine. That's how desert rats survive, genius.",
+       "diagram": "nephron",
+       "part": "ascending_limb"
+      },
+      {
+       "id": "kidneys-2-L4",
+       "title": "Hormones that steer the kidney",
+       "fact": "Aldosterone (adrenal cortex) makes the late distal tubule and collecting duct reabsorb Na+ and secrete K+. ADH saves water. When blood pressure falls, juxtaglomerular cells release renin, starting the renin-angiotensin-aldosterone system. ANP from stretched heart atria does the opposite: the kidney excretes more Na+ and water.",
+       "rick": "Aldosterone hoards salt, ANP dumps it. Your hormones argue more than Beth and Jerry.",
+       "diagram": "nephron",
+       "part": "collecting_duct"
+      }
+     ],
+     "questions": [
+      {
+       "id": "kidneys-2-01",
+       "type": "mcq",
+       "q": "What is a typical adult glomerular filtration rate (GFR)?",
+       "choices": [
+        "About 12 mL/min",
+        "About 125 mL/min",
+        "About 1.2 L/min",
+        "About 5 L/min"
+       ],
+       "answer": 1,
+       "explain": "GFR is about 125 mL/min, roughly 180 L per day. Renal blood flow is about 1-1.2 L/min and resting cardiac output about 5 L/min. A GFR around 12 mL/min would mean kidney failure.",
+       "rick": "125 mL/min. 180 liters a day. Your whole plasma volume gets filtered about 60 times daily. *burp* Show-offs."
+      },
+      {
+       "id": "kidneys-2-02",
+       "type": "mcq",
+       "q": "Which segment reabsorbs the largest share of filtered Na+ and water?",
+       "choices": [
+        "Proximal convoluted tubule",
+        "Loop of Henle",
+        "Distal convoluted tubule",
+        "Collecting duct"
+       ],
+       "answer": 0,
+       "explain": "The proximal tubule reabsorbs about 65% of filtered Na+ and water, plus essentially all glucose and amino acids and most bicarbonate. Its cells have a brush border and loads of mitochondria to power the Na+/K+ ATPase. Later segments fine-tune the rest.",
+       "rick": "Proximal tubule. The workhorse. Does two-thirds of the job while the collecting duct takes the credit."
+      },
+      {
+       "id": "kidneys-2-03",
+       "type": "mcq",
+       "q": "When blood pressure falls, what do the kidneys release to start the cascade that makes angiotensin II and aldosterone?",
+       "choices": [
+        "Erythropoietin (EPO)",
+        "Renin",
+        "Antidiuretic hormone (ADH)",
+        "Atrial natriuretic peptide (ANP)"
+       ],
+       "answer": 1,
+       "explain": "Juxtaglomerular cells in the afferent arteriole release renin when renal perfusion falls. Renin turns angiotensinogen into angiotensin I; ACE then makes angiotensin II, which constricts vessels and releases aldosterone. EPO drives red cell production; ANP opposes this system.",
+       "rick": "Renin. The kidneys sense low pressure and pull the fire alarm. The whole RAAS conga line starts with them."
+      },
+      {
+       "id": "kidneys-2-04",
+       "type": "mcq",
+       "q": "Which segment actively pumps NaCl out of the tubule but is impermeable to water?",
+       "choices": [
+        "Thin descending limb",
+        "Collecting duct",
+        "Proximal tubule",
+        "Thick ascending limb"
+       ],
+       "answer": 3,
+       "explain": "The thick ascending limb moves Na+, K+ and Cl- out with the NKCC2 cotransporter but has no water channels. That dilutes the tubular fluid and makes the medullary interstitium salty, the key to concentrating urine. The descending limb does the reverse: water out, little salt.",
+       "rick": "Thick ascending limb: pumps salt, refuses water. Stubborn. Essential. Like me."
+      },
+      {
+       "id": "kidneys-2-05",
+       "type": "mcq",
+       "q": "Which substance is freely filtered but normally fully reabsorbed, so urine has essentially none?",
+       "choices": [
+        "Urea",
+        "Glucose",
+        "Creatinine",
+        "K+"
+       ],
+       "answer": 1,
+       "explain": "Glucose is freely filtered, then the proximal tubule reabsorbs all of it with SGLT transporters. If blood glucose is so high that the transporters saturate (as in uncontrolled diabetes), glucose spills into the urine. Urea and creatinine are wastes that get excreted.",
+       "rick": "Glucose. Your kidneys reabsorb every molecule. Sugar in urine means the system's overwhelmed. Diabetes, usually."
+      },
+      {
+       "id": "kidneys-2-06",
+       "type": "mcq",
+       "q": "Which plasma component is normally almost entirely kept OUT of the glomerular filtrate?",
+       "choices": [
+        "Albumin",
+        "Glucose",
+        "Na+",
+        "Urea"
+       ],
+       "answer": 0,
+       "explain": "The glomerular filter holds back albumin mainly because of its size (close to the filter's cutoff), helped by its negative charge. Small solutes like glucose, Na+ and urea pass freely. Albumin in the urine (albuminuria) is an early sign of glomerular damage, e.g. from diabetes.",
+       "rick": "Albumin's too big and too negative to get through. Like me at a family dinner."
+      },
+      {
+       "id": "kidneys-2-07",
+       "type": "mcq",
+       "q": "Which adrenal cortex hormone increases Na+ reabsorption and K+ secretion in the kidney?",
+       "choices": [
+        "ADH",
+        "ANP",
+        "Epinephrine",
+        "Aldosterone"
+       ],
+       "answer": 3,
+       "explain": "Aldosterone, from the zona glomerulosa of the adrenal cortex, acts on principal cells of the late distal tubule and collecting duct: more Na+ channels and Na+/K+ ATPase, so more Na+ is reabsorbed and K+ secreted. High K+ and angiotensin II trigger its release.",
+       "rick": "Aldosterone. Grab sodium, dump potassium. The salt-hoarding hormone. Pickle Rick runs on it."
+      },
+      {
+       "id": "kidneys-2-08",
+       "type": "mcq",
+       "q": "After leaving the collecting ducts at the papillae, urine drains in which order?",
+       "choices": [
+        "Renal pelvis -> major calyx -> minor calyx -> ureter",
+        "Major calyx -> minor calyx -> ureter -> renal pelvis",
+        "Minor calyx -> major calyx -> renal pelvis -> ureter",
+        "Minor calyx -> renal pelvis -> major calyx -> urethra"
+       ],
+       "answer": 2,
+       "explain": "Collecting ducts open at the tip of each renal pyramid (papilla) into a minor calyx. Several minor calyces join into a major calyx, the major calyces merge into the funnel-shaped renal pelvis, and the pelvis narrows into the ureter.",
+       "rick": "Minor, major, pelvis, ureter. Small pipes into big pipes. Even the sewer rats get this."
+      },
+      {
+       "id": "kidneys-2-09",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "bowmans_capsule",
+       "q": "Click Bowman's capsule, the cup that catches the filtrate.",
+       "explain": "Bowman's capsule surrounds the glomerulus. Its inner layer is made of podocytes that wrap the capillaries; filtrate collects in Bowman's space and flows straight into the proximal tubule.",
+       "rick": "Bowman's capsule. A cup catching whatever the glomerulus squeezes out. Named after a guy, not a bowling ball."
+      },
+      {
+       "id": "kidneys-2-10",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "proximal_tubule",
+       "q": "Click the segment that reabsorbs about two-thirds of the filtered Na+ and water.",
+       "explain": "The proximal convoluted tubule follows Bowman's capsule. Its brush-border cells reabsorb about 65% of filtered Na+ and water, all the glucose and amino acids, and most bicarbonate.",
+       "rick": "Proximal tubule. Two-thirds of the work, zero fame. The Morty of the nephron."
+      },
+      {
+       "id": "kidneys-2-11",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "collecting_duct",
+       "q": "Click the collecting duct, where ADH adjusts how much water is saved.",
+       "explain": "Collecting ducts receive fluid from many nephrons and run through the medulla to the papillae. With ADH, aquaporins let water out into the salty medulla, so the urine becomes concentrated.",
+       "rick": "Collecting duct. Final checkpoint. ADH decides here whether you pee a *burp* puddle or a thimble."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "kidneys-3-L1",
+       "title": "What sets GFR",
+       "fact": "GFR = Kf x [(P_GC - P_BS) - (pi_GC - pi_BS)]: glomerular capillary pressure pushes fluid out; Bowman's space pressure and plasma oncotic pressure oppose it. Afferent constriction lowers P_GC, GFR and RPF. Efferent constriction raises P_GC and GFR but lowers RPF, so filtration fraction (GFR/RPF, about 20%) rises.",
+       "rick": "Squeeze the inlet, flow and filtration both drop. Squeeze the outlet, pressure builds. It's a *burp* garden hose, Morty-brain.",
+       "diagram": "nephron",
+       "part": "efferent_arteriole"
+      },
+      {
+       "id": "kidneys-3-L2",
+       "title": "Clearance",
+       "fact": "Clearance = (U x V) / P = plasma volume cleared of a substance per minute. Inulin is freely filtered and neither reabsorbed nor secreted, so its clearance equals GFR. Creatinine slightly overestimates GFR because a little is secreted. PAH is filtered and secreted almost completely, so its clearance estimates renal plasma flow.",
+       "rick": "UV over P. Sounds like a sunscreen. It's the single most useful equation in renal physiology. Tattoo it somewhere.",
+       "diagram": "nephron",
+       "part": "glomerulus"
+      },
+      {
+       "id": "kidneys-3-L3",
+       "title": "Transporters by segment",
+       "fact": "PCT: Na+/H+ exchanger, SGLT for glucose, carbonic anhydrase to reclaim HCO3-. Thick ascending limb: NKCC2 (loop diuretic target); its lumen-positive voltage drives paracellular Ca2+ and Mg2+ reabsorption. DCT: Na+-Cl- cotransporter (thiazide target) and PTH-regulated Ca2+ reabsorption. Collecting duct: ENaC in principal cells.",
+       "rick": "Every segment, its own transporter, its own drug. Learn the map now or cry on *burp* exam day.",
+       "diagram": "nephron",
+       "part": "ascending_limb"
+      },
+      {
+       "id": "kidneys-3-L4",
+       "title": "Renin-angiotensin-aldosterone",
+       "fact": "Juxtaglomerular cells in the afferent arteriole release renin when renal perfusion falls, sympathetic beta1 input rises or the macula densa senses low NaCl. Renin: angiotensinogen -> angiotensin I. ACE (mainly in lung capillaries) -> angiotensin II, which constricts arterioles, releases aldosterone and ADH and drives thirst.",
+       "rick": "Liver makes the precursor, kidney cuts it, lungs finish it. A three-organ conspiracy to raise your blood pressure.",
+       "diagram": "nephron",
+       "part": "afferent_arteriole"
+      }
+     ],
+     "questions": [
+      {
+       "id": "kidneys-3-01",
+       "type": "mcq",
+       "q": "Clearance of which substance equals GFR because it is freely filtered and neither reabsorbed nor secreted?",
+       "choices": [
+        "Creatinine",
+        "PAH",
+        "Inulin",
+        "Glucose"
+       ],
+       "answer": 2,
+       "explain": "Inulin, a plant polysaccharide, is freely filtered and untouched by the tubule, so its clearance equals GFR. Creatinine is slightly secreted (overestimates GFR); PAH is secreted (measures renal plasma flow); glucose is reabsorbed (clearance near 0).",
+       "rick": "Inulin. Not insulin, genius. One letter different, completely different universe."
+      },
+      {
+       "id": "kidneys-3-02",
+       "type": "mcq",
+       "q": "Constricting only the EFFERENT arteriole has what effect?",
+       "choices": [
+        "GFR down, RPF down, filtration fraction unchanged",
+        "GFR up, RPF down, filtration fraction up",
+        "GFR up, RPF up, filtration fraction unchanged",
+        "GFR down, RPF up, filtration fraction down"
+       ],
+       "answer": 1,
+       "explain": "Efferent constriction backs blood up in the glomerulus: P_GC and GFR rise while plasma flow through the kidney (RPF) falls, so FF = GFR/RPF increases. Afferent constriction lowers both GFR and RPF, leaving FF about the same.",
+       "rick": "Pinch the exit, pressure builds upstream. GFR up, flow down. Plumbing 101, Morty-brain."
+      },
+      {
+       "id": "kidneys-3-03",
+       "type": "mcq",
+       "q": "Furosemide and other loop diuretics inhibit which transporter?",
+       "choices": [
+        "Na+-Cl- cotransporter in the DCT",
+        "ENaC in the collecting duct",
+        "Carbonic anhydrase in the PCT",
+        "Na+-K+-2Cl- cotransporter (NKCC2) in the thick ascending limb"
+       ],
+       "answer": 3,
+       "explain": "Loop diuretics block NKCC2 in the thick ascending limb, so a large share of filtered NaCl escapes reabsorption and the medullary gradient collapses. The lumen-positive voltage is lost too, so Ca2+ and Mg2+ are wasted. Thiazides block the DCT's Na+-Cl- cotransporter.",
+       "rick": "Loop diuretics act on the loop. The universe occasionally names things sensibly. Cherish it."
+      },
+      {
+       "id": "kidneys-3-04",
+       "type": "mcq",
+       "q": "Which cells secrete renin?",
+       "choices": [
+        "Macula densa cells",
+        "Juxtaglomerular (granular) cells of the afferent arteriole",
+        "Podocytes",
+        "Zona glomerulosa cells of the adrenal cortex"
+       ],
+       "answer": 1,
+       "explain": "Renin comes from juxtaglomerular cells, modified smooth muscle cells in the afferent arteriole wall. The macula densa only SENSES NaCl in the tubule and signals the JG cells. The zona glomerulosa makes aldosterone, further down the cascade.",
+       "rick": "JG cells release it, the macula densa just snitches. Macula densa never makes renin itself. It *burp* tattles."
+      },
+      {
+       "id": "kidneys-3-05",
+       "type": "mcq",
+       "q": "Urine inulin is 30 mg/mL, plasma inulin 0.25 mg/mL and urine flow 1 mL/min. What is the GFR?",
+       "choices": [
+        "7.5 mL/min",
+        "30 mL/min",
+        "120 mL/min",
+        "250 mL/min"
+       ],
+       "answer": 2,
+       "explain": "Clearance = (U x V) / P = (30 mg/mL x 1 mL/min) / 0.25 mg/mL = 120 mL/min. Because inulin clearance equals GFR, the GFR is 120 mL/min, a normal value. 7.5 comes from multiplying by P instead of dividing.",
+       "rick": "120. UV over P. If you got 7.5, you multiplied. Go stand in the corner of the multiverse."
+      },
+      {
+       "id": "kidneys-3-06",
+       "type": "mcq",
+       "q": "What does angiotensin-converting enzyme (ACE) do?",
+       "choices": [
+        "Converts angiotensin I to angiotensin II",
+        "Converts angiotensinogen to angiotensin I",
+        "Converts angiotensin II to aldosterone",
+        "Converts prorenin to renin"
+       ],
+       "answer": 0,
+       "explain": "ACE, found mostly on lung capillary endothelium, converts angiotensin I to angiotensin II and also breaks down bradykinin (why ACE inhibitors can cause a dry cough). Renin makes angiotensin I from angiotensinogen; aldosterone is a steroid made by the adrenal cortex.",
+       "rick": "ACE turns angiotensin I into II. Block it and bradykinin piles up. Cough, cough. *burp* Pardon me."
+      },
+      {
+       "id": "kidneys-3-07",
+       "type": "mcq",
+       "q": "Parathyroid hormone increases Ca2+ reabsorption mainly in which segment?",
+       "choices": [
+        "Distal convoluted tubule",
+        "Proximal convoluted tubule",
+        "Thin descending limb",
+        "Collecting duct"
+       ],
+       "answer": 0,
+       "explain": "PTH boosts Ca2+ reabsorption in the distal convoluted tubule. In the proximal tubule it does something else: it inhibits phosphate reabsorption and activates 1-alpha-hydroxylase to make active vitamin D (calcitriol). Net result: blood Ca2+ up, phosphate down.",
+       "rick": "PTH keeps calcium at the DCT and dumps phosphate at the PCT. 'Phosphate Trashing Hormone.' You're welcome."
+      },
+      {
+       "id": "kidneys-3-08",
+       "type": "mcq",
+       "q": "Fluid leaving the thick ascending limb (entering the DCT) is normally:",
+       "choices": [
+        "Isotonic to plasma",
+        "Hypertonic, about 1200 mOsm/kg",
+        "Identical to the final urine",
+        "Hypotonic, about 100 mOsm/kg"
+       ],
+       "answer": 3,
+       "explain": "The thick ascending limb removes NaCl without water, so the fluid leaving it is dilute (about 100 mOsm/kg) whatever your hydration: it's the 'diluting segment'. Fluid at the hairpin tip is hypertonic. Final urine concentration depends on ADH in the collecting duct.",
+       "rick": "Diluting segment. Always dilute coming out, no matter how dehydrated you are. Consistent. Unlike you."
+      },
+      {
+       "id": "kidneys-3-09",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "afferent_arteriole",
+       "q": "Click the vessel that carries blood INTO the glomerulus and contains the renin-secreting cells.",
+       "explain": "The afferent arteriole delivers blood to the glomerulus. Its wall holds juxtaglomerular cells that secrete renin. Dilating it raises glomerular pressure and GFR; constricting it lowers both GFR and RPF.",
+       "rick": "Afferent: Arrives. Efferent: Exits. A before E, in the alphabet and in the blood. Mnemonics, people."
+      },
+      {
+       "id": "kidneys-3-10",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "efferent_arteriole",
+       "q": "Click the vessel draining the glomerulus, which angiotensin II preferentially constricts.",
+       "explain": "The efferent arteriole carries blood out of the glomerulus into the peritubular capillaries and vasa recta. Angiotensin II constricts it more than the afferent, raising glomerular pressure to protect GFR when perfusion is low.",
+       "rick": "Efferent arteriole. The exit door. Angiotensin II narrows it so the glomerulus keeps its pressure. Clever hack."
+      },
+      {
+       "id": "kidneys-3-11",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "descending_limb",
+       "q": "Click the limb of the loop of Henle that is permeable to water but not to NaCl.",
+       "explain": "The thin descending limb has aquaporin-1 water channels but low NaCl permeability. As it dips into the salty medulla, water leaves by osmosis and the tubular fluid becomes more and more concentrated toward the hairpin.",
+       "rick": "Descending limb. Lets water out, keeps salt in. By the bottom it's brine. Pickle Rick approves."
+      },
+      {
+       "id": "kidneys-3-12",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "ascending_limb",
+       "q": "Click the segment where loop diuretics block NKCC2.",
+       "explain": "The thick part of the ascending limb reabsorbs Na+, K+ and 2 Cl- through NKCC2 while staying impermeable to water. Blocking NKCC2 with furosemide wipes out the medullary gradient and causes a strong diuresis.",
+       "rick": "Ascending limb. Salt pump, waterproof. Shut it down with furosemide and you pee like a broken fire hydrant."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "kidneys-4-L1",
+       "title": "Diuretics: site and side effects",
+       "fact": "Acetazolamide (PCT carbonic anhydrase): normal anion gap metabolic acidosis. Loop diuretics (NKCC2): hypokalemic metabolic alkalosis, Ca2+ loss. Thiazides (DCT Na+-Cl- cotransporter): hypokalemic alkalosis but Ca2+ retention. Spironolactone (aldosterone receptor) and amiloride (ENaC): K+-sparing; risk hyperkalemia and acidosis.",
+       "rick": "Loops lose calcium, thiazides keep it. Memorize that or I'll replace you with a *burp* Meeseeks.",
+       "diagram": "nephron",
+       "part": "distal_tubule"
+      },
+      {
+       "id": "kidneys-4-L2",
+       "title": "Nephrotic vs nephritic",
+       "fact": "Nephrotic: podocyte damage -> proteinuria >3.5 g/day, low albumin, edema, hyperlipidemia, fatty casts. Kids: usually minimal change disease (normal light microscopy, effaced foot processes on EM, steroid-responsive). Nephritic: inflamed glomeruli -> hematuria with RBC casts, hypertension, oliguria; e.g. post-strep GN (low C3).",
+       "rick": "Nephrotic: protein pours out. Nephritic: blood and inflammation. One letter apart, two different disasters.",
+       "diagram": "nephron",
+       "part": "glomerulus"
+      },
+      {
+       "id": "kidneys-4-L3",
+       "title": "Water balance gone wrong",
+       "fact": "Central diabetes insipidus (DI): no ADH; dilute polyuria; desmopressin works. Nephrogenic DI: collecting duct ignores ADH (lithium, hypercalcemia); desmopressin fails. SIADH: excess ADH (e.g. small cell lung cancer) -> euvolemic hyponatremia, inappropriately concentrated urine. Primary polydipsia: dilute urine, low-normal Na+.",
+       "rick": "No ADH, deaf to ADH, or way too much ADH. Three ways to screw up one *burp* hormone. Impressive.",
+       "diagram": "nephron",
+       "part": "collecting_duct"
+      },
+      {
+       "id": "kidneys-4-L4",
+       "title": "Angiotensin II protects GFR",
+       "fact": "When renal perfusion falls, angiotensin II constricts the efferent arteriole to hold glomerular pressure and GFR up, while prostaglandins dilate the afferent arteriole. So ACE inhibitors or ARBs can cause acute kidney injury in bilateral renal artery stenosis, and NSAIDs can do the same in a volume-depleted patient.",
+       "rick": "Take away the efferent squeeze and GFR craters. ACE inhibitors: great drug, wrong patient.",
+       "diagram": "nephron",
+       "part": "efferent_arteriole"
+      }
+     ],
+     "questions": [
+      {
+       "id": "kidneys-4-01",
+       "type": "mcq",
+       "q": "A patient on high-dose furosemide is most likely to develop which acid-base and K+ pattern?",
+       "choices": [
+        "Hyperkalemic metabolic acidosis",
+        "Hypokalemic metabolic alkalosis",
+        "Normal anion gap metabolic acidosis",
+        "Respiratory alkalosis with normal K+"
+       ],
+       "answer": 1,
+       "explain": "More Na+ reaches the collecting duct and volume loss activates aldosterone, so K+ and H+ are secreted: hypokalemia with metabolic alkalosis (plus contraction alkalosis). Hyperkalemic acidosis fits K+-sparing diuretics; normal anion gap acidosis fits acetazolamide.",
+       "rick": "Furosemide flushes K+ and H+. Low potassium, high pH. Two problems for the price of one."
+      },
+      {
+       "id": "kidneys-4-02",
+       "type": "mcq",
+       "q": "A patient has recurrent calcium kidney stones from idiopathic hypercalciuria. Which diuretic LOWERS urinary Ca2+?",
+       "choices": [
+        "Furosemide",
+        "Acetazolamide",
+        "Hydrochlorothiazide",
+        "Mannitol"
+       ],
+       "answer": 2,
+       "explain": "Thiazides block the DCT Na+-Cl- cotransporter; lower Na+ inside the cell speeds basolateral Na+/Ca2+ exchange, so more Ca2+ is reabsorbed and urinary Ca2+ falls. Loop diuretics do the opposite. Acetazolamide alkalinizes the urine, favoring calcium phosphate stones.",
+       "rick": "Thiazides hold on to calcium. Loops throw it away. Pick wrong and you're farming kidney stones."
+      },
+      {
+       "id": "kidneys-4-03",
+       "type": "mcq",
+       "q": "A 4-year-old has periorbital edema, heavy proteinuria and low albumin. Biopsy light microscopy is normal. What does EM show?",
+       "choices": [
+        "Effacement of podocyte foot processes",
+        "Subepithelial humps",
+        "Spike-and-dome basement membrane",
+        "Split, basket-weave basement membrane"
+       ],
+       "answer": 0,
+       "explain": "Minimal change disease, the commonest cause of nephrotic syndrome in children, looks normal on light microscopy; EM shows effaced (flattened) podocyte foot processes. It usually responds to corticosteroids. Humps: post-strep GN; spike-and-dome: membranous; basket-weave: Alport.",
+       "rick": "Normal under light, wrecked under EM. Minimal change: minimal on the slide, not minimal for the kid."
+      },
+      {
+       "id": "kidneys-4-04",
+       "type": "mcq",
+       "q": "A 7-year-old has cola-colored urine, hypertension and puffy eyes 2 weeks after strep throat. Which urine finding is typical?",
+       "choices": [
+        "Fatty casts (oval fat bodies)",
+        "WBC casts",
+        "Muddy brown granular casts",
+        "RBC casts"
+       ],
+       "answer": 3,
+       "explain": "Post-streptococcal glomerulonephritis is a nephritic syndrome: immune complexes inflame the glomeruli, red cells leak and form RBC casts in the tubules; C3 is low. Fatty casts suggest nephrotic syndrome, WBC casts pyelonephritis or interstitial nephritis, muddy brown casts ATN.",
+       "rick": "RBC casts: red cells molded inside the tubules. Proof the bleeding started up in the *burp* glomerulus."
+      },
+      {
+       "id": "kidneys-4-05",
+       "type": "mcq",
+       "q": "A man on long-term lithium has polyuria with dilute urine. After desmopressin the urine stays dilute. What is the defect?",
+       "choices": [
+        "No ADH release from the posterior pituitary",
+        "Excess ADH secretion",
+        "Collecting duct cells unresponsive to ADH",
+        "Excess water drinking with normal ADH action"
+       ],
+       "answer": 2,
+       "explain": "Lithium enters principal cells through ENaC and disrupts ADH (V2 receptor) signaling and aquaporin-2 expression: nephrogenic diabetes insipidus. Since the problem is the kidney's response, desmopressin (an ADH analog) doesn't concentrate the urine; in central DI it would.",
+       "rick": "The kidney's ignoring ADH. Shout desmopressin at it all day, nothing. Lithium made it deaf."
+      },
+      {
+       "id": "kidneys-4-06",
+       "type": "mcq",
+       "q": "A woman drinks about 10 L of water a day. Na+ 134 mEq/L, urine 70 mOsm/kg. After water restriction her urine rises to 600 mOsm/kg. Diagnosis?",
+       "choices": [
+        "Central diabetes insipidus",
+        "Nephrogenic diabetes insipidus",
+        "Primary polydipsia",
+        "SIADH"
+       ],
+       "answer": 2,
+       "explain": "Primary polydipsia: heavy drinking suppresses ADH, so urine is maximally dilute and Na+ is low-normal. ADH release and the kidney's response are intact, so urine concentrates once intake stops. In DI urine stays dilute despite restriction; SIADH makes concentrated urine.",
+       "rick": "Her kidneys are fine; her drinking habit isn't. Turn off the tap and the urine concentrates. *burp* Case closed."
+      },
+      {
+       "id": "kidneys-4-07",
+       "type": "mcq",
+       "q": "A climber takes acetazolamide to prevent altitude sickness. Which acid-base disturbance does it cause?",
+       "choices": [
+        "Hypokalemic metabolic alkalosis",
+        "Normal anion gap (hyperchloremic) metabolic acidosis",
+        "High anion gap metabolic acidosis",
+        "Respiratory acidosis"
+       ],
+       "answer": 1,
+       "explain": "Blocking proximal tubule carbonic anhydrase stops HCO3- reabsorption, so HCO3- is lost in urine and Cl- rises: a normal anion gap metabolic acidosis. No unmeasured anion is added, so the gap stays normal. The acidosis drives breathing, which helps at altitude.",
+       "rick": "Dump bicarbonate, blood goes acidic, you breathe harder up the mountain. Chemistry beats altitude."
+      },
+      {
+       "id": "kidneys-4-08",
+       "type": "mcq",
+       "q": "A man with bilateral renal artery stenosis starts an ACE inhibitor and his creatinine jumps. Main mechanism?",
+       "choices": [
+        "Afferent arteriole constriction",
+        "Direct toxic injury to podocytes",
+        "Increased renin release",
+        "Loss of angiotensin II constriction of the efferent arteriole"
+       ],
+       "answer": 3,
+       "explain": "With low renal perfusion, GFR depends on angiotensin II squeezing the efferent arteriole to keep glomerular pressure up. An ACE inhibitor removes that squeeze, so glomerular pressure and GFR fall and creatinine rises. Renin does rise on ACE inhibitors, but that doesn't lower GFR.",
+       "rick": "No angiotensin II, no efferent squeeze, no filtration pressure. Your kidney just *burp* gave up. Physics wins."
+      },
+      {
+       "id": "kidneys-4-09",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "macula_densa",
+       "q": "Click the cells that sense tubular NaCl and drive tubuloglomerular feedback.",
+       "explain": "The macula densa is a plaque of cells at the end of the thick ascending limb where it touches its own glomerulus's arterioles. High NaCl delivery -> afferent constriction (GFR falls); low NaCl -> afferent dilation and renin release.",
+       "rick": "Macula densa. A salt sensor bolted onto its own glomerulus. Self-regulating plumbing. I'm almost impressed."
+      },
+      {
+       "id": "kidneys-4-10",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "distal_tubule",
+       "q": "Click the segment where thiazides block the Na+-Cl- cotransporter.",
+       "explain": "The distal convoluted tubule reabsorbs NaCl via the Na+-Cl- cotransporter (NCC), the thiazide target, and Ca2+ under PTH control. Its early part is water-impermeable, so it dilutes the tubular fluid further.",
+       "rick": "DCT. Thiazides hit here, and PTH saves your calcium here. Small segment, huge exam yield."
+      },
+      {
+       "id": "kidneys-4-11",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "collecting_duct",
+       "q": "Click where ADH inserts aquaporin-2, the site lithium makes deaf to ADH.",
+       "explain": "Principal cells of the collecting duct insert aquaporin-2 under ADH (V2 receptors) and reabsorb Na+ via ENaC under aldosterone; intercalated cells secrete H+ or HCO3-. Lithium blunts the ADH response: nephrogenic DI.",
+       "rick": "Collecting duct. ADH's turf. Lithium makes it deaf and you pee buckets."
+      },
+      {
+       "id": "kidneys-4-12",
+       "type": "label",
+       "diagram": "nephron",
+       "part": "proximal_tubule",
+       "q": "Click the segment where acetazolamide acts and all filtered glucose is reabsorbed.",
+       "explain": "The proximal convoluted tubule reclaims about 80% of filtered HCO3- using carbonic anhydrase (blocked by acetazolamide) plus all glucose via SGLT2 and SGLT1. Generalized PCT failure is called Fanconi syndrome.",
+       "rick": "Proximal tubule. Glucose, amino acids, bicarb, all reclaimed. Break it and you get Fanconi: *burp* everything leaks."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "diagram": "digestive",
+   "id": "esophagus",
+   "name": "Esophagus",
+   "desc": "Muscular tube about 25 cm long from the pharynx, behind the trachea and heart, through the diaphragm to the stomach. Moves food by peristalsis. Chronic acid reflux can cause Barrett esophagus.",
+   "rick": "A meat chute. Food goes down, and if it comes back up, that's reflux, Morty-brain."
+  },
+  {
+   "diagram": "digestive",
+   "id": "stomach",
+   "name": "Stomach",
+   "desc": "J-shaped muscular sac in the upper left abdomen. Stores food, churns it with HCl and pepsin into chyme and releases it slowly through the pyloric sphincter. Parietal cells also make intrinsic factor.",
+   "rick": "Your personal acid vat. pH about 2. Show some respect."
+  },
+  {
+   "diagram": "digestive",
+   "id": "liver",
+   "name": "Liver",
+   "desc": "Largest internal organ, upper right abdomen under the diaphragm. Makes bile, processes nutrients from the hepatic portal vein, stores glycogen, makes plasma proteins like albumin and detoxifies drugs and alcohol.",
+   "rick": "The liver. Regenerates, detoxifies, never complains. My liver deserves a *burp* Nobel Prize."
+  },
+  {
+   "diagram": "digestive",
+   "id": "gallbladder",
+   "name": "Gallbladder",
+   "desc": "Small pear-shaped sac under the liver. Stores and concentrates bile, then squeezes it through the cystic and common bile ducts into the duodenum when CCK signals that fat has arrived.",
+   "rick": "Bile storage. Concentrate too much and you grow gallstones. Rocks. Inside you."
+  },
+  {
+   "diagram": "digestive",
+   "id": "pancreas",
+   "name": "Pancreas",
+   "desc": "Gland behind the stomach, its head in the C-loop of the duodenum. Exocrine part sends enzymes and HCO3- to the duodenum; islets release insulin and glucagon. A head tumor can block the bile duct.",
+   "rick": "Half enzyme factory, half hormone lab. The overachiever of your abdomen."
+  },
+  {
+   "diagram": "digestive",
+   "id": "duodenum",
+   "name": "Duodenum",
+   "desc": "First, C-shaped part of the small intestine, about 25 cm long. Receives chyme from the stomach plus bile and pancreatic juice at the major duodenal papilla. Main site of iron absorption.",
+   "rick": "Duodenum. Where acid meets bile and bicarbonate. A chemical bar fight, every meal."
+  },
+  {
+   "diagram": "digestive",
+   "id": "small_intestine",
+   "name": "Small Intestine",
+   "desc": "Jejunum and ileum: meters of coiled tube lined with circular folds, villi and microvilli where most nutrients are absorbed. The terminal ileum absorbs vitamin B12 and bile salts.",
+   "rick": "Meters of spaghetti doing all the real absorbing. Stomach gets the fame, this does the work."
+  },
+  {
+   "diagram": "digestive",
+   "id": "cecum",
+   "name": "Cecum",
+   "desc": "Blind pouch at the start of the large intestine in the right lower quadrant. Receives contents from the ileum through the ileocecal valve; the appendix hangs from it.",
+   "rick": "A cul-de-sac with a worm attached. Evolution was *burp* drunk that day."
+  },
+  {
+   "diagram": "digestive",
+   "id": "appendix",
+   "name": "Appendix",
+   "desc": "Narrow, blind-ended tube (vermiform appendix) attached to the cecum, rich in lymphoid tissue. Obstruction and inflammation cause appendicitis, classically with pain over McBurney point.",
+   "rick": "Tiny, lymphoid, and occasionally explosive. The surgeon's favorite piece of you."
+  },
+  {
+   "diagram": "digestive",
+   "id": "ascending_colon",
+   "name": "Ascending Colon",
+   "desc": "Rises up the right side of the abdomen from the cecum to the hepatic (right colic) flexure under the liver. Retroperitoneal. Absorbs water and salts from the liquid leftovers.",
+   "rick": "Ascending colon. Goes up on the right. If you need a hint beyond the name, I can't help you."
+  },
+  {
+   "diagram": "digestive",
+   "id": "transverse_colon",
+   "name": "Transverse Colon",
+   "desc": "Crosses the upper abdomen from the hepatic flexure to the splenic flexure, hung on its own mesentery (the transverse mesocolon). Absorbs water and electrolytes; supplied by both SMA and IMA.",
+   "rick": "The hammock of your gut. Swings across the belly full of tomorrow's problems."
+  },
+  {
+   "diagram": "digestive",
+   "id": "descending_colon",
+   "name": "Descending Colon",
+   "desc": "Runs down the left side of the abdomen from the splenic flexure to the sigmoid colon. Retroperitoneal; supplied by the IMA. Stool gets firmer here as water is absorbed.",
+   "rick": "Going down on the left. Stool's almost finished. Like a product nearing shipping."
+  },
+  {
+   "diagram": "digestive",
+   "id": "sigmoid_colon",
+   "name": "Sigmoid Colon",
+   "desc": "S-shaped loop in the lower left abdomen linking the descending colon to the rectum, on its own mesentery. Common site of diverticulosis and, in adults, of volvulus.",
+   "rick": "S-shaped, floppy and prone to twisting. The drama queen of the colon."
+  },
+  {
+   "diagram": "digestive",
+   "id": "rectum",
+   "name": "Rectum",
+   "desc": "Final straight part of the large intestine, in the pelvis just above the anal canal. Stores stool; stretching its wall triggers the urge to defecate. Always involved in Hirschsprung disease.",
+   "rick": "The waiting room before the exit. Stretch receptors tell you when it's time. Listen to them."
+  },
+  {
+   "diagram": "nephron",
+   "id": "afferent_arteriole",
+   "name": "Afferent Arteriole",
+   "desc": "Arteriole that brings blood INTO the glomerulus. Its wall contains the renin-secreting juxtaglomerular cells; dilating it raises glomerular pressure and GFR.",
+   "rick": "The inlet valve. Open it, more filtering. Close it, less. Even you can run a faucet."
+  },
+  {
+   "diagram": "nephron",
+   "id": "efferent_arteriole",
+   "name": "Efferent Arteriole",
+   "desc": "Carries blood OUT of the glomerulus into the peritubular capillaries and vasa recta. Constricting it (e.g. by angiotensin II) raises glomerular pressure and filtration fraction.",
+   "rick": "The outlet valve. Squeeze it and pressure backs up into the glomerulus. *burp* Hydraulics, baby."
+  },
+  {
+   "diagram": "nephron",
+   "id": "glomerulus",
+   "name": "Glomerulus",
+   "desc": "Tuft of fenestrated capillaries inside Bowman's capsule where plasma is filtered. The filter (endothelium, basement membrane, podocytes) holds back blood cells and most proteins.",
+   "rick": "About a million of these capillary hairballs per kidney, filtering 180 liters a day. Gross and magnificent."
+  },
+  {
+   "diagram": "nephron",
+   "id": "bowmans_capsule",
+   "name": "Bowman's Capsule",
+   "desc": "Double-walled cup around the glomerulus. Its inner layer is made of podocytes; filtrate collects in Bowman's space and flows into the proximal tubule.",
+   "rick": "The catcher's mitt for filtrate. Named after a Victorian guy. Not a bowling pun."
+  },
+  {
+   "diagram": "nephron",
+   "id": "proximal_tubule",
+   "name": "Proximal Tubule",
+   "desc": "First tubule segment, lined with brush-border cells packed with mitochondria. Reabsorbs about 2/3 of filtered Na+ and water, nearly all glucose and amino acids, and most HCO3-.",
+   "rick": "The nephron's workhorse. Takes back the good stuff before you pee it away."
+  },
+  {
+   "diagram": "nephron",
+   "id": "descending_limb",
+   "name": "Descending Limb",
+   "desc": "Thin descending limb of the loop of Henle, dipping into the medulla. Permeable to water but not much NaCl, so water leaves and the fluid gets more concentrated.",
+   "rick": "Water out, salt stays. Brine by the bottom. Pickle Rick's favorite tube."
+  },
+  {
+   "diagram": "nephron",
+   "id": "ascending_limb",
+   "name": "Ascending Limb",
+   "desc": "Ascending limb of the loop of Henle. Its thick part pumps out NaCl via NKCC2 but is water-tight, diluting the fluid and salting the medulla. Target of loop diuretics.",
+   "rick": "Salt pump, waterproof walls. Builds the gradient that lets you make concentrated pee."
+  },
+  {
+   "diagram": "nephron",
+   "id": "distal_tubule",
+   "name": "Distal Tubule",
+   "desc": "Distal convoluted tubule. Reabsorbs NaCl via the Na+-Cl- cotransporter (blocked by thiazides) and Ca2+ under PTH control; its early part is water-impermeable.",
+   "rick": "Fine-tuning department. Thiazides and PTH both meddle here."
+  },
+  {
+   "diagram": "nephron",
+   "id": "macula_densa",
+   "name": "Macula Densa",
+   "desc": "Plaque of tightly packed cells at the end of the thick ascending limb, touching its own glomerulus's arterioles. Senses tubular NaCl to adjust GFR (tubuloglomerular feedback) and renin.",
+   "rick": "A salt sensor that snitches to the arterioles. Your nephron has *burp* internal affairs."
+  },
+  {
+   "diagram": "nephron",
+   "id": "collecting_duct",
+   "name": "Collecting Duct",
+   "desc": "Final tubes draining many nephrons to the renal papilla. Principal cells reabsorb Na+ (aldosterone) and water (ADH via aquaporin-2); intercalated cells handle acid-base.",
+   "rick": "Last chance to tweak the urine. ADH and aldosterone fight over what you keep here."
+  }
+ ]
+}

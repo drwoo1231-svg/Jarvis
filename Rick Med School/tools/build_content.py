@@ -27,7 +27,7 @@ def j(s):
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 topics, parts = {}, []
-files = sorted(glob.glob(os.path.join(SRC, "*.json")))
+files = sorted(f for f in glob.glob(os.path.join(SRC, "*.json")) if not os.path.basename(f).startswith("_"))
 for f in files:
     d = json.load(open(f))
     for t in d.get("topics", []):

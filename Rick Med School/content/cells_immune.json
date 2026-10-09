@@ -1,0 +1,1500 @@
+{
+ "batch": "cells_immune",
+ "topics": [
+  {
+   "topic": "cells",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "cells-1-L1",
+       "title": "Cells: the units of life",
+       "fact": "The cell is the smallest unit of life; you are made of roughly 30 trillion of them. Inside the cell membrane is the cytoplasm: jelly-like cytosol plus organelles, the cell's 'little organs'. Human cells are eukaryotic: their DNA sits in a nucleus (mature red blood cells lose theirs). Bacteria are prokaryotic: no nucleus at all.",
+       "rick": "30 trillion cells, and every one of them is working harder right now than you did all semester, genius.",
+       "diagram": "cell",
+       "part": "cytoplasm"
+      },
+      {
+       "id": "cells-1-L2",
+       "title": "The cell membrane",
+       "fact": "The cell membrane (plasma membrane) is a double layer of phospholipids studded with proteins. It surrounds the cell and is selectively permeable: it decides what gets in and out. Animal cells have no rigid cell wall; plant cells and bacteria do.",
+       "rick": "A bouncer made of fat. Lets the good stuff in, keeps the garbage out. Unlike your brain, which lets *burp* everything leak out.",
+       "diagram": "cell",
+       "part": "cell_membrane"
+      },
+      {
+       "id": "cells-1-L3",
+       "title": "The nucleus",
+       "fact": "The nucleus is the control center. It stores most of the cell's DNA, the instruction manual for building proteins, inside a double membrane called the nuclear envelope, which has pores. Inside it, the nucleolus helps build ribosomes. Mature red blood cells throw their nucleus out.",
+       "rick": "The nucleus is the cell's brain. Yes, cells have one. More than I can say for some people in this room, Morty-brain.",
+       "diagram": "cell",
+       "part": "nucleus"
+      },
+      {
+       "id": "cells-1-L4",
+       "title": "Power, factories, trash cans",
+       "fact": "Mitochondria are the power plants: they use O2 to burn fuel and make ATP, the cell's energy currency, releasing CO2 and H2O. Ribosomes are tiny factories that build proteins. Lysosomes are recycling bins full of enzymes that digest waste and worn-out parts.",
+       "rick": "Mitochondria make the energy, ribosomes make the proteins, lysosomes eat the trash. Basically my garage, but organized.",
+       "diagram": "cell",
+       "part": "mitochondrion"
+      }
+     ],
+     "questions": [
+      {
+       "id": "cells-1-01",
+       "type": "mcq",
+       "q": "Which part of the cell holds most of its DNA?",
+       "choices": [
+        "Mitochondrion",
+        "Nucleus",
+        "Lysosome",
+        "Cell membrane"
+       ],
+       "answer": 1,
+       "explain": "The nucleus stores the chromosomes, the cell's DNA instruction manual. Mitochondria carry a tiny DNA of their own (37 genes), but nearly all your genes live in the nucleus.",
+       "rick": "The nucleus. It's where the instructions are. You know, the thing you never read before *burp* breaking stuff."
+      },
+      {
+       "id": "cells-1-02",
+       "type": "mcq",
+       "q": "Which organelle makes most of the cell's usable energy (ATP)?",
+       "choices": [
+        "Ribosome",
+        "Golgi apparatus",
+        "Nucleus",
+        "Mitochondrion"
+       ],
+       "answer": 3,
+       "explain": "Mitochondria run aerobic respiration, using O2 to turn fuel into ATP. Ribosomes USE energy to build proteins; they don't make it.",
+       "rick": "Mitochondria, the powerhouse of the cell. Congrats, you've reached meme-level biology."
+      },
+      {
+       "id": "cells-1-03",
+       "type": "mcq",
+       "q": "What is the main job of the cell membrane?",
+       "choices": [
+        "Building proteins",
+        "Storing the DNA",
+        "Controlling what enters and leaves the cell",
+        "Digesting worn-out organelles"
+       ],
+       "answer": 2,
+       "explain": "The membrane is a selectively permeable barrier: it lets some substances through and blocks others. Proteins are built by ribosomes; DNA sits in the nucleus.",
+       "rick": "It's a door with a guest list, genius. Doors. You've seen doors."
+      },
+      {
+       "id": "cells-1-04",
+       "type": "mcq",
+       "q": "What do ribosomes build?",
+       "choices": [
+        "Proteins",
+        "Lipids for the membrane",
+        "DNA",
+        "Glucose"
+       ],
+       "answer": 0,
+       "explain": "Ribosomes read mRNA and link amino acids into proteins. Lipids are made mainly by the smooth ER, and DNA is copied in the nucleus.",
+       "rick": "Proteins. Tiny factories, millions per cell, working 24/7 without whining. Take notes, Morty-brain."
+      },
+      {
+       "id": "cells-1-05",
+       "type": "mcq",
+       "q": "Which organelle is the cell's recycling center, using enzymes to digest waste?",
+       "choices": [
+        "Centrosome",
+        "Lysosome",
+        "Nucleolus",
+        "Ribosome"
+       ],
+       "answer": 1,
+       "explain": "Lysosomes are membrane sacs of digestive enzymes that break down worn-out organelles, engulfed bacteria and other junk so the parts can be reused.",
+       "rick": "Lysosomes. Little acid trash compactors. I wish I had one for this conversation."
+      },
+      {
+       "id": "cells-1-06",
+       "type": "mcq",
+       "q": "Which kind of organism has NO nucleus in any of its cells?",
+       "choices": [
+        "Humans",
+        "Mushrooms",
+        "Oak trees",
+        "Bacteria"
+       ],
+       "answer": 3,
+       "explain": "Bacteria are prokaryotes: their DNA floats in the cytoplasm with no nuclear envelope. Animals, plants and fungi are eukaryotes, whose cells have a nucleus (human red blood cells lose theirs as they mature, an exception).",
+       "rick": "Bacteria. No nucleus, no brain, and they still out-breed you by a factor of a *burp* billion."
+      },
+      {
+       "id": "cells-1-07",
+       "type": "mcq",
+       "q": "Roughly how many cells make up an adult human body?",
+       "choices": [
+        "About 30 million",
+        "About 30 billion",
+        "About 30 trillion",
+        "About 30 quadrillion"
+       ],
+       "answer": 2,
+       "explain": "Estimates are around 30 trillion human cells, most of them red blood cells. You also carry a similar number of bacteria, mostly in your gut.",
+       "rick": "30 trillion. And not one of them can do your homework for you. I checked."
+      },
+      {
+       "id": "cells-1-08",
+       "type": "mcq",
+       "q": "The cell membrane is built mainly from a double layer of:",
+       "choices": [
+        "Cellulose",
+        "Phospholipids",
+        "DNA",
+        "Starch"
+       ],
+       "answer": 1,
+       "explain": "A phospholipid bilayer: water-loving heads face outward, water-fearing tails hide inside. Cellulose builds plant cell WALLS, which animal cells don't have.",
+       "rick": "Phospholipids. Your cells are wrapped in fancy grease, genius. Respect the grease."
+      },
+      {
+       "id": "cells-1-09",
+       "type": "label",
+       "diagram": "cell",
+       "part": "cell_membrane",
+       "q": "Click the cell membrane.",
+       "explain": "The cell membrane is the thin outer boundary of the cell, a phospholipid bilayer that controls what gets in and out.",
+       "rick": "The edge. The outer line. The thing holding the whole cell together. Unlike you, emotionally."
+      },
+      {
+       "id": "cells-1-10",
+       "type": "label",
+       "diagram": "cell",
+       "part": "nucleus",
+       "q": "Click the nucleus.",
+       "explain": "The nucleus is the large round control center that stores the DNA, wrapped in a double membrane with pores.",
+       "rick": "Big round thing, Einstein. Miss this one and I'm portaling to a dimension with smarter students."
+      },
+      {
+       "id": "cells-1-11",
+       "type": "label",
+       "diagram": "cell",
+       "part": "mitochondrion",
+       "q": "Click a mitochondrion.",
+       "explain": "Mitochondria are bean-shaped organelles with a folded inner membrane (cristae); they make most of the cell's ATP using O2.",
+       "rick": "The bean with the wrinkly insides. That's where your energy comes from. Clearly yours are on strike."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "cells-2-L1",
+       "title": "The protein export line",
+       "fact": "Proteins for export or for membranes are built by ribosomes on the rough ER, threaded into it and folded. Vesicles carry them to the Golgi apparatus, which modifies them (e.g. adds sugars), then sorts and packages them into new vesicles for the membrane, lysosomes, or secretion by exocytosis.",
+       "rick": "Rough ER builds it, Golgi gift-wraps it, vesicle ships it. Like a delivery company, except it actually *burp* delivers.",
+       "diagram": "cell",
+       "part": "rough_er"
+      },
+      {
+       "id": "cells-2-L2",
+       "title": "Smooth ER and lysosomes",
+       "fact": "Smooth ER has no ribosomes. It makes lipids and steroid hormones, detoxifies drugs (huge in liver cells) and stores Ca2+ (in muscle it's called the sarcoplasmic reticulum). Lysosomes hold acid hydrolases that work best at about pH 5 and digest worn-out organelles and engulfed material.",
+       "rick": "My liver cells have so much smooth ER they deserve a medal. A whole trophy case, honestly.",
+       "diagram": "cell",
+       "part": "smooth_er"
+      },
+      {
+       "id": "cells-2-L3",
+       "title": "Crossing the membrane",
+       "fact": "O2 and CO2 slip through the lipid bilayer by simple diffusion, down their gradient. Water moves by osmosis toward more solute, often via aquaporins; in pure water an animal cell swells and may burst. Facilitated diffusion (e.g. GLUT for glucose) needs no ATP. Active transport does: the Na+/K+ ATPase pumps 3 Na+ out, 2 K+ in.",
+       "rick": "Downhill is free, uphill costs ATP. Physics doesn't do favors, and neither do I.",
+       "diagram": "cell",
+       "part": "cell_membrane"
+      },
+      {
+       "id": "cells-2-L4",
+       "title": "DNA, genes and division",
+       "fact": "Human body cells have 46 chromosomes (23 pairs); eggs and sperm have 23. In the nucleus, DNA is transcribed into mRNA; in the cytoplasm, ribosomes translate mRNA into protein. The nucleolus builds ribosome subunits. Mitosis makes 2 identical body cells; meiosis makes haploid eggs and sperm.",
+       "rick": "DNA -> RNA -> protein. The central dogma. Retroviruses cheat at it, but you're not a retrovirus. Probably.",
+       "diagram": "cell",
+       "part": "nucleolus"
+      }
+     ],
+     "questions": [
+      {
+       "id": "cells-2-01",
+       "type": "mcq",
+       "q": "Which organelle modifies, sorts and packages proteins received from the rough ER?",
+       "choices": [
+        "Smooth ER",
+        "Golgi apparatus",
+        "Lysosome",
+        "Nucleolus"
+       ],
+       "answer": 1,
+       "explain": "The Golgi receives proteins from the rough ER, modifies them (adds or trims sugars, adds tags), then sorts them into vesicles for secretion, the cell membrane or lysosomes.",
+       "rick": "The Golgi. The cell's post office. Stamps, sorting, shipping. Less bureaucracy, more efficiency."
+      },
+      {
+       "id": "cells-2-02",
+       "type": "mcq",
+       "q": "What makes rough ER look 'rough' under the electron microscope?",
+       "choices": [
+        "Attached ribosomes",
+        "Embedded lysosomes",
+        "Cholesterol crystals",
+        "Coiled DNA strands"
+       ],
+       "answer": 0,
+       "explain": "Ribosomes stud its outer surface while they make secretory and membrane proteins. Smooth ER lacks them, so it looks smooth.",
+       "rick": "Ribosomes stuck all over it. Like crumbs on Morty's shirt, but *burp* productive."
+      },
+      {
+       "id": "cells-2-03",
+       "type": "mcq",
+       "q": "Which organelle is abundant in liver cells for detoxifying drugs and in adrenal cells for making steroids?",
+       "choices": [
+        "Rough ER",
+        "Nucleolus",
+        "Smooth ER",
+        "Centrosome"
+       ],
+       "answer": 2,
+       "explain": "Smooth ER makes lipids and steroids and holds drug-metabolizing enzymes, so it's plentiful in hepatocytes and steroid-making cells. Rough ER makes proteins, not steroids.",
+       "rick": "Smooth ER. Mine has detoxed enough booze to float a small planet. That is NOT a study technique."
+      },
+      {
+       "id": "cells-2-04",
+       "type": "mcq",
+       "q": "Lysosomal enzymes work best at about which pH?",
+       "choices": [
+        "About 2, like stomach acid",
+        "About 7.4, like blood",
+        "About 9, alkaline",
+        "About 5, mildly acidic"
+       ],
+       "answer": 3,
+       "explain": "Lysosomes pump in H+ to keep their inside near pH 4.5-5. Their acid hydrolases barely work at the cytosol's neutral pH, which protects the cell if a lysosome leaks.",
+       "rick": "About 5. Acidic enough to digest junk, not the whole cell. It's called a safety feature. Look it up."
+      },
+      {
+       "id": "cells-2-05",
+       "type": "mcq",
+       "q": "Each cycle of the Na+/K+ ATPase uses 1 ATP to move:",
+       "choices": [
+        "3 Na+ in and 2 K+ out",
+        "2 Na+ out and 3 K+ in",
+        "3 Na+ out and 2 K+ in",
+        "1 Na+ out and 1 K+ in"
+       ],
+       "answer": 2,
+       "explain": "It pumps 3 Na+ out and 2 K+ in, both against their gradients. This keeps Na+ high outside and K+ high inside, and the pump is electrogenic (net 1 positive charge out per cycle).",
+       "rick": "3 out, 2 in. It's on every exam in every *burp* dimension. I've checked like 40 of them."
+      },
+      {
+       "id": "cells-2-06",
+       "type": "mcq",
+       "q": "A red blood cell is placed in pure water. What happens?",
+       "choices": [
+        "It shrinks (crenates)",
+        "It swells and may burst (lyses)",
+        "Nothing changes",
+        "It divides by mitosis"
+       ],
+       "answer": 1,
+       "explain": "Pure water is hypotonic to the cell, so water rushes in by osmosis and the RBC swells until it may burst. In a hypertonic (very salty) solution it would shrink instead.",
+       "rick": "Pop! Water rushes toward the solute. Osmosis, genius. Like your head, but with actual contents."
+      },
+      {
+       "id": "cells-2-07",
+       "type": "mcq",
+       "q": "How many chromosomes are in a normal human body (somatic) cell?",
+       "choices": [
+        "46",
+        "23",
+        "44",
+        "92"
+       ],
+       "answer": 0,
+       "explain": "46 chromosomes in 23 pairs: 22 pairs of autosomes plus XX or XY. Eggs and sperm carry 23 (haploid), so fertilization restores 46.",
+       "rick": "46. Two sets of 23, from two people who probably had no idea what they were doing."
+      },
+      {
+       "id": "cells-2-08",
+       "type": "mcq",
+       "q": "Copying DNA into mRNA is called ___ and happens in the ___.",
+       "choices": [
+        "Translation; cytoplasm",
+        "Replication; Golgi",
+        "Transcription; ribosome",
+        "Transcription; nucleus"
+       ],
+       "answer": 3,
+       "explain": "Transcription (DNA -> mRNA) happens in the nucleus. Translation (mRNA -> protein) happens on ribosomes in the cytoplasm. Replication copies DNA into DNA before division.",
+       "rick": "Transcription, in the nucleus. Translation comes after. Two different words, Morty-brain. Keep 'em apart."
+      },
+      {
+       "id": "cells-2-09",
+       "type": "label",
+       "diagram": "cell",
+       "part": "golgi",
+       "q": "Click the organelle that sorts and packages proteins into vesicles for export.",
+       "explain": "That's the Golgi apparatus, the stack of flattened sacs that modifies proteins from the rough ER and ships them out in vesicles.",
+       "rick": "The Golgi. The stack of sacs. The cell's shipping department. Not the nucleus, not the ER. The stack."
+      },
+      {
+       "id": "cells-2-10",
+       "type": "label",
+       "diagram": "cell",
+       "part": "rough_er",
+       "q": "Click the rough ER.",
+       "explain": "The rough ER is the ribosome-studded membrane network continuous with the nuclear envelope, where secretory and membrane proteins are made.",
+       "rick": "The bumpy folds next to the nucleus. Bumps are ribosomes. Bumps mean proteins. Got it? Good."
+      },
+      {
+       "id": "cells-2-11",
+       "type": "label",
+       "diagram": "cell",
+       "part": "lysosome",
+       "q": "Click a lysosome.",
+       "explain": "Lysosomes are small round membrane sacs of acid enzymes that digest worn-out organelles and engulfed material.",
+       "rick": "The little acid bubble. A stomach the size of nothing. Click it before it digests your grade."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "cells-3-L1",
+       "title": "Inside the mitochondrion",
+       "fact": "Mitochondria have 2 membranes. The matrix runs the Krebs (TCA) cycle and fatty acid beta-oxidation. The folded inner membrane (cristae) holds the electron transport chain, which pumps H+ into the intermembrane space; H+ flows back through ATP synthase to make ATP: roughly 30-32 ATP per glucose.",
+       "rick": "A proton waterfall spinning a turbine that makes ATP. Nature built a *burp* hydroelectric dam in your cells.",
+       "diagram": "cell",
+       "part": "mitochondrion"
+      },
+      {
+       "id": "cells-3-L2",
+       "title": "Protein targeting",
+       "fact": "Secretory (and many membrane) proteins carry an N-terminal signal peptide; the signal recognition particle (SRP) docks the ribosome on the rough ER. N-linked glycosylation begins in the RER; the Golgi does O-linked glycosylation and tags lysosomal enzymes with mannose-6-phosphate. The nucleolus makes rRNA (RNA pol I).",
+       "rick": "Signal peptide is the shipping label, SRP is the forklift. No label and your protein stays in the cytosol forever.",
+       "diagram": "cell",
+       "part": "rough_er"
+      },
+      {
+       "id": "cells-3-L3",
+       "title": "Cell cycle control",
+       "fact": "G1 -> S (DNA replication) -> G2 -> M (mitosis); resting cells exit from G1 into G0. Cyclin-CDK complexes drive the cycle. Hypophosphorylated Rb binds E2F and blocks entry into S; p53 senses DNA damage and induces p21 to halt the cycle. In M phase the 2 centrosomes organize the mitotic spindle.",
+       "rick": "Rb and p53 are the brakes. Cancer is a cell that cut its own brake lines. Idiot cells.",
+       "diagram": "cell",
+       "part": "centrosome"
+      },
+      {
+       "id": "cells-3-L4",
+       "title": "Cytoskeleton and junctions",
+       "fact": "Microtubules (tubulin) form the spindle, cilia (9+2) and tracks for motors: kinesin walks to the + end (anterograde), dynein to the - end (retrograde). Desmosomes (desmoglein, a cadherin) bind cells together; hemidesmosomes (integrins) anchor cells to basement membrane; gap junctions (connexins) pass ions.",
+       "rick": "Kinesin goes out, dynein comes back. Like me at a bar, except dynein *burp* remembers the way home.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "cells-3-01",
+       "type": "mcq",
+       "q": "Where in the mitochondrion are the electron transport chain and ATP synthase located?",
+       "choices": [
+        "Outer membrane",
+        "Inner membrane (cristae)",
+        "Matrix",
+        "Intermembrane space"
+       ],
+       "answer": 1,
+       "explain": "Both sit in the inner membrane, folded into cristae for surface area. The ETC pumps H+ into the intermembrane space; the matrix hosts the Krebs cycle and beta-oxidation.",
+       "rick": "Inner membrane, folded up to cram in more machinery. Nature figured out origami before you did."
+      },
+      {
+       "id": "cells-3-02",
+       "type": "mcq",
+       "q": "How is a newly made secretory protein targeted to the rough ER?",
+       "choices": [
+        "An N-terminal signal peptide bound by SRP",
+        "A mannose-6-phosphate tag",
+        "A C-terminal KDEL sequence",
+        "Attachment of ubiquitin"
+       ],
+       "answer": 0,
+       "explain": "SRP recognizes the N-terminal signal peptide as it emerges and docks the ribosome on the RER. KDEL retrieves ER-resident proteins from the Golgi; M6P targets lysosomes; ubiquitin marks proteins for the proteasome.",
+       "rick": "Signal peptide plus SRP. The other three are real tags with different jobs. Learn all four, it's cheaper than failing."
+      },
+      {
+       "id": "cells-3-03",
+       "type": "mcq",
+       "q": "Where does N-linked glycosylation of proteins begin?",
+       "choices": [
+        "Golgi apparatus",
+        "Lysosome",
+        "Rough ER",
+        "Nucleolus"
+       ],
+       "answer": 2,
+       "explain": "The core N-linked oligosaccharide (built on dolichol) is attached to asparagine in the rough ER lumen during translation; the Golgi then trims and modifies it. O-linked glycosylation happens in the Golgi.",
+       "rick": "Rough ER starts it, Golgi finishes it. Teamwork. A concept you, lone wolf, know nothing about."
+      },
+      {
+       "id": "cells-3-04",
+       "type": "mcq",
+       "q": "In G1, hypophosphorylated Rb blocks entry into S phase by binding which transcription factor?",
+       "choices": [
+        "p53",
+        "E2F",
+        "Myc",
+        "NF-kB"
+       ],
+       "answer": 1,
+       "explain": "Rb holds E2F, which drives S-phase genes. Cyclin D-CDK4/6 phosphorylate Rb and release E2F. p53 is a separate brake that acts by inducing p21 after DNA damage.",
+       "rick": "E2F. Rb sits on it like I sit on my portal gun. Phosphorylate Rb and E2F runs wild."
+      },
+      {
+       "id": "cells-3-05",
+       "type": "mcq",
+       "q": "From which phase do cells leave the cycle to enter the resting G0 state?",
+       "choices": [
+        "G1",
+        "S",
+        "G2",
+        "M"
+       ],
+       "answer": 0,
+       "explain": "Cells exit from G1 into G0, the quiescent state (e.g. resting hepatocytes; most neurons stay there permanently). G1 is also the phase whose length varies most between cell types.",
+       "rick": "G1. G0 is where cells go to chill. Permanently, for neurons. Kinda like you in lectures."
+      },
+      {
+       "id": "cells-3-06",
+       "type": "mcq",
+       "q": "Kinesin moves cargo along microtubules in which direction?",
+       "choices": [
+        "Toward the - end (retrograde)",
+        "Along actin filaments instead",
+        "Toward the + end (anterograde)",
+        "Into the nucleus through its pores"
+       ],
+       "answer": 2,
+       "explain": "Kinesin walks toward the + end, i.e. from a neuron's cell body out to the axon terminal (anterograde). Dynein walks toward the - end (retrograde). Myosin, not kinesin, runs on actin.",
+       "rick": "Plus end. Kinesin hauls stuff out, dynein drags it back. Same thing happens with me and the *burp* liquor store."
+      },
+      {
+       "id": "cells-3-07",
+       "type": "mcq",
+       "q": "Pemphigus vulgaris is caused by autoantibodies against desmoglein, a component of:",
+       "choices": [
+        "Hemidesmosomes",
+        "Gap junctions",
+        "Tight junctions",
+        "Desmosomes"
+       ],
+       "answer": 3,
+       "explain": "Desmoglein (a cadherin) holds keratinocytes together in desmosomes; attacking it gives flaccid intraepidermal blisters. Bullous pemphigoid targets hemidesmosomes, giving tense subepidermal blisters.",
+       "rick": "Desmosomes. Pemphigus pops cells apart from EACH OTHER; pemphigoid pops them off the floor. Learn the difference."
+      },
+      {
+       "id": "cells-3-08",
+       "type": "mcq",
+       "q": "Gap junctions, which let ions pass directly between neighboring cells, are made of:",
+       "choices": [
+        "Connexins",
+        "Claudins",
+        "Cadherins",
+        "Integrins"
+       ],
+       "answer": 0,
+       "explain": "Six connexins form a connexon; connexons from two neighboring cells join into a channel. Claudins seal tight junctions, cadherins form adherens junctions and desmosomes, and integrins bind the matrix.",
+       "rick": "Connexins. They connect. It's literally in the name, genius. Biology rarely gives you a freebie like this."
+      },
+      {
+       "id": "cells-3-09",
+       "type": "label",
+       "diagram": "cell",
+       "part": "smooth_er",
+       "q": "Click the ribosome-free ER that makes steroids and holds cytochrome P450 drug enzymes.",
+       "explain": "Smooth ER: tubular ER with no ribosomes. It makes lipids and steroids, metabolizes drugs via cytochrome P450 (abundant in hepatocytes) and stores Ca2+ in muscle.",
+       "rick": "Smooth ER. No ribosomes, all chemistry. The part of my liver that's earned overtime pay."
+      },
+      {
+       "id": "cells-3-10",
+       "type": "label",
+       "diagram": "cell",
+       "part": "nucleolus",
+       "q": "Click the dense spot inside the nucleus where rRNA is made.",
+       "explain": "The nucleolus is a membrane-less region in the nucleus where RNA polymerase I transcribes rRNA and ribosomal subunits are assembled before export through nuclear pores.",
+       "rick": "The nucleolus. A dot inside the nucleus that builds ribosome parts. Click the dot, genius."
+      },
+      {
+       "id": "cells-3-11",
+       "type": "label",
+       "diagram": "cell",
+       "part": "centrosome",
+       "q": "Click the main microtubule-organizing center of the cell.",
+       "explain": "The centrosome, a pair of centrioles in pericentriolar material, nucleates microtubules. It duplicates during S phase, and the two centrosomes become the poles of the mitotic spindle.",
+       "rick": "Centrosome. Spindle boss. Mess it up and chromosomes split like my family at Thanksgiving."
+      },
+      {
+       "id": "cells-3-12",
+       "type": "label",
+       "diagram": "cell",
+       "part": "ribosome",
+       "q": "Click a free ribosome, where cytosolic proteins are made.",
+       "explain": "Free ribosomes float in the cytosol and make proteins that stay in the cytosol, nucleus or mitochondria; ER-bound ones make secreted and membrane proteins. Same ribosome, different destination.",
+       "rick": "A ribosome. Tiny dot, huge job. You're the exact opposite."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "cells-4-L1",
+       "title": "Golgi and lysosome disasters",
+       "fact": "I-cell disease: the Golgi enzyme N-acetylglucosamine-1-phosphotransferase is missing, so lysosomal enzymes get no mannose-6-phosphate tag and are secreted: high plasma enzymes, coarse facies, early death. Tay-Sachs: hexosaminidase A deficiency -> GM2 ganglioside builds up; cherry-red macula, no hepatosplenomegaly.",
+       "rick": "No mannose-6-phosphate tag, no delivery. Lysosomes starve while the enzymes party in the *burp* bloodstream.",
+       "diagram": "cell",
+       "part": "golgi"
+      },
+      {
+       "id": "cells-4-L2",
+       "title": "Mitochondrial genes and poisons",
+       "fact": "mtDNA comes only from the mother: an affected mother passes the mutation to all her children, an affected father to none. Heteroplasmy (mixed normal and mutant mtDNA) makes severity vary (e.g. MELAS). Cyanide and CO block complex IV; uncouplers such as 2,4-dinitrophenol let H+ leak back, making heat instead of ATP.",
+       "rick": "Dad's mitochondria get trashed right after fertilization. Brutal, efficient, and on every exam ever.",
+       "diagram": "cell",
+       "part": "mitochondrion"
+      },
+      {
+       "id": "cells-4-L3",
+       "title": "Apoptosis",
+       "fact": "Intrinsic pathway: DNA damage or lost survival signals -> BAX/BAK permeabilize the outer mitochondrial membrane -> cytochrome c released -> apoptosome activates caspase-9 -> caspases 3/7. BCL-2 blocks this; t(14;18) overexpresses BCL-2 in follicular lymphoma. Extrinsic: Fas ligand or TNF -> caspase-8.",
+       "rick": "Apoptosis is a tidy self-destruct: shrink, bleb, get eaten, no inflammation. Necrosis is the messy *burp* version.",
+       "diagram": "cell",
+       "part": "mitochondrion"
+      },
+      {
+       "id": "cells-4-L4",
+       "title": "Cilia, microtubules, misfolding",
+       "fact": "Primary ciliary dyskinesia: defective dynein arms -> immotile cilia and sperm: sinusitis, bronchiectasis, male infertility; about half have situs inversus (Kartagener syndrome). Colchicine and vinca alkaloids block microtubule polymerization; taxanes stabilize them. Cystic fibrosis: F508del CFTR misfolds and is kept in the ER.",
+       "rick": "Broken dynein and your heart can end up on the wrong side. Biology's version of a portal accident.",
+       "diagram": "cell",
+       "part": "centrosome"
+      }
+     ],
+     "questions": [
+      {
+       "id": "cells-4-01",
+       "type": "mcq",
+       "q": "A 1-year-old has coarse facies, gingival hyperplasia, stiff joints and very high plasma levels of lysosomal enzymes. Which step is defective?",
+       "choices": [
+        "Making hexosaminidase A",
+        "Adding mannose-6-phosphate in the Golgi",
+        "Acidifying the lysosome lumen",
+        "Starting N-linked glycosylation in the RER"
+       ],
+       "answer": 1,
+       "explain": "I-cell disease (mucolipidosis II): N-acetylglucosamine-1-phosphotransferase fails, so there is no M6P tag. Enzymes are secreted instead of reaching lysosomes, hence high plasma levels and inclusion-filled cells.",
+       "rick": "The Golgi forgot the address label. Enzymes end up in the blood, lysosomes stay full of junk. Classic."
+      },
+      {
+       "id": "cells-4-02",
+       "type": "mcq",
+       "q": "A 6-month-old has an exaggerated startle response, lost milestones and a cherry-red macula; liver and spleen are normal size. What accumulates?",
+       "choices": [
+        "Sphingomyelin",
+        "Glucocerebroside",
+        "GM2 ganglioside",
+        "Galactocerebroside"
+       ],
+       "answer": 2,
+       "explain": "Tay-Sachs: hexosaminidase A deficiency -> GM2 ganglioside. Niemann-Pick (sphingomyelin) also has a cherry-red spot but WITH hepatosplenomegaly; Gaucher (glucocerebroside) has hepatosplenomegaly and no cherry-red spot.",
+       "rick": "Normal liver and spleen plus cherry-red spot = Tay-Sachs. Pattern recognition, genius. It's the whole exam."
+      },
+      {
+       "id": "cells-4-03",
+       "type": "mcq",
+       "q": "A man with MELAS (a mitochondrial DNA mutation) and an unaffected woman have 4 children. How many inherit his mutation?",
+       "choices": [
+        "All 4",
+        "About 2",
+        "Only the sons",
+        "None"
+       ],
+       "answer": 3,
+       "explain": "Embryo mitochondria come from the egg; sperm mitochondria are destroyed after fertilization. So an affected father passes mtDNA disease to no children; an affected mother passes it to all, with variable severity (heteroplasmy).",
+       "rick": "Zero. Sperm mitochondria get recycled right after fertilization. Dads contribute DNA and not much else."
+      },
+      {
+       "id": "cells-4-04",
+       "type": "mcq",
+       "q": "A man rescued from a house fire has severe lactic acidosis and unusually high venous O2 saturation. Which component is most likely inhibited?",
+       "choices": [
+        "ATP synthase",
+        "Complex IV (cytochrome c oxidase)",
+        "Complex I (NADH dehydrogenase)",
+        "Pyruvate kinase"
+       ],
+       "answer": 1,
+       "explain": "Burning plastics release cyanide (and CO), and both block complex IV. Cells can't use O2, so venous blood stays oxygenated and cells switch to anaerobic glycolysis -> lactic acidosis.",
+       "rick": "Complex IV. The O2 is right there and the cells can't use it. Like a buffet you're banned from."
+      },
+      {
+       "id": "cells-4-05",
+       "type": "mcq",
+       "q": "A bodybuilder takes an illegal 'fat burner' and develops dangerous hyperthermia. Like thermogenin in brown fat, the drug most likely:",
+       "choices": [
+        "Blocks ATP synthase directly",
+        "Blocks complex IV",
+        "Inhibits the Krebs cycle",
+        "Lets H+ leak into the matrix, bypassing ATP synthase"
+       ],
+       "answer": 3,
+       "explain": "2,4-dinitrophenol is an uncoupler: H+ leaks back across the inner membrane, so O2 use and electron flow rise while ATP synthesis falls, and the energy is lost as heat. Oligomycin, by contrast, blocks ATP synthase.",
+       "rick": "Uncoupling: the dam leaks, no electricity, just heat. Brown fat does it on purpose. Idiots do it with *burp* pills."
+      },
+      {
+       "id": "cells-4-06",
+       "type": "mcq",
+       "q": "Follicular lymphoma with t(14;18) overexpresses a protein that normally does what?",
+       "choices": [
+        "Phosphorylates Rb",
+        "Activates caspase-8",
+        "Degrades p53",
+        "Prevents cytochrome c release from mitochondria"
+       ],
+       "answer": 3,
+       "explain": "t(14;18) moves BCL-2 next to the IgH locus, so it is overexpressed. BCL-2 holds BAX/BAK in check, blocking cytochrome c release and the intrinsic apoptosis pathway, so B cells that should die survive.",
+       "rick": "BCL-2: the 'don't kill me' button stuck ON. Immortal B cells. Not the cool kind of immortal."
+      },
+      {
+       "id": "cells-4-07",
+       "type": "mcq",
+       "q": "A man has chronic sinusitis, bronchiectasis, infertility with immotile sperm, and dextrocardia. Which structure is most likely defective?",
+       "choices": [
+        "Dynein arms of microtubules",
+        "CFTR chloride channel",
+        "Keratin intermediate filaments",
+        "Kinesin motor heads"
+       ],
+       "answer": 0,
+       "explain": "Primary ciliary dyskinesia (Kartagener): faulty dynein arms -> immotile cilia and sperm flagella; embryonic nodal cilia fail, so organ sidedness is random. CF also causes sinusitis and infertility but not situs inversus.",
+       "rick": "Heart on the wrong side is your clue. CF can't flip organs. Broken dynein can, by *burp* slacking off."
+      },
+      {
+       "id": "cells-4-08",
+       "type": "mcq",
+       "q": "Which drug for acute gout binds tubulin and blocks microtubule polymerization in neutrophils?",
+       "choices": [
+        "Allopurinol",
+        "Paclitaxel",
+        "Colchicine",
+        "Methotrexate"
+       ],
+       "answer": 2,
+       "explain": "Colchicine binds tubulin and prevents polymerization, so neutrophils can't migrate and degranulate in the joint. Paclitaxel does the opposite (stabilizes microtubules); allopurinol lowers uric acid production.",
+       "rick": "Colchicine. Freezes the neutrophils' scaffolding so they can't storm the joint. Molecular crowd control."
+      },
+      {
+       "id": "cells-4-09",
+       "type": "label",
+       "diagram": "cell",
+       "part": "golgi",
+       "q": "Click the organelle where lysosomal enzymes get their mannose-6-phosphate tag.",
+       "explain": "The Golgi (cis-Golgi) adds mannose-6-phosphate to lysosomal enzymes; M6P receptors in the trans-Golgi then send them to lysosomes. Without it (I-cell disease) the enzymes are secreted.",
+       "rick": "The Golgi. The address-label printer. Break it and every package goes to the wrong *burp* universe."
+      },
+      {
+       "id": "cells-4-10",
+       "type": "label",
+       "diagram": "cell",
+       "part": "lysosome",
+       "q": "Click the organelle that fills with GM2 ganglioside in Tay-Sachs disease.",
+       "explain": "GM2 ganglioside piles up inside neuronal lysosomes because hexosaminidase A, a lysosomal enzyme, is missing. Every lysosomal storage disease follows this 'undigested substrate' logic.",
+       "rick": "Lysosome. Storage disease means stuff goes in and never comes out. Like my fridge."
+      },
+      {
+       "id": "cells-4-11",
+       "type": "label",
+       "diagram": "cell",
+       "part": "mitochondrion",
+       "q": "Click the organelle that releases cytochrome c to trigger intrinsic apoptosis.",
+       "explain": "In intrinsic apoptosis, BAX/BAK permeabilize the outer mitochondrial membrane; cytochrome c escapes to the cytosol, binds APAF-1 to form the apoptosome and activates caspase-9.",
+       "rick": "Mitochondria power the cell AND hold the self-destruct button. Great design, honestly."
+      },
+      {
+       "id": "cells-4-12",
+       "type": "label",
+       "diagram": "cell",
+       "part": "rough_er",
+       "q": "Click the ribosome-studded organelle that makes CFTR and retains misfolded F508del CFTR.",
+       "explain": "CFTR is made on the rough ER. F508del misfolds, fails ER quality control and is retained there, then sent to proteasomes (ER-associated degradation), so little CFTR reaches the apical membrane.",
+       "rick": "Rough ER quality control: misfolded? Rejected. Harsh, but that's half of cystic fibrosis."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "topic": "immune",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "immune-1-L1",
+       "title": "Your defense force",
+       "fact": "The immune system defends you against pathogens: bacteria, viruses, fungi and parasites. The first barriers are skin and mucous membranes, plus tears, mucus and stomach acid. Behind them are white blood cells (leukocytes), made in the bone marrow, which hunt down anything that gets through.",
+       "rick": "Skin, snot and stomach acid. Your first line of defense is basically gross. Respect the *burp* gross.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-1-L2",
+       "title": "Innate vs adaptive",
+       "fact": "Innate immunity is fast (minutes to hours) and not specific: neutrophils and macrophages eat invaders (phagocytosis) and cause inflammation (redness, heat, swelling, pain). Adaptive immunity is slower (days) but specific and has memory: T cells and B cells. B cells make antibodies, Y-shaped proteins.",
+       "rick": "Innate is a bouncer with a bat who hits everyone. Adaptive is a sniper who remembers faces. Learn both, idiot.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-1-L3",
+       "title": "Thymus and spleen",
+       "fact": "The thymus sits in the chest behind the breastbone, in front of and above the heart. T cells mature there (T for thymus); it is largest in childhood and shrinks after puberty. The spleen, in the upper left abdomen, filters blood: it removes old red blood cells and fights germs in the bloodstream.",
+       "rick": "Thymus trains T cells, spleen filters blood. The thymus shrinks with age. Mine's a raisin. Worth it.",
+       "diagram": "organ_map",
+       "part": "thymus"
+      },
+      {
+       "id": "immune-1-L4",
+       "title": "Lymph nodes and vaccines",
+       "fact": "Lymph nodes are bean-sized filters along lymph vessels, clustered in the neck, armpits and groin. They swell when fighting a nearby infection ('swollen glands'). Vaccines show your immune system a harmless piece or weakened form of a germ, so it makes memory cells and responds faster next time.",
+       "rick": "Vaccines are a training montage for your immune system. Same germ shows up later, gets *burp* destroyed.",
+       "diagram": "organ_map",
+       "part": "lymph_nodes"
+      }
+     ],
+     "questions": [
+      {
+       "id": "immune-1-01",
+       "type": "mcq",
+       "q": "Which cells are the main soldiers of the immune system?",
+       "choices": [
+        "Red blood cells",
+        "White blood cells",
+        "Platelets",
+        "Fat cells"
+       ],
+       "answer": 1,
+       "explain": "White blood cells (leukocytes) detect and destroy invaders. Red blood cells carry O2 and platelets help blood clot; neither is a main immune cell.",
+       "rick": "White blood cells. Red ones carry oxygen, platelets plug holes. It's color-coded, genius."
+      },
+      {
+       "id": "immune-1-02",
+       "type": "mcq",
+       "q": "T cells are named after the organ where they mature. Which organ?",
+       "choices": [
+        "Thyroid",
+        "Tonsils",
+        "Thymus",
+        "Testes"
+       ],
+       "answer": 2,
+       "explain": "T cells are born in the bone marrow but mature in the thymus, the gland in the chest above the heart. The thyroid is a hormone gland in the neck with a confusingly similar name.",
+       "rick": "Thymus. Not thyroid, not tonsils. Four T-words and you need a *burp* coin flip? Pathetic."
+      },
+      {
+       "id": "immune-1-03",
+       "type": "mcq",
+       "q": "What are antibodies?",
+       "choices": [
+        "Cells that swallow bacteria",
+        "Proteins that stick to specific invaders",
+        "Hormones that cause fever",
+        "A kind of weakened virus"
+       ],
+       "answer": 1,
+       "explain": "Antibodies are Y-shaped proteins made by B cells (as plasma cells). Each binds one specific target (antigen), tagging it for destruction or blocking it. Cells that swallow bacteria are phagocytes.",
+       "rick": "Proteins. Little Y-shaped sticky tags. Antibodies point, other cells shoot."
+      },
+      {
+       "id": "immune-1-04",
+       "type": "mcq",
+       "q": "What is the body's FIRST line of defense against germs?",
+       "choices": [
+        "Antibodies",
+        "T cells",
+        "Lymph nodes",
+        "Skin and mucous membranes"
+       ],
+       "answer": 3,
+       "explain": "Physical and chemical barriers come first: intact skin, mucous membranes, mucus, tears and stomach acid stop most germs before any immune cell is needed.",
+       "rick": "Skin. A big waterproof bag. Keep it intact, Morty-brain, no matter what portal you fall through."
+      },
+      {
+       "id": "immune-1-05",
+       "type": "mcq",
+       "q": "What is a main job of the spleen?",
+       "choices": [
+        "Filtering blood and removing old red blood cells",
+        "Producing bile for digestion",
+        "Making insulin",
+        "Filtering blood to make urine"
+       ],
+       "answer": 0,
+       "explain": "The spleen filters blood: it removes old or damaged red blood cells and traps germs in the bloodstream. Bile comes from the liver, insulin from the pancreas, urine from the kidneys.",
+       "rick": "Blood filter and red-cell graveyard. The spleen works quietly. Unlike you, *burp* whining about one quiz."
+      },
+      {
+       "id": "immune-1-06",
+       "type": "mcq",
+       "q": "Why do lymph nodes in your neck often swell during a throat infection?",
+       "choices": [
+        "They fill with excess saliva",
+        "They store extra red blood cells",
+        "Immune cells inside multiply to fight the germs",
+        "They absorb heat from the fever"
+       ],
+       "answer": 2,
+       "explain": "Germs and debris drain to the nearest lymph nodes. Lymphocytes there recognize them and multiply rapidly, so the node enlarges and is often tender. Swelling means immune activity.",
+       "rick": "Lymphocytes multiplying. Your neck turns into a barracks. Swollen glands mean the army's mobilized."
+      },
+      {
+       "id": "immune-1-07",
+       "type": "mcq",
+       "q": "How does a vaccine protect you?",
+       "choices": [
+        "It kills bacteria directly, like an antibiotic",
+        "It trains the immune system to make memory cells",
+        "It replaces your white blood cells",
+        "It coats your skin to block germs"
+       ],
+       "answer": 1,
+       "explain": "A vaccine safely exposes the adaptive immune system to a harmless piece or weakened form of a germ, so memory B and T cells respond fast if the real germ shows up. Antibiotics kill bacteria; vaccines don't.",
+       "rick": "Training, not killing. A vaccine is a fire drill. An antibiotic is a fire extinguisher. Different things, idiot."
+      },
+      {
+       "id": "immune-1-08",
+       "type": "mcq",
+       "q": "Which defense acts within minutes to hours and attacks many kinds of germs the same way?",
+       "choices": [
+        "Innate immunity",
+        "Adaptive immunity",
+        "Antibody memory",
+        "Vaccination"
+       ],
+       "answer": 0,
+       "explain": "Innate immunity (barriers, neutrophils, macrophages, inflammation) is fast and non-specific. Adaptive immunity (T and B cells) takes days the first time but is specific and remembers.",
+       "rick": "Innate. Fast and dumb, like a guard dog. Adaptive is slow and smart, like me. Mostly like me."
+      },
+      {
+       "id": "immune-1-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "spleen",
+       "q": "Click the spleen.",
+       "explain": "The spleen sits in the upper left abdomen, behind the stomach, under the ribs. It filters blood, removes old red blood cells and fights blood-borne infections.",
+       "rick": "Upper left, tucked behind the stomach. If you clicked the liver, wrong side, genius. Patient's left!"
+      },
+      {
+       "id": "immune-1-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "thymus",
+       "q": "Click the thymus.",
+       "explain": "The thymus lies in the upper chest behind the breastbone, above the heart. T cells mature there; it's big in children and is mostly replaced by fat in adults.",
+       "rick": "Chest, above the heart. T-cell boot camp. It's practically in the name."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "immune-2-L1",
+       "title": "The white blood cell lineup",
+       "fact": "Neutrophils are most common (about 40-70% of WBCs) and first to attack bacteria; dead ones form pus. Lymphocytes (about 20-40%) are T, B and NK cells. Monocytes become macrophages in tissues. Eosinophils fight parasitic worms; basophils, the rarest, release histamine. Normal count: about 4,000-11,000/uL.",
+       "rick": "Never Let Monkeys Eat Bananas: neutrophils, lymphocytes, monocytes, eosinophils, basophils. Most to least.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-2-L2",
+       "title": "Antibodies",
+       "fact": "Plasma cells (activated B cells) secrete antibodies (immunoglobulins): 2 heavy + 2 light chains, with variable tips that bind antigen. IgM is made first (a pentamer). IgG is most abundant in blood and crosses the placenta. IgA guards mucus, tears and breast milk. IgE drives allergy and fights worms.",
+       "rick": "IgM first, IgG most, IgA in your spit, IgE makes you sneeze. Memorize it or I'm *burp* replacing you with a Meeseeks.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-2-L3",
+       "title": "Helper and killer T cells",
+       "fact": "Helper T cells (CD4+) direct the response: their cytokines activate B cells and macrophages. HIV infects and destroys them. Cytotoxic T cells (CD8+) kill virus-infected and cancer cells. T cells can't see free antigen; they only recognize peptides shown on MHC molecules (called HLA in humans).",
+       "rick": "CD4 gives the orders, CD8 does the killing. Like me and Morty. Except Morty mostly screams.",
+       "diagram": "organ_map",
+       "part": "thymus"
+      },
+      {
+       "id": "immune-2-L4",
+       "title": "Lymph, gut and passive immunity",
+       "fact": "Lymph (leaked tissue fluid) flows via lymphatics and lymph nodes back to the blood, mostly through the thoracic duct (left neck). Peyer patches in the small intestine (ileum) sample gut antigens and promote IgA. Passive immunity = borrowed antibodies: natural (maternal IgG, breast-milk IgA) or artificial (antibody injections).",
+       "rick": "Borrowed antibodies work, but they expire. Like my library books. Which I never *burp* return.",
+       "diagram": "organ_map",
+       "part": "lymph_nodes"
+      }
+     ],
+     "questions": [
+      {
+       "id": "immune-2-01",
+       "type": "mcq",
+       "q": "Which white blood cell is the most abundant in normal adult blood?",
+       "choices": [
+        "Lymphocyte",
+        "Monocyte",
+        "Neutrophil",
+        "Eosinophil"
+       ],
+       "answer": 2,
+       "explain": "Neutrophils make up about 40-70% of WBCs and are first responders to bacterial infection. Lymphocytes are second (about 20-40%).",
+       "rick": "Neutrophils. The grunts. Show up first, die in droves, become pus. Heroes, honestly."
+      },
+      {
+       "id": "immune-2-02",
+       "type": "mcq",
+       "q": "Which white blood cell is classically increased in parasitic worm infections?",
+       "choices": [
+        "Neutrophil",
+        "Eosinophil",
+        "Monocyte",
+        "Basophil"
+       ],
+       "answer": 1,
+       "explain": "Eosinophils attack helminths (worms) too big to eat, releasing toxic granule proteins such as major basic protein. They also rise in allergies and asthma.",
+       "rick": "Eosinophils. Worm killers. Good, 'cause the multiverse is *burp* crawling with parasites."
+      },
+      {
+       "id": "immune-2-03",
+       "type": "mcq",
+       "q": "Monocytes that leave the blood and settle in tissues become:",
+       "choices": [
+        "Plasma cells",
+        "Neutrophils",
+        "Mast cells",
+        "Macrophages"
+       ],
+       "answer": 3,
+       "explain": "Monocytes migrate into tissues and differentiate into macrophages, long-lived phagocytes that eat microbes and debris and present antigen. Plasma cells come from B cells.",
+       "rick": "Macrophages. Means 'big eaters'. A monocyte moves into tissue and gets fat. Relatable."
+      },
+      {
+       "id": "immune-2-04",
+       "type": "mcq",
+       "q": "Which antibody class crosses the placenta to protect the fetus?",
+       "choices": [
+        "IgG",
+        "IgM",
+        "IgA",
+        "IgE"
+       ],
+       "answer": 0,
+       "explain": "Only IgG crosses the placenta (carried by FcRn receptors), giving newborns months of passive protection. IgM is a big pentamer and can't cross; IgA reaches the baby through breast milk.",
+       "rick": "IgG. Mom ships antibodies across the placenta. Free protection. Best gift she ever gave you, guaranteed."
+      },
+      {
+       "id": "immune-2-05",
+       "type": "mcq",
+       "q": "Which antibody class is made FIRST in a new infection?",
+       "choices": [
+        "IgG",
+        "IgE",
+        "IgM",
+        "IgA"
+       ],
+       "answer": 2,
+       "explain": "IgM (secreted as a pentamer) is the first antibody of a primary response. Later, helper T cells drive class switching to IgG, IgA or IgE. A high specific IgM suggests a recent infection.",
+       "rick": "IgM. Big clumsy pentamer shows up first, the refined IgG sniper comes later. Like a first draft."
+      },
+      {
+       "id": "immune-2-06",
+       "type": "mcq",
+       "q": "HIV mainly infects and depletes which cells?",
+       "choices": [
+        "CD8+ cytotoxic T cells",
+        "CD4+ helper T cells",
+        "B cells",
+        "Neutrophils"
+       ],
+       "answer": 1,
+       "explain": "HIV binds CD4 (plus CCR5 or CXCR4) and destroys CD4+ helper T cells. With too few helpers the adaptive response collapses; AIDS is defined by a count below 200/uL or an AIDS-defining illness.",
+       "rick": "CD4 helpers. Kill the generals and the army falls apart. Sneaky little *burp* virus."
+      },
+      {
+       "id": "immune-2-07",
+       "type": "mcq",
+       "q": "Which cells directly kill virus-infected body cells?",
+       "choices": [
+        "CD8+ cytotoxic T cells",
+        "Plasma cells",
+        "Eosinophils",
+        "CD4+ helper T cells"
+       ],
+       "answer": 0,
+       "explain": "CD8+ T cells recognize viral peptides on MHC class I and kill the cell with perforin and granzymes. Helper T cells coordinate rather than kill; plasma cells make antibodies.",
+       "rick": "CD8s. Assassins. Find an infected cell, punch holes, done. Efficient. I like 'em."
+      },
+      {
+       "id": "immune-2-08",
+       "type": "mcq",
+       "q": "A baby receiving antibodies through breast milk is an example of:",
+       "choices": [
+        "Natural active immunity",
+        "Artificial active immunity",
+        "Artificial passive immunity",
+        "Natural passive immunity"
+       ],
+       "answer": 3,
+       "explain": "Passive = receiving ready-made antibodies, so no memory forms. Natural = not from a medical product. Active immunity is when your own body makes antibodies, after infection (natural) or vaccination (artificial).",
+       "rick": "Passive. Borrowed. Temporary. The baby didn't earn those antibodies, just like you didn't earn this degree."
+      },
+      {
+       "id": "immune-2-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "lymph_nodes",
+       "q": "Click the lymph nodes.",
+       "explain": "Lymph nodes are small bean-shaped filters along lymph vessels, clustered in the neck, armpits and groin. Lymphocytes inside meet antigens draining in from the tissues.",
+       "rick": "Little beans along the vessels. They're all over the place, so try not to miss."
+      },
+      {
+       "id": "immune-2-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "small_intestine",
+       "q": "Click the organ whose wall contains Peyer patches.",
+       "explain": "Peyer patches are lymphoid follicles in the wall of the small intestine, mostly the ileum. M cells sample gut antigens and the patches drive IgA production.",
+       "rick": "Small intestine. Your gut guards its own border while you shovel garbage into it."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "immune-3-L1",
+       "title": "MHC and antigen presentation",
+       "fact": "MHC class I (HLA-A, -B, -C) is on all nucleated cells and shows peptides made inside the cell (e.g. viral) to CD8+ T cells. MHC class II (HLA-DP, -DQ, -DR) is on antigen-presenting cells (dendritic cells, macrophages, B cells) and shows peptides from engulfed material to CD4+ T cells.",
+       "rick": "Class I: 'here's what's inside me.' Class II: 'here's what I ate.' Rule of 8: 1x8, 2x4. Cells are *burp* gossips.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-3-L2",
+       "title": "T-cell boot camp: the thymus",
+       "fact": "In the thymic cortex, positive selection keeps T cells whose receptors can bind self-MHC. In the medulla, negative selection deletes T cells that bind self-antigens too strongly (AIRE helps display tissue proteins). Naive T cells need 2 signals: TCR binding MHC-peptide plus costimulation (B7 on APC binds CD28).",
+       "rick": "Cortex: can you see MHC? Medulla: will you attack your own body? Fail either and you die. Tough school.",
+       "diagram": "organ_map",
+       "part": "thymus"
+      },
+      {
+       "id": "immune-3-L3",
+       "title": "Complement",
+       "fact": "Complement is a cascade of plasma proteins, mostly made by the liver. Triggers: classical pathway (IgG or IgM bound to antigen), alternative (microbe surfaces) and lectin (mannose-binding lectin). C3b opsonizes; C3a and C5a drive inflammation (C5a calls neutrophils); C5b-9 forms the membrane attack complex.",
+       "rick": "C3b tags it, C5a yells for backup, the MAC punches holes. Complement is a mob. A very organized mob.",
+       "diagram": "organ_map",
+       "part": "liver"
+      },
+      {
+       "id": "immune-3-L4",
+       "title": "Hypersensitivity types",
+       "fact": "Type I: IgE on mast cells, immediate (anaphylaxis, hay fever). Type II: antibodies against cell-surface or matrix antigens (autoimmune hemolytic anemia, Graves). Type III: immune complex deposition (SLE, post-strep glomerulonephritis). Type IV: delayed, T-cell mediated (TB skin test, poison ivy).",
+       "rick": "ACID: Allergic, Cytotoxic, Immune complex, Delayed. Four types, one mnemonic. Even you can *burp* manage that.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "immune-3-01",
+       "type": "mcq",
+       "q": "Peptides from a virus replicating inside a cell are presented to CD8+ T cells on:",
+       "choices": [
+        "MHC class II",
+        "MHC class I",
+        "CD4",
+        "Toll-like receptor 4"
+       ],
+       "answer": 1,
+       "explain": "MHC I presents endogenous (cytosolic) peptides, cut by the proteasome and loaded in the ER via TAP, to CD8+ T cells. MHC II presents engulfed, exogenous peptides to CD4+ T cells.",
+       "rick": "Class I, to CD8. Rule of 8: 1 times 8, 2 times 4. Multiplication. You've heard of it?"
+      },
+      {
+       "id": "immune-3-02",
+       "type": "mcq",
+       "q": "Which cells mainly express MHC class II, presenting antigen to CD4+ T cells?",
+       "choices": [
+        "All nucleated cells",
+        "Red blood cells and platelets",
+        "Dendritic cells, macrophages and B cells",
+        "CD8+ T cells and NK cells"
+       ],
+       "answer": 2,
+       "explain": "MHC II is mainly on professional antigen-presenting cells: dendritic cells, macrophages and B cells. MHC I is on all nucleated cells (and platelets); red blood cells lack both.",
+       "rick": "Professional presenters only. Dendritic cells, macrophages, B cells. Everyone else is an amateur."
+      },
+      {
+       "id": "immune-3-03",
+       "type": "mcq",
+       "q": "Negative selection, which deletes strongly self-reactive T cells, occurs mainly in the:",
+       "choices": [
+        "Thymic cortex",
+        "Bone marrow",
+        "Lymph node paracortex",
+        "Thymic medulla"
+       ],
+       "answer": 3,
+       "explain": "The thymic medulla deletes T cells that bind self-antigen too strongly, with AIRE helping display tissue proteins. Positive selection, which tests for self-MHC binding, happens earlier in the cortex.",
+       "rick": "Medulla. Cortex checks you're useful, medulla checks you won't attack your own body. Ideal hiring process."
+      },
+      {
+       "id": "immune-3-04",
+       "type": "mcq",
+       "q": "For naive T-cell activation, B7 (CD80/86) on the APC must bind which stimulatory T-cell molecule?",
+       "choices": [
+        "CD28",
+        "CTLA-4",
+        "CD40",
+        "CD3"
+       ],
+       "answer": 0,
+       "explain": "Signal 2 is B7 binding CD28. CTLA-4 also binds B7 but INHIBITS T cells. CD40 on APCs and B cells binds CD40L; CD3 carries signal 1 from the TCR. Signal 1 without signal 2 -> anergy.",
+       "rick": "CD28. CTLA-4 grabs the same B7 and slams the brakes. Same key, opposite door. Classic trap."
+      },
+      {
+       "id": "immune-3-05",
+       "type": "mcq",
+       "q": "Which complement fragment is the main opsonin?",
+       "choices": [
+        "C5a",
+        "C3b",
+        "C3a",
+        "C5b-9"
+       ],
+       "answer": 1,
+       "explain": "C3b coats microbes so phagocytes with complement receptors can grab them (IgG is the other key opsonin). C3a and C5a are anaphylatoxins; C5b-9 is the membrane attack complex.",
+       "rick": "C3b. A 'kick me' sign for bacteria. Phagocytes love it."
+      },
+      {
+       "id": "immune-3-06",
+       "type": "mcq",
+       "q": "Which complement pathway is triggered by IgG or IgM bound to antigen?",
+       "choices": [
+        "Alternative pathway",
+        "Lectin pathway",
+        "Extrinsic pathway",
+        "Classical pathway"
+       ],
+       "answer": 3,
+       "explain": "The classical pathway starts when C1q binds antibody (IgM or IgG) on an antigen. The alternative pathway triggers on microbial surfaces, the lectin pathway via mannose-binding lectin. 'Extrinsic' is coagulation.",
+       "rick": "Classical. Antibodies call in complement. Old school, like me, but less handsome."
+      },
+      {
+       "id": "immune-3-07",
+       "type": "mcq",
+       "q": "A positive tuberculin (PPD) skin test read at 48-72 hours is which type of hypersensitivity?",
+       "choices": [
+        "Type IV",
+        "Type I",
+        "Type II",
+        "Type III"
+       ],
+       "answer": 0,
+       "explain": "Type IV is delayed and T-cell mediated: memory Th1 cells recruit macrophages to the injection site, causing induration after 48-72 hours. No antibodies are involved.",
+       "rick": "Type IV. Delayed. The T cells take two days to show up. Like me to my own *burp* birthday party."
+      },
+      {
+       "id": "immune-3-08",
+       "type": "mcq",
+       "q": "Which disease is a classic type III (immune complex) hypersensitivity?",
+       "choices": [
+        "Poison ivy contact dermatitis",
+        "Peanut anaphylaxis",
+        "Systemic lupus erythematosus",
+        "Autoimmune hemolytic anemia"
+       ],
+       "answer": 2,
+       "explain": "In SLE, antigen-antibody complexes deposit in kidneys, skin and joints and activate complement. Poison ivy dermatitis is type IV, anaphylaxis type I, and autoimmune hemolytic anemia type II.",
+       "rick": "Lupus. Complexes clog the filters, complement trashes the place. Type III is basically immune littering."
+      },
+      {
+       "id": "immune-3-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "liver",
+       "q": "Click the organ that makes most complement proteins and C-reactive protein.",
+       "explain": "Hepatocytes make most complement proteins and acute-phase proteins such as CRP, fibrinogen and serum amyloid A, ramping them up when IL-6 rises during inflammation.",
+       "rick": "Liver. Of course. It does everything. The real MVP of your abused body."
+      },
+      {
+       "id": "immune-3-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "thymus",
+       "q": "Click the organ where T cells undergo positive and negative selection.",
+       "explain": "The thymus: positive selection in the cortex, negative selection in the medulla. Only a small fraction of thymocytes survive both and leave as mature naive T cells.",
+       "rick": "Thymus. Most applicants die. Brutal admissions. Your med school wishes it were this picky."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "immune-4-L1",
+       "title": "B- and T-cell deficiencies",
+       "fact": "Bruton agammaglobulinemia: X-linked BTK defect -> no mature B cells; boys get bacterial infections after about 6 months, as maternal IgG fades. DiGeorge (22q11.2 deletion): 3rd/4th pharyngeal pouches fail -> thymic hypoplasia (T-cell deficit), hypocalcemia, heart defects. Hyper-IgM: CD40L defect, no class switch.",
+       "rick": "No B cells, no thymus, no switching. Three ways to break an immune system. Nature's creative like that.",
+       "diagram": "organ_map",
+       "part": "thymus"
+      },
+      {
+       "id": "immune-4-L2",
+       "title": "Phagocyte failures",
+       "fact": "Chronic granulomatous disease: NADPH oxidase defect -> no respiratory burst; infections with catalase-positive organisms (S. aureus, Aspergillus, Serratia, Burkholderia); abnormal dihydrorhodamine test. Leukocyte adhesion deficiency 1: CD18 integrin defect -> neutrophils can't leave vessels: late cord separation, no pus.",
+       "rick": "CGD: catalase-positive bugs destroy their own H2O2, so the crippled phagocyte has nothing to *burp* borrow.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "immune-4-L3",
+       "title": "No spleen, no MAC",
+       "fact": "Asplenia (splenectomy, or autosplenectomy in sickle cell disease) -> risk of overwhelming sepsis from encapsulated bacteria: S. pneumoniae, H. influenzae type b, N. meningitidis. The smear shows Howell-Jolly bodies (nuclear remnants the spleen normally removes). Terminal complement (C5-C9) loss -> Neisseria.",
+       "rick": "Capsules hide bacteria from phagocytes; the spleen catches them anyway. No spleen, no catch. Simple.",
+       "diagram": "organ_map",
+       "part": "spleen"
+      },
+      {
+       "id": "immune-4-L4",
+       "title": "Cytokines and lymph nodes",
+       "fact": "IL-1, IL-6 and TNF-alpha cause fever. IL-12 drives Th1 cells, whose IFN-gamma activates macrophages (key against TB). IL-4 drives Th2 cells and IgE switching; IL-5 boosts eosinophils. In lymph nodes, B cells sit in cortical follicles and T cells in the paracortex, which expands in viral infections.",
+       "rick": "IL-12 calls Th1, IFN-gamma wakes the macrophages. Cytokines are just cells texting. Badly, mostly.",
+       "diagram": "organ_map",
+       "part": "lymph_nodes"
+      }
+     ],
+     "questions": [
+      {
+       "id": "immune-4-01",
+       "type": "mcq",
+       "q": "A 9-month-old boy has recurrent otitis and pneumonia, normal T cells, almost no CD19+ B cells and very low IgG, IgA and IgM. Which gene is mutated?",
+       "choices": [
+        "CD40LG",
+        "BTK",
+        "ADA",
+        "WAS"
+       ],
+       "answer": 1,
+       "explain": "X-linked (Bruton) agammaglobulinemia: BTK tyrosine kinase is needed for pre-B cells to mature. Infections start after about 6 months as maternal IgG wanes. CD40L defects give hyper-IgM with normal B cells; ADA-SCID also lacks T cells.",
+       "rick": "BTK. Boy, 6 months, no B cells. The X chromosome strikes again. Thanks, Mom's side."
+      },
+      {
+       "id": "immune-4-02",
+       "type": "mcq",
+       "q": "A newborn has seizures from hypocalcemia, truncus arteriosus and no thymic shadow on chest X-ray. What is the most likely cause?",
+       "choices": [
+        "Adenosine deaminase deficiency",
+        "X-linked BTK mutation",
+        "22q11.2 microdeletion",
+        "Trisomy 21"
+       ],
+       "answer": 2,
+       "explain": "DiGeorge: 3rd/4th pharyngeal pouches fail -> absent parathyroids (hypocalcemia) and thymic hypoplasia (T-cell deficit), plus conotruncal heart defects. ADA-SCID also lacks a thymic shadow but has no hypocalcemia or heart defect.",
+       "rick": "CATCH-22: Cardiac, Abnormal face, Thymic aplasia, Cleft palate, Hypocalcemia, chromosome 22. Write it down."
+      },
+      {
+       "id": "immune-4-03",
+       "type": "mcq",
+       "q": "A 4-year-old has recurrent S. aureus abscesses and Aspergillus pneumonia. A dihydrorhodamine test shows no oxidative burst. Which enzyme is deficient?",
+       "choices": [
+        "Myeloperoxidase",
+        "Superoxide dismutase",
+        "Adenosine deaminase",
+        "NADPH oxidase"
+       ],
+       "answer": 3,
+       "explain": "CGD: NADPH oxidase can't make superoxide (no respiratory burst), so phagocytes can't kill catalase-positive organisms. Myeloperoxidase acts one step later (H2O2 -> HOCl); its deficiency leaves the burst intact and is usually mild (sometimes Candida).",
+       "rick": "NADPH oxidase. No respiratory burst, no kill. The phagocytes just hug the bacteria. *burp* Useless."
+      },
+      {
+       "id": "immune-4-04",
+       "type": "mcq",
+       "q": "A newborn's umbilical cord is still attached at 5 weeks. He has skin infections without pus and marked neutrophilia. Which molecule is defective?",
+       "choices": [
+        "CD18 (beta-2 integrin)",
+        "NADPH oxidase",
+        "CD40 ligand",
+        "C5"
+       ],
+       "answer": 0,
+       "explain": "LAD type 1: the CD18 defect blocks firm adhesion of neutrophils to endothelium, so they can't leave the blood: neutrophilia but no pus, and delayed cord separation. In CGD neutrophils migrate fine but can't kill.",
+       "rick": "CD18. Neutrophils everywhere in the blood and none at the party. Stuck in traffic like idiots."
+      },
+      {
+       "id": "immune-4-05",
+       "type": "mcq",
+       "q": "A woman with sickle cell disease has Howell-Jolly bodies on her blood smear. She is at greatest risk of sepsis from which organism?",
+       "choices": [
+        "Pseudomonas aeruginosa",
+        "Streptococcus pneumoniae",
+        "Candida albicans",
+        "Cytomegalovirus"
+       ],
+       "answer": 1,
+       "explain": "Howell-Jolly bodies signal a nonfunctional spleen (autosplenectomy). The spleen clears encapsulated bacteria (S. pneumoniae, H. influenzae type b, N. meningitidis), so asplenic patients risk overwhelming sepsis.",
+       "rick": "Encapsulated bugs, and pneumococcus is the king. No spleen, no defense. Capsule wins."
+      },
+      {
+       "id": "immune-4-06",
+       "type": "mcq",
+       "q": "A 19-year-old has her second episode of meningococcal meningitis. Deficiency of which component(s) is most likely?",
+       "choices": [
+        "C1 esterase inhibitor",
+        "Decay-accelerating factor (CD55)",
+        "C5-C9 (membrane attack complex)",
+        "Myeloperoxidase"
+       ],
+       "answer": 2,
+       "explain": "Neisseria are mainly killed by the membrane attack complex, so terminal complement (C5-C9) deficiency causes recurrent Neisseria infections. C1-INH deficiency causes hereditary angioedema; DAF loss causes PNH.",
+       "rick": "No MAC, no holes, and Neisseria keeps coming back. Recurrent meningococcus = check the *burp* complement."
+      },
+      {
+       "id": "immune-4-07",
+       "type": "mcq",
+       "q": "A boy has recurrent sinopulmonary infections and Pneumocystis pneumonia. Serum IgM is high, but IgG, IgA and IgE are very low. What is defective?",
+       "choices": [
+        "CD40 ligand on helper T cells",
+        "BTK in B cells",
+        "IL-2 receptor gamma chain",
+        "MHC class I expression"
+       ],
+       "answer": 0,
+       "explain": "Class switching needs CD40L on helper T cells to bind CD40 on B cells. Without it B cells stay stuck making IgM (X-linked hyper-IgM), and macrophage activation also suffers, so opportunists like Pneumocystis appear.",
+       "rick": "CD40L. B cells waiting for a 'switch' signal that never comes. Stuck on IgM forever."
+      },
+      {
+       "id": "immune-4-08",
+       "type": "mcq",
+       "q": "Which cytokine, made by Th1 cells, activates macrophages to kill intracellular Mycobacterium tuberculosis?",
+       "choices": [
+        "IL-4",
+        "IL-10",
+        "IL-5",
+        "Interferon-gamma"
+       ],
+       "answer": 3,
+       "explain": "IL-12 from macrophages drives Th1 cells, which secrete IFN-gamma to activate macrophages and build granulomas. IL-4 and IL-5 are Th2 cytokines; IL-10 is anti-inflammatory. Defects in the IL-12/IFN-gamma axis invite mycobacteria.",
+       "rick": "IFN-gamma. Th1 wakes the macrophages. Without it, TB moves in and redecorates your lungs."
+      },
+      {
+       "id": "immune-4-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "spleen",
+       "q": "Click the organ whose loss causes Howell-Jolly bodies and sepsis risk from encapsulated bacteria.",
+       "explain": "The spleen's red pulp removes damaged RBCs and nuclear remnants (Howell-Jolly bodies); its macrophages and marginal-zone B cells clear encapsulated bacteria. Asplenic patients get vaccines against them.",
+       "rick": "Spleen. Small, purple, underrated. Lose it and pneumococcus throws a *burp* party in your blood."
+      },
+      {
+       "id": "immune-4-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "lymph_nodes",
+       "q": "Click the organs that filter lymph and whose paracortex (T-cell zone) expands in viral infections.",
+       "explain": "Lymph nodes: cortical follicles hold B cells (germinal centers), the paracortex holds T cells and high endothelial venules, and medullary sinuses drain lymph. The spleen filters blood, not lymph.",
+       "rick": "Lymph nodes. Cortex for B, paracortex for T. Organized. More than your notes, genius."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "diagram": "cell",
+   "id": "cell_membrane",
+   "name": "Cell Membrane",
+   "desc": "Phospholipid bilayer with proteins and cholesterol that encloses the cell and controls what enters and leaves (selectively permeable). Carries receptors, channels and pumps.",
+   "rick": "A greasy force field with doormen. Still better security than my garage."
+  },
+  {
+   "diagram": "cell",
+   "id": "cytoplasm",
+   "name": "Cytoplasm",
+   "desc": "Everything inside the membrane except the nucleus: watery cytosol (where glycolysis runs and free ribosomes work) plus the organelles and cytoskeleton.",
+   "rick": "Cell soup. Organelles floating in it like croutons. Smarter croutons than you, though."
+  },
+  {
+   "diagram": "cell",
+   "id": "nucleus",
+   "name": "Nucleus",
+   "desc": "Holds the chromosomes (DNA) inside a double-membrane nuclear envelope with pores. DNA is replicated and transcribed into RNA here.",
+   "rick": "The vault with the blueprints. Every protein you'll ever make starts in here. Most of you, anyway."
+  },
+  {
+   "diagram": "cell",
+   "id": "nucleolus",
+   "name": "Nucleolus",
+   "desc": "Dense, membrane-less region inside the nucleus where rRNA is made by RNA polymerase I and ribosomal subunits are assembled.",
+   "rick": "Ribosome factory inside the control room. Efficient. Unlike anything you've ever organized."
+  },
+  {
+   "diagram": "cell",
+   "id": "mitochondrion",
+   "name": "Mitochondrion",
+   "desc": "Double-membrane power plant: Krebs cycle in the matrix, electron transport chain and ATP synthase on the inner membrane (cristae). Has its own maternally inherited DNA.",
+   "rick": "Ancient bacteria your cells swallowed and enslaved. Billions of years later, they still pay rent in ATP."
+  },
+  {
+   "diagram": "cell",
+   "id": "rough_er",
+   "name": "Rough ER",
+   "desc": "Ribosome-studded membrane network continuous with the nuclear envelope. Makes secretory and membrane proteins and starts N-linked glycosylation. Prominent in plasma cells.",
+   "rick": "Protein assembly line. Plasma cells are packed with it because they pump out antibodies nonstop."
+  },
+  {
+   "diagram": "cell",
+   "id": "smooth_er",
+   "name": "Smooth ER",
+   "desc": "Ribosome-free ER that makes lipids and steroid hormones, detoxifies drugs (cytochrome P450, abundant in liver) and stores Ca2+ (sarcoplasmic reticulum in muscle).",
+   "rick": "Lipids, steroids, detox. Basically the cell's pharmacy and booze filter. My favorite organelle."
+  },
+  {
+   "diagram": "cell",
+   "id": "golgi",
+   "name": "Golgi Apparatus",
+   "desc": "Stack of flattened sacs that modifies proteins from the rough ER (O-linked glycosylation, mannose-6-phosphate tags), then sorts them into vesicles for secretion, membrane or lysosomes.",
+   "rick": "The post office. Receives, stamps, ships. If packages go missing, blame the Golgi. Everyone does."
+  },
+  {
+   "diagram": "cell",
+   "id": "ribosome",
+   "name": "Ribosome",
+   "desc": "rRNA-protein machine (80S in human cytosol: 60S + 40S subunits) that translates mRNA into protein. Free ones make cytosolic proteins; ER-bound ones make secreted and membrane proteins.",
+   "rick": "Reads the code, spits out protein. Millions of them per cell. No union, no breaks."
+  },
+  {
+   "diagram": "cell",
+   "id": "lysosome",
+   "name": "Lysosome",
+   "desc": "Membrane sac of acid hydrolases that work at about pH 5 and digest worn-out organelles and engulfed material. Enzyme defects cause lysosomal storage diseases.",
+   "rick": "Acid garbage disposal. When one enzyme's missing, the trash piles up and you get a *burp* named disease."
+  },
+  {
+   "diagram": "cell",
+   "id": "centrosome",
+   "name": "Centrosome",
+   "desc": "Main microtubule-organizing center near the nucleus: a pair of centrioles (9 microtubule triplets each). It duplicates and forms the poles of the mitotic spindle.",
+   "rick": "Spindle commander. Pulls chromosomes apart during division. Two little barrels running the whole show."
+  }
+ ]
+}

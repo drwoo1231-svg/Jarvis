@@ -1,0 +1,1732 @@
+{
+ "batch": "nervous_hormones",
+ "topics": [
+  {
+   "topic": "nervous",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "nervous-1-L1",
+       "title": "Your body's wiring",
+       "fact": "The nervous system is your body's fast messaging network. The brain and spinal cord form the central nervous system (CNS), the boss. Nerves branching out to the rest of the body form the peripheral nervous system (PNS). It senses what is happening, decides what to do, and tells muscles and glands to act.",
+       "rick": "Brain and spinal cord are HQ, nerves are the cables. Yours is mostly *burp* buffering, but the hardware's standard.",
+       "diagram": "brain",
+       "part": "spinal_cord"
+      },
+      {
+       "id": "nervous-1-L2",
+       "title": "Meet the neuron",
+       "fact": "Neurons are nerve cells. Dendrites are branches that receive signals. The cell body (soma) holds the nucleus. One long axon carries the electrical signal away from the cell body to the axon terminals. There the signal crosses a synapse to the next cell using chemical messengers called neurotransmitters.",
+       "rick": "Dendrites listen, axon talks. Like me at parties, except the axon has something worth saying.",
+       "diagram": "neuron",
+       "part": "axon"
+      },
+      {
+       "id": "nervous-1-L3",
+       "title": "The big brain parts",
+       "fact": "The cerebrum is the largest part, split into left and right hemispheres, each with 4 main lobes: frontal (planning, movement, personality), parietal (touch), temporal (hearing, memory) and occipital (vision). The cerebellum at the back handles balance and coordination. The brainstem regulates breathing and heart rate.",
+       "rick": "Frontal lobe: decisions. Yours clearly called in sick. Cerebellum: balance. Mine's pickled, hence the wobble.",
+       "diagram": "brain",
+       "part": "frontal_lobe"
+      },
+      {
+       "id": "nervous-1-L4",
+       "title": "Spinal cord and reflexes",
+       "fact": "The spinal cord runs inside the backbone and carries messages between brain and body. Sensory nerves bring information in; motor nerves send commands out to muscles. Touch a hot stove and a spinal reflex pulls your hand back before your brain even feels the pain. The skull and vertebrae protect it all.",
+       "rick": "Reflexes skip the brain entirely. Explains how you've survived this long, genius.",
+       "diagram": "brain",
+       "part": "spinal_cord"
+      }
+     ],
+     "questions": [
+      {
+       "id": "nervous-1-01",
+       "type": "mcq",
+       "q": "Which two organs make up the central nervous system (CNS)?",
+       "choices": [
+        "Brain and peripheral nerves",
+        "Brain and spinal cord",
+        "Spinal cord and heart",
+        "Nerves and muscles"
+       ],
+       "answer": 1,
+       "explain": "The CNS is the brain plus the spinal cord. The nerves that branch out to the rest of the body form the peripheral nervous system (PNS), not the CNS.",
+       "rick": "Brain plus spinal cord. Two parts. TWO. Even a Meeseeks could hold that in memory before poofing."
+      },
+      {
+       "id": "nervous-1-02",
+       "type": "mcq",
+       "q": "What is the main signaling cell of the nervous system called?",
+       "choices": [
+        "Nephron",
+        "Erythrocyte",
+        "Neuron",
+        "Osteocyte"
+       ],
+       "answer": 2,
+       "explain": "Neurons carry electrical and chemical signals. A nephron is the kidney's filtering unit, an erythrocyte is a red blood cell and an osteocyte is a bone cell.",
+       "rick": "Neuron. Nephron is kidney. Two letters apart, a whole *burp* universe of difference, Morty-brain."
+      },
+      {
+       "id": "nervous-1-03",
+       "type": "mcq",
+       "q": "Which part of a neuron carries the signal AWAY from the cell body?",
+       "choices": [
+        "Axon",
+        "Dendrite",
+        "Nucleus",
+        "Ribosome"
+       ],
+       "answer": 0,
+       "explain": "The axon conducts the signal away from the cell body toward the axon terminals. Dendrites do the opposite: they bring incoming signals toward the cell body.",
+       "rick": "Axon: away. Both start with A. I'm literally spoon-feeding you mnemonics here."
+      },
+      {
+       "id": "nervous-1-04",
+       "type": "mcq",
+       "q": "Which part of the brain mainly coordinates balance and smooth movement?",
+       "choices": [
+        "Occipital lobe",
+        "Temporal lobe",
+        "Spinal cord",
+        "Cerebellum"
+       ],
+       "answer": 3,
+       "explain": "The cerebellum, tucked at the back under the cerebrum, coordinates balance, posture and smooth movement. The occipital lobe handles vision and the temporal lobe hearing and memory.",
+       "rick": "Cerebellum. Why do drunks wobble? Booze messes with it. I'm conducting ongoing field research."
+      },
+      {
+       "id": "nervous-1-05",
+       "type": "mcq",
+       "q": "Which lobe of the brain mainly processes vision?",
+       "choices": [
+        "Frontal lobe",
+        "Temporal lobe",
+        "Occipital lobe",
+        "Parietal lobe"
+       ],
+       "answer": 2,
+       "explain": "The primary visual cortex sits in the occipital lobe at the back of the head. Your eyes are at the front, but the signals travel all the way to the back.",
+       "rick": "Eyes in front, vision in the back. Your body's wiring is almost as dumb as your questions. Occipital."
+      },
+      {
+       "id": "nervous-1-06",
+       "type": "mcq",
+       "q": "Neurons pass signals across a synapse using chemicals called:",
+       "choices": [
+        "Neurotransmitters",
+        "Hormones",
+        "Antibodies",
+        "Enzymes"
+       ],
+       "answer": 0,
+       "explain": "Neurotransmitters (like acetylcholine or dopamine) are released into the tiny synaptic gap and act on the next cell within milliseconds. Hormones are chemical messengers too, but they travel in the blood.",
+       "rick": "Neurotransmitters. Hormones go by blood, the slow mail. Synapses use the express portal."
+      },
+      {
+       "id": "nervous-1-07",
+       "type": "mcq",
+       "q": "Which part of the brain controls automatic functions like breathing and heart rate?",
+       "choices": [
+        "Cerebellum",
+        "Frontal lobe",
+        "Occipital lobe",
+        "Brainstem"
+       ],
+       "answer": 3,
+       "explain": "The brainstem (midbrain, pons and medulla) connects the brain to the spinal cord and runs vital automatic functions such as breathing, heart rate and blood pressure.",
+       "rick": "Brainstem. Keeps you breathing without your help. Thank god, because your help is *burp* useless."
+      },
+      {
+       "id": "nervous-1-08",
+       "type": "mcq",
+       "q": "You touch a hot stove and pull your hand away before you feel pain. Why?",
+       "choices": [
+        "The skin contracts the arm muscles directly, without nerves",
+        "A spinal cord reflex acts before the brain registers pain",
+        "The occipital lobe sees the heat and reacts first",
+        "The arm muscles sense the heat and decide to move"
+       ],
+       "answer": 1,
+       "explain": "In a reflex arc the sensory nerve signals the spinal cord, which directly activates motor neurons to the muscle. The message to the brain, where pain is actually felt, arrives a moment later.",
+       "rick": "Your spinal cord yanked your hand while your brain was still loading. Let the cord do more of your thinking."
+      },
+      {
+       "id": "nervous-1-09",
+       "type": "label",
+       "diagram": "neuron",
+       "part": "dendrite",
+       "q": "Click the dendrites, the branches that receive incoming signals.",
+       "explain": "Dendrites are the branching extensions around the cell body. They collect signals from other neurons and pass them toward the cell body.",
+       "rick": "Dendrites: the antennae. Like Wi-Fi, except it actually picks up a signal. Unlike you."
+      },
+      {
+       "id": "nervous-1-10",
+       "type": "label",
+       "diagram": "brain",
+       "part": "cerebellum",
+       "q": "Click the cerebellum.",
+       "explain": "The cerebellum ('little brain') sits at the back, below the occipital lobe and behind the brainstem. It coordinates balance and smooth movement.",
+       "rick": "Back and bottom, the wrinkly little cauliflower. Your balance computer. Mine's on backup power."
+      },
+      {
+       "id": "nervous-1-11",
+       "type": "label",
+       "diagram": "brain",
+       "part": "frontal_lobe",
+       "q": "Click the frontal lobe.",
+       "explain": "The frontal lobe is the front part of each cerebral hemisphere, in front of the central sulcus. It handles planning, decisions, personality and voluntary movement.",
+       "rick": "Front of the brain. Frontal. Scientists named it slowly, for people like you, genius."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "nervous-2-L1",
+       "title": "Divisions of the system",
+       "fact": "The PNS has 12 pairs of cranial nerves and 31 pairs of spinal nerves. The somatic system controls voluntary skeletal muscle. The autonomic system runs smooth muscle, heart muscle and glands: sympathetic = fight or flight (faster heart, dilated pupils), parasympathetic = rest and digest (slower heart, digestion).",
+       "rick": "Sympathetic: flee the Galactic Federation. Parasympathetic: digest your Szechuan sauce afterwards.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "nervous-2-L2",
+       "title": "The action potential",
+       "fact": "At rest the inside of a neuron is about -70 mV, kept by K+ leak channels and the Na+/K+ pump (3 Na+ out, 2 K+ in per ATP). At threshold (about -55 mV) voltage-gated Na+ channels open, Na+ rushes in and the inside goes positive (about +30 mV). Then K+ flows out to repolarize. It's all-or-none.",
+       "rick": "All-or-none, like my commitment to science. Hit threshold or *burp* go home.",
+       "diagram": "neuron",
+       "part": "axon"
+      },
+      {
+       "id": "nervous-2-L3",
+       "title": "Myelin and the synapse",
+       "fact": "Myelin insulates axons: Schwann cells make it in the PNS, oligodendrocytes in the CNS. The impulse jumps between gaps called nodes of Ranvier (saltatory conduction), which is much faster. At the axon terminal the impulse opens Ca2+ channels; Ca2+ entry makes vesicles release neurotransmitter into the synapse.",
+       "rick": "Saltatory conduction: the signal portal-hops node to node. I invented that. Probably. In some universe.",
+       "diagram": "neuron",
+       "part": "myelin_sheath"
+      },
+      {
+       "id": "nervous-2-L4",
+       "title": "Brain regions, upgraded",
+       "fact": "The brainstem has 3 parts: midbrain, pons and medulla. The medulla, lowest and continuous with the spinal cord, holds centers for heart rate, blood pressure and breathing. Cortex is outer gray matter (cell bodies); white matter is myelinated axons. Each cerebral hemisphere mainly controls the OPPOSITE side of the body.",
+       "rick": "Left brain runs the right hand. Crossed wiring. Like your priorities, except it works.",
+       "diagram": "brain",
+       "part": "medulla"
+      }
+     ],
+     "questions": [
+      {
+       "id": "nervous-2-01",
+       "type": "mcq",
+       "q": "What is the typical resting membrane potential of a neuron?",
+       "choices": [
+        "About +30 mV",
+        "About 0 mV",
+        "About -70 mV",
+        "About -10 mV"
+       ],
+       "answer": 2,
+       "explain": "At rest the inside of a neuron is about -70 mV relative to the outside. +30 mV is roughly the peak of an action potential, when the inside briefly turns positive.",
+       "rick": "Minus seventy. Negative, like my outlook on your career. +30 is the spike peak, genius."
+      },
+      {
+       "id": "nervous-2-02",
+       "type": "mcq",
+       "q": "During the rising (depolarization) phase of an action potential, which ion rushes INTO the neuron?",
+       "choices": [
+        "Na+",
+        "K+",
+        "Cl-",
+        "Mg2+"
+       ],
+       "answer": 0,
+       "explain": "Voltage-gated Na+ channels open and Na+ flows in down its concentration and electrical gradients, making the inside positive. K+ flowing OUT is what repolarizes the cell afterwards.",
+       "rick": "Sodium in, potassium out. Salt goes into the cell like it goes on my margarita glass."
+      },
+      {
+       "id": "nervous-2-03",
+       "type": "mcq",
+       "q": "Compared with a stimulus just above threshold, a sustained stimulus well above threshold makes a neuron fire action potentials that are:",
+       "choices": [
+        "Twice as large in amplitude",
+        "Graded in size, like a dimmer switch",
+        "The same size, but more frequent",
+        "Slower to travel down the axon"
+       ],
+       "answer": 2,
+       "explain": "Action potentials are all-or-none: once threshold (about -55 mV) is reached, every spike has the same size and shape. A stronger stimulus is coded by MORE spikes per second (frequency coding), not bigger ones. Graded potentials are the ones that vary in size.",
+       "rick": "All-or-none, genius. Neurons don't shout louder, they just repeat themselves faster. Like me, *burp* on a bender."
+      },
+      {
+       "id": "nervous-2-04",
+       "type": "mcq",
+       "q": "Which cells make myelin in the central nervous system?",
+       "choices": [
+        "Schwann cells",
+        "Oligodendrocytes",
+        "Astrocytes",
+        "Microglia"
+       ],
+       "answer": 1,
+       "explain": "Oligodendrocytes myelinate CNS axons, and one can wrap segments of many axons. Schwann cells are the PNS version, each myelinating one segment of one axon. Astrocytes support neurons; microglia are immune cells.",
+       "rick": "Oligodendrocytes in the CNS, Schwann cells outside. Mix them up and I portal you somewhere with no textbooks."
+      },
+      {
+       "id": "nervous-2-05",
+       "type": "mcq",
+       "q": "What is saltatory conduction?",
+       "choices": [
+        "The impulse jumping from one node of Ranvier to the next",
+        "Neurotransmitter diffusing across the synapse",
+        "The impulse traveling backward to the dendrites",
+        "Salt being pumped into the axon terminal"
+       ],
+       "answer": 0,
+       "explain": "In myelinated axons the action potential is regenerated only at the nodes of Ranvier, so it effectively jumps from node to node. That makes conduction much faster than in unmyelinated axons.",
+       "rick": "Saltare is Latin for 'to jump'. Nothing to do with salt. Put down the pretzels, Morty-brain."
+      },
+      {
+       "id": "nervous-2-06",
+       "type": "mcq",
+       "q": "Which effect is caused by the sympathetic (fight or flight) system?",
+       "choices": [
+        "Slower heart rate and constricted pupils",
+        "More saliva and faster digestion",
+        "Contraction of the bladder to empty it",
+        "Faster heart rate and dilated pupils"
+       ],
+       "answer": 3,
+       "explain": "Sympathetic activity raises heart rate, dilates pupils and airways, and shifts blood to muscles. Slowing the heart, constricting pupils, digestion and bladder emptying are parasympathetic (rest and digest) effects.",
+       "rick": "Fight or flight: heart pounding, pupils huge. Basically my face every time Unity calls."
+      },
+      {
+       "id": "nervous-2-07",
+       "type": "mcq",
+       "q": "How many pairs of spinal nerves does a human have?",
+       "choices": [
+        "12",
+        "31",
+        "24",
+        "33"
+       ],
+       "answer": 1,
+       "explain": "There are 31 pairs: 8 cervical, 12 thoracic, 5 lumbar, 5 sacral and 1 coccygeal. 12 is the number of cranial nerve pairs; 33 is roughly the number of vertebrae.",
+       "rick": "Thirty-one. Twelve is the cranial nerves. Write it down, your memory's a *burp* sieve."
+      },
+      {
+       "id": "nervous-2-08",
+       "type": "mcq",
+       "q": "What directly triggers release of neurotransmitter from the axon terminal?",
+       "choices": [
+        "K+ flowing into the terminal",
+        "Na+ being pumped out of the terminal",
+        "Ca2+ flowing into the terminal",
+        "Cl- flowing out of the terminal"
+       ],
+       "answer": 2,
+       "explain": "The arriving action potential opens voltage-gated Ca2+ channels. Ca2+ entry triggers synaptic vesicles to fuse with the membrane and dump neurotransmitter into the cleft.",
+       "rick": "Calcium is the trigger. No calcium, no release. Like me without booze: zero output."
+      },
+      {
+       "id": "nervous-2-09",
+       "type": "label",
+       "diagram": "neuron",
+       "part": "myelin_sheath",
+       "q": "Click the myelin sheath.",
+       "explain": "Myelin is the fatty insulating wrap around the axon, made by Schwann cells (PNS) or oligodendrocytes (CNS). It speeds conduction by letting the impulse jump between nodes.",
+       "rick": "The fatty insulation on the cable. Lose it and signals crawl. Like your reading speed."
+      },
+      {
+       "id": "nervous-2-10",
+       "type": "label",
+       "diagram": "brain",
+       "part": "occipital_lobe",
+       "q": "Click the lobe that contains the primary visual cortex.",
+       "explain": "The occipital lobe at the back of the cerebrum receives visual input relayed from the eyes through the thalamus. Damage here can blind part of the visual field even with healthy eyes.",
+       "rick": "Vision lives in the back of your head. Eyes in front, screen in back. Nature's a lousy engineer."
+      },
+      {
+       "id": "nervous-2-11",
+       "type": "label",
+       "diagram": "brain",
+       "part": "medulla",
+       "q": "Click the lowest part of the brainstem, continuous with the spinal cord.",
+       "explain": "The medulla oblongata sits below the pons and merges into the spinal cord. It holds vital centers for breathing, heart rate and blood pressure, so damage here is often fatal.",
+       "rick": "Medulla. Break it and the lights go out. Permanently. Don't, uh, test that."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "nervous-3-L1",
+       "title": "Channels and refractory periods",
+       "fact": "At rest the membrane is most permeable to K+, so the resting potential sits near K+'s equilibrium potential (about -90 mV). Spikes start at the axon hillock/initial segment, rich in Na+ channels. Na+ channel inactivation causes the absolute refractory period; lingering K+ efflux causes the relative one.",
+       "rick": "Na+ channels need a nap after firing. Absolute refractory period. You have one too: it's called your life.",
+       "diagram": "neuron",
+       "part": "axon_hillock"
+      },
+      {
+       "id": "nervous-3-L2",
+       "title": "Upper vs lower motor neurons",
+       "fact": "Upper motor neurons (UMN) in motor cortex (notably the precentral gyrus) form the corticospinal tract; most cross at the pyramidal decussation (lower medulla) to reach anterior horn lower motor neurons (LMN). UMN lesion: spastic weakness, hyperreflexia, Babinski sign. LMN lesion: flaccid weakness, atrophy, fasciculations.",
+       "rick": "Upper motor neuron down: stiff and jumpy. Lower: floppy and twitchy. Like me before and after *burp* coffee.",
+       "diagram": "brain",
+       "part": "precentral_gyrus"
+      },
+      {
+       "id": "nervous-3-L3",
+       "title": "Sensory pathways",
+       "fact": "The postcentral gyrus is primary somatosensory cortex, mapped as a homunculus with huge face and hands. Fine touch, vibration and proprioception ascend the dorsal columns on the same side and cross in the medulla. Pain and temperature fibers cross within 1-2 segments and ascend in the spinothalamic tract.",
+       "rick": "Dorsal columns cross high, pain crosses low. Two tracts, two rules. Your brain has room for two, right?",
+       "diagram": "brain",
+       "part": "postcentral_gyrus"
+      },
+      {
+       "id": "nervous-3-L4",
+       "title": "Transmitters and receptors",
+       "fact": "Glutamate is the brain's main excitatory transmitter; GABA the main inhibitory one (glycine in the spinal cord). Acetylcholine acts on nicotinic receptors at the neuromuscular junction and autonomic ganglia, and on muscarinic receptors at parasympathetic targets. Most sympathetic postganglionic fibers release norepinephrine.",
+       "rick": "Glutamate floors the gas, GABA hits the brakes. Your brain's mostly brakes, apparently.",
+       "diagram": "neuron",
+       "part": "synapse"
+      }
+     ],
+     "questions": [
+      {
+       "id": "nervous-3-01",
+       "type": "mcq",
+       "q": "The absolute refractory period of an action potential is mainly due to:",
+       "choices": [
+        "Inactivation of voltage-gated Na+ channels",
+        "Voltage-gated K+ channels still being open",
+        "Failure of the Na+/K+ pump",
+        "Depletion of neurotransmitter vesicles"
+       ],
+       "answer": 0,
+       "explain": "After opening, Na+ channels enter an inactivated state and cannot reopen until the membrane repolarizes, so no new spike is possible. Still-open K+ channels (hyperpolarization) explain the RELATIVE refractory period.",
+       "rick": "Inactivated Na+ channels. K+ is the relative period. Absolute versus relative, like my genius versus yours."
+      },
+      {
+       "id": "nervous-3-02",
+       "type": "mcq",
+       "q": "Why is the neuronal resting membrane potential close to the K+ equilibrium potential?",
+       "choices": [
+        "The Na+/K+ pump directly generates most of the voltage",
+        "At rest the membrane is far more permeable to Na+ than to K+",
+        "K+ is actively pumped out of the cell, leaving it negative",
+        "At rest the membrane is far more permeable to K+ than to other ions"
+       ],
+       "answer": 3,
+       "explain": "K+ leak channels make the resting membrane most permeable to K+, pulling the potential toward E(K+), about -90 mV; a small Na+ leak pulls it up to about -70 mV. The pump's direct electrogenic share is only a few mV.",
+       "rick": "Permeability rules, genius. The pump just maintains gradients. It's the janitor, not the CEO."
+      },
+      {
+       "id": "nervous-3-03",
+       "type": "mcq",
+       "q": "Right-sided spastic weakness, hyperreflexia and an upgoing plantar reflex (Babinski sign). Where is the lesion most likely?",
+       "choices": [
+        "Right spinal cord anterior horn",
+        "Left internal capsule",
+        "Right sciatic nerve",
+        "Neuromuscular junction"
+       ],
+       "answer": 1,
+       "explain": "Spasticity, hyperreflexia and Babinski are upper motor neuron signs. Corticospinal fibers in the left internal capsule have not crossed yet, so a lesion there hits the right body. Anterior horn and nerve lesions give LMN signs.",
+       "rick": "UMN signs, opposite side, above the crossing. Left capsule, right body. Wiring 101, dummy."
+      },
+      {
+       "id": "nervous-3-04",
+       "type": "mcq",
+       "q": "Where do most corticospinal tract fibers cross to the opposite side?",
+       "choices": [
+        "Internal capsule",
+        "Cerebral peduncles of the midbrain",
+        "Pyramidal decussation in the lower medulla",
+        "Anterior white commissure at each spinal level"
+       ],
+       "answer": 2,
+       "explain": "About 85-90% of corticospinal fibers cross in the pyramidal decussation at the medulla-spinal cord junction, then descend as the lateral corticospinal tract. The internal capsule and peduncles carry them before they cross.",
+       "rick": "Most cross at the pyramids. Ancient Egypt reference, free of charge. You're welcome."
+      },
+      {
+       "id": "nervous-3-05",
+       "type": "mcq",
+       "q": "Pain and temperature from the LEFT foot ascend the spinal cord mainly in which tract and on which side?",
+       "choices": [
+        "Spinothalamic tract, left side",
+        "Dorsal columns, left side",
+        "Dorsal columns, right side",
+        "Spinothalamic tract, right side"
+       ],
+       "answer": 3,
+       "explain": "Pain and temperature fibers synapse in the dorsal horn, and the second-order axons cross within about 1-2 segments to ascend in the contralateral spinothalamic tract. Dorsal columns carry touch and vibration on the same side.",
+       "rick": "Pain crosses early. Left foot, right cord. Like you, it switches sides at the first sign of *burp* trouble."
+      },
+      {
+       "id": "nervous-3-06",
+       "type": "mcq",
+       "q": "Autoimmune destruction of CNS myelin (made by oligodendrocytes) is the hallmark of which disease?",
+       "choices": [
+        "Guillain-Barre syndrome",
+        "Multiple sclerosis",
+        "Amyotrophic lateral sclerosis",
+        "Myasthenia gravis"
+       ],
+       "answer": 1,
+       "explain": "Multiple sclerosis is immune-mediated demyelination of the CNS. Guillain-Barre targets PERIPHERAL myelin (Schwann cells), ALS kills motor neurons, and myasthenia gravis attacks ACh receptors at the neuromuscular junction.",
+       "rick": "MS: CNS myelin. Guillain-Barre: PNS myelin. Same crime, different jurisdiction."
+      },
+      {
+       "id": "nervous-3-07",
+       "type": "mcq",
+       "q": "Most sympathetic postganglionic neurons release which neurotransmitter onto their targets?",
+       "choices": [
+        "Acetylcholine",
+        "Dopamine",
+        "Norepinephrine",
+        "Epinephrine"
+       ],
+       "answer": 2,
+       "explain": "Sympathetic postganglionic fibers mostly release norepinephrine onto adrenergic receptors (exception: sweat glands get ACh). The adrenal medulla, not the neurons, secretes mostly epinephrine into the blood.",
+       "rick": "Norepinephrine. Epinephrine is the adrenal medulla's job. Different employees, genius."
+      },
+      {
+       "id": "nervous-3-08",
+       "type": "mcq",
+       "q": "What is the main inhibitory neurotransmitter in the brain?",
+       "choices": [
+        "GABA",
+        "Glutamate",
+        "Glycine",
+        "Acetylcholine"
+       ],
+       "answer": 0,
+       "explain": "GABA is the main inhibitory transmitter in the brain; glycine plays that role mainly in the spinal cord and brainstem. Glutamate is the main excitatory transmitter.",
+       "rick": "GABA. Benzos and booze boost it. Which explains *burp* a lot about me, actually."
+      },
+      {
+       "id": "nervous-3-09",
+       "type": "label",
+       "diagram": "neuron",
+       "part": "axon_hillock",
+       "q": "Click the cone-shaped region where the axon leaves the cell body.",
+       "explain": "The axon hillock leads into the initial segment, which is packed with voltage-gated Na+ channels, so this hillock/initial-segment trigger zone is where summed inputs usually reach threshold and the spike starts.",
+       "rick": "The trigger zone. Every input gets summed here, then it fires or doesn't. Decisive. Unlike you."
+      },
+      {
+       "id": "nervous-3-10",
+       "type": "label",
+       "diagram": "neuron",
+       "part": "node_of_ranvier",
+       "q": "Click a gap in the myelin where the action potential is regenerated.",
+       "explain": "Nodes of Ranvier are short unmyelinated gaps packed with voltage-gated Na+ channels. The spike regenerates at each node and jumps to the next (saltatory conduction).",
+       "rick": "The gaps are the point. Signal hops node to node, like me hopping dimensions dodging warrants."
+      },
+      {
+       "id": "nervous-3-11",
+       "type": "label",
+       "diagram": "brain",
+       "part": "precentral_gyrus",
+       "q": "Click the primary motor cortex.",
+       "explain": "The primary motor cortex is the precentral gyrus, the ridge just in front of the central sulcus in the frontal lobe. Its upper motor neurons drive voluntary movement of the opposite side of the body.",
+       "rick": "Precentral gyrus. In FRONT of the central sulcus. Motor up front, sensory behind. Get it tattooed."
+      },
+      {
+       "id": "nervous-3-12",
+       "type": "label",
+       "diagram": "brain",
+       "part": "postcentral_gyrus",
+       "q": "Click the primary somatosensory cortex.",
+       "explain": "The primary somatosensory cortex is the postcentral gyrus, just behind the central sulcus in the parietal lobe. It maps touch, pain, temperature and position from the opposite side of the body.",
+       "rick": "Behind the central sulcus. Where you feel things. Like shame, hopefully, if you clicked the wrong gyrus."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "nervous-4-L1",
+       "title": "Stroke syndromes",
+       "fact": "MCA stroke: contralateral face and arm weakness and numbness (more than leg), plus aphasia if the dominant (usually left) side, neglect if nondominant. ACA: contralateral leg more than arm. PCA: contralateral homonymous hemianopia with macular sparing. Basilar artery occlusion infarcting the ventral pons: locked-in syndrome.",
+       "rick": "Know the artery, know the deficit. The brain's a map, and strokes are me spilling *burp* whiskey on it.",
+       "diagram": "brain",
+       "part": "pons"
+      },
+      {
+       "id": "nervous-4-L2",
+       "title": "Aphasias",
+       "fact": "Broca aphasia (dominant inferior frontal gyrus): non-fluent, effortful speech, comprehension largely intact. Wernicke aphasia (posterior superior temporal gyrus): fluent but meaningless speech, poor comprehension, often unaware. Conduction aphasia (arcuate fasciculus): fluent, comprehends, but can't repeat.",
+       "rick": "Broca: broken speech. Wernicke: wordy nonsense. Conduction: can't repeat. Kind of like you in lecture.",
+       "diagram": "brain",
+       "part": "broca_area"
+      },
+      {
+       "id": "nervous-4-L3",
+       "title": "Spinal cord lesions",
+       "fact": "Brown-Sequard (hemisection), below the lesion: same-side spastic weakness and loss of vibration/position sense, opposite-side loss of pain and temperature. Syringomyelia: bilateral cape-like pain/temperature loss. B12 deficiency: dorsal columns plus lateral corticospinal tracts. ALS: UMN and LMN signs, no sensory loss.",
+       "rick": "Hemisect a cord and the symptoms split sides. Like a breakup: each side keeps different stuff.",
+       "diagram": "brain",
+       "part": "spinal_cord"
+      },
+      {
+       "id": "nervous-4-L4",
+       "title": "Toxins at the synapse",
+       "fact": "Botulinum toxin cleaves SNARE proteins and blocks ACh release: descending flaccid paralysis. Tetanus toxin blocks GABA and glycine release from spinal inhibitory interneurons: spastic paralysis, lockjaw. Lambert-Eaton: antibodies to presynaptic Ca2+ channels. Myasthenia gravis: antibodies to postsynaptic nicotinic ACh receptors.",
+       "rick": "Botox floppy, tetanus stiff. Same SNARE trick, different neurons. Nature's a sadistic chemist.",
+       "diagram": "neuron",
+       "part": "axon_terminal"
+      }
+     ],
+     "questions": [
+      {
+       "id": "nervous-4-01",
+       "type": "mcq",
+       "q": "Sudden right face and arm weakness; she speaks in short, effortful phrases but follows commands. Which artery is most likely occluded?",
+       "choices": [
+        "Left anterior cerebral artery",
+        "Right middle cerebral artery",
+        "Left posterior cerebral artery",
+        "Left middle cerebral artery"
+       ],
+       "answer": 3,
+       "explain": "Face and arm more than leg points to MCA territory on the lateral cortex; non-fluent speech with intact comprehension is Broca aphasia, so it's the dominant (left) hemisphere. ACA would hit the leg; PCA causes visual field loss.",
+       "rick": "Face, arm, Broca: left MCA. The most common stroke on the exam, and you still hesitated?"
+      },
+      {
+       "id": "nervous-4-02",
+       "type": "mcq",
+       "q": "Sudden weakness and numbness of the right leg, with the face and arm largely spared. Which artery is most likely occluded?",
+       "choices": [
+        "Left middle cerebral artery",
+        "Left anterior cerebral artery",
+        "Right anterior cerebral artery",
+        "Basilar artery"
+       ],
+       "answer": 1,
+       "explain": "The leg and foot areas of motor and sensory cortex lie on the medial surface of the hemisphere, supplied by the ACA. Right leg means left hemisphere. MCA strokes hit face and arm more than leg.",
+       "rick": "Leg area's on the medial surface, ACA turf. Left artery, right leg. Crossed wires, as always, genius."
+      },
+      {
+       "id": "nervous-4-03",
+       "type": "mcq",
+       "q": "A patient speaks fluently and understands well but cannot repeat a phrase. Damage to which structure is most likely?",
+       "choices": [
+        "Broca area",
+        "Wernicke area",
+        "Arcuate fasciculus",
+        "Precentral gyrus"
+       ],
+       "answer": 2,
+       "explain": "Conduction aphasia: the arcuate fasciculus linking Wernicke and Broca areas is damaged, so repetition fails while fluency and comprehension are relatively spared. Broca gives non-fluent speech; Wernicke gives poor comprehension.",
+       "rick": "Can talk, can understand, can't repeat. The cable between the two speech areas is cut. Like your attention span."
+      },
+      {
+       "id": "nervous-4-04",
+       "type": "mcq",
+       "q": "A stab wound hemisects the LEFT half of the spinal cord at T10. Which deficit is expected below the lesion?",
+       "choices": [
+        "Loss of pain and temperature on the right",
+        "Loss of vibration sense on the right",
+        "Loss of pain and temperature on the left",
+        "Flaccid paralysis of both legs"
+       ],
+       "answer": 0,
+       "explain": "Brown-Sequard: the spinothalamic tract has already crossed, so pain and temperature are lost on the OPPOSITE (right) side. Dorsal columns and the lateral corticospinal tract are uncrossed here, so vibration and motor loss are on the left.",
+       "rick": "Pain switches sides, vibration stays home. Left cut, right numb to pain. Classic Step 1 bait."
+      },
+      {
+       "id": "nervous-4-05",
+       "type": "mcq",
+       "q": "An infant fed honey develops constipation, poor feeding and descending flaccid paralysis. What is the toxin's mechanism?",
+       "choices": [
+        "Antibodies blocking postsynaptic ACh receptors",
+        "Cleaving SNARE proteins to block ACh release",
+        "Blocking GABA and glycine release from interneurons",
+        "Blocking voltage-gated Na+ channels in axons"
+       ],
+       "answer": 1,
+       "explain": "Infant botulism: Clostridium botulinum toxin cleaves SNARE proteins in cholinergic terminals, so ACh is not released and muscles go flaccid. Blocking GABA/glycine release is tetanus (spastic); blocking Na+ channels is tetrodotoxin.",
+       "rick": "Honey spores, baby gut, no ACh release: floppy baby. The toxin snips SNAREs like I snip *burp* red tape."
+      },
+      {
+       "id": "nervous-4-06",
+       "type": "mcq",
+       "q": "A farmer with a dirty puncture wound and no tetanus shots develops lockjaw and painful spasms. The toxin blocks transmitter release mainly from:",
+       "choices": [
+        "Alpha motor neurons at the neuromuscular junction",
+        "Dorsal root ganglion sensory neurons",
+        "Postganglionic parasympathetic neurons",
+        "Inhibitory spinal interneurons, such as Renshaw cells"
+       ],
+       "answer": 3,
+       "explain": "Tetanus toxin enters motor nerve terminals, travels retrogradely to the spinal cord and cleaves synaptobrevin in inhibitory interneurons, blocking GABA and glycine release. Motor neurons fire unchecked: lockjaw, spasms. Botulinum toxin acts at the neuromuscular junction instead.",
+       "rick": "Tetanus cuts the brake lines, not the engine. Motor neurons floor it nonstop. Get your *burp* booster, genius."
+      },
+      {
+       "id": "nervous-4-07",
+       "type": "mcq",
+       "q": "Serum K+ acutely rises to 7 mEq/L. What happens to a neuron's resting membrane potential?",
+       "choices": [
+        "It depolarizes (becomes less negative)",
+        "It hyperpolarizes (becomes more negative)",
+        "It stays unchanged because the pump compensates",
+        "It reverses to about +30 mV"
+       ],
+       "answer": 0,
+       "explain": "The resting potential is set mainly by the K+ gradient. Raising extracellular K+ shrinks that gradient, so E(K+) and the resting potential become less negative. Sustained depolarization then inactivates Na+ channels and reduces excitability.",
+       "rick": "Smaller K+ gradient, less negative potential. That's why high K+ wrecks hearts too. Nernst, baby. Look it up."
+      },
+      {
+       "id": "nervous-4-08",
+       "type": "mcq",
+       "q": "A strict vegan has macrocytic anemia, lost vibration and position sense in the legs, and spastic weakness. Which cord regions are damaged?",
+       "choices": [
+        "Anterior horn cells and lateral corticospinal tracts",
+        "Dorsal columns only",
+        "Spinothalamic fibers crossing in the anterior white commissure",
+        "Dorsal columns and lateral corticospinal tracts"
+       ],
+       "answer": 3,
+       "explain": "B12 deficiency causes subacute combined degeneration: demyelination of dorsal columns (vibration, proprioception), lateral corticospinal tracts (spasticity) and spinocerebellar tracts. Anterior horns + corticospinal = ALS (no sensory loss); dorsal columns alone = tabes dorsalis.",
+       "rick": "B12 deficiency: dorsal columns plus corticospinal. Subacute combined degeneration. Cobalamin matters, *burp* genius."
+      },
+      {
+       "id": "nervous-4-09",
+       "type": "label",
+       "diagram": "brain",
+       "part": "broca_area",
+       "q": "Click the area damaged in a patient with effortful, non-fluent speech but good comprehension.",
+       "explain": "Broca area is in the inferior frontal gyrus of the dominant (usually left) hemisphere, just above the lateral sulcus. Damage causes expressive (Broca) aphasia: halting speech, intact comprehension, impaired repetition.",
+       "rick": "Broken speech, Broca. Inferior frontal gyrus, left side. 'Broca: broken.' Even you can manage that."
+      },
+      {
+       "id": "nervous-4-10",
+       "type": "label",
+       "diagram": "brain",
+       "part": "wernicke_area",
+       "q": "Click the area damaged in a patient with fluent 'word salad' and poor comprehension.",
+       "explain": "Wernicke area lies in the posterior superior temporal gyrus of the dominant hemisphere. Damage gives receptive (Wernicke) aphasia: fluent but meaningless speech, poor comprehension and repetition, often without awareness.",
+       "rick": "Word salad with zero croutons of meaning. Wernicke. Sounds like my *burp* grant proposals."
+      },
+      {
+       "id": "nervous-4-11",
+       "type": "label",
+       "diagram": "brain",
+       "part": "pons",
+       "q": "Click the structure whose ventral damage causes locked-in syndrome.",
+       "explain": "Basilar artery occlusion can infarct the ventral pons, destroying corticospinal and corticobulbar tracts: quadriplegia and loss of speech, with consciousness, blinking and vertical eye movements preserved.",
+       "rick": "Ventral pons gone: awake, aware, can only blink. Worst sitcom premise ever. Pons."
+      },
+      {
+       "id": "nervous-4-12",
+       "type": "label",
+       "diagram": "brain",
+       "part": "central_sulcus",
+       "q": "Click the groove that separates the primary motor cortex from the primary somatosensory cortex.",
+       "explain": "The central sulcus divides the frontal from the parietal lobe; the precentral (motor) gyrus lies in front of it and the postcentral (sensory) gyrus behind. The lateral sulcus instead separates off the temporal lobe.",
+       "rick": "Central sulcus. The border wall between move and feel. Unlike Earth borders, it's actually useful."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "topic": "hormones",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "hormones-1-L1",
+       "title": "Chemical messengers",
+       "fact": "Hormones are chemical messengers made by endocrine glands and released into the blood. They travel everywhere, but only cells with the matching receptor respond. Hormones act more slowly than nerve signals, but their effects usually last longer. Main glands: pituitary, thyroid, adrenal glands, pancreas, ovaries or testes.",
+       "rick": "Hormones are spam mail through the blood. Only cells with the right receptor bother to open it.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "hormones-1-L2",
+       "title": "The master gland",
+       "fact": "The pituitary is a pea-sized gland hanging below the brain. It is called the master gland because its hormones control other glands, like the thyroid and adrenals. It also makes growth hormone, which drives growth in childhood. The pituitary itself takes orders from the hypothalamus, a brain area just above it.",
+       "rick": "The pituitary bosses everyone around but takes orders from the hypothalamus. Middle management. *burp* Classic.",
+       "diagram": "organ_map",
+       "part": "pituitary"
+      },
+      {
+       "id": "hormones-1-L3",
+       "title": "Thyroid and adrenals",
+       "fact": "The butterfly-shaped thyroid in the front of the neck makes thyroid hormone, which sets your metabolic rate (how fast cells burn energy); it needs iodine. The adrenal glands sit on top of the kidneys. They make adrenaline (epinephrine) for fight or flight, and cortisol, a stress hormone.",
+       "rick": "Thyroid sets your metabolic speed. Yours idles at sloth. Adrenals sit on the kidneys like little party hats.",
+       "diagram": "organ_map",
+       "part": "thyroid"
+      },
+      {
+       "id": "hormones-1-L4",
+       "title": "Sugar and sex hormones",
+       "fact": "The pancreas makes insulin, which lowers blood sugar by helping cells take in glucose, and glucagon, which raises it. Diabetes mellitus means high blood sugar: type 1 = little or no insulin made; type 2 = cells respond poorly to insulin and the pancreas can't keep up. Testes make testosterone; ovaries, estrogen and progesterone.",
+       "rick": "Insulin puts sugar away, glucagon pulls it back out. Teamwork. Something you've never experienced.",
+       "diagram": "organ_map",
+       "part": "pancreas"
+      }
+     ],
+     "questions": [
+      {
+       "id": "hormones-1-01",
+       "type": "mcq",
+       "q": "How do most hormones travel from their gland to their target cells?",
+       "choices": [
+        "Along nerve fibers",
+        "Through the blood",
+        "Through the digestive tract",
+        "Through the air in the lungs"
+       ],
+       "answer": 1,
+       "explain": "Endocrine glands release hormones into the bloodstream, which carries them throughout the body. Only cells with the matching receptor respond. Nerve signals, by contrast, travel along nerve fibers.",
+       "rick": "Through the blood. It's called the circulatory system, genius. It circulates."
+      },
+      {
+       "id": "hormones-1-02",
+       "type": "mcq",
+       "q": "Which hormone lowers blood sugar?",
+       "choices": [
+        "Glucagon",
+        "Adrenaline (epinephrine)",
+        "Insulin",
+        "Cortisol"
+       ],
+       "answer": 2,
+       "explain": "Insulin from the pancreas helps cells take up and store glucose, lowering blood sugar. Glucagon, adrenaline and cortisol all RAISE blood sugar.",
+       "rick": "Insulin, the main sugar-lowering hormone. The other three raise it. Like you raise my *burp* blood pressure."
+      },
+      {
+       "id": "hormones-1-03",
+       "type": "mcq",
+       "q": "Which gland is nicknamed the master gland?",
+       "choices": [
+        "Pituitary gland",
+        "Thyroid gland",
+        "Adrenal gland",
+        "Pancreas"
+       ],
+       "answer": 0,
+       "explain": "The pituitary releases hormones that control other glands, such as TSH for the thyroid and ACTH for the adrenal cortex. It is itself controlled by the hypothalamus.",
+       "rick": "Pituitary. Pea-sized, runs the show. Proof that size isn't everything, Morty-brain."
+      },
+      {
+       "id": "hormones-1-04",
+       "type": "mcq",
+       "q": "Which mineral is needed to make thyroid hormone?",
+       "choices": [
+        "Iron",
+        "Calcium",
+        "Potassium",
+        "Iodine"
+       ],
+       "answer": 3,
+       "explain": "Thyroid hormones T4 and T3 contain 4 and 3 iodine atoms. Too little dietary iodine can cause hypothyroidism and an enlarged thyroid (goiter), which is why table salt is often iodized.",
+       "rick": "Iodine. The 4 and 3 in T4 and T3 literally count iodines. It's in the *burp* NAME."
+      },
+      {
+       "id": "hormones-1-05",
+       "type": "mcq",
+       "q": "In a scary situation your adrenal glands release adrenaline. What does it do?",
+       "choices": [
+        "Makes you sleepy and slows your heart",
+        "Lowers your blood sugar for storage",
+        "Raises heart rate and readies you for action",
+        "Slows your breathing to save oxygen"
+       ],
+       "answer": 2,
+       "explain": "Adrenaline (epinephrine) drives the fight-or-flight response: faster and stronger heartbeat, wider airways, and more glucose in the blood for energy.",
+       "rick": "Fight or flight. Heart races, sugar spikes. My natural state, thanks to the Galactic Federation and you."
+      },
+      {
+       "id": "hormones-1-06",
+       "type": "mcq",
+       "q": "Where are the adrenal glands?",
+       "choices": [
+        "On top of the kidneys",
+        "In the front of the neck",
+        "At the base of the brain",
+        "Inside the pancreas"
+       ],
+       "answer": 0,
+       "explain": "Ad-renal means 'near the kidney': one adrenal gland sits on top of each kidney. The thyroid is in the neck and the pituitary at the base of the brain.",
+       "rick": "Ad-renal. Near the kidney. Latin did the work for you and you STILL needed a quiz."
+      },
+      {
+       "id": "hormones-1-07",
+       "type": "mcq",
+       "q": "Which hormone drives bone and muscle growth in children?",
+       "choices": [
+        "Melatonin",
+        "Glucagon",
+        "Antidiuretic hormone",
+        "Growth hormone"
+       ],
+       "answer": 3,
+       "explain": "Growth hormone from the pituitary promotes growth of bones and muscles, largely through IGF-1 made in the liver. Melatonin regulates sleep, glucagon raises blood sugar and ADH saves water.",
+       "rick": "Growth hormone. Named after what it does. A rare courtesy from scientists. Not from me, though."
+      },
+      {
+       "id": "hormones-1-08",
+       "type": "mcq",
+       "q": "What causes type 1 diabetes?",
+       "choices": [
+        "The pancreas makes too much insulin",
+        "The pancreas makes little or no insulin",
+        "The thyroid makes too little hormone",
+        "Eating too much salt"
+       ],
+       "answer": 1,
+       "explain": "In type 1 diabetes the immune system destroys the insulin-making beta cells of the pancreas, so insulin is lacking and blood sugar rises. In type 2 the body still makes insulin but responds poorly to it.",
+       "rick": "Type 1: no insulin factory. Type 2: factory's fine, customers ignore the product. Got it?"
+      },
+      {
+       "id": "hormones-1-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "pituitary",
+       "q": "Click the pituitary gland.",
+       "explain": "The pituitary hangs below the brain, just beneath the hypothalamus, in a bony pocket of the skull. It controls many other glands.",
+       "rick": "Little pea under the brain. Clicked the whole brain? Close, but no *burp* Szechuan sauce for you."
+      },
+      {
+       "id": "hormones-1-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "thyroid",
+       "q": "Click the thyroid gland.",
+       "explain": "The thyroid is the butterfly-shaped gland in the front of the neck, below the larynx (Adam's apple). It makes thyroid hormone, which sets metabolic rate.",
+       "rick": "Butterfly in the neck. Not the thymus, that's lower in the chest. T-words: still your nemesis."
+      },
+      {
+       "id": "hormones-1-11",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "pancreas",
+       "q": "Click the organ that makes insulin.",
+       "explain": "The pancreas lies behind the stomach. Clusters of cells called islets of Langerhans release insulin and glucagon straight into the blood.",
+       "rick": "Pancreas, behind the stomach. Half digestion, half hormones. A multitasker. Try it sometime."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "hormones-2-L1",
+       "title": "Hypothalamus and pituitary",
+       "fact": "The hypothalamus controls the pituitary. The anterior pituitary makes GH, TSH, ACTH, FSH, LH and prolactin. The posterior pituitary releases two hormones made by hypothalamic neurons: ADH (antidiuretic hormone, makes the kidneys save water) and oxytocin (uterine contractions in labor, milk let-down).",
+       "rick": "Anterior makes its own stuff, posterior just stores the hypothalamus's stuff. Glorified *burp* storage unit.",
+       "diagram": "organ_map",
+       "part": "pituitary"
+      },
+      {
+       "id": "hormones-2-L2",
+       "title": "Feedback loops",
+       "fact": "Most hormones are controlled by negative feedback, like a thermostat. Example: hypothalamus TRH -> pituitary TSH -> thyroid T4 and T3. When T4/T3 rise, they inhibit TRH and TSH release, so output drops. Positive feedback is rarer: during labor, oxytocin drives contractions that trigger even more oxytocin.",
+       "rick": "Negative feedback: the system shuts itself up when it's had enough. Try it sometime.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "hormones-2-L3",
+       "title": "Steroid vs peptide hormones",
+       "fact": "Peptide hormones (insulin, glucagon, ADH) are water-soluble and bind cell-surface receptors, many working via second messengers like cAMP. Steroid hormones (cortisol, aldosterone, estrogen, testosterone) are made from cholesterol, cross the membrane and bind receptors inside the cell to change gene transcription.",
+       "rick": "Peptides ring the doorbell. Steroids walk right in and rewrite your DNA's to-do list. Rude, but effective.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "hormones-2-L4",
+       "title": "Adrenals, kidneys and calcium",
+       "fact": "Adrenal cortex: aldosterone (kidneys keep Na+, excrete K+) and cortisol (stress, raises glucose). Adrenal medulla: epinephrine and norepinephrine. Kidneys release EPO, which boosts red blood cell production, and renin. Parathyroid hormone (PTH) raises blood Ca2+; calcitonin from the thyroid lowers it.",
+       "rick": "PTH pulls calcium up, calcitonin tones it down. Like me and my liver: opposing forces.",
+       "diagram": "organ_map",
+       "part": "adrenal_glands"
+      }
+     ],
+     "questions": [
+      {
+       "id": "hormones-2-01",
+       "type": "mcq",
+       "q": "Which hormone is released from the POSTERIOR pituitary?",
+       "choices": [
+        "TSH",
+        "Growth hormone",
+        "Oxytocin",
+        "Prolactin"
+       ],
+       "answer": 2,
+       "explain": "The posterior pituitary releases oxytocin and ADH, both made by neurons in the hypothalamus. TSH, growth hormone and prolactin are made by the anterior pituitary.",
+       "rick": "Posterior: oxytocin and ADH. That's it. Two. Like your functioning *burp* brain cells."
+      },
+      {
+       "id": "hormones-2-02",
+       "type": "mcq",
+       "q": "Which hormone makes the kidneys reabsorb more water, producing concentrated urine?",
+       "choices": [
+        "ADH (vasopressin)",
+        "Oxytocin",
+        "Calcitonin",
+        "Glucagon"
+       ],
+       "answer": 0,
+       "explain": "ADH (vasopressin) makes the collecting ducts permeable to water, so more water returns to the blood and urine becomes concentrated. Alcohol suppresses ADH, which is why drinking makes you urinate more.",
+       "rick": "ADH: anti-diuretic, anti-peeing. Booze blocks it. I've done extensive personal research."
+      },
+      {
+       "id": "hormones-2-03",
+       "type": "mcq",
+       "q": "High blood levels of T4 and T3 normally cause:",
+       "choices": [
+        "Increased TSH secretion",
+        "Increased TRH secretion",
+        "Increased iodine uptake by the thyroid",
+        "Decreased TSH secretion"
+       ],
+       "answer": 3,
+       "explain": "Thyroid hormone feeds back negatively on the hypothalamus and anterior pituitary, lowering TRH and TSH. Less TSH means less stimulation of the thyroid, so output falls back toward normal.",
+       "rick": "High T4, low TSH. The thermostat turns the heater off. Basic household appliance logic."
+      },
+      {
+       "id": "hormones-2-04",
+       "type": "mcq",
+       "q": "Steroid hormones such as cortisol and estrogen are made from:",
+       "choices": [
+        "Chains of amino acids",
+        "Cholesterol",
+        "Glucose",
+        "Iodinated tyrosine"
+       ],
+       "answer": 1,
+       "explain": "All steroid hormones (cortisol, aldosterone, estrogen, progesterone, testosterone) are built from cholesterol. Peptide hormones are amino-acid chains, and thyroid hormone is made from iodinated tyrosine.",
+       "rick": "Cholesterol. That greasy stuff is the raw material for your whole hormonal personality."
+      },
+      {
+       "id": "hormones-2-05",
+       "type": "mcq",
+       "q": "How do peptide hormones like glucagon usually act on target cells?",
+       "choices": [
+        "Bind a surface receptor, often triggering a second messenger",
+        "Enter the nucleus and bind DNA directly",
+        "Dissolve through the membrane into the cytoplasm",
+        "Get broken down inside the cell to make ATP"
+       ],
+       "answer": 0,
+       "explain": "Peptide hormones are water-soluble and can't cross the lipid membrane, so they bind cell-surface receptors; many then activate second messengers such as cAMP. Steroid and thyroid hormones act on intracellular receptors.",
+       "rick": "Peptides can't pass the greasy membrane, so they knock. The second messenger opens the door."
+      },
+      {
+       "id": "hormones-2-06",
+       "type": "mcq",
+       "q": "Which hormone RAISES blood calcium?",
+       "choices": [
+        "Calcitonin",
+        "Antidiuretic hormone (ADH)",
+        "Aldosterone",
+        "Parathyroid hormone (PTH)"
+       ],
+       "answer": 3,
+       "explain": "PTH from the parathyroid glands raises blood Ca2+ by releasing it from bone, saving it in the kidney and activating vitamin D. Calcitonin from thyroid C cells has the opposite, weaker effect.",
+       "rick": "PTH raises calcium. Calcitonin TONES it down. The name is literally a hint. Read the names!"
+      },
+      {
+       "id": "hormones-2-07",
+       "type": "mcq",
+       "q": "Erythropoietin (EPO) from the kidneys stimulates:",
+       "choices": [
+        "Platelet production",
+        "Red blood cell production",
+        "Stomach acid secretion",
+        "Urine production"
+       ],
+       "answer": 1,
+       "explain": "When O2 delivery to the kidney drops (anemia, high altitude), kidney cells release EPO, which tells the bone marrow to make more red blood cells. Platelet production is driven mainly by thrombopoietin from the liver.",
+       "rick": "EPO: more red cells. Cyclists cheat with it. I just portal to a universe where I already won."
+      },
+      {
+       "id": "hormones-2-08",
+       "type": "mcq",
+       "q": "Which is a classic example of POSITIVE feedback in the endocrine system?",
+       "choices": [
+        "High T4 and T3 lowering TSH secretion",
+        "Oxytocin release during labor contractions",
+        "High blood glucose triggering insulin release",
+        "High blood Ca2+ suppressing PTH release"
+       ],
+       "answer": 1,
+       "explain": "In labor, the baby pressing on the cervix triggers oxytocin release; oxytocin strengthens contractions, which press harder and release more oxytocin, until delivery ends the loop. The other three are negative feedback: the response switches off its own trigger.",
+       "rick": "Positive feedback: a loop that floors it until something gives. Usually a baby. Rarely a good *burp* idea otherwise."
+      },
+      {
+       "id": "hormones-2-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "adrenal_glands",
+       "q": "Click the glands that make cortisol and aldosterone.",
+       "explain": "The adrenal glands sit on top of the kidneys. Their outer cortex makes cortisol, aldosterone and androgens; the inner medulla makes epinephrine and norepinephrine.",
+       "rick": "On top of the kidneys. Two tiny hats full of stress juice. Very *burp* fashionable."
+      },
+      {
+       "id": "hormones-2-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "kidneys",
+       "q": "Click the organ that makes most of the body's erythropoietin (EPO).",
+       "explain": "Specialized cells in the kidney cortex make most adult EPO (roughly 90%) when O2 delivery falls; the liver makes the rest. That's why chronic kidney disease often causes anemia.",
+       "rick": "Kidneys. Not just pee machines. Kidney failure, then anemia. Connect the dots, Morty-brain."
+      },
+      {
+       "id": "hormones-2-11",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "thyroid",
+       "q": "Click the gland that makes calcitonin.",
+       "explain": "Calcitonin comes from the parafollicular (C) cells of the thyroid. It lowers blood Ca2+ by inhibiting bone resorption, but in adult humans it plays only a minor role.",
+       "rick": "Thyroid again, different cells. C cells, C for calcitonin. Mnemonics this easy should be illegal."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "hormones-3-L1",
+       "title": "Making thyroid hormone",
+       "fact": "Thyroid follicular cells take up iodide via a Na+/I- symporter. Thyroid peroxidase oxidizes it, attaches it to tyrosines on thyroglobulin and couples them into T4 (mostly) and T3. Tissues convert T4 to the more active T3 with deiodinases. T3 raises metabolic rate and heat production and sensitizes the heart to catecholamines.",
+       "rick": "T4 is the prohormone, T3 does the real work. Like you and your *burp* lab partner.",
+       "diagram": "organ_map",
+       "part": "thyroid"
+      },
+      {
+       "id": "hormones-3-L2",
+       "title": "The adrenal cortex zones",
+       "fact": "Outside to inside: zona glomerulosa makes aldosterone (driven by angiotensin II and high K+); zona fasciculata makes cortisol (driven by ACTH); zona reticularis makes androgens such as DHEA. Mnemonic: salt, sugar, sex. The medulla's chromaffin cells make catecholamines, mostly epinephrine.",
+       "rick": "Glomerulosa, fasciculata, reticularis: G-F-R, like the kidney. Salt, sugar, sex. Memorize or perish.",
+       "diagram": "organ_map",
+       "part": "adrenal_glands"
+      },
+      {
+       "id": "hormones-3-L3",
+       "title": "Insulin, glucagon, cortisol",
+       "fact": "In beta cells, glucose is metabolized, ATP rises, ATP-sensitive K+ channels close, the cell depolarizes, Ca2+ enters and insulin is released. Insulin moves GLUT4 into muscle and fat cell membranes. Alpha cells make glucagon. Cortisol raises glucose (gluconeogenesis), breaks down muscle protein and suppresses immunity.",
+       "rick": "Close the K+ channel, out comes insulin. Sulfonylurea drugs do exactly that. Pharmacology's just cheating.",
+       "diagram": "organ_map",
+       "part": "pancreas"
+      },
+      {
+       "id": "hormones-3-L4",
+       "title": "Hormones from surprise organs",
+       "fact": "Heart: stretched atria release ANP -> Na+ excretion, vasodilation. Kidney: renin, EPO, and calcitriol (active vitamin D, via 1-alpha-hydroxylase). Liver: IGF-1 in response to GH. Stomach: gastrin (G cells) and ghrelin (hunger). Small intestine: secretin, CCK, GIP. Fat tissue: leptin (satiety).",
+       "rick": "Everything's a gland if you're desperate enough. The heart makes hormones. Even your fat has opinions.",
+       "diagram": "organ_map",
+       "part": "heart"
+      }
+     ],
+     "questions": [
+      {
+       "id": "hormones-3-01",
+       "type": "mcq",
+       "q": "Which enzyme oxidizes iodide and attaches it to tyrosines on thyroglobulin?",
+       "choices": [
+        "Thyroid peroxidase",
+        "Deiodinase",
+        "Tyrosine kinase",
+        "1-alpha-hydroxylase"
+       ],
+       "answer": 0,
+       "explain": "Thyroid peroxidase (TPO) oxidizes iodide, iodinates tyrosine residues and couples them into T3 and T4. Deiodinases work in tissues, converting T4 to T3. Anti-TPO antibodies are typical of Hashimoto thyroiditis.",
+       "rick": "TPO. Drugs like methimazole block it and the factory stalls. Pharmacology bonus, *burp* free of charge."
+      },
+      {
+       "id": "hormones-3-02",
+       "type": "mcq",
+       "q": "Graves disease causes hyperthyroidism because of antibodies that:",
+       "choices": [
+        "Destroy thyroid peroxidase",
+        "Block the TSH receptor",
+        "Neutralize circulating T4",
+        "Stimulate the TSH receptor"
+       ],
+       "answer": 3,
+       "explain": "In Graves disease IgG antibodies mimic TSH and switch on the TSH receptor, driving hormone production and gland growth while real TSH is suppressed. Anti-TPO antibodies are typical of Hashimoto, which causes HYPOthyroidism.",
+       "rick": "Antibodies cosplaying as TSH. The thyroid can't tell. Neither could you, apparently."
+      },
+      {
+       "id": "hormones-3-03",
+       "type": "mcq",
+       "q": "Which zone of the adrenal cortex makes aldosterone?",
+       "choices": [
+        "Zona fasciculata",
+        "Zona glomerulosa",
+        "Zona reticularis",
+        "Adrenal medulla"
+       ],
+       "answer": 1,
+       "explain": "The zona glomerulosa, the outermost layer, makes aldosterone. Zona fasciculata makes cortisol, zona reticularis makes androgens, and the medulla makes catecholamines.",
+       "rick": "Outermost layer, salt hormone. Salt, sugar, sex, outside in. I gave you the mnemonic. Use it."
+      },
+      {
+       "id": "hormones-3-04",
+       "type": "mcq",
+       "q": "What is the main stimulus for cortisol secretion?",
+       "choices": [
+        "Angiotensin II",
+        "TSH",
+        "ACTH",
+        "High plasma K+"
+       ],
+       "answer": 2,
+       "explain": "ACTH from the anterior pituitary drives cortisol release from the zona fasciculata. Angiotensin II and high K+ are the main drivers of aldosterone, not cortisol.",
+       "rick": "ACTH: adrenocorticotropic hormone. Adrenal and cortex, right in the name. Read the label."
+      },
+      {
+       "id": "hormones-3-05",
+       "type": "mcq",
+       "q": "In pancreatic beta cells, how does rising glucose trigger insulin release?",
+       "choices": [
+        "More ATP opens K+(ATP) channels, hyperpolarizing the cell",
+        "Glucose binds a surface receptor that raises cAMP",
+        "Glucose directly fuses insulin vesicles with the membrane",
+        "More ATP closes K+(ATP) channels, depolarizing the cell"
+       ],
+       "answer": 3,
+       "explain": "Glucose enters the beta cell and is metabolized; ATP rises and closes ATP-sensitive K+ channels. The cell depolarizes, voltage-gated Ca2+ channels open, and Ca2+ triggers insulin exocytosis. Sulfonylureas close the same channels.",
+       "rick": "Close K+ channels, depolarize, calcium, insulin. A domino chain even a Meeseeks could follow."
+      },
+      {
+       "id": "hormones-3-06",
+       "type": "mcq",
+       "q": "Insulin increases glucose uptake into skeletal muscle and fat mainly by:",
+       "choices": [
+        "Moving GLUT2 transporters into the cell membrane",
+        "Moving GLUT4 transporters into the cell membrane",
+        "Activating SGLT1 Na+-glucose cotransporters",
+        "Increasing gluconeogenesis in those cells"
+       ],
+       "answer": 1,
+       "explain": "Insulin signaling moves GLUT4 from intracellular vesicles to the membrane of muscle and fat cells. GLUT2 (liver, gut, kidney) works without insulin, and SGLT1 absorbs glucose in the small intestine.",
+       "rick": "GLUT4, the insulin-sensitive one. Exercise moves it too, by the way. Not that you'd *burp* know."
+      },
+      {
+       "id": "hormones-3-07",
+       "type": "mcq",
+       "q": "Atrial natriuretic peptide (ANP) is released in response to:",
+       "choices": [
+        "Low blood volume sensed by the kidneys",
+        "High blood glucose after a meal",
+        "Stretch of the atria from high blood volume",
+        "Low plasma Ca2+ sensed by the parathyroids"
+       ],
+       "answer": 2,
+       "explain": "Volume overload stretches the atrial walls, and atrial muscle cells release ANP. It increases Na+ and water excretion, dilates vessels and opposes the renin-angiotensin-aldosterone system.",
+       "rick": "Heart gets overstretched, tells the kidneys to dump salt. Smartest thing in your chest, honestly."
+      },
+      {
+       "id": "hormones-3-08",
+       "type": "mcq",
+       "q": "Which is a typical effect of cortisol?",
+       "choices": [
+        "Increased gluconeogenesis in the liver",
+        "Increased lymphocyte proliferation",
+        "Increased protein synthesis in muscle",
+        "Lower blood glucose"
+       ],
+       "answer": 0,
+       "explain": "Cortisol raises blood glucose by boosting hepatic gluconeogenesis and breaking down muscle protein for amino acids. It suppresses the immune system (fewer circulating lymphocytes), which is why glucocorticoids are anti-inflammatory.",
+       "rick": "Cortisol: sugar up, muscle down, immune system nerfed. Chronic stress in a molecule. Basically me."
+      },
+      {
+       "id": "hormones-3-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "heart",
+       "q": "Click the organ that releases atrial natriuretic peptide (ANP).",
+       "explain": "Atrial muscle cells in the heart release ANP when stretched by high blood volume. ANP promotes Na+ and water excretion by the kidneys and relaxes blood vessels.",
+       "rick": "The heart. A pump with a side hustle in endocrinology. Show-off."
+      },
+      {
+       "id": "hormones-3-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "stomach",
+       "q": "Click the organ that makes most of the body's ghrelin, the hunger hormone.",
+       "explain": "Ghrelin is made mainly by cells in the stomach (mostly the fundus). Levels rise before meals and stimulate appetite and growth hormone release. The stomach's G cells also secrete gastrin.",
+       "rick": "Ghrelin: your stomach growling at your brain. Mine's mostly growling for *burp* Szechuan sauce."
+      },
+      {
+       "id": "hormones-3-11",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "liver",
+       "q": "Click the organ that makes most circulating IGF-1 in response to growth hormone.",
+       "explain": "Growth hormone acts on the liver to make insulin-like growth factor 1 (IGF-1), which carries out much of GH's growth effect on bone and cartilage. The liver is the main source of circulating IGF-1.",
+       "rick": "Liver. GH sends the order, the liver does the actual work. Typical management structure."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "hormones-4-L1",
+       "title": "Cushing syndrome",
+       "fact": "Cortisol excess: central obesity, moon face, purple striae, high glucose, hypertension. Most common cause: glucocorticoid drugs (low ACTH). Endogenous: pituitary ACTH adenoma (Cushing disease), ectopic ACTH (e.g. small cell lung cancer), adrenal tumor (low ACTH). High-dose dexamethasone suppresses pituitary but not ectopic ACTH.",
+       "rick": "Dexamethasone test: pituitary adenomas still obey feedback, ectopic tumors don't. Rebels without a *burp* receptor.",
+       "diagram": "organ_map",
+       "part": "adrenal_glands"
+      },
+      {
+       "id": "hormones-4-L2",
+       "title": "Adrenal failure and Conn",
+       "fact": "Primary adrenal insufficiency (Addison): low cortisol and aldosterone -> hypotension, low Na+, high K+; high ACTH darkens the skin. Secondary (pituitary, e.g. Sheehan postpartum infarction): low ACTH, no darkening, aldosterone near normal. Conn (primary hyperaldosteronism): hypertension, low K+, low renin.",
+       "rick": "Dark skin plus high K+? Adrenals dead, ACTH screaming. Pituitary problem? Paler, quieter. Labs tell stories.",
+       "diagram": "organ_map",
+       "part": "pituitary"
+      },
+      {
+       "id": "hormones-4-L3",
+       "title": "Water: DI vs SIADH",
+       "fact": "ADH binds V2 receptors in the collecting duct, inserting aquaporin-2. Diabetes insipidus = lots of dilute urine: central (no ADH; urine concentrates after desmopressin) or nephrogenic (kidney resistant, e.g. lithium; no response). SIADH (e.g. small cell lung cancer): too much ADH, concentrated urine, euvolemic hyponatremia.",
+       "rick": "DI: pee like a firehose. SIADH: hoard water till sodium drowns. Opposite disasters, same *burp* hormone.",
+       "diagram": "organ_map",
+       "part": "kidneys"
+      },
+      {
+       "id": "hormones-4-L4",
+       "title": "Calcium and insulin pearls",
+       "fact": "PTH raises Ca2+ (bone resorption, distal tubule Ca2+ reabsorption, renal 1-alpha-hydroxylase -> calcitriol) and lowers phosphate. Insulin drives K+ into cells, so DKA shows normal-high serum K+ despite total-body K+ loss. Proinsulin splits into insulin + C-peptide: C-peptide is high in insulinoma, low after injected insulin.",
+       "rick": "Calcium, potassium, C-peptide: three exam traps, one lesson. I'm basically doing your homework.",
+       "diagram": "organ_map",
+       "part": "kidneys"
+      }
+     ],
+     "questions": [
+      {
+       "id": "hormones-4-01",
+       "type": "mcq",
+       "q": "Weight gain, purple striae, high cortisol and high ACTH. High-dose dexamethasone suppresses cortisol. Most likely cause?",
+       "choices": [
+        "Ectopic ACTH from small cell lung cancer",
+        "Cortisol-secreting adrenal adenoma",
+        "Long-term prednisone therapy",
+        "ACTH-secreting pituitary adenoma"
+       ],
+       "answer": 3,
+       "explain": "High ACTH means ACTH-dependent disease; suppression by high-dose dexamethasone means the source still obeys feedback: a pituitary adenoma (Cushing disease). Ectopic ACTH does not suppress; adrenal tumors and prednisone give LOW ACTH.",
+       "rick": "High ACTH that still suppresses: pituitary. The adenoma's a little obedient. Ectopic tumors obey nobody."
+      },
+      {
+       "id": "hormones-4-02",
+       "type": "mcq",
+       "q": "Fatigue, low blood pressure and darkening skin; Na+ 128 mEq/L, K+ 6.0 mEq/L. Most likely diagnosis?",
+       "choices": [
+        "Secondary adrenal insufficiency (pituitary)",
+        "Primary adrenal insufficiency (Addison disease)",
+        "Primary hyperaldosteronism (Conn syndrome)",
+        "Syndrome of inappropriate ADH (SIADH)"
+       ],
+       "answer": 1,
+       "explain": "Low aldosterone gives low Na+, high K+ and hypotension; high ACTH (POMC, which also yields MSH) darkens skin. Secondary insufficiency has low ACTH: no darkening and usually normal K+. SIADH does not raise K+.",
+       "rick": "Tan without a beach plus high K+? The adrenals are toast. Addison. *burp* Next."
+      },
+      {
+       "id": "hormones-4-03",
+       "type": "mcq",
+       "q": "Hypertension, hypokalemia, metabolic alkalosis, high aldosterone and LOW plasma renin. Most likely cause?",
+       "choices": [
+        "Renal artery stenosis (renovascular)",
+        "Primary adrenal insufficiency (Addison)",
+        "Primary hyperaldosteronism (Conn syndrome)",
+        "Licorice (glycyrrhizin) excess"
+       ],
+       "answer": 2,
+       "explain": "Autonomous aldosterone (adenoma or bilateral hyperplasia) retains Na+, wastes K+ and H+, and suppresses renin. Renal artery stenosis has HIGH renin; licorice lets cortisol act on aldosterone receptors, so aldosterone is LOW; Addison causes hypotension.",
+       "rick": "High aldo, low renin: the adrenal's freelancing. Conn. If renin is high, check the kidney's plumbing instead."
+      },
+      {
+       "id": "hormones-4-04",
+       "type": "mcq",
+       "q": "After head trauma: polyuria; urine stays dilute (100 mOsm/kg) despite water restriction but rises to 450 mOsm/kg after desmopressin. Diagnosis?",
+       "choices": [
+        "Central diabetes insipidus",
+        "Nephrogenic diabetes insipidus",
+        "Primary polydipsia",
+        "SIADH"
+       ],
+       "answer": 0,
+       "explain": "In central DI the hypothalamus/posterior pituitary fails to release ADH, so urine stays dilute with water restriction, but the kidney responds to desmopressin (synthetic ADH). Nephrogenic DI does not respond; primary polydipsia concentrates with restriction.",
+       "rick": "Responds to desmopressin, so the kidneys work. The ADH supply chain's broken. Central. Easy."
+      },
+      {
+       "id": "hormones-4-05",
+       "type": "mcq",
+       "q": "A patient with small cell lung cancer has Na+ 122 mEq/L, normal volume status and inappropriately concentrated urine. Diagnosis?",
+       "choices": [
+        "Central diabetes insipidus",
+        "SIADH",
+        "Primary polydipsia",
+        "Primary hyperaldosteronism"
+       ],
+       "answer": 1,
+       "explain": "Small cell lung cancer can secrete ADH ectopically. Excess ADH makes the kidneys retain free water: euvolemic hyponatremia with concentrated urine. DI gives dilute urine and high-normal Na+; primary polydipsia gives maximally dilute urine.",
+       "rick": "Tumor pumping ADH, kidneys hoarding water, sodium diluted. SIADH. Small cell: paraneoplastic overachiever."
+      },
+      {
+       "id": "hormones-4-06",
+       "type": "mcq",
+       "q": "A patient with end-stage chronic kidney disease most likely has which pattern of serum values?",
+       "choices": [
+        "High Ca2+, low phosphate, high PTH",
+        "High Ca2+, high phosphate, low PTH",
+        "Low Ca2+, high phosphate, high PTH",
+        "Low Ca2+, high phosphate, low PTH"
+       ],
+       "answer": 2,
+       "explain": "Failing kidneys retain phosphate and make little calcitriol (less 1-alpha-hydroxylase), so Ca2+ falls and the parathyroids overwork: secondary hyperparathyroidism (renal osteodystrophy). High Ca2+ + low phosphate + high PTH is primary; low Ca2+ + low PTH is hypoparathyroidism.",
+       "rick": "Dead kidneys hoard phosphate and skip the vitamin D. The parathyroids panic. Secondary hyperparathyroidism, *burp* genius."
+      },
+      {
+       "id": "hormones-4-07",
+       "type": "mcq",
+       "q": "In diabetic ketoacidosis, why is serum K+ often normal or high even though total-body K+ is depleted?",
+       "choices": [
+        "Insulin lack and hyperosmolality shift K+ out of cells",
+        "The kidneys stop excreting K+ during ketoacidosis",
+        "High insulin levels push K+ out of cells",
+        "Ketones block K+ excretion in the urine"
+       ],
+       "answer": 0,
+       "explain": "Insulin normally drives K+ into cells via the Na+/K+-ATPase; without it, and with hyperosmolality pulling water and K+ out, K+ leaves cells. Meanwhile osmotic diuresis wastes K+ in urine, so total-body K+ is low and falls fast once insulin is given.",
+       "rick": "Insulin is the K+ bouncer: shoves it into cells. Fire the bouncer, K+ floods the plasma. Rehire him, it crashes."
+      },
+      {
+       "id": "hormones-4-08",
+       "type": "mcq",
+       "q": "A hypoglycemic nurse has high serum insulin but LOW C-peptide. What is the most likely cause?",
+       "choices": [
+        "Insulinoma",
+        "Sulfonylurea use",
+        "Primary adrenal insufficiency",
+        "Injection of exogenous insulin"
+       ],
+       "answer": 3,
+       "explain": "Beta cells release insulin and C-peptide in equal amounts, so insulinoma and sulfonylureas raise both. Pharmaceutical insulin contains no C-peptide, and the high insulin suppresses the patient's own secretion, so C-peptide is low.",
+       "rick": "No C-peptide, no pancreas involved. Somebody's been *burp* injecting. Medicine's a detective show, genius."
+      },
+      {
+       "id": "hormones-4-09",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "pituitary",
+       "q": "Click the gland that infarcts in Sheehan syndrome after severe postpartum hemorrhage.",
+       "explain": "The pituitary enlarges in pregnancy and is vulnerable to low blood flow. Massive blood loss at delivery can infarct it: often the first sign is failure to lactate (no prolactin), then hypothyroidism and adrenal insufficiency.",
+       "rick": "Pituitary. Pregnancy makes it big and hungry for blood. Cut the supply and the whole empire falls."
+      },
+      {
+       "id": "hormones-4-10",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "kidneys",
+       "q": "Click the organ where 1-alpha-hydroxylase makes active vitamin D (calcitriol).",
+       "explain": "The liver makes 25-hydroxyvitamin D; the kidney's proximal tubule adds the second hydroxyl via 1-alpha-hydroxylase (stimulated by PTH). That's why chronic kidney disease causes low calcitriol and secondary hyperparathyroidism.",
+       "rick": "Kidneys finish vitamin D. Liver starts it, kidney closes. Kidneys fail, calcium chaos. Elementary."
+      },
+      {
+       "id": "hormones-4-11",
+       "type": "label",
+       "diagram": "organ_map",
+       "part": "small_intestine",
+       "q": "Click the organ whose S cells release secretin when stomach acid arrives.",
+       "explain": "S cells in the duodenum, the first part of the small intestine, release secretin in response to acid. Secretin makes the pancreas secrete bicarbonate-rich fluid to neutralize it.",
+       "rick": "Duodenum, small intestine. Acid arrives, secretin calls the pancreas for baking soda. Chemistry, Morty-brain."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "diagram": "neuron",
+   "id": "dendrite",
+   "name": "Dendrites",
+   "desc": "Branched extensions of the neuron that receive incoming signals, mostly at synapses on their surface, and carry them toward the cell body.",
+   "rick": "Dendrites: the listening branches. More receptive than you'll ever be."
+  },
+  {
+   "diagram": "neuron",
+   "id": "soma",
+   "name": "Soma (Cell Body)",
+   "desc": "The neuron's cell body. Contains the nucleus and most organelles, including clumps of rough ER (Nissl substance), and integrates the incoming signals.",
+   "rick": "The cell body. Where the neuron keeps its nucleus and its *burp* priorities."
+  },
+  {
+   "diagram": "neuron",
+   "id": "nucleus",
+   "name": "Nucleus",
+   "desc": "Holds the neuron's DNA. Mature neurons generally do not divide. Typically large and pale with a prominent nucleolus, reflecting heavy protein synthesis.",
+   "rick": "DNA headquarters. Neurons mostly never divide again. Commitment issues? Not them."
+  },
+  {
+   "diagram": "neuron",
+   "id": "axon_hillock",
+   "name": "Axon Hillock",
+   "desc": "Cone-shaped region where the axon leaves the soma. The initial segment just beyond it is packed with voltage-gated Na+ channels, so action potentials usually start in this zone.",
+   "rick": "Trigger zone. All the inputs get summed here, then it decides: fire or not. Binary. Respect."
+  },
+  {
+   "diagram": "neuron",
+   "id": "axon",
+   "name": "Axon",
+   "desc": "The single long process that conducts action potentials away from the cell body to the axon terminals. Some axons are about 1 m long, from the spinal cord to the foot.",
+   "rick": "The long cable. Some run from your spine to your toes. Longer than your attention span, easily."
+  },
+  {
+   "diagram": "neuron",
+   "id": "myelin_sheath",
+   "name": "Myelin Sheath",
+   "desc": "Fatty insulating wrap made by Schwann cells (PNS) or oligodendrocytes (CNS). It raises membrane resistance and lowers capacitance, so impulses jump node to node much faster.",
+   "rick": "Fatty insulation. Makes signals fast. Fat being useful for once, Morty-brain."
+  },
+  {
+   "diagram": "neuron",
+   "id": "node_of_ranvier",
+   "name": "Node of Ranvier",
+   "desc": "Short gaps between myelin segments, packed with voltage-gated Na+ channels. The action potential regenerates here and jumps from node to node (saltatory conduction).",
+   "rick": "Gaps where the spike recharges and hops. Portal tech, biological edition."
+  },
+  {
+   "diagram": "neuron",
+   "id": "axon_terminal",
+   "name": "Axon Terminal",
+   "desc": "Swollen end of an axon branch filled with neurotransmitter vesicles. Ca2+ entering through voltage-gated channels triggers vesicle fusion and transmitter release.",
+   "rick": "Where the electrical signal turns chemical. Calcium pulls the *burp* trigger."
+  },
+  {
+   "diagram": "neuron",
+   "id": "synapse",
+   "name": "Synapse",
+   "desc": "Junction where a neuron passes its signal to another cell: presynaptic terminal, a narrow synaptic cleft (roughly 20-40 nm), and a postsynaptic membrane with receptors.",
+   "rick": "The gap where neurons talk without touching. Like you and social skills."
+  },
+  {
+   "diagram": "brain",
+   "id": "frontal_lobe",
+   "name": "Frontal Lobe",
+   "desc": "Front of each hemisphere, ahead of the central sulcus. Planning, judgment, personality and voluntary movement (motor cortex); on the dominant side, speech production (Broca area).",
+   "rick": "Planning, judgment, personality. Yours is apparently on *burp* airplane mode."
+  },
+  {
+   "diagram": "brain",
+   "id": "parietal_lobe",
+   "name": "Parietal Lobe",
+   "desc": "Between the central sulcus and the occipital lobe. Processes touch, pain, temperature and body position (somatosensory cortex) and spatial awareness.",
+   "rick": "Touch and spatial sense. It knows where your hand is. Wish it knew where your brain was."
+  },
+  {
+   "diagram": "brain",
+   "id": "temporal_lobe",
+   "name": "Temporal Lobe",
+   "desc": "Below the lateral sulcus. Hearing (primary auditory cortex), language comprehension (Wernicke area on the dominant side) and memory (hippocampus on its inner side).",
+   "rick": "Hearing and memory. Remember this, would you? It's literally the memory lobe."
+  },
+  {
+   "diagram": "brain",
+   "id": "occipital_lobe",
+   "name": "Occipital Lobe",
+   "desc": "Back of the cerebrum. Contains the primary visual cortex, which receives input from the eyes relayed through the thalamus.",
+   "rick": "Vision, at the back of your head. Your eyes are the front end, this is the server room."
+  },
+  {
+   "diagram": "brain",
+   "id": "cerebellum",
+   "name": "Cerebellum",
+   "desc": "Below the occipital lobes, behind the brainstem. Coordinates movement, balance and posture and helps motor learning; damage causes clumsy movement (ataxia) on the same side.",
+   "rick": "Coordination central. Booze messes with it, which is why I *burp* lean like this. Scientific."
+  },
+  {
+   "diagram": "brain",
+   "id": "pons",
+   "name": "Pons",
+   "desc": "Middle part of the brainstem, between midbrain and medulla. Relays signals from cerebrum to cerebellum, helps regulate breathing, and holds nuclei of cranial nerves V, VI, VII (and part of VIII).",
+   "rick": "Pons means bridge. Cerebrum to cerebellum, the messages cross here. Latin, genius."
+  },
+  {
+   "diagram": "brain",
+   "id": "medulla",
+   "name": "Medulla Oblongata",
+   "desc": "Lowest part of the brainstem, continuous with the spinal cord. Holds cardiovascular and respiratory centers, and the pyramids; most corticospinal fibers cross at their lower end.",
+   "rick": "Breathing and heart-rate control. The one part of your brain I'd ask you not to break."
+  },
+  {
+   "diagram": "brain",
+   "id": "spinal_cord",
+   "name": "Spinal Cord",
+   "desc": "Continues from the medulla down the vertebral canal to about L1-L2 in adults. Carries ascending sensory and descending motor tracts, runs reflexes, and gives off 31 pairs of spinal nerves.",
+   "rick": "The main data cable. Snap it and everything below goes offline. Back up your *burp* spine, genius."
+  },
+  {
+   "diagram": "brain",
+   "id": "central_sulcus",
+   "name": "Central Sulcus",
+   "desc": "Deep groove separating the frontal lobe from the parietal lobe, and the precentral (motor) gyrus from the postcentral (sensory) gyrus.",
+   "rick": "Big groove between moving and feeling. The brain's own border wall."
+  },
+  {
+   "diagram": "brain",
+   "id": "lateral_sulcus",
+   "name": "Lateral Sulcus",
+   "desc": "Also called the Sylvian fissure. Deep groove separating the temporal lobe below from the frontal and parietal lobes above; the insula lies hidden deep inside it.",
+   "rick": "Sylvian fissure. Temporal lobe below, everything else above. The insula's hide-and-seek spot."
+  },
+  {
+   "diagram": "brain",
+   "id": "precentral_gyrus",
+   "name": "Precentral Gyrus",
+   "desc": "Ridge just in front of the central sulcus: the primary motor cortex. Its upper motor neurons send axons down the corticospinal tract to move the opposite side of the body.",
+   "rick": "Motor cortex. Every voluntary twitch starts here. Even your bad *burp* dance moves."
+  },
+  {
+   "diagram": "brain",
+   "id": "postcentral_gyrus",
+   "name": "Postcentral Gyrus",
+   "desc": "Ridge just behind the central sulcus: the primary somatosensory cortex. Receives touch, pain, temperature and position from the opposite side, mapped as the sensory homunculus.",
+   "rick": "Sensory cortex. Giant lips and hands on the homunculus. Ugly little guy. Looks like Jerry."
+  },
+  {
+   "diagram": "brain",
+   "id": "broca_area",
+   "name": "Broca Area",
+   "desc": "Inferior frontal gyrus of the dominant (usually left) hemisphere. Speech production; damage causes non-fluent (expressive) aphasia with fairly intact comprehension.",
+   "rick": "Speech production. Break it and words come out like rusty gears grinding."
+  },
+  {
+   "diagram": "brain",
+   "id": "wernicke_area",
+   "name": "Wernicke Area",
+   "desc": "Posterior superior temporal gyrus of the dominant hemisphere. Language comprehension; damage causes fluent but meaningless speech with poor comprehension.",
+   "rick": "Comprehension. Damage it and you talk fluent nonsense. So, you know, a *burp* podcast."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "brain",
+   "name": "Brain",
+   "desc": "Control center of the nervous system. Its hypothalamus is also an endocrine organ: it makes releasing and inhibiting hormones for the pituitary plus ADH and oxytocin. The pineal gland makes melatonin.",
+   "rick": "The hypothalamus is in here pulling the pituitary's strings. Yours has strings, I've just never seen them move."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "pituitary",
+   "name": "Pituitary Gland",
+   "desc": "Pea-sized gland below the hypothalamus in a bony pocket (sella turcica). Anterior lobe: GH, TSH, ACTH, FSH, LH, prolactin. Posterior lobe releases ADH and oxytocin.",
+   "rick": "Pea-sized dictator under the brain. Respect the pea."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "thyroid",
+   "name": "Thyroid Gland",
+   "desc": "Butterfly-shaped gland in front of the trachea, below the larynx. Follicular cells make T4 and T3 (metabolic rate); parafollicular C cells make calcitonin.",
+   "rick": "Neck butterfly. Sets your idle speed. Yours idles at Jerry."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "thymus",
+   "name": "Thymus",
+   "desc": "Gland in the upper chest behind the sternum, where T cells mature and learn self-tolerance. Large in children, mostly replaced by fat in adults; makes thymic hormones (thymosins).",
+   "rick": "T-cell boot camp. Shrinks with age, like your excuses should."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "heart",
+   "name": "Heart",
+   "desc": "Muscular pump in the middle of the chest. Also endocrine: stretched atria release atrial natriuretic peptide (ANP), which promotes Na+ and water excretion.",
+   "rick": "Pump with a hormone side gig. Overfill it and it yells ANP at the kidneys."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "lungs",
+   "name": "Lungs",
+   "desc": "Paired gas-exchange organs in the chest. Their capillary endothelium is rich in angiotensin-converting enzyme (ACE), a major site where angiotensin I becomes angiotensin II.",
+   "rick": "Air bags with an ACE up their sleeve. Literally. Angiotensin I in, angiotensin II out."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "liver",
+   "name": "Liver",
+   "desc": "Largest internal organ, upper right abdomen. Stores glycogen, makes bile and plasma proteins. Hormone-wise it makes IGF-1 (in response to GH), angiotensinogen and hepcidin.",
+   "rick": "The body's chemical plant. Mine's been working *burp* overtime since roughly forever."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "stomach",
+   "name": "Stomach",
+   "desc": "J-shaped organ in the upper left abdomen. Secretes acid and pepsinogen; G cells make gastrin (boosts acid), and the stomach is the main source of ghrelin, the hunger hormone.",
+   "rick": "Acid pit that growls for food via ghrelin. Mine growls for Szechuan sauce."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "spleen",
+   "name": "Spleen",
+   "desc": "Upper left abdomen, behind the stomach. Largest lymphoid organ: filters blood, removes old red blood cells and fights blood-borne bacteria, especially encapsulated ones.",
+   "rick": "Blood filter and red-cell graveyard. Lose it and encapsulated bacteria throw a party."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "pancreas",
+   "name": "Pancreas",
+   "desc": "Behind the stomach. The exocrine part makes digestive enzymes; the islets of Langerhans make insulin (beta cells), glucagon (alpha cells) and somatostatin (delta cells).",
+   "rick": "Enzymes out one door, insulin out the other. Two jobs, zero complaints. Learn from it."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "adrenal_glands",
+   "name": "Adrenal Glands",
+   "desc": "One on top of each kidney. Cortex: aldosterone, cortisol and androgens. Medulla: epinephrine and norepinephrine.",
+   "rick": "Tiny hats on the kidneys pumping stress hormones. Mine are *burp* permanently maxed."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "kidneys",
+   "name": "Kidneys",
+   "desc": "Paired organs at the back of the upper abdomen. They filter blood into urine and release renin, erythropoietin (EPO) and active vitamin D (calcitriol).",
+   "rick": "Filters that moonlight as hormone factories: renin, EPO, vitamin D. Overachievers."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "small_intestine",
+   "name": "Small Intestine",
+   "desc": "Several meters of tube (duodenum, jejunum, ileum) where most digestion and absorption happen. Its cells release gut hormones such as secretin, CCK and GIP.",
+   "rick": "Where food actually gets absorbed. Meters of gut doing your nutritional *burp* homework."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "large_intestine",
+   "name": "Large Intestine",
+   "desc": "Cecum, colon and rectum. Absorbs water and electrolytes, houses gut bacteria (some make vitamin K), and forms and stores feces.",
+   "rick": "Water reclaimer and bacteria hotel. Also the end of the line. Like this conversation, soon."
+  },
+  {
+   "diagram": "organ_map",
+   "id": "bladder",
+   "name": "Urinary Bladder",
+   "desc": "Hollow muscular sac in the pelvis that stores urine from the ureters. Its detrusor muscle contracts (parasympathetic) to empty it through the urethra.",
+   "rick": "A stretchy bag for pee. Not complicated. Even you got this one, right?"
+  },
+  {
+   "diagram": "organ_map",
+   "id": "lymph_nodes",
+   "name": "Lymph Nodes",
+   "desc": "Bean-shaped filters along lymphatic vessels, clustered in the neck, armpits, groin and abdomen. B and T cells meet antigens here; nodes swell during infections.",
+   "rick": "Immune checkpoints. Swollen nodes mean the immune system's busy. Busier than you, anyway."
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+  "levels": {
+    "1": "BABY STEPS (basic): general public / middle school. Names of big parts and their main job.",
+    "2": "PRE-MED (intermediate): high-school biology / intro anatomy & physiology. Structures, pathways, numbers, simple mechanisms.",
+    "3": "MED SCHOOL (advanced): first-year medical school anatomy & physiology. Detailed structures, mechanisms, basic clinical correlations.",
+    "4": "RICK MODE (expert): USMLE Step 1 style. Mechanism reasoning, physiology numbers, classic clinical correlations / pathophysiology. Still exactly ONE defensible best answer."
+  },
+  "diagrams": {
+    "cell": ["cell_membrane", "cytoplasm", "nucleus", "nucleolus", "mitochondrion", "rough_er", "smooth_er", "golgi", "ribosome", "lysosome", "centrosome"],
+    "skeleton": ["skull", "mandible", "clavicle", "scapula", "sternum", "ribs", "humerus", "radius", "ulna", "carpals", "metacarpals", "phalanges_hand", "vertebral_column", "pelvis", "sacrum", "femur", "patella", "tibia", "fibula", "tarsals", "metatarsals", "phalanges_foot"],
+    "muscles": ["sternocleidomastoid", "trapezius", "deltoid", "pectoralis_major", "biceps_brachii", "forearm_flexors", "rectus_abdominis", "external_oblique", "quadriceps_femoris", "adductors", "sartorius", "tibialis_anterior", "gastrocnemius"],
+    "neuron": ["dendrite", "soma", "nucleus", "axon_hillock", "axon", "myelin_sheath", "node_of_ranvier", "axon_terminal", "synapse"],
+    "brain": ["frontal_lobe", "parietal_lobe", "temporal_lobe", "occipital_lobe", "cerebellum", "pons", "medulla", "spinal_cord", "central_sulcus", "lateral_sulcus", "precentral_gyrus", "postcentral_gyrus", "broca_area", "wernicke_area"],
+    "heart": ["right_atrium", "right_ventricle", "left_atrium", "left_ventricle", "superior_vena_cava", "inferior_vena_cava", "aorta", "pulmonary_trunk", "pulmonary_veins", "tricuspid_valve", "pulmonary_valve", "mitral_valve", "aortic_valve", "interventricular_septum", "sa_node", "av_node"],
+    "lungs": ["larynx", "trachea", "carina", "right_main_bronchus", "left_main_bronchus", "bronchioles", "alveoli", "right_lung", "left_lung", "cardiac_notch", "diaphragm"],
+    "digestive": ["esophagus", "stomach", "liver", "gallbladder", "pancreas", "duodenum", "small_intestine", "cecum", "appendix", "ascending_colon", "transverse_colon", "descending_colon", "sigmoid_colon", "rectum"],
+    "nephron": ["afferent_arteriole", "efferent_arteriole", "glomerulus", "bowmans_capsule", "proximal_tubule", "descending_limb", "ascending_limb", "distal_tubule", "macula_densa", "collecting_duct"],
+    "organ_map": ["brain", "pituitary", "thyroid", "thymus", "heart", "lungs", "liver", "stomach", "spleen", "pancreas", "adrenal_glands", "kidneys", "small_intestine", "large_intestine", "bladder", "lymph_nodes"]
+  },
+  "topics": {
+    "cells":     {"title": "CELLS",         "diagrams": ["cell"],               "labels": [3, 3, 4, 4]},
+    "immune":    {"title": "IMMUNE SYSTEM", "diagrams": ["organ_map"],          "labels": [2, 2, 2, 2], "label_parts_hint": "spleen, thymus, lymph_nodes (and bone-marrow-free organs only: the diagram has no bone marrow)"},
+    "bones":     {"title": "BONES",         "diagrams": ["skeleton"],           "labels": [3, 3, 4, 4]},
+    "muscles":   {"title": "MUSCLES",       "diagrams": ["muscles"],            "labels": [3, 3, 4, 4]},
+    "nervous":   {"title": "NERVOUS SYSTEM","diagrams": ["neuron", "brain"],    "labels": [3, 3, 4, 4]},
+    "hormones":  {"title": "HORMONES",      "diagrams": ["organ_map"],          "labels": [3, 3, 3, 3], "label_parts_hint": "pituitary, thyroid, adrenal_glands, pancreas, thymus, kidneys (EPO/renin), stomach, heart (ANP) ..."},
+    "heart":     {"title": "HEART & BLOOD", "diagrams": ["heart"],              "labels": [3, 3, 4, 4]},
+    "lungs":     {"title": "LUNGS",         "diagrams": ["lungs"],              "labels": [3, 3, 4, 4]},
+    "digestion": {"title": "DIGESTION",     "diagrams": ["digestive"],          "labels": [3, 3, 4, 4]},
+    "kidneys":   {"title": "KIDNEYS",       "diagrams": ["nephron", "organ_map"],"labels": [3, 3, 4, 4], "label_parts_hint": "organ_map only for kidneys / bladder / adrenal_glands at levels 1-2; nephron parts otherwise"}
+  },
+  "part_owner": {
+    "cell": "cells", "skeleton": "bones", "muscles": "muscles", "neuron": "nervous", "brain": "nervous",
+    "heart": "heart", "lungs": "lungs", "digestive": "digestion", "nephron": "kidneys", "organ_map": "hormones"
+  },
+  "per_level": {"lessons": 4, "mcq": 8},
+  "limits": {
+    "lesson.title": 40, "lesson.fact": 330, "lesson.rick": 130,
+    "question.q": 150, "question.choice": 70, "question.explain": 280, "question.rick": 130,
+    "part.name": 32, "part.desc": 220, "part.rick": 130
+  }
+}

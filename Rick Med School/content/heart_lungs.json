@@ -1,0 +1,1666 @@
+{
+ "batch": "heart_lungs",
+ "topics": [
+  {
+   "topic": "heart",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "heart-1-L1",
+       "title": "Meet the pump",
+       "fact": "The heart is a muscular pump about the size of a fist. It sits in the middle of the chest between the lungs, behind the sternum, tilted to the left. At rest it beats about 60-100 times a minute, pushing blood through the blood vessels to deliver O2 and nutrients and carry away CO2 and wastes.",
+       "rick": "A meat pump the size of your fist. Beats about 100,000 times a day and never takes a day off. Unlike Jerry.",
+       "diagram": "heart",
+       "part": "left_ventricle"
+      },
+      {
+       "id": "heart-1-L2",
+       "title": "Four chambers, two pumps",
+       "fact": "The heart has 4 chambers. The two upper ones, the atria, RECEIVE blood. The two lower ones, the ventricles, PUMP it out. The right side sends O2-poor blood to the lungs; the left side sends O2-rich blood to the whole body, so the left ventricle has the thickest, strongest wall.",
+       "rick": "Two pumps glued together, genius. Right side does lungs, left side does everything else. Even you can count to four.",
+       "diagram": "heart",
+       "part": "right_atrium"
+      },
+      {
+       "id": "heart-1-L3",
+       "title": "Arteries, veins, capillaries",
+       "fact": "Arteries carry blood AWAY from the heart; veins carry it back TOWARD the heart. Capillaries are microscopic vessels with walls one cell thick, where O2 and nutrients leave the blood and wastes enter it. The aorta is the biggest artery. Arteries usually carry O2-rich blood; the pulmonary arteries are the main exception.",
+       "rick": "Arteries: Away. Both start with A. That's the whole trick, Morty-brain. I *burp* just saved you a semester.",
+       "diagram": "heart",
+       "part": "aorta"
+      },
+      {
+       "id": "heart-1-L4",
+       "title": "What blood is made of",
+       "fact": "An adult has about 5 liters of blood. About 55% is plasma: water carrying proteins, salts, nutrients and hormones. The rest is mostly cells: red blood cells carry O2 using hemoglobin, white blood cells fight infection, and platelets (tiny cell fragments) plug leaks and help blood clot.",
+       "rick": "Five liters of red soup. Red cells deliver, white cells fight, platelets patch holes. Better run than the Citadel.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "heart-1-01",
+       "type": "mcq",
+       "q": "How many chambers does the human heart have?",
+       "choices": [
+        "Two",
+        "Three",
+        "Four",
+        "Six"
+       ],
+       "answer": 2,
+       "explain": "Four: two atria on top that receive blood and two ventricles below that pump it out. A muscular wall, the septum, keeps the right side's O2-poor blood separate from the left side's O2-rich blood.",
+       "rick": "Four. Not two, not 'a lot'. Four. I've met Meeseeks with better retention than you."
+      },
+      {
+       "id": "heart-1-02",
+       "type": "mcq",
+       "q": "Which blood vessels carry blood AWAY from the heart?",
+       "choices": [
+        "Arteries",
+        "Veins",
+        "Capillaries",
+        "Lymph vessels"
+       ],
+       "answer": 0,
+       "explain": "Arteries carry blood away from the heart under high pressure, so they have thick, muscular, elastic walls. Veins bring blood back and have thinner walls and valves. It's about direction, not oxygen: the pulmonary arteries carry O2-poor blood.",
+       "rick": "A for Arteries, A for Away. If that's too hard, interdimensional cable is always hiring."
+      },
+      {
+       "id": "heart-1-03",
+       "type": "mcq",
+       "q": "Where do O2 and nutrients actually pass from the blood into the tissues?",
+       "choices": [
+        "Arteries",
+        "Veins",
+        "Aorta",
+        "Capillaries"
+       ],
+       "answer": 3,
+       "explain": "Capillary walls are only one cell thick, so O2, nutrients and wastes can diffuse across them. Arteries, veins and the aorta have walls far too thick for exchange; they are the delivery and return pipes.",
+       "rick": "Capillaries. The tiny pipes where the actual work happens. Like grad students."
+      },
+      {
+       "id": "heart-1-04",
+       "type": "mcq",
+       "q": "Which blood cells carry oxygen?",
+       "choices": [
+        "Red blood cells",
+        "White blood cells",
+        "Platelets",
+        "Plasma cells"
+       ],
+       "answer": 0,
+       "explain": "Red blood cells are packed with hemoglobin, an iron-containing protein that binds O2. White blood cells defend against infection, platelets help clotting, and plasma cells are immune cells that make antibodies.",
+       "rick": "Red cells. Little red frisbees full of hemoglobin. The color was a *burp* hint, genius."
+      },
+      {
+       "id": "heart-1-05",
+       "type": "mcq",
+       "q": "What is the main job of platelets?",
+       "choices": [
+        "Carrying CO2",
+        "Making antibodies",
+        "Helping blood clot",
+        "Fighting bacteria"
+       ],
+       "answer": 2,
+       "explain": "Platelets are small cell fragments that stick to damaged vessel walls and to each other, forming a plug, and help the clotting process that seals the leak. Fighting infection is the job of white blood cells.",
+       "rick": "Platelets are the duct tape of your blood. Cheap, tiny, and holding your whole sorry life together."
+      },
+      {
+       "id": "heart-1-06",
+       "type": "mcq",
+       "q": "Where does the RIGHT ventricle pump blood?",
+       "choices": [
+        "To the whole body",
+        "To the lungs",
+        "To the brain only",
+        "Into the left ventricle"
+       ],
+       "answer": 1,
+       "explain": "The right ventricle pumps O2-poor blood through the pulmonary trunk to the lungs to pick up O2. The LEFT ventricle pumps blood to the rest of the body through the aorta. In a normal heart the two sides never mix.",
+       "rick": "Right side, lungs. Left side, everything else. It's a two-pump system, not a riddle."
+      },
+      {
+       "id": "heart-1-07",
+       "type": "mcq",
+       "q": "Which heart chamber has the thickest muscular wall?",
+       "choices": [
+        "Right atrium",
+        "Left atrium",
+        "Right ventricle",
+        "Left ventricle"
+       ],
+       "answer": 3,
+       "explain": "The left ventricle must push blood through the entire body at high pressure, so its wall is roughly three times thicker than the right ventricle's, which only pumps to the nearby, low-pressure lungs. The atria have the thinnest walls.",
+       "rick": "The left ventricle. It does the heavy lifting, so it hits the gym. The atria are just the warm-up act."
+      },
+      {
+       "id": "heart-1-08",
+       "type": "mcq",
+       "q": "A normal resting heart rate for an adult is about:",
+       "choices": [
+        "20-40 beats per minute",
+        "60-100 beats per minute",
+        "120-160 beats per minute",
+        "180-220 beats per minute"
+       ],
+       "answer": 1,
+       "explain": "Most adults rest at about 60-100 beats per minute. Below 60 is called bradycardia and above 100 tachycardia, although very fit athletes often rest in the 40s or 50s quite normally.",
+       "rick": "60 to 100. If yours is 180 right now, it's because I'm in the room. Understandable."
+      },
+      {
+       "id": "heart-1-09",
+       "type": "label",
+       "diagram": "heart",
+       "part": "left_ventricle",
+       "q": "Click the left ventricle.",
+       "explain": "The left ventricle is the big, thick-walled lower chamber that forms the heart's tip (apex). It pumps O2-rich blood into the aorta and out to the whole body. On a front view it is on the viewer's RIGHT, because the patient's left is your right.",
+       "rick": "The left ventricle. The heart's muscle car. Patient's left, your right: you're facing them, not a mirror."
+      },
+      {
+       "id": "heart-1-10",
+       "type": "label",
+       "diagram": "heart",
+       "part": "right_atrium",
+       "q": "Click the chamber that receives O2-poor blood returning from the body.",
+       "explain": "The right atrium is the upper right chamber. The superior and inferior venae cavae empty used, O2-poor blood from the body into it, and it passes the blood through the tricuspid valve to the right ventricle.",
+       "rick": "Right atrium: the heart's lobby. All the tired, used blood checks in here first."
+      },
+      {
+       "id": "heart-1-11",
+       "type": "label",
+       "diagram": "heart",
+       "part": "aorta",
+       "q": "Click the aorta, the body's largest artery.",
+       "explain": "The aorta leaves the left ventricle, arches up and over the heart and runs down through the chest and abdomen, branching to deliver O2-rich blood to every organ. It's roughly 2.5-3 cm wide at its root.",
+       "rick": "The aorta. Biggest artery you've got. The garden hose of life, *burp* under serious pressure."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "heart-2-L1",
+       "title": "The route, step by step",
+       "fact": "Body -> venae cavae -> right atrium -> tricuspid valve -> right ventricle -> pulmonary valve -> pulmonary trunk -> lungs (gain O2, lose CO2) -> pulmonary veins -> left atrium -> mitral valve -> left ventricle -> aortic valve -> aorta -> body. Pulmonary arteries carry O2-poor blood; pulmonary veins carry O2-rich blood.",
+       "rick": "Memorize the loop. It's a circle, Morty-brain. The shape you've been running in your whole life.",
+       "diagram": "heart",
+       "part": "pulmonary_veins"
+      },
+      {
+       "id": "heart-2-L2",
+       "title": "Valves and heart sounds",
+       "fact": "Four valves keep blood moving one way. The atrioventricular (AV) valves - tricuspid (right) and mitral, or bicuspid (left) - are tethered by chordae tendineae to papillary muscles. The semilunar valves - pulmonary and aortic - guard the exits. S1 'lub' = AV valves closing; S2 'dub' = semilunar valves closing.",
+       "rick": "Lub-dub is just doors slamming. Four doors, one direction. Even a Meeseeks could run this.",
+       "diagram": "heart",
+       "part": "tricuspid_valve"
+      },
+      {
+       "id": "heart-2-L3",
+       "title": "The heart's wiring",
+       "fact": "The SA node in the right atrium is the natural pacemaker. Its impulse spreads over both atria, is delayed at the AV node so the ventricles can fill, then runs down the bundle of His, bundle branches and Purkinje fibers. ECG: P wave = atrial depolarization, QRS = ventricular depolarization, T wave = ventricular repolarization.",
+       "rick": "Self-wiring meat with a built-in *burp* metronome. Honestly? One of evolution's better hacks.",
+       "diagram": "heart",
+       "part": "sa_node"
+      },
+      {
+       "id": "heart-2-L4",
+       "title": "Output, red cells, blood types",
+       "fact": "Cardiac output = heart rate x stroke volume: about 70/min x 70 mL, roughly 5 L/min at rest. Red cells come from red bone marrow (driven by EPO from the kidneys), have no nucleus and live about 120 days. ABO: plasma has antibodies against the A/B antigens your red cells lack, so type O has anti-A and anti-B; type AB has neither.",
+       "rick": "Five liters a minute, every minute, forever. And you get tired walking to the fridge.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "heart-2-01",
+       "type": "mcq",
+       "q": "Which valve lies between the LEFT atrium and the LEFT ventricle?",
+       "choices": [
+        "Tricuspid valve",
+        "Mitral valve",
+        "Aortic valve",
+        "Pulmonary valve"
+       ],
+       "answer": 1,
+       "explain": "The mitral (bicuspid) valve has two cusps and sits between the left atrium and left ventricle. The tricuspid is its right-side twin. The aortic and pulmonary valves are semilunar valves at the ventricle exits.",
+       "rick": "Mitral. Named after a bishop's hat. Some anatomist had *burp* way too much free time."
+      },
+      {
+       "id": "heart-2-02",
+       "type": "mcq",
+       "q": "Which vessels carry O2-rich blood from the lungs to the heart?",
+       "choices": [
+        "Pulmonary arteries",
+        "Venae cavae",
+        "Pulmonary veins",
+        "Coronary arteries"
+       ],
+       "answer": 2,
+       "explain": "The pulmonary veins (usually four) return freshly oxygenated blood from the lungs to the left atrium. They break the 'veins carry O2-poor blood' habit because vessels are named by direction - toward the heart - not by oxygen content.",
+       "rick": "Veins full of oxygen. Rules are for people who don't read the fine print."
+      },
+      {
+       "id": "heart-2-03",
+       "type": "mcq",
+       "q": "What is the heart's natural pacemaker?",
+       "choices": [
+        "AV node",
+        "Bundle of His",
+        "Purkinje fibers",
+        "SA node"
+       ],
+       "answer": 3,
+       "explain": "The sinoatrial (SA) node fires spontaneously the fastest, about 60-100 times a minute, so it sets the pace. If it fails, the AV node can take over, but at a slower intrinsic rate of about 40-60 per minute.",
+       "rick": "SA node. The tiny drummer in your right atrium. Fire him and the whole band plays slower."
+      },
+      {
+       "id": "heart-2-04",
+       "type": "mcq",
+       "q": "On an ECG, the QRS complex represents:",
+       "choices": [
+        "Atrial depolarization",
+        "Ventricular depolarization",
+        "Ventricular repolarization",
+        "The delay in the AV node"
+       ],
+       "answer": 1,
+       "explain": "QRS = ventricular depolarization, which triggers ventricular contraction. The P wave is atrial depolarization, the T wave is ventricular repolarization, and the AV-node delay falls within the PR interval. Atrial repolarization is hidden inside the QRS.",
+       "rick": "QRS: the big spike. The ventricles yelling 'GO'. You've seen it on every hospital show, genius."
+      },
+      {
+       "id": "heart-2-05",
+       "type": "mcq",
+       "q": "The first heart sound (S1, 'lub') is caused by:",
+       "choices": [
+        "Closing of the mitral and tricuspid valves",
+        "Closing of the aortic and pulmonary valves",
+        "Opening of the mitral and tricuspid valves",
+        "Blood hitting the aortic wall"
+       ],
+       "answer": 0,
+       "explain": "S1 happens when the ventricles start to contract and their rising pressure snaps the AV valves (mitral, tricuspid) shut. S2 'dub' is the aortic and pulmonary valves closing as the ventricles relax. Healthy valves are silent when they open.",
+       "rick": "Lub = AV valves slam. Dub = semilunar valves slam. Your heart's a *burp* door-slamming teenager."
+      },
+      {
+       "id": "heart-2-06",
+       "type": "mcq",
+       "q": "Heart rate is 70 beats/min and stroke volume is 70 mL. Cardiac output is about:",
+       "choices": [
+        "0.5 L/min",
+        "1 L/min",
+        "4.9 L/min",
+        "49 L/min"
+       ],
+       "answer": 2,
+       "explain": "Cardiac output = heart rate x stroke volume = 70 x 70 mL = 4,900 mL/min, about 4.9 L/min - roughly your whole blood volume every minute at rest. During hard exercise it can rise to about 20-25 L/min.",
+       "rick": "Multiply two numbers. That's it. A calculator watch could replace you, Morty-brain."
+      },
+      {
+       "id": "heart-2-07",
+       "type": "mcq",
+       "q": "About how long does a red blood cell survive in the circulation?",
+       "choices": [
+        "12 days",
+        "40 days",
+        "365 days",
+        "120 days"
+       ],
+       "answer": 3,
+       "explain": "With no nucleus, red cells can't repair themselves; after about 120 days they are removed, mainly by macrophages in the spleen, and their iron is recycled. EPO from the kidneys drives the bone marrow to replace them.",
+       "rick": "120 days, then the spleen eats them. No nucleus, no repairs. Planned obsolescence, biology-style."
+      },
+      {
+       "id": "heart-2-08",
+       "type": "mcq",
+       "q": "A person with blood type O has which antibodies in their plasma?",
+       "choices": [
+        "Both anti-A and anti-B",
+        "No ABO antibodies",
+        "Anti-A only",
+        "Anti-B only"
+       ],
+       "answer": 0,
+       "explain": "Type O red cells carry neither A nor B antigen, and the plasma has antibodies against both. That's why O-negative red cells are the emergency 'universal donor' cells, while type O people can receive only type O red cells.",
+       "rick": "Type O: no antigens, all the antibodies. The paranoid bouncer of blood types. I respect it."
+      },
+      {
+       "id": "heart-2-09",
+       "type": "label",
+       "diagram": "heart",
+       "part": "superior_vena_cava",
+       "q": "Click the vein that returns blood from the head and arms to the heart.",
+       "explain": "The superior vena cava drains the head, neck, arms and upper chest into the top of the right atrium. Its partner, the inferior vena cava, brings blood up from the lower body.",
+       "rick": "Superior vena cava. 'Superior' because it's on top, not because it's better than you. Though it is."
+      },
+      {
+       "id": "heart-2-10",
+       "type": "label",
+       "diagram": "heart",
+       "part": "pulmonary_trunk",
+       "q": "Click the vessel that carries blood from the right ventricle toward the lungs.",
+       "explain": "The pulmonary trunk leaves the right ventricle through the pulmonary valve and splits into the right and left pulmonary arteries. It is an artery carrying O2-poor blood: direction, not oxygen, defines an artery.",
+       "rick": "Pulmonary trunk. An artery full of O2-poor blood. Anatomy loves messing with idiots."
+      },
+      {
+       "id": "heart-2-11",
+       "type": "label",
+       "diagram": "heart",
+       "part": "tricuspid_valve",
+       "q": "Click the valve between the right atrium and the right ventricle.",
+       "explain": "The tricuspid valve has three cusps tethered by chordae tendineae to papillary muscles. It opens to let blood fill the right ventricle and snaps shut when the ventricle contracts, contributing to S1.",
+       "rick": "Tricuspid: three flaps, right side. 'Tri' means three. Latin is free, you know."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "heart-3-L1",
+       "title": "Cardiac action potentials",
+       "fact": "Ventricular cells rest near -90 mV. Phase 0: fast Na+ influx. Phase 2 plateau: Ca2+ in via L-type channels balances K+ out. Phase 3: K+ efflux repolarizes. The long plateau means a long refractory period, so heart muscle can't tetanize. SA/AV node cells: phase 4 drifts up via the 'funny' Na+ current (If); their upstroke is Ca2+.",
+       "rick": "Two kinds of action potentials, one heart. Na+ starts the party, Ca2+ keeps it going. *burp* Like tequila.",
+       "diagram": "heart",
+       "part": "sa_node"
+      },
+      {
+       "id": "heart-3-L2",
+       "title": "Stroke volume and Starling",
+       "fact": "Stroke volume depends on preload (end-diastolic stretch), afterload (pressure the ventricle ejects against) and contractility (raised by sympathetic beta1 stimulation). Frank-Starling law: more stretch -> stronger beat, so output matches venous return. Ejection fraction = SV / EDV, normally about 55-70%.",
+       "rick": "Stretch it more, it snaps back harder. Frank and Starling worked that out without a portal gun.",
+       "diagram": "heart",
+       "part": "left_ventricle"
+      },
+      {
+       "id": "heart-3-L3",
+       "title": "Listening posts and murmurs",
+       "fact": "Aortic area: right 2nd intercostal space; pulmonary: left 2nd; tricuspid: left lower sternal border; mitral: apex (left 5th space, midclavicular line). Stenosis = can't open fully; regurgitation = can't close fully. Systolic murmurs: aortic stenosis, mitral regurgitation. Diastolic: mitral stenosis, aortic regurgitation.",
+       "rick": "Four spots, four valves. A stethoscope isn't a necklace, genius. *burp* Put it on the chest.",
+       "diagram": "heart",
+       "part": "mitral_valve"
+      },
+      {
+       "id": "heart-3-L4",
+       "title": "Hemostasis: plug, then glue",
+       "fact": "Primary: von Willebrand factor tethers platelet GPIb to exposed collagen (adhesion); activated platelets release ADP and thromboxane A2, and fibrinogen bridges their GPIIb/IIIa (aggregation). Secondary: the coagulation cascade makes thrombin, which turns fibrinogen into fibrin to seal it. Factors II, VII, IX, X need vitamin K.",
+       "rick": "Platelets are the sandbags, fibrin is the cement. Hemostasis is just emergency construction.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "heart-3-01",
+       "type": "mcq",
+       "q": "The plateau (phase 2) of the ventricular action potential is mainly due to:",
+       "choices": [
+        "Na+ influx through fast Na+ channels",
+        "Ca2+ influx through L-type Ca2+ channels",
+        "Cl- influx through chloride channels",
+        "Activity of the Na+/K+ ATPase"
+       ],
+       "answer": 1,
+       "explain": "During phase 2, Ca2+ entering through L-type channels balances K+ leaving, holding the voltage flat. That Ca2+ also triggers Ca2+ release from the sarcoplasmic reticulum (Ca2+-induced Ca2+ release) for contraction. Fast Na+ channels drive phase 0 only.",
+       "rick": "The plateau is calcium holding the door open. Ca2+ in, K+ out, stalemate. Thrilling stuff."
+      },
+      {
+       "id": "heart-3-02",
+       "type": "mcq",
+       "q": "Spontaneous phase 4 depolarization in SA node cells is driven mainly by:",
+       "choices": [
+        "Fast voltage-gated Na+ channels",
+        "K+ efflux through delayed rectifier channels",
+        "The funny current (If): Na+ entering via HCN channels",
+        "Ca2+ release from the sarcoplasmic reticulum"
+       ],
+       "answer": 2,
+       "explain": "Nodal cells have no stable resting potential: HCN channels open at negative voltages and let Na+ in (the 'funny' current), slowly depolarizing the cell to threshold. Sympathetic input steepens this slope (faster rate); vagal ACh flattens it (slower rate).",
+       "rick": "It's literally called the funny current. Scientists named it that, and I'm the *burp* unprofessional one?"
+      },
+      {
+       "id": "heart-3-03",
+       "type": "mcq",
+       "q": "Venous return rises and stretches the left ventricle more. By the Frank-Starling law, stroke volume will:",
+       "choices": [
+        "Increase, because stretched fibers contract more forcefully",
+        "Decrease, because overstretched fibers can't contract",
+        "Stay the same, because only heart rate changes output",
+        "Decrease, because afterload rises"
+       ],
+       "answer": 0,
+       "explain": "Within the normal range, a bigger end-diastolic volume stretches sarcomeres toward optimal overlap and raises their Ca2+ sensitivity, so the next beat is stronger and ejects more. This automatically matches the output of the two ventricles to venous return.",
+       "rick": "More blood in, more blood out. The heart balances its books better than you balance a checkbook."
+      },
+      {
+       "id": "heart-3-04",
+       "type": "mcq",
+       "q": "End-diastolic volume is 120 mL and end-systolic volume is 50 mL. The ejection fraction is about:",
+       "choices": [
+        "42%",
+        "58%",
+        "70%",
+        "140%"
+       ],
+       "answer": 1,
+       "explain": "Stroke volume = EDV - ESV = 120 - 50 = 70 mL. EF = SV / EDV = 70/120, about 58%, within the normal range of roughly 55-70%. Heart failure with an EF of 40% or less is called HF with reduced ejection fraction (HFrEF).",
+       "rick": "58 percent. Normal. Unlike literally everything else about you."
+      },
+      {
+       "id": "heart-3-05",
+       "type": "mcq",
+       "q": "Where is the mitral valve best heard with a stethoscope?",
+       "choices": [
+        "Right 2nd intercostal space, sternal border",
+        "Left 2nd intercostal space, sternal border",
+        "Left lower sternal border",
+        "Cardiac apex, left 5th intercostal space"
+       ],
+       "answer": 3,
+       "explain": "The mitral area is at the apex, about the left 5th intercostal space in the midclavicular line. Right 2nd = aortic area, left 2nd = pulmonary area, left lower sternal border = tricuspid area. Listening posts follow blood flow, not exact valve positions.",
+       "rick": "Apex. Where the left ventricle pokes your ribs. Stethoscope there, not on your forehead."
+      },
+      {
+       "id": "heart-3-06",
+       "type": "mcq",
+       "q": "Aortic stenosis causes a murmur during which phase of the cardiac cycle?",
+       "choices": [
+        "Diastole",
+        "Systole",
+        "Continuously through both",
+        "Only during inspiration"
+       ],
+       "answer": 1,
+       "explain": "Blood is forced through the narrowed aortic valve while the left ventricle ejects, so the murmur is systolic (crescendo-decrescendo). Diastolic murmurs come from aortic regurgitation or mitral stenosis, when blood leaks back or squeezes through a valve during filling.",
+       "rick": "Narrow exit, blood forced through while the ventricle squeezes. Systole. It's plumbing, Morty-brain."
+      },
+      {
+       "id": "heart-3-07",
+       "type": "mcq",
+       "q": "Which clotting factors need vitamin K-dependent gamma-carboxylation in the liver to work?",
+       "choices": [
+        "I, V, VIII and XIII",
+        "VIII and IX only",
+        "XI and XII only",
+        "II, VII, IX and X"
+       ],
+       "answer": 3,
+       "explain": "Factors II (prothrombin), VII, IX and X - plus the anticoagulant proteins C and S - need vitamin K-dependent gamma-carboxylation to bind Ca2+ and function. Warfarin blocks vitamin K recycling, so it lowers all of them.",
+       "rick": "2, 7, 9, 10. Memorize it like the combination to a safe full of Szechuan sauce."
+      },
+      {
+       "id": "heart-3-08",
+       "type": "mcq",
+       "q": "Platelets first ADHERE to exposed subendothelial collagen mainly through:",
+       "choices": [
+        "Von Willebrand factor binding platelet GPIb",
+        "Fibrinogen binding platelet GPIIb/IIIa",
+        "Thrombin cleaving fibrinogen",
+        "Plasmin binding fibrin"
+       ],
+       "answer": 0,
+       "explain": "Adhesion: vWF bridges collagen to platelet GPIb. Aggregation comes next, when fibrinogen links GPIIb/IIIa receptors on neighboring platelets. Thrombin makes fibrin in secondary hemostasis, and plasmin breaks clots down.",
+       "rick": "vWF is the glue, GPIb is the hand. Adhesion first, then the *burp* platelet mosh pit."
+      },
+      {
+       "id": "heart-3-09",
+       "type": "label",
+       "diagram": "heart",
+       "part": "sa_node",
+       "q": "Click the SA node, the heart's natural pacemaker.",
+       "explain": "The sinoatrial node lies in the wall of the right atrium near where the superior vena cava enters. Its cells depolarize spontaneously and set the normal heart rhythm, called sinus rhythm.",
+       "rick": "The SA node. A tiny strip of tissue running your whole life. No pressure."
+      },
+      {
+       "id": "heart-3-10",
+       "type": "label",
+       "diagram": "heart",
+       "part": "mitral_valve",
+       "q": "Click the valve that normally has only two cusps.",
+       "explain": "The mitral (bicuspid) valve, between the left atrium and left ventricle, is the only valve with two cusps. The tricuspid valve has three, and the semilunar valves (aortic, pulmonary) normally have three each.",
+       "rick": "Two flaps. Every other valve has three. The mitral valve is the minimalist of the heart."
+      },
+      {
+       "id": "heart-3-11",
+       "type": "label",
+       "diagram": "heart",
+       "part": "pulmonary_valve",
+       "q": "Click the valve best heard at the left 2nd intercostal space.",
+       "explain": "The pulmonary area is the left 2nd intercostal space at the sternal edge. The pulmonary valve guards the exit from the right ventricle into the pulmonary trunk, and its closure is the P2 part of S2.",
+       "rick": "Left second space, pulmonary. Right second space, aortic. Don't mix them up, idiot."
+      },
+      {
+       "id": "heart-3-12",
+       "type": "label",
+       "diagram": "heart",
+       "part": "interventricular_septum",
+       "q": "Click the wall that separates the left and right ventricles.",
+       "explain": "The interventricular septum is mostly thick muscle with a thin membranous part at the top, the most common site of ventricular septal defects. It carries the bundle branches; its anterior two-thirds is supplied by the LAD.",
+       "rick": "A wall keeping red and blue blood... *burp* sorry, O2-rich and O2-poor blood apart. See, I can learn."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "heart-4-L1",
+       "title": "Coronary territories",
+       "fact": "LAD: anterior wall, apex, anterior 2/3 of septum (ECG V1-V4). Left circumflex: lateral wall (I, aVL, V5-V6). RCA: right ventricle and, in right-dominant hearts (most people), the inferior wall via the posterior descending artery (II, III, aVF) plus the AV node - so inferior MIs often cause bradycardia or AV block.",
+       "rick": "Know which pipe feeds which wall, or enjoy guessing while the *burp* troponin climbs.",
+       "diagram": "heart",
+       "part": "av_node"
+      },
+      {
+       "id": "heart-4-L2",
+       "title": "Two classic valve lesions",
+       "fact": "Aortic stenosis (often calcific, elderly): crescendo-decrescendo systolic murmur, right upper sternal border, radiating to carotids; syncope, angina, dyspnea; concentric LVH. Mitral stenosis (usually rheumatic): opening snap + diastolic rumble at the apex; the left atrium dilates -> atrial fibrillation, dysphagia, hoarseness.",
+       "rick": "One valve turns to rock, the other turns to a pinhole. Both turn you into a *burp* patient.",
+       "diagram": "heart",
+       "part": "aortic_valve"
+      },
+      {
+       "id": "heart-4-L3",
+       "title": "Arrhythmia patterns",
+       "fact": "Atrial fibrillation: irregularly irregular, no P waves; often triggered by ectopic foci in the pulmonary vein sleeves; clots form in the left atrial appendage -> embolic stroke. AV block: 1st degree PR over 200 ms. Mobitz I: PR lengthens until a QRS drops. Mobitz II: sudden drops, fixed PR. 3rd degree: P and QRS dissociated.",
+       "rick": "Irregularly irregular. Like your sleep schedule, but with a stroke risk.",
+       "diagram": "heart",
+       "part": "pulmonary_veins"
+      },
+      {
+       "id": "heart-4-L4",
+       "title": "Heart failure and Fick",
+       "fact": "Left heart failure backs blood up into the lungs: dyspnea, orthopnea, paroxysmal nocturnal dyspnea, crackles. Right heart failure backs up into systemic veins: raised JVP, hepatomegaly, leg edema; its most common cause is left heart failure. Fick: cardiac output = O2 consumption / (arterial O2 content - mixed venous O2 content).",
+       "rick": "Pump fails, fluid backs up behind it. It's a traffic jam, Morty-brain. With lungs.",
+       "diagram": "heart",
+       "part": "left_ventricle"
+      }
+     ],
+     "questions": [
+      {
+       "id": "heart-4-01",
+       "type": "mcq",
+       "q": "An MI shows ST elevation in II, III and aVF with a heart rate of 42/min. Which artery is most likely occluded?",
+       "choices": [
+        "Left anterior descending",
+        "Left circumflex",
+        "Right coronary",
+        "Left main"
+       ],
+       "answer": 2,
+       "explain": "II, III and aVF look at the inferior wall, fed by the posterior descending artery, which comes from the RCA in right-dominant hearts (most people). The RCA usually supplies the AV node too, so bradycardia and AV block are common. LAD occlusion causes anterior (V1-V4) changes.",
+       "rick": "Inferior leads plus a slow heart: RCA. The AV node *burp* lost its lunch money."
+      },
+      {
+       "id": "heart-4-02",
+       "type": "mcq",
+       "q": "An 80-year-old faints on exertion; crescendo-decrescendo systolic murmur at the right upper sternal border radiating to the carotids. Diagnosis?",
+       "choices": [
+        "Mitral regurgitation",
+        "Hypertrophic cardiomyopathy",
+        "Mitral stenosis",
+        "Aortic stenosis"
+       ],
+       "answer": 3,
+       "explain": "Calcific aortic stenosis: crescendo-decrescendo systolic murmur, best at the right 2nd intercostal space, radiating to the carotids; syncope, angina and dyspnea are ominous signs. HCM's murmur is loudest at the left lower sternal border and doesn't radiate to the carotids.",
+       "rick": "Old guy, crusty valve, faints on the stairs. Aortic stenosis. Calcium: great for bones, terrible for doors."
+      },
+      {
+       "id": "heart-4-03",
+       "type": "mcq",
+       "q": "A woman with prior rheumatic fever has an opening snap then a diastolic rumble at the apex, plus dysphagia. What best explains the dysphagia?",
+       "choices": [
+        "Enlarged left ventricle compressing the esophagus",
+        "Enlarged left atrium compressing the esophagus",
+        "Enlarged right ventricle compressing the esophagus",
+        "Pericardial effusion compressing the trachea"
+       ],
+       "answer": 1,
+       "explain": "Rheumatic mitral stenosis dams blood in the left atrium, which dilates. As the most posterior chamber it lies right against the esophagus, so enlargement causes dysphagia; it can also stretch the left recurrent laryngeal nerve (hoarseness) and trigger atrial fibrillation.",
+       "rick": "Mitral stenosis: the left atrium bloats like Pickle Rick in brine and squashes your food pipe."
+      },
+      {
+       "id": "heart-4-04",
+       "type": "mcq",
+       "q": "An ECG shows the PR interval lengthening beat by beat until a QRS is dropped, then the cycle repeats. Diagnosis?",
+       "choices": [
+        "First-degree AV block",
+        "Mobitz type II block",
+        "Mobitz type I (Wenckebach) block",
+        "Third-degree AV block"
+       ],
+       "answer": 2,
+       "explain": "Progressive PR lengthening until a beat drops is Mobitz I (Wenckebach), usually a fairly benign block within the AV node. Mobitz II drops beats WITHOUT PR lengthening, usually below the AV node, and can progress to complete (third-degree) block.",
+       "rick": "Wenckebach: the AV node getting tired, tireder, then napping. Relatable, honestly."
+      },
+      {
+       "id": "heart-4-05",
+       "type": "mcq",
+       "q": "O2 consumption is 250 mL/min, arterial O2 content 200 mL/L, mixed venous O2 content 150 mL/L. Cardiac output?",
+       "choices": [
+        "5 L/min",
+        "1.25 L/min",
+        "2.5 L/min",
+        "12.5 L/min"
+       ],
+       "answer": 0,
+       "explain": "Fick principle: CO = VO2 / (CaO2 - CvO2) = 250 mL/min / (200 - 150) mL/L = 250/50 = 5 L/min. The O2 the body uses each minute must equal what the blood drops off as it flows through the tissues.",
+       "rick": "Oxygen used divided by oxygen dropped off. Five liters. Fick did it with a pencil, genius."
+      },
+      {
+       "id": "heart-4-06",
+       "type": "mcq",
+       "q": "Which finding points MOST specifically to LEFT-sided rather than right-sided heart failure?",
+       "choices": [
+        "Raised jugular venous pressure",
+        "Hepatomegaly",
+        "Pitting ankle edema",
+        "Bilateral basal crackles and orthopnea"
+       ],
+       "answer": 3,
+       "explain": "Left heart failure raises left atrial and pulmonary capillary pressure, pushing fluid into the lungs: crackles, orthopnea and paroxysmal nocturnal dyspnea. Raised JVP, hepatomegaly and leg edema reflect systemic venous congestion from right-sided failure.",
+       "rick": "Left fails, lungs flood. Right fails, legs flood. It's gravity and backpressure, genius."
+      },
+      {
+       "id": "heart-4-07",
+       "type": "mcq",
+       "q": "A boy has recurrent joint bleeds. Platelet count and PT are normal; PTT is prolonged. Which factor is most likely deficient?",
+       "choices": [
+        "Factor VII",
+        "Factor VIII",
+        "Factor XIII",
+        "Platelet GPIIb/IIIa"
+       ],
+       "answer": 1,
+       "explain": "Deep joint and muscle bleeds with an isolated long PTT in a boy = hemophilia, X-linked recessive; hemophilia A (factor VIII) is far more common than B (factor IX). Factor VII deficiency prolongs the PT; factor XIII and GPIIb/IIIa defects leave PT and PTT normal.",
+       "rick": "Boy, bleeding joints, long PTT. Factor VIII. X-linked, so the guys get the short straw."
+      },
+      {
+       "id": "heart-4-08",
+       "type": "mcq",
+       "q": "A child's large VSD goes untreated and causes pulmonary hypertension. Years later he is cyanotic with clubbing. Why?",
+       "choices": [
+        "The shunt reversed to right-to-left (Eisenmenger)",
+        "The VSD closed and the lungs failed",
+        "He developed tetralogy of Fallot",
+        "Left ventricular failure caused cyanosis"
+       ],
+       "answer": 0,
+       "explain": "A big left-to-right shunt floods the lungs; pulmonary vessels remodel and resistance climbs until right-sided pressure beats left. The shunt reverses, sending O2-poor blood to the body: late cyanosis, clubbing, polycythemia. Tetralogy of Fallot is congenital, not acquired.",
+       "rick": "Flood the lungs long enough and they fight back. Eisenmenger: the shunt flips sides. Petty, but effective."
+      },
+      {
+       "id": "heart-4-09",
+       "type": "label",
+       "diagram": "heart",
+       "part": "av_node",
+       "q": "Click the structure that delays the impulse between the atria and the ventricles.",
+       "explain": "The AV node, in the lower interatrial septum (Koch's triangle), slows conduction by about 0.1 s so the ventricles fill before they contract. It's the usual site of Mobitz I block and is supplied by the RCA in most people.",
+       "rick": "The AV node: the bouncer making the ventricles wait. Without it they'd contract half-empty."
+      },
+      {
+       "id": "heart-4-10",
+       "type": "label",
+       "diagram": "heart",
+       "part": "aortic_valve",
+       "q": "Click the valve whose stenosis causes a systolic murmur radiating to the carotids.",
+       "explain": "The aortic valve sits between the left ventricle and the aorta. When stenotic (calcified with age, or a congenital bicuspid valve), the LV must push through a narrow opening: crescendo-decrescendo systolic murmur, LV hypertrophy, angina, syncope.",
+       "rick": "Aortic valve. Calcify it and the left ventricle turns into a *burp* bodybuilder on steroids. Bad ending."
+      },
+      {
+       "id": "heart-4-11",
+       "type": "label",
+       "diagram": "heart",
+       "part": "pulmonary_veins",
+       "q": "Click the vessels where the ectopic triggers of atrial fibrillation usually arise.",
+       "explain": "Sleeves of atrial muscle extend into the pulmonary veins where they join the left atrium; ectopic foci there commonly trigger atrial fibrillation. That's why catheter ablation for AF aims to electrically isolate the pulmonary veins.",
+       "rick": "The pulmonary veins: where the electrical chaos starts. Fence them off and the noise stops."
+      },
+      {
+       "id": "heart-4-12",
+       "type": "label",
+       "diagram": "heart",
+       "part": "left_atrium",
+       "q": "Click the chamber where clots most often form in atrial fibrillation.",
+       "explain": "In AF the left atrium quivers instead of contracting, so blood stagnates, especially in its appendage, and clots form. A clot that escapes passes through the left ventricle into the aorta and can cause an embolic stroke.",
+       "rick": "The left atrium. Stagnant blood, clots, stroke. Your brain is the last stop on that train."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "topic": "lungs",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "lungs-1-L1",
+       "title": "Why you breathe",
+       "fact": "Every cell needs O2 to make energy and produces CO2 as waste. Breathing brings fresh air in and gets rid of CO2. Air travels: nose or mouth -> pharynx (throat) -> larynx (voice box) -> trachea (windpipe) -> bronchi -> bronchioles -> alveoli. A resting adult breathes about 12-20 times a minute.",
+       "rick": "You do this about 20,000 times a day without thinking. Which is how you do everything, genius.",
+       "diagram": "lungs",
+       "part": "trachea"
+      },
+      {
+       "id": "lungs-1-L2",
+       "title": "Two lungs, not twins",
+       "fact": "The two lungs fill most of the chest, protected by the rib cage. They are spongy and light because they are mostly air. The right lung has 3 lobes; the left has only 2, leaving room for the heart. Each lung is wrapped in a thin, slippery membrane called the pleura.",
+       "rick": "Two big air sponges. The left one's smaller because the heart *burp* called dibs on the space.",
+       "diagram": "lungs",
+       "part": "right_lung"
+      },
+      {
+       "id": "lungs-1-L3",
+       "title": "The diaphragm does the work",
+       "fact": "The diaphragm is a dome-shaped sheet of muscle under the lungs. When you breathe IN, it contracts and flattens, making the chest bigger so air rushes in. When you breathe OUT at rest, it simply relaxes and domes back up, pushing air out. Hiccups are sudden involuntary spasms of the diaphragm.",
+       "rick": "A muscle trampoline under your lungs. Pull down, air in. Relax, air out. Even a Meeseeks gets it.",
+       "diagram": "lungs",
+       "part": "diaphragm"
+      },
+      {
+       "id": "lungs-1-L4",
+       "title": "Alveoli: the swap meet",
+       "fact": "The airways end in hundreds of millions of tiny air sacs called alveoli, each wrapped in capillaries. O2 diffuses from the air into the blood, and CO2 diffuses from the blood into the air to be breathed out. Spread flat, all that surface would cover roughly 70 square meters.",
+       "rick": "Hundreds of millions of tiny bubbles making gas trades. A stock exchange that actually works.",
+       "diagram": "lungs",
+       "part": "alveoli"
+      }
+     ],
+     "questions": [
+      {
+       "id": "lungs-1-01",
+       "type": "mcq",
+       "q": "Which gas do your lungs get rid of as a waste product?",
+       "choices": [
+        "Carbon dioxide (CO2)",
+        "Oxygen (O2)",
+        "Nitrogen (N2)",
+        "Hydrogen (H2)"
+       ],
+       "answer": 0,
+       "explain": "Cells burn fuel with O2 and produce CO2, which the blood carries to the lungs to be breathed out. Nitrogen is about 78% of air but just goes in and out unused.",
+       "rick": "CO2. You make it, you exhale it. Your one *burp* productive output."
+      },
+      {
+       "id": "lungs-1-02",
+       "type": "mcq",
+       "q": "Where in the lungs does gas exchange happen?",
+       "choices": [
+        "Trachea",
+        "Main bronchi",
+        "Larynx",
+        "Alveoli"
+       ],
+       "answer": 3,
+       "explain": "Alveoli are tiny air sacs with walls one cell thick, wrapped in capillaries, so O2 and CO2 can diffuse across. The trachea, bronchi and larynx are just pipes that carry air to them.",
+       "rick": "Alveoli. Everything above them is plumbing. Very expensive, slimy plumbing."
+      },
+      {
+       "id": "lungs-1-03",
+       "type": "mcq",
+       "q": "What is the common name for the trachea?",
+       "choices": [
+        "Windpipe",
+        "Food pipe",
+        "Voice box",
+        "Tonsil"
+       ],
+       "answer": 0,
+       "explain": "The trachea is the windpipe: a tube held open by C-shaped rings of cartilage, running from the larynx down into the chest. The 'food pipe' is the esophagus, which lies just behind it.",
+       "rick": "Windpipe. Wind goes in pipe. I'm running out of ways to make this simpler, Morty-brain."
+      },
+      {
+       "id": "lungs-1-04",
+       "type": "mcq",
+       "q": "How many lobes does the right lung have?",
+       "choices": [
+        "1",
+        "2",
+        "3",
+        "4"
+       ],
+       "answer": 2,
+       "explain": "The right lung has 3 lobes (upper, middle and lower); the left has 2 (upper and lower) because the heart takes up space on the left.",
+       "rick": "Three on the right, two on the left. The heart stole a lobe. Typical."
+      },
+      {
+       "id": "lungs-1-05",
+       "type": "mcq",
+       "q": "Why is the left lung smaller than the right?",
+       "choices": [
+        "The liver pushes it up",
+        "It makes room for the heart",
+        "It is only used during exercise",
+        "It has no bronchi"
+       ],
+       "answer": 1,
+       "explain": "The heart sits slightly to the left, so the left lung has a dent for it (the cardiac notch) and only 2 lobes. The liver actually sits under the RIGHT lung, making it a bit shorter, but the right lung is still bigger overall.",
+       "rick": "The heart elbowed it out of the way. Organ politics, Morty-brain."
+      },
+      {
+       "id": "lungs-1-06",
+       "type": "mcq",
+       "q": "What does the diaphragm do when you breathe in?",
+       "choices": [
+        "Relaxes and domes upward",
+        "Squeezes the lungs to push air in",
+        "Contracts and flattens, enlarging the chest",
+        "Stays still while the lungs inflate themselves"
+       ],
+       "answer": 2,
+       "explain": "Contracting pulls the dome down, so the chest gets bigger and air flows in to fill it. Relaxing lets it dome back up for a quiet exhale. The lungs can't inflate themselves; they follow the chest wall.",
+       "rick": "The diaphragm's a plunger. Pull it down, air rushes in. Physics, *burp* not magic."
+      },
+      {
+       "id": "lungs-1-07",
+       "type": "mcq",
+       "q": "About how many breaths per minute does a resting adult take?",
+       "choices": [
+        "2-4",
+        "12-20",
+        "40-60",
+        "80-100"
+       ],
+       "answer": 1,
+       "explain": "A normal adult breathes about 12-20 times a minute at rest. Newborns breathe faster, roughly 30-60. Exercise raises both the rate and the depth of breathing.",
+       "rick": "12 to 20. If you're at 80, you're either a hamster or having a really bad day."
+      },
+      {
+       "id": "lungs-1-08",
+       "type": "mcq",
+       "q": "What is the larynx commonly called?",
+       "choices": [
+        "Windpipe",
+        "Food pipe",
+        "Air sac",
+        "Voice box"
+       ],
+       "answer": 3,
+       "explain": "The larynx (voice box) sits at the top of the trachea and contains the vocal folds (cords), which vibrate to make sound. Its epiglottis helps keep food out of the airway when you swallow.",
+       "rick": "Voice box. The thing you use to say dumb stuff. Two vocal cords and zero filter."
+      },
+      {
+       "id": "lungs-1-09",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "trachea",
+       "q": "Click the trachea (windpipe).",
+       "explain": "The trachea runs from the larynx down into the chest, held open by about 16-20 C-shaped cartilage rings. At its bottom it splits into the right and left main bronchi.",
+       "rick": "The windpipe. A vacuum hose with ribs. Don't put a peanut in it."
+      },
+      {
+       "id": "lungs-1-10",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "diaphragm",
+       "q": "Click the main muscle of breathing.",
+       "explain": "The diaphragm is the dome-shaped muscle separating the chest from the abdomen. Contracting flattens it and pulls air into the lungs; relaxing lets air back out. It does most of the work of quiet breathing.",
+       "rick": "The diaphragm. MVP of breathing. Also of hiccups, but mostly breathing."
+      },
+      {
+       "id": "lungs-1-11",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "right_lung",
+       "q": "Click the right lung.",
+       "explain": "The right lung is on the patient's right side, which is the viewer's LEFT on a front-facing diagram. It has 3 lobes and is larger than the left lung.",
+       "rick": "Patient's right, your left. You're facing the patient, not a mirror. Try to keep up."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "lungs-2-L1",
+       "title": "The airway tree",
+       "fact": "The trachea is held open by C-shaped cartilage rings whose open back faces the esophagus. It splits at the carina into right and left main bronchi; in all, the airways branch about 23 times down to bronchioles and alveoli. Mucus traps dust and germs, and cilia sweep it up toward the throat: the mucociliary escalator.",
+       "rick": "Twenty-three branchings, all lined with tiny *burp* janitors sweeping snot upward. Beautiful. Gross.",
+       "diagram": "lungs",
+       "part": "left_main_bronchus"
+      },
+      {
+       "id": "lungs-2-L2",
+       "title": "Conducting vs respiratory zone",
+       "fact": "From the nose to the terminal bronchioles is the conducting zone: it warms, humidifies and filters air but exchanges no gas, so it is 'anatomic dead space' (about 150 mL). The respiratory zone - respiratory bronchioles, alveolar ducts and alveoli - is where gas exchange happens.",
+       "rick": "150 mL of every breath never reaches an alveolus. Dead space. Like the space between your ears.",
+       "diagram": "lungs",
+       "part": "bronchioles"
+      },
+      {
+       "id": "lungs-2-L3",
+       "title": "Pressure moves the air",
+       "fact": "Inhaling: the diaphragm and external intercostals contract, chest volume rises, so alveolar pressure falls below atmospheric (Boyle's law) and air flows in. Quiet exhaling is passive elastic recoil. A quiet breath (tidal volume) is about 500 mL; about 1.2 L (residual volume) always stays in; total lung capacity is about 6 L.",
+       "rick": "Bigger box, lower pressure, air rushes in. Boyle worked this out in the 1600s. By *burp* candlelight.",
+       "diagram": "lungs",
+       "part": "diaphragm"
+      },
+      {
+       "id": "lungs-2-L4",
+       "title": "Moving O2 and CO2",
+       "fact": "Gases diffuse from high to low partial pressure: alveolar PO2 is about 100 mmHg versus about 40 in returning venous blood. About 98% of O2 rides on hemoglobin. CO2 travels mostly (about 70%) as bicarbonate (HCO3-). Breathing is driven mainly by rising CO2, sensed by chemoreceptors in the medulla.",
+       "rick": "Gases roll downhill, from more to less. Even gas gets this. Gas, Morty-brain.",
+       "diagram": "lungs",
+       "part": "alveoli"
+      }
+     ],
+     "questions": [
+      {
+       "id": "lungs-2-01",
+       "type": "mcq",
+       "q": "About how much air moves in with a normal, quiet breath (tidal volume)?",
+       "choices": [
+        "50 mL",
+        "500 mL",
+        "1.5 L",
+        "5 L"
+       ],
+       "answer": 1,
+       "explain": "Tidal volume at rest is about 500 mL (roughly 7 mL/kg). About 150 mL of it just fills the dead space of the conducting airways, so only about 350 mL of fresh air reaches the alveoli.",
+       "rick": "Half a liter. A small soda. Not the giant one you panic-gulp before exams."
+      },
+      {
+       "id": "lungs-2-02",
+       "type": "mcq",
+       "q": "Air flows INTO the lungs during inhalation because:",
+       "choices": [
+        "Alveolar pressure rises above atmospheric pressure",
+        "The lungs actively expand by contracting",
+        "Alveolar pressure falls below atmospheric pressure",
+        "Pleural fluid pumps air into the alveoli"
+       ],
+       "answer": 2,
+       "explain": "Contracting the diaphragm and external intercostals enlarges the chest; the lungs follow, so alveolar volume rises and pressure drops slightly below atmospheric (Boyle's law). Air flows down that pressure gradient. Lungs have no muscle to expand themselves.",
+       "rick": "Air goes from high pressure to low pressure. That's it. That's breathing. You're welcome."
+      },
+      {
+       "id": "lungs-2-03",
+       "type": "mcq",
+       "q": "The C-shaped cartilage rings of the trachea are open toward the:",
+       "choices": [
+        "Sternum, in front",
+        "Esophagus, at the back",
+        "Heart, below",
+        "Thyroid gland, above"
+       ],
+       "answer": 1,
+       "explain": "The gap at the back is bridged by the trachealis muscle, so the esophagus can bulge forward when you swallow a big bite. The rings keep the trachea from collapsing as pressure changes during breathing.",
+       "rick": "Open at the back, so your sandwich can squeeze down the esophagus. Thoughtful design. Unlike your diet."
+      },
+      {
+       "id": "lungs-2-04",
+       "type": "mcq",
+       "q": "How is most CO2 carried in the blood?",
+       "choices": [
+        "Dissolved in plasma",
+        "Bound to hemoglobin",
+        "As bicarbonate (HCO3-)",
+        "As gas bubbles"
+       ],
+       "answer": 2,
+       "explain": "About 70% of CO2 is converted inside red cells by carbonic anhydrase (CO2 + H2O -> H2CO3 -> H+ + HCO3-) and travels as bicarbonate. Roughly 20% binds hemoglobin (carbaminohemoglobin) and about 7-10% is dissolved.",
+       "rick": "Bicarbonate. Carbonic anhydrase does it faster than you can say *burp* 'carbonic anhydrase'."
+      },
+      {
+       "id": "lungs-2-05",
+       "type": "mcq",
+       "q": "How is most O2 carried in the blood?",
+       "choices": [
+        "Bound to hemoglobin",
+        "Dissolved in plasma",
+        "As bicarbonate",
+        "Bound to albumin"
+       ],
+       "answer": 0,
+       "explain": "About 98% of O2 is bound to hemoglobin in red cells; only about 2% is dissolved, because O2 dissolves poorly in plasma. Each hemoglobin molecule can carry up to 4 O2.",
+       "rick": "Hemoglobin does almost all the carrying. Plasma's the coworker who 'helps' by watching."
+      },
+      {
+       "id": "lungs-2-06",
+       "type": "mcq",
+       "q": "What is the volume of air left in the lungs after a maximal exhalation called?",
+       "choices": [
+        "Tidal volume",
+        "Vital capacity",
+        "Inspiratory reserve volume",
+        "Residual volume"
+       ],
+       "answer": 3,
+       "explain": "Residual volume (about 1.2 L) stays in the lungs no matter how hard you blow, keeping alveoli from collapsing. Vital capacity is the most you can exhale after a maximal breath in; tidal volume is a quiet breath.",
+       "rick": "Residual volume. You can't empty your lungs completely. Your head, on the other hand..."
+      },
+      {
+       "id": "lungs-2-07",
+       "type": "mcq",
+       "q": "Which airway belongs to the conducting zone, where NO gas exchange happens?",
+       "choices": [
+        "Alveolar ducts",
+        "Respiratory bronchioles",
+        "Alveolar sacs",
+        "Terminal bronchioles"
+       ],
+       "answer": 3,
+       "explain": "Terminal bronchioles are the last purely conducting airways. Respiratory bronchioles, alveolar ducts and alveolar sacs all have alveoli in their walls and take part in gas exchange.",
+       "rick": "Terminal bronchioles. 'Terminal' as in end of the pipes, not 'six months to live'. Relax."
+      },
+      {
+       "id": "lungs-2-08",
+       "type": "mcq",
+       "q": "In a healthy person, the main chemical signal that drives breathing is:",
+       "choices": [
+        "A rise in blood CO2",
+        "A fall in blood O2",
+        "A rise in blood O2",
+        "A fall in blood nitrogen"
+       ],
+       "answer": 0,
+       "explain": "CO2 diffuses into the brain's fluid and forms H+, which central chemoreceptors in the medulla detect; even a small CO2 rise boosts breathing. Low O2 becomes a strong drive only when arterial PO2 falls below about 60 mmHg.",
+       "rick": "You breathe to dump CO2, not to grab O2. Your brain's a CO2 alarm, genius."
+      },
+      {
+       "id": "lungs-2-09",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "larynx",
+       "q": "Click the larynx (voice box).",
+       "explain": "The larynx sits at the top of the trachea, in front of the lower pharynx. It houses the vocal folds and, with the epiglottis, protects the airway during swallowing. Its thyroid cartilage forms the Adam's apple.",
+       "rick": "The voice box. Home of the vocal cords and the reason everyone can hear you whine."
+      },
+      {
+       "id": "lungs-2-10",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "alveoli",
+       "q": "Click where O2 actually passes from the air into the blood.",
+       "explain": "Alveoli are the gas-exchange surface: thin-walled air sacs wrapped in capillaries. O2 diffuses in and CO2 diffuses out across a blood-air barrier only about 0.5 um thick.",
+       "rick": "Alveoli. The only part of the lung doing real chemistry. The rest is ductwork."
+      },
+      {
+       "id": "lungs-2-11",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "left_main_bronchus",
+       "q": "Click the left main bronchus.",
+       "explain": "The left main bronchus leaves the carina for the left lung. It is longer, narrower and more horizontal than the right, because it has to pass under the aortic arch and beside the heart.",
+       "rick": "Left main bronchus. Long, skinny and leaning sideways. Like you after *burp* three beers."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "lungs-3-L1",
+       "title": "Alveolar cells and surfactant",
+       "fact": "Type I pneumocytes are thin, flat cells covering about 95% of the alveolar surface for gas exchange. Type II pneumocytes secrete surfactant (mainly dipalmitoylphosphatidylcholine) and regenerate type I cells. Surfactant lowers surface tension so small alveoli don't collapse (Laplace: P = 2T/r) and raises lung compliance.",
+       "rick": "Surfactant: soap for your lungs. Without it, your alveoli fold like *burp* Jerry in an argument.",
+       "diagram": "lungs",
+       "part": "alveoli"
+      },
+      {
+       "id": "lungs-3-L2",
+       "title": "V/Q matching",
+       "fact": "Overall ventilation/perfusion (V/Q) is about 0.8. Upright, both are greatest at the base, but perfusion rises more, so V/Q is highest at the apex (about 3) and lowest at the base (about 0.6). No blood flow (embolus): V/Q -> infinity, dead space. No airflow (blocked airway): V/Q = 0, shunt. Hypoxia constricts pulmonary vessels.",
+       "rick": "Air and blood have to show up at the same place. It's a dinner date, genius, not rocket science.",
+       "diagram": "lungs",
+       "part": "right_lung"
+      },
+      {
+       "id": "lungs-3-L3",
+       "title": "The O2-hemoglobin curve",
+       "fact": "Hemoglobin binds O2 cooperatively, giving a sigmoid curve (P50 about 27 mmHg). A RIGHT shift means lower affinity and easier O2 unloading: more CO2, H+ (low pH), heat and 2,3-BPG, as in exercising muscle. LEFT shift: fetal hemoglobin (binds 2,3-BPG poorly), carbon monoxide, alkalosis, cold.",
+       "rick": "Right shift, let go. Left shift, hold on. Hemoglobin has more emotional range than you.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "lungs-3-L4",
+       "title": "Airway anatomy",
+       "fact": "The trachea splits at the carina, about the level of the sternal angle (T4/T5). The right main bronchus is wider, shorter and more vertical. The right lung has 3 lobes; the left has 2, plus the cardiac notch and the lingula (part of its upper lobe). Bronchi have cartilage; bronchioles have none: smooth muscle dominates.",
+       "rick": "Big airways get cartilage armor, little ones get muscle. Squeeze the little ones and you wheeze, *burp* genius.",
+       "diagram": "lungs",
+       "part": "carina"
+      }
+     ],
+     "questions": [
+      {
+       "id": "lungs-3-01",
+       "type": "mcq",
+       "q": "Which cells secrete pulmonary surfactant?",
+       "choices": [
+        "Type I pneumocytes",
+        "Type II pneumocytes",
+        "Alveolar macrophages",
+        "Goblet cells"
+       ],
+       "answer": 1,
+       "explain": "Type II pneumocytes are cuboidal cells that store surfactant in lamellar bodies and act as stem cells to replace type I cells after injury. Type I cells form the thin gas-exchange surface; macrophages clean up; goblet cells make mucus in larger airways.",
+       "rick": "Type II. The cuboidal nerds doing the chemistry while type I just lies there looking flat."
+      },
+      {
+       "id": "lungs-3-02",
+       "type": "mcq",
+       "q": "By the law of Laplace (P = 2T/r), which alveoli tend to collapse first when surfactant is missing?",
+       "choices": [
+        "Smaller alveoli",
+        "Larger alveoli",
+        "All collapse equally",
+        "Only alveoli at the apex"
+       ],
+       "answer": 0,
+       "explain": "At the same surface tension, a smaller radius means a higher collapsing pressure, so small alveoli would empty into large ones. Surfactant lowers tension more as alveoli shrink, stabilizing them and preventing atelectasis.",
+       "rick": "Small bubble, big pressure, collapse. Physics bullies the little guys."
+      },
+      {
+       "id": "lungs-3-03",
+       "type": "mcq",
+       "q": "In an upright person, where is the V/Q ratio highest?",
+       "choices": [
+        "Lung base",
+        "Lung apex",
+        "Hilum",
+        "Equal throughout the lungs"
+       ],
+       "answer": 1,
+       "explain": "Gravity increases both ventilation and perfusion toward the base, but perfusion increases much more. So the apex is relatively over-ventilated (V/Q about 3) and the base relatively over-perfused (about 0.6). The apex also has the highest alveolar PO2.",
+       "rick": "Apex. Little air, even less blood, so V/Q is high. TB loves it up there, by the way."
+      },
+      {
+       "id": "lungs-3-04",
+       "type": "mcq",
+       "q": "Which of these shifts the O2-hemoglobin dissociation curve to the RIGHT?",
+       "choices": [
+        "Carbon monoxide",
+        "Fetal hemoglobin",
+        "Alkalosis",
+        "Increased 2,3-BPG"
+       ],
+       "answer": 3,
+       "explain": "2,3-BPG binds deoxyhemoglobin and lowers its O2 affinity, so O2 unloads more easily (right shift). CO, fetal hemoglobin and alkalosis all raise affinity, shifting the curve LEFT. Right-shift memory aid 'CADET face right': CO2, Acid, 2,3-BPG, Exercise, Temperature.",
+       "rick": "Right shift = let go of the O2. Like you letting go of every fact by *burp* Thursday."
+      },
+      {
+       "id": "lungs-3-05",
+       "type": "mcq",
+       "q": "How do pulmonary arterioles respond to low alveolar O2?",
+       "choices": [
+        "They constrict, diverting blood to better-ventilated areas",
+        "They dilate, like systemic arterioles",
+        "They do not change",
+        "They become leaky, causing edema"
+       ],
+       "answer": 0,
+       "explain": "Hypoxic pulmonary vasoconstriction sends blood away from poorly ventilated alveoli toward well-ventilated ones, improving V/Q matching. Systemic arterioles do the opposite and dilate in hypoxia. Widespread hypoxia (e.g. high altitude) can raise pulmonary artery pressure.",
+       "rick": "Lungs reroute blood away from crappy alveoli. Smart. Systemic vessels do the opposite. Idiots."
+      },
+      {
+       "id": "lungs-3-06",
+       "type": "mcq",
+       "q": "The lingula is part of which lobe?",
+       "choices": [
+        "Right middle lobe",
+        "Right upper lobe",
+        "Left lower lobe",
+        "Left upper lobe"
+       ],
+       "answer": 3,
+       "explain": "The lingula ('little tongue') is a tongue-shaped extension of the left upper lobe, just below the cardiac notch. It is roughly the left lung's counterpart of the right middle lobe.",
+       "rick": "The lingula: the left lung's sad attempt at a middle lobe. Participation trophy."
+      },
+      {
+       "id": "lungs-3-07",
+       "type": "mcq",
+       "q": "A pulmonary embolus blocks blood flow to a ventilated lung region. That region's V/Q ratio becomes:",
+       "choices": [
+        "Zero (shunt)",
+        "About 0.8 (normal)",
+        "Infinite (dead space)",
+        "Exactly 1"
+       ],
+       "answer": 2,
+       "explain": "Ventilation continues but perfusion is zero, so V/Q heads to infinity: the region is dead space, wasting ventilation. The opposite - perfusion without ventilation, as in an airway plugged by mucus - is V/Q of zero, a shunt.",
+       "rick": "Air but no blood. You're ventilating a ghost town. Dead space, Morty-brain."
+      },
+      {
+       "id": "lungs-3-08",
+       "type": "mcq",
+       "q": "Fetal hemoglobin has a higher O2 affinity than adult hemoglobin mainly because it:",
+       "choices": [
+        "Contains more iron per molecule",
+        "Has extra heme groups",
+        "Binds 2,3-BPG less strongly",
+        "Binds CO2 more strongly"
+       ],
+       "answer": 2,
+       "explain": "HbF (alpha2 gamma2) has gamma chains that bind 2,3-BPG poorly, so its curve sits to the LEFT of adult HbA. That lets the fetus pull O2 from maternal blood across the placenta. Both have four hemes.",
+       "rick": "Fetal Hb: a little O2 thief stealing from mom. Kids, *burp* am I right?"
+      },
+      {
+       "id": "lungs-3-09",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "bronchioles",
+       "q": "Click the small airways that have no cartilage in their walls.",
+       "explain": "Bronchioles (under about 1 mm wide) lack cartilage and glands, so smooth muscle dominates their walls; they can constrict strongly, as in an asthma attack, and can collapse during expiration in emphysema.",
+       "rick": "Bronchioles: no cartilage, plenty of smooth muscle. Squeeze them and you wheeze. Asthma 101."
+      },
+      {
+       "id": "lungs-3-10",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "cardiac_notch",
+       "q": "Click the indentation in the left lung where the heart sits.",
+       "explain": "The cardiac notch is a deep indentation in the front border of the left lung's upper lobe, making room for the heart; the lingula lies just below it.",
+       "rick": "The cardiac notch. The left lung carved out a parking spot for the heart. Romantic."
+      },
+      {
+       "id": "lungs-3-11",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "carina",
+       "q": "Click the ridge where the trachea splits into the two main bronchi.",
+       "explain": "The carina is a keel-shaped cartilage ridge at the tracheal bifurcation, around the level of the sternal angle (T4/T5). Its lining is very sensitive and triggers a strong cough reflex.",
+       "rick": "The carina. Touch it with a tube and the patient coughs like I insulted their mother."
+      },
+      {
+       "id": "lungs-3-12",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "left_lung",
+       "q": "Click the lung that has only two lobes.",
+       "explain": "The left lung has an upper and a lower lobe separated by the oblique fissure; it has no horizontal fissure. It is on the patient's left, which is the viewer's right on a front view.",
+       "rick": "Left lung. Two lobes, because the heart moved in and took a room."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "lungs-4-L1",
+       "title": "Obstructive vs restrictive",
+       "fact": "Obstructive (asthma, COPD): air gets in but can't get out - FEV1/FVC below 0.7, TLC normal or high (air trapping). Restrictive (fibrosis, chest wall, neuromuscular): FEV1 and FVC both fall, ratio normal or high, TLC low. DLCO falls in emphysema and fibrosis. Compliance: up in emphysema, down in fibrosis.",
+       "rick": "Obstructive: air can't get out. Restrictive: air can't get in. Your *burp* brain does both with facts.",
+       "diagram": "lungs",
+       "part": "bronchioles"
+      },
+      {
+       "id": "lungs-4-L2",
+       "title": "Hypoxemia and the A-a gradient",
+       "fact": "Alveolar gas equation: PAO2 = FiO2 x (760 - 47) - PaCO2/0.8, about 150 - 50 = 100 mmHg on room air at sea level. A-a gradient = PAO2 - PaO2, normally under about 10-15 mmHg. Normal gradient: hypoventilation, altitude. Raised gradient: V/Q mismatch, shunt, diffusion limit. Shunt barely improves with 100% O2.",
+       "rick": "One equation separates a lazy brainstem from broken lungs. Learn it or stay confused.",
+       "diagram": "lungs",
+       "part": "alveoli"
+      },
+      {
+       "id": "lungs-4-L3",
+       "title": "Surfactant and the newborn",
+       "fact": "Surfactant output rises late in pregnancy and is usually adequate by about 34-35 weeks. Preterm babies lacking it get neonatal respiratory distress syndrome: collapsed alveoli, grunting, retractions, ground-glass X-ray. Risk also rises with maternal diabetes (fetal insulin suppresses surfactant) and C-section.",
+       "rick": "Born too early, lungs not finished. Factory recall on day one. Rough start, kid.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "lungs-4-L4",
+       "title": "Nerves and aspiration",
+       "fact": "The phrenic nerves (C3, C4, C5 'keep the diaphragm alive') are its only motor supply; diaphragm irritation can refer pain to the shoulder. The recurrent laryngeal nerves supply all intrinsic laryngeal muscles except cricothyroid; the left one loops under the aortic arch. Aspirated objects favor the right main bronchus.",
+       "rick": "Nerves taking ridiculous detours and peanuts taking the express lane. Your anatomy is a *burp* mess.",
+       "diagram": "lungs",
+       "part": "diaphragm"
+      }
+     ],
+     "questions": [
+      {
+       "id": "lungs-4-01",
+       "type": "mcq",
+       "q": "A 65-year-old smoker has FEV1/FVC 0.55, TLC 125% of predicted and a low DLCO. Most likely diagnosis?",
+       "choices": [
+        "Asthma",
+        "Idiopathic pulmonary fibrosis",
+        "Emphysema",
+        "Chronic bronchitis"
+       ],
+       "answer": 2,
+       "explain": "Low FEV1/FVC with high TLC = obstruction with air trapping. A low DLCO means the gas-exchange surface itself is destroyed: emphysema. Asthma and pure chronic bronchitis are obstructive but usually keep a normal DLCO; fibrosis is restrictive with a low TLC.",
+       "rick": "Smoker, trapped air, wrecked alveoli. Emphysema. Cigarettes: worse life choice than chasing Szechuan sauce."
+      },
+      {
+       "id": "lungs-4-02",
+       "type": "mcq",
+       "q": "Heroin overdose, room air at sea level: PaCO2 80 mmHg, PaO2 50 mmHg. What is the main cause of the hypoxemia?",
+       "choices": [
+        "Hypoventilation",
+        "V/Q mismatch",
+        "Right-to-left shunt",
+        "Diffusion limitation"
+       ],
+       "answer": 0,
+       "explain": "PAO2 = 150 - 80/0.8 = 50 mmHg, so the A-a gradient is about 0: gas exchange works, there's just too little ventilation. High PaCO2 with a normal A-a gradient = hypoventilation (opioids, sedatives, neuromuscular weakness).",
+       "rick": "A-a gradient zero. Lungs are fine; the brainstem stopped telling them to work. Opioids, *burp* idiot."
+      },
+      {
+       "id": "lungs-4-03",
+       "type": "mcq",
+       "q": "Hypoxemia that barely improves on 100% O2 is most consistent with:",
+       "choices": [
+        "Hypoventilation",
+        "High altitude",
+        "Mild V/Q mismatch",
+        "Right-to-left shunt"
+       ],
+       "answer": 3,
+       "explain": "Shunted blood never meets ventilated alveoli, so extra inspired O2 can't reach it and PaO2 barely rises. Hypoventilation, altitude and V/Q mismatch all improve with extra O2, because that blood does pass alveoli whose O2 can be raised.",
+       "rick": "Shunt: the blood skips the lungs entirely. Pump in all the O2 you want, it never gets the memo."
+      },
+      {
+       "id": "lungs-4-04",
+       "type": "mcq",
+       "q": "A 35-year-old nonsmoker has panacinar emphysema worst in the lower lobes, plus liver cirrhosis. Most likely cause?",
+       "choices": [
+        "Cystic fibrosis",
+        "Alpha-1 antitrypsin deficiency",
+        "Asbestos exposure",
+        "Sarcoidosis"
+       ],
+       "answer": 1,
+       "explain": "Without alpha-1 antitrypsin, neutrophil elastase digests alveolar walls unchecked: panacinar emphysema, worst at the bases. The misfolded protein also gets stuck in liver cells, causing cirrhosis. Smoking-related emphysema is centriacinar and upper-lobe predominant.",
+       "rick": "Young, nonsmoker, wrecked lung bases and liver. Alpha-1 antitrypsin. The elastase ate the furniture."
+      },
+      {
+       "id": "lungs-4-05",
+       "type": "mcq",
+       "q": "Stab wound to the right chest: low BP, distended neck veins, absent right breath sounds, hyperresonance, trachea shifted left. Diagnosis?",
+       "choices": [
+        "Right tension pneumothorax",
+        "Right massive hemothorax",
+        "Cardiac tamponade",
+        "Left tension pneumothorax"
+       ],
+       "answer": 0,
+       "explain": "Air enters the right pleural space with each breath but can't leave: the lung collapses (no breath sounds, hyperresonance), the trachea and mediastinum shift left, and venous return is kinked (low BP, distended neck veins). Hemothorax is dull; tamponade doesn't shift the trachea.",
+       "rick": "Air goes in, can't get out, shoves the trachea sideways. Tension pneumothorax. Physics wins again."
+      },
+      {
+       "id": "lungs-4-06",
+       "type": "mcq",
+       "q": "A baby born at 28 weeks has grunting, retractions and ground-glass lungs on X-ray. What is primarily lacking?",
+       "choices": [
+        "Elastin in the alveolar walls",
+        "Surfactant from type I pneumocytes",
+        "Mucus from goblet cells",
+        "Surfactant from type II pneumocytes"
+       ],
+       "answer": 3,
+       "explain": "Neonatal respiratory distress syndrome: before about 34 weeks, type II pneumocytes make too little surfactant, so high surface tension collapses alveoli (diffuse atelectasis), causing the ground-glass picture and labored breathing. Type I cells don't make surfactant.",
+       "rick": "Premature lungs, no surfactant, alveoli collapse like cheap tents. Type II cells weren't ready."
+      },
+      {
+       "id": "lungs-4-07",
+       "type": "mcq",
+       "q": "Irritation of the central diaphragm (e.g. blood from a ruptured spleen) causes shoulder pain. Which spinal segments carry it?",
+       "choices": [
+        "T1-T2",
+        "C3-C5",
+        "L1-L2",
+        "S2-S4"
+       ],
+       "answer": 1,
+       "explain": "The phrenic nerve (C3-C5) carries motor and central sensory fibers of the diaphragm. Its input enters the same cord segments as the skin over the shoulder (C3-C5 dermatomes), so the brain misreads it as shoulder pain - e.g. Kehr sign with splenic rupture.",
+       "rick": "C3, 4, 5 keeps the diaphragm alive. And makes your shoulder hurt when your spleen pops. *burp* Fun!"
+      },
+      {
+       "id": "lungs-4-08",
+       "type": "mcq",
+       "q": "A patient becomes hoarse; imaging shows an aortic arch aneurysm. Which nerve is most likely being stretched?",
+       "choices": [
+        "Left phrenic nerve",
+        "Superior laryngeal nerve",
+        "Left recurrent laryngeal nerve",
+        "Right recurrent laryngeal nerve"
+       ],
+       "answer": 2,
+       "explain": "The left recurrent laryngeal nerve hooks under the aortic arch (at the ligamentum arteriosum) and climbs to the larynx, so an arch aneurysm, a big left atrium or a left lung tumor can stretch it. It supplies all intrinsic laryngeal muscles except cricothyroid: vocal cord palsy.",
+       "rick": "The left recurrent laryngeal nerve takes the scenic route under the aorta. Evolution's worst road trip."
+      },
+      {
+       "id": "lungs-4-09",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "right_main_bronchus",
+       "q": "Click the main bronchus that inhaled foreign objects most often enter.",
+       "explain": "The right main bronchus is wider, shorter and more vertical than the left, nearly in line with the trachea, so inhaled objects and aspirated fluid usually go right - typically to the right lower lobe when upright.",
+       "rick": "Right main bronchus. Straight shot down. Peanuts love it. So do toddlers' Lego bricks."
+      },
+      {
+       "id": "lungs-4-10",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "diaphragm",
+       "q": "Click the muscle supplied by nerves from C3, C4 and C5.",
+       "explain": "The diaphragm's motor supply is entirely the phrenic nerves (C3-C5). A cord injury at C3 or higher stops diaphragmatic breathing; a phrenic nerve palsy paralyzes one half, which sits high on X-ray.",
+       "rick": "C3-4-5 keeps the diaphragm alive. Wreck the cord up there and a machine breathes for you, genius."
+      },
+      {
+       "id": "lungs-4-11",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "alveoli",
+       "q": "Click the structures whose type II cells make too little surfactant in very preterm babies.",
+       "explain": "Alveoli are lined by type I cells (gas exchange) and type II cells (surfactant). Without enough surfactant, as in preterm neonatal RDS, alveoli collapse and gas exchange fails.",
+       "rick": "Alveoli. No surfactant and they deflate like a cheap pool float."
+      },
+      {
+       "id": "lungs-4-12",
+       "type": "label",
+       "diagram": "lungs",
+       "part": "larynx",
+       "q": "Click the organ whose intrinsic muscles are mostly supplied by the recurrent laryngeal nerves.",
+       "explain": "The larynx contains the vocal cords. All its intrinsic muscles except the cricothyroid are supplied by the recurrent laryngeal nerves, so injury (thyroid surgery, aortic arch aneurysm) causes hoarseness.",
+       "rick": "The larynx. Nick its nerve in thyroid surgery and the patient sounds like a *burp* broken Meeseeks."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "diagram": "heart",
+   "id": "right_atrium",
+   "name": "Right Atrium",
+   "desc": "Upper right chamber. Receives O2-poor blood from the superior and inferior venae cavae and the coronary sinus, and passes it through the tricuspid valve to the right ventricle. Contains the SA and AV nodes.",
+   "rick": "The heart's waiting room for used blood. Grim, but somebody has to do it."
+  },
+  {
+   "diagram": "heart",
+   "id": "right_ventricle",
+   "name": "Right Ventricle",
+   "desc": "Lower right chamber, forming most of the heart's front surface behind the sternum. Pumps O2-poor blood through the pulmonary valve to the lungs at low pressure (about 25 mmHg systolic).",
+   "rick": "A thin-walled pump for a short trip. The lungs are right next door, genius."
+  },
+  {
+   "diagram": "heart",
+   "id": "left_atrium",
+   "name": "Left Atrium",
+   "desc": "Upper left chamber and the most posterior part of the heart, lying against the esophagus. Receives O2-rich blood from the pulmonary veins and passes it through the mitral valve to the left ventricle.",
+   "rick": "Left atrium: hides at the back like a kid who didn't do the *burp* homework."
+  },
+  {
+   "diagram": "heart",
+   "id": "left_ventricle",
+   "name": "Left Ventricle",
+   "desc": "Thick-walled lower left chamber that forms the apex. Pumps O2-rich blood through the aortic valve into the aorta at high pressure (about 120 mmHg systolic) to supply the whole body.",
+   "rick": "The left ventricle. The only part of you that actually works out."
+  },
+  {
+   "diagram": "heart",
+   "id": "superior_vena_cava",
+   "name": "Superior Vena Cava",
+   "desc": "Large vein returning O2-poor blood from the head, neck, upper limbs and upper chest into the top of the right atrium.",
+   "rick": "The upper drain. Everything from the neck up flows here, including whatever's left of your brain."
+  },
+  {
+   "diagram": "heart",
+   "id": "inferior_vena_cava",
+   "name": "Inferior Vena Cava",
+   "desc": "Largest vein in the body. Carries O2-poor blood from the legs, pelvis and abdomen up through the diaphragm (at about T8) into the bottom of the right atrium.",
+   "rick": "Biggest vein you've got. Hauls blood uphill from your legs. Gravity hates it."
+  },
+  {
+   "diagram": "heart",
+   "id": "aorta",
+   "name": "Aorta",
+   "desc": "Largest artery. Rises from the left ventricle, arches over the heart and descends through the chest and abdomen, branching to deliver O2-rich blood to every organ.",
+   "rick": "The main highway out of the heart. Every organ is an exit."
+  },
+  {
+   "diagram": "heart",
+   "id": "pulmonary_trunk",
+   "name": "Pulmonary Trunk",
+   "desc": "Short, wide artery leaving the right ventricle through the pulmonary valve. Splits into the right and left pulmonary arteries, which carry O2-poor blood to the lungs.",
+   "rick": "An artery full of O2-poor blood. Anatomy's way of trolling first-years."
+  },
+  {
+   "diagram": "heart",
+   "id": "pulmonary_veins",
+   "name": "Pulmonary Veins",
+   "desc": "Usually four veins (two from each lung) returning O2-rich blood to the left atrium. Muscle sleeves around their openings are the usual trigger site of atrial fibrillation.",
+   "rick": "Veins with oxygen in them. Break the rules, Morty-brain. Just not on the exam."
+  },
+  {
+   "diagram": "heart",
+   "id": "tricuspid_valve",
+   "name": "Tricuspid Valve",
+   "desc": "Right atrioventricular valve with three cusps, tethered by chordae tendineae to papillary muscles. Lets blood into the right ventricle and closes during systole (part of S1).",
+   "rick": "Three flaps on parachute strings. Better engineering than Earth's entire aerospace industry."
+  },
+  {
+   "diagram": "heart",
+   "id": "pulmonary_valve",
+   "name": "Pulmonary Valve",
+   "desc": "Semilunar valve with three cusps between the right ventricle and the pulmonary trunk. Stops backflow into the right ventricle; heard best at the left 2nd intercostal space.",
+   "rick": "The exit door for lung-bound blood. Closes with a click you call P2."
+  },
+  {
+   "diagram": "heart",
+   "id": "mitral_valve",
+   "name": "Mitral Valve",
+   "desc": "Left atrioventricular (bicuspid) valve with two cusps, between the left atrium and left ventricle. Anchored by chordae tendineae; heard best at the apex. Classic target of rheumatic fever.",
+   "rick": "Two cusps, named after a bishop's hat. Medicine's naming committee was *burp* drunk. And I'd know."
+  },
+  {
+   "diagram": "heart",
+   "id": "aortic_valve",
+   "name": "Aortic Valve",
+   "desc": "Semilunar valve with three cusps between the left ventricle and the aorta. The coronary arteries arise just above it. Heard best at the right 2nd intercostal space.",
+   "rick": "Guards the most important doorway in your body. Treat it better than your apartment door."
+  },
+  {
+   "diagram": "heart",
+   "id": "interventricular_septum",
+   "name": "Interventricular Septum",
+   "desc": "Wall between the ventricles: thick muscle plus a thin upper membranous part, the usual VSD site. Carries the bundle branches; its anterior two-thirds is supplied by the LAD.",
+   "rick": "The wall between two pumps. Like the wall between me and caring about your feelings."
+  },
+  {
+   "diagram": "heart",
+   "id": "sa_node",
+   "name": "SA Node",
+   "desc": "Sinoatrial node: pacemaker tissue in the right atrial wall near the superior vena cava opening. Fires spontaneously about 60-100 times a minute and sets the normal sinus rhythm.",
+   "rick": "Your built-in metronome. Let it quit and somebody has to wire a battery into your chest."
+  },
+  {
+   "diagram": "heart",
+   "id": "av_node",
+   "name": "AV Node",
+   "desc": "Atrioventricular node in the lower interatrial septum. Delays the impulse about 0.1 s so the ventricles can fill, then passes it to the bundle of His. Backup pacemaker at about 40-60/min.",
+   "rick": "The AV node: professional procrastinator. For once, procrastinating *burp* saves lives."
+  },
+  {
+   "diagram": "lungs",
+   "id": "larynx",
+   "name": "Larynx",
+   "desc": "Voice box at the top of the trachea (about C3-C6). Its cartilages include the thyroid cartilage (Adam's apple); it houses the vocal folds and guards the airway with the epiglottis during swallowing.",
+   "rick": "Voice box. Turns air into words. In your case, mostly *burp* the wrong words."
+  },
+  {
+   "diagram": "lungs",
+   "id": "trachea",
+   "name": "Trachea",
+   "desc": "Windpipe from the larynx (about C6) to the carina (about T4/T5), roughly 10-12 cm long. Held open by C-shaped cartilage rings that are open at the back, where the esophagus lies.",
+   "rick": "A ribbed hose to your lungs. Respect the hose."
+  },
+  {
+   "diagram": "lungs",
+   "id": "carina",
+   "name": "Carina",
+   "desc": "Keel-shaped ridge at the bottom of the trachea where it splits into the two main bronchi, near the sternal angle (T4/T5). Its very sensitive lining triggers a strong cough.",
+   "rick": "The fork in the road. Left or right, your peanut has a choice to make."
+  },
+  {
+   "diagram": "lungs",
+   "id": "right_main_bronchus",
+   "name": "Right Main Bronchus",
+   "desc": "Airway from the carina to the right lung. Wider, shorter and more vertical than the left, so aspirated objects usually end up on this side.",
+   "rick": "The express lane to the right lung. Every foreign object's favorite slide."
+  },
+  {
+   "diagram": "lungs",
+   "id": "left_main_bronchus",
+   "name": "Left Main Bronchus",
+   "desc": "Airway from the carina to the left lung. Longer, narrower and more horizontal than the right; passes under the aortic arch and in front of the esophagus.",
+   "rick": "Longer and skinnier, because the aorta is sitting on it. Rough neighborhood."
+  },
+  {
+   "diagram": "lungs",
+   "id": "bronchioles",
+   "name": "Bronchioles",
+   "desc": "Small airways (under about 1 mm) beyond the bronchi, with no cartilage; smooth muscle dominates their walls. Terminal bronchioles end the conducting zone; respiratory bronchioles begin gas exchange.",
+   "rick": "Tiny tubes with no cartilage, all muscle and attitude. Squeeze too hard and you wheeze."
+  },
+  {
+   "diagram": "lungs",
+   "id": "alveoli",
+   "name": "Alveoli",
+   "desc": "Hundreds of millions of tiny air sacs wrapped in capillaries: the site of gas exchange. Lined by type I cells (thin exchange surface) and type II cells (surfactant).",
+   "rick": "Where the actual magic happens. Everything else is just pipes, Morty-brain."
+  },
+  {
+   "diagram": "lungs",
+   "id": "right_lung",
+   "name": "Right Lung",
+   "desc": "Larger lung with 3 lobes (upper, middle, lower) divided by the horizontal and oblique fissures. A bit shorter than the left because the liver pushes the diaphragm up on the right.",
+   "rick": "Three lobes. The overachiever. Basically the Rick of lungs."
+  },
+  {
+   "diagram": "lungs",
+   "id": "left_lung",
+   "name": "Left Lung",
+   "desc": "Smaller lung with 2 lobes (upper and lower) divided by the oblique fissure. Its upper lobe carries the cardiac notch and the lingula, making room for the heart.",
+   "rick": "Two lobes and a heart-shaped dent. Sentimental little organ."
+  },
+  {
+   "diagram": "lungs",
+   "id": "cardiac_notch",
+   "name": "Cardiac Notch",
+   "desc": "Indentation in the front border of the left lung's upper lobe where the heart lies closest to the chest wall; the lingula sits just below it.",
+   "rick": "A dent made just for the heart. Romantic, if lungs had feelings. They don't. Neither do I."
+  },
+  {
+   "diagram": "lungs",
+   "id": "diaphragm",
+   "name": "Diaphragm",
+   "desc": "Dome-shaped muscle separating the thorax from the abdomen; the main muscle of breathing. Contracts and flattens to inhale. Motor supply: the phrenic nerves (C3-C5).",
+   "rick": "The plunger under your lungs. C3-4-5 keeps it alive. *burp* Write that on your hand."
+  }
+ ]
+}

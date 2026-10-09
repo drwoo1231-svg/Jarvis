@@ -1,0 +1,1722 @@
+{
+ "batch": "bones_muscles",
+ "topics": [
+  {
+   "topic": "bones",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "bones-1-L1",
+       "title": "What bones are for",
+       "fact": "Your skeleton has five big jobs: SUPPORT (it holds you up), PROTECTION (the skull guards the brain, the rib cage guards the heart and lungs), MOVEMENT (muscles pull on bones like levers), BLOOD CELL production (in red bone marrow) and STORAGE of minerals, mainly calcium and phosphate.",
+       "rick": "Bones: the scaffolding that keeps you from being a puddle of *burp* Morty-goo on the floor. You're welcome, evolution.",
+       "diagram": "skeleton",
+       "part": "skull"
+      },
+      {
+       "id": "bones-1-L2",
+       "title": "206 and counting",
+       "fact": "An adult has about 206 bones. A newborn has roughly 270-300 bony pieces that fuse as it grows (for example in the skull, sacrum and hip bones). The femur (thigh bone) is the longest and strongest bone; the smallest is the stapes, a tiny bone in the middle ear.",
+       "rick": "Babies have more bones than you and contribute about as much to science. The femur's the big one, genius. Remember it.",
+       "diagram": "skeleton",
+       "part": "femur"
+      },
+      {
+       "id": "bones-1-L3",
+       "title": "Skull, spine and rib cage",
+       "fact": "The skull protects the brain; its lower jaw, the mandible, is the only skull bone that moves freely (chewing, talking). The vertebral column (spine) is a stack of vertebrae that protects the spinal cord. 12 pairs of ribs plus the sternum (breastbone) form the rib cage around the heart and lungs.",
+       "rick": "Your rib cage is literally a cage for your heart. Romantic. Also the only thing between your lungs and my portal gun.",
+       "diagram": "skeleton",
+       "part": "ribs"
+      },
+      {
+       "id": "bones-1-L4",
+       "title": "Arm and leg bones",
+       "fact": "Arm: humerus (upper arm), then radius (thumb side) and ulna (pinky side) in the forearm, then carpals (wrist), metacarpals (palm) and phalanges (fingers). Leg: femur (thigh), patella (kneecap), tibia (shin, carries the weight) and fibula (thin outer bone), then tarsals, metatarsals and phalanges.",
+       "rick": "Radius on the thumb side, ulna on the pinky side. A Mr. Meeseeks gets that on the first try. Be the Meeseeks.",
+       "diagram": "skeleton",
+       "part": "tibia"
+      }
+     ],
+     "questions": [
+      {
+       "id": "bones-1-01",
+       "type": "mcq",
+       "q": "About how many bones does an adult human skeleton have?",
+       "choices": [
+        "106",
+        "206",
+        "306",
+        "412"
+       ],
+       "answer": 1,
+       "explain": "Adults have about 206 bones. Newborns start with roughly 270-300 bony pieces, but many fuse during growth (for example in the skull, sacrum and hip bones), so the count goes DOWN with age, not up.",
+       "rick": "Two hundred and six. Not 'a lot', not 'like, a bunch'. 206. Write it on your hand, Morty-brain."
+      },
+      {
+       "id": "bones-1-02",
+       "type": "mcq",
+       "q": "Which bone is the longest and strongest in the human body?",
+       "choices": [
+        "Humerus",
+        "Tibia",
+        "Fibula",
+        "Femur"
+       ],
+       "answer": 3,
+       "explain": "The femur (thigh bone) is the longest and strongest bone. The tibia is the second longest and the main weight-bearing bone of the lower leg; the humerus is the longest bone of the arm.",
+       "rick": "Femur. The bone holding up your whole body while you stand there not knowing what a femur is."
+      },
+      {
+       "id": "bones-1-03",
+       "type": "mcq",
+       "q": "Which structure protects the heart and lungs?",
+       "choices": [
+        "The rib cage (ribs and sternum)",
+        "The pelvis",
+        "The skull",
+        "The clavicles"
+       ],
+       "answer": 0,
+       "explain": "The rib cage - 12 pairs of ribs, the sternum in front and the thoracic vertebrae behind - surrounds the heart and lungs. The pelvis protects pelvic organs like the bladder; the skull protects the brain.",
+       "rick": "Ribs: nature's airbag, except it's always deployed and it cracks if you fall off a *burp* hoverboard."
+      },
+      {
+       "id": "bones-1-04",
+       "type": "mcq",
+       "q": "What does red bone marrow make?",
+       "choices": [
+        "Blood cells",
+        "Bile",
+        "Insulin",
+        "Synovial (joint) fluid"
+       ],
+       "answer": 0,
+       "explain": "Red bone marrow makes blood cells - red cells, white cells and platelets - a process called hematopoiesis. Bile is made by the liver, insulin by the pancreas, and joint fluid by the synovial membrane.",
+       "rick": "Your bones are tiny blood factories. Inside every skeleton there's a stem cell sweatshop. Science is gross."
+      },
+      {
+       "id": "bones-1-05",
+       "type": "mcq",
+       "q": "Bones store most of the body's supply of which mineral?",
+       "choices": [
+        "Iron",
+        "Sodium",
+        "Calcium",
+        "Iodine"
+       ],
+       "answer": 2,
+       "explain": "About 99% of the body's calcium is stored in bone as hydroxyapatite (a calcium phosphate crystal). Most iron is in hemoglobin, iodine is used by the thyroid, and sodium is mostly in body fluids.",
+       "rick": "Calcium. Your skeleton is a calcium bank, and your blood robs it whenever it feels like it."
+      },
+      {
+       "id": "bones-1-06",
+       "type": "mcq",
+       "q": "What is the proper name for the kneecap?",
+       "choices": [
+        "Fibula",
+        "Patella",
+        "Femur",
+        "Pelvis"
+       ],
+       "answer": 1,
+       "explain": "The patella (kneecap) sits in front of the knee inside the quadriceps tendon and helps the thigh muscles straighten the knee more efficiently. The femur is the thigh bone; the fibula is the thin outer leg bone.",
+       "rick": "Patella. Sounds like a pasta. It's a kneecap. Don't eat it."
+      },
+      {
+       "id": "bones-1-07",
+       "type": "mcq",
+       "q": "Which skull bone forms the movable lower jaw?",
+       "choices": [
+        "Maxilla",
+        "Frontal bone",
+        "Occipital bone",
+        "Mandible"
+       ],
+       "answer": 3,
+       "explain": "The mandible is the lower jaw and the only skull bone with a freely movable joint (the temporomandibular joint). The maxilla is the upper jaw, which does not move.",
+       "rick": "The mandible: the bone you flap to say wrong answers. The maxilla's smarter. It stays still."
+      },
+      {
+       "id": "bones-1-08",
+       "type": "mcq",
+       "q": "Which structure surrounds and protects the spinal cord?",
+       "choices": [
+        "Sternum",
+        "Pelvis",
+        "Vertebral column",
+        "Clavicle"
+       ],
+       "answer": 2,
+       "explain": "The spinal cord runs through the vertebral canal, the tunnel formed by the stacked vertebrae of the vertebral column (spine). The sternum is the breastbone in the front of the chest.",
+       "rick": "Your spine is armor for the cable that runs your whole body. Nice to know one part of you has a backbone."
+      },
+      {
+       "id": "bones-1-09",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "skull",
+       "q": "Click the skull.",
+       "explain": "The skull is the bony case of the head. It protects the brain and holds the eyes, inner ears and teeth; its only freely movable bone is the mandible (lower jaw).",
+       "rick": "It's the round thing on top. The one with nothing in it, in your case."
+      },
+      {
+       "id": "bones-1-10",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "femur",
+       "q": "Click the femur (thigh bone).",
+       "explain": "The femur is the single bone of the thigh, running from the hip to the knee. It is the longest and strongest bone in the body.",
+       "rick": "Biggest bone in the body and you still have to look for it. *burp* Unbelievable."
+      },
+      {
+       "id": "bones-1-11",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "ribs",
+       "q": "Click the ribs.",
+       "explain": "The 12 pairs of ribs curve around the chest from the spine toward the front, forming the rib cage that protects the heart and lungs and moves when you breathe.",
+       "rick": "Curvy bones around the chest. Like a xylophone, if xylophones kept your lungs from falling out."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "bones-2-L1",
+       "title": "Axial vs appendicular",
+       "fact": "AXIAL skeleton (80 bones): skull, vertebral column, ribs and sternum, plus the hyoid and ear ossicles. APPENDICULAR skeleton (126): the limbs plus their girdles - pectoral (clavicle, scapula) and pelvic (hip bones). The spine has 7 cervical, 12 thoracic and 5 lumbar vertebrae, then the sacrum (5 fused) and coccyx.",
+       "rick": "Axial is the trunk, appendicular is the dangly bits. It's not rocket science. Rocket science is easier, actually.",
+       "diagram": "skeleton",
+       "part": "vertebral_column"
+      },
+      {
+       "id": "bones-2-L2",
+       "title": "Inside a long bone",
+       "fact": "A long bone has a shaft (diaphysis) and two ends (epiphyses), covered by periosteum except at the cartilage-capped joints. Shaft wall = compact bone made of osteons: rings of bone around a central canal with vessels. Ends hold spongy (trabecular) bone with red marrow; the medullary cavity holds yellow, fatty marrow in adults.",
+       "rick": "Compact outside, spongy inside. Like a Szechuan nugget, except this one holds up your *burp* body.",
+       "diagram": "skeleton",
+       "part": "humerus"
+      },
+      {
+       "id": "bones-2-L3",
+       "title": "Bone cells and growth",
+       "fact": "OsteoBlasts Build bone: they secrete osteoid (mostly type I collagen) that then mineralizes. Osteoblasts trapped in their own matrix become osteocytes, which sense mechanical strain. OsteoClasts are big multinucleated cells that resorb bone. Long bones grow in length at the epiphyseal (growth) plate, which closes after puberty.",
+       "rick": "Blasts build, clasts crush. Your skeleton gets torn down and rebuilt nonstop. Like my garage after Morty touches stuff.",
+       "diagram": "skeleton",
+       "part": "femur"
+      },
+      {
+       "id": "bones-2-L4",
+       "title": "Ribs and joints",
+       "fact": "Ribs 1-7 are true ribs (own costal cartilage to the sternum); 8-12 are false: 8-10 join the cartilage above, 11-12 'float' (no front attachment). Joints: fibrous (skull sutures, nearly immovable), cartilaginous (intervertebral discs, pubic symphysis), synovial (freely movable: hinge like the elbow, ball-and-socket like the hip).",
+       "rick": "Floating ribs: the ones too lazy to reach the sternum. Relatable, I'm sure.",
+       "diagram": "skeleton",
+       "part": "sternum"
+      }
+     ],
+     "questions": [
+      {
+       "id": "bones-2-01",
+       "type": "mcq",
+       "q": "How many cervical (neck) vertebrae do humans have?",
+       "choices": [
+        "7",
+        "5",
+        "8",
+        "12"
+       ],
+       "answer": 0,
+       "explain": "There are 7 cervical vertebrae (almost all mammals, even giraffes, have 7). Don't confuse them with the 8 cervical spinal NERVES. There are 12 thoracic and 5 lumbar vertebrae.",
+       "rick": "Seven. Same as a giraffe. The giraffe just used theirs better."
+      },
+      {
+       "id": "bones-2-02",
+       "type": "mcq",
+       "q": "Which cell resorbs (breaks down) bone?",
+       "choices": [
+        "Osteoblast",
+        "Osteocyte",
+        "Osteoclast",
+        "Chondrocyte"
+       ],
+       "answer": 2,
+       "explain": "Osteoclasts are large multinucleated cells of the monocyte/macrophage lineage that dissolve bone mineral and digest matrix. Osteoblasts build bone, osteocytes maintain it, and chondrocytes make cartilage.",
+       "rick": "Osteo-CLAST. Clast like 'crash'. They demolish bone. My kind of cell."
+      },
+      {
+       "id": "bones-2-03",
+       "type": "mcq",
+       "q": "Which cell secretes new bone matrix (osteoid)?",
+       "choices": [
+        "Osteoclast",
+        "Osteocyte",
+        "Chondroblast",
+        "Osteoblast"
+       ],
+       "answer": 3,
+       "explain": "Osteoblasts secrete osteoid (mostly type I collagen), which then mineralizes with calcium phosphate (hydroxyapatite). Once surrounded by their own matrix they become osteocytes. Chondroblasts make cartilage, not bone.",
+       "rick": "Blast builds. Mix it up with clast on an exam and I'm portaling you to a dimension made of *burp* flashcards."
+      },
+      {
+       "id": "bones-2-04",
+       "type": "mcq",
+       "q": "Which bone belongs to the APPENDICULAR skeleton?",
+       "choices": [
+        "Sternum",
+        "Scapula",
+        "Sacrum",
+        "Hyoid"
+       ],
+       "answer": 1,
+       "explain": "The scapula is part of the pectoral girdle, which attaches the arm to the trunk, so it is appendicular. The sternum, the sacrum (part of the vertebral column) and the hyoid are all axial.",
+       "rick": "Scapula hangs off the trunk to hold your arm. Appendage-ular. The sacrum's in your spine, Morty-brain."
+      },
+      {
+       "id": "bones-2-05",
+       "type": "mcq",
+       "q": "Where does a child's long bone grow in LENGTH?",
+       "choices": [
+        "Epiphyseal (growth) plate",
+        "Periosteum",
+        "Medullary cavity",
+        "Articular cartilage"
+       ],
+       "answer": 0,
+       "explain": "Length comes from cartilage cells multiplying at the epiphyseal plate, then being replaced by bone. The periosteum adds bone to the OUTSIDE, making bones wider (appositional growth), not longer.",
+       "rick": "Growth plates. They fuse after puberty, which is why you're stuck at this height and this IQ."
+      },
+      {
+       "id": "bones-2-06",
+       "type": "mcq",
+       "q": "What is the basic structural unit of compact bone?",
+       "choices": [
+        "Trabecula",
+        "Lacuna",
+        "Sarcomere",
+        "Osteon (Haversian system)"
+       ],
+       "answer": 3,
+       "explain": "An osteon is a cylinder of concentric bone layers (lamellae) around a central (Haversian) canal carrying vessels and nerves. Trabeculae are the struts of spongy bone; lacunae are the tiny cavities that hold osteocytes.",
+       "rick": "Osteons: tiny tree-ring tubes. Compact bone is a bundle of them. Like *burp* a fistful of straws, but useful."
+      },
+      {
+       "id": "bones-2-07",
+       "type": "mcq",
+       "q": "Which rib pairs are the 'floating' ribs?",
+       "choices": [
+        "1 and 2",
+        "8 to 10",
+        "11 and 12",
+        "6 and 7"
+       ],
+       "answer": 2,
+       "explain": "Ribs 11-12 have no anterior attachment, so they 'float'. Ribs 1-7 are true ribs (own cartilage to the sternum). Ribs 8-12 are all false ribs: 8-10 attach via the cartilage of the rib above, and 11-12 are the floating subset of the false ribs.",
+       "rick": "Two floating pairs, 11 and 12. They just hang out in the back doing nothing. Like you in lectures."
+      },
+      {
+       "id": "bones-2-08",
+       "type": "mcq",
+       "q": "What type of joint is the hip?",
+       "choices": [
+        "Synovial hinge joint",
+        "Synovial ball-and-socket joint",
+        "Fibrous suture",
+        "Cartilaginous symphysis"
+       ],
+       "answer": 1,
+       "explain": "The rounded head of the femur sits in the cup-shaped acetabulum of the pelvis: a ball-and-socket synovial joint that moves in many directions. The elbow is a hinge joint; skull sutures are fibrous; the pubic symphysis is cartilaginous.",
+       "rick": "Ball in a socket. Moves every which way. Unlike your brain, which only moves toward snacks."
+      },
+      {
+       "id": "bones-2-09",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "sternum",
+       "q": "Click the sternum (breastbone), where the true ribs attach.",
+       "explain": "The sternum is the flat bone in the middle of the chest. The costal cartilages of ribs 1-7 attach directly to it, and it joins the clavicles at the sternoclavicular joints.",
+       "rick": "Flat bone in the middle of your chest. The thing CPR pushes on. Hard. Very hard."
+      },
+      {
+       "id": "bones-2-10",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "clavicle",
+       "q": "Click the clavicle (collarbone).",
+       "explain": "The clavicle is an S-shaped strut between the sternum and the acromion of the scapula. It holds the arm out away from the trunk and is one of the most commonly fractured bones.",
+       "rick": "The collarbone: holds your shoulder out like a coat hanger. Snaps easily. Like your attention span."
+      },
+      {
+       "id": "bones-2-11",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "fibula",
+       "q": "Click the thin bone on the outer (lateral) side of the leg.",
+       "explain": "The fibula runs alongside the tibia on the lateral side of the leg. It carries little body weight but anchors muscles and forms the bump on the outside of the ankle (lateral malleolus).",
+       "rick": "Fibula: the tibia's skinny sidekick. Carries almost no weight. Like Morty on an adventure."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "bones-3-L1",
+       "title": "Two ways to make bone",
+       "fact": "Intramembranous ossification: mesenchyme becomes bone directly - flat bones of the skull vault, much of the face and most of the clavicle. Endochondral ossification: a hyaline cartilage model is replaced by bone - long bones, vertebrae, pelvis and skull base. Primary centers form in the shaft, secondary ones in the epiphyses.",
+       "rick": "Skull goes membrane-to-bone directly; long bones take the cartilage detour. Both still faster than you learning this.",
+       "diagram": "skeleton",
+       "part": "skull"
+      },
+      {
+       "id": "bones-3-L2",
+       "title": "Calcium control",
+       "fact": "PTH (parathyroid glands) raises blood Ca2+: it increases bone resorption, increases kidney Ca2+ reabsorption and phosphate excretion, and stimulates 1-alpha-hydroxylase to make calcitriol (active vitamin D), which boosts gut Ca2+ and phosphate absorption. Calcitonin (thyroid C cells) lowers Ca2+ by inhibiting osteoclasts.",
+       "rick": "PTH pumps calcium up, calcitonin nudges it down - barely. Calcitonin's the Jerry of hormones. *burp* Technically there.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "bones-3-L3",
+       "title": "Fractures that bite back",
+       "fact": "FOOSH (fall on outstretched hand) + snuffbox pain = scaphoid fracture; blood enters distally, so the proximal pole risks avascular necrosis. Midshaft humerus: radial nerve (wrist drop). Surgical neck: axillary nerve. Femoral neck: medial circumflex femoral artery (head necrosis). Fibular neck: common fibular nerve (foot drop).",
+       "rick": "Break the wrong bone and you wreck the nerve next to it too. Two-for-one deal. Biology's Black Friday.",
+       "diagram": "skeleton",
+       "part": "carpals"
+      },
+      {
+       "id": "bones-3-L4",
+       "title": "Bone disease basics",
+       "fact": "Osteoporosis: too LITTLE bone, normally mineralized. Typical after menopause (estrogen loss -> more osteoclast activity); vertebral compression, hip and wrist fractures; Ca2+, phosphate, PTH and ALP normal; DEXA T-score -2.5 or lower. Osteomalacia (rickets in kids): poorly MINERALIZED bone, usually from vitamin D deficiency.",
+       "rick": "Osteoporosis: not enough bone. Osteomalacia: bone that's too soft. Different problems, same crappy ending: snap.",
+       "diagram": "skeleton",
+       "part": "vertebral_column"
+      }
+     ],
+     "questions": [
+      {
+       "id": "bones-3-01",
+       "type": "mcq",
+       "q": "Which bones form mainly by intramembranous ossification?",
+       "choices": [
+        "Femur and tibia",
+        "Vertebrae",
+        "Flat bones of the skull vault",
+        "Phalanges"
+       ],
+       "answer": 2,
+       "explain": "In intramembranous ossification, mesenchyme becomes bone directly (skull vault, much of the face, most of the clavicle). Long bones, vertebrae and phalanges form by endochondral ossification, replacing a cartilage model.",
+       "rick": "Skull vault. No cartilage middleman. Even your bones cut corners better than you do."
+      },
+      {
+       "id": "bones-3-02",
+       "type": "mcq",
+       "q": "After a fall on an outstretched hand, a 22-year-old has tenderness in the anatomical snuffbox. Which bone is most likely fractured?",
+       "choices": [
+        "Scaphoid",
+        "Lunate",
+        "Hamate",
+        "Pisiform"
+       ],
+       "answer": 0,
+       "explain": "The scaphoid is the most commonly fractured carpal, typically after a FOOSH, with snuffbox tenderness; early X-rays may be normal. Its blood enters distally, so the proximal pole risks avascular necrosis. The lunate is the most commonly DISLOCATED carpal.",
+       "rick": "Snuffbox pain means scaphoid until proven otherwise. Miss it and the bone dies. Like your social life."
+      },
+      {
+       "id": "bones-3-03",
+       "type": "mcq",
+       "q": "A midshaft fracture of the humerus is most likely to injure which nerve?",
+       "choices": [
+        "Axillary nerve",
+        "Radial nerve",
+        "Ulnar nerve",
+        "Median nerve"
+       ],
+       "answer": 1,
+       "explain": "The radial nerve runs in the radial (spiral) groove on the back of the humeral shaft. Injury causes wrist drop (weak wrist and finger extension). The axillary nerve is at risk in surgical neck fractures; the ulnar nerve behind the medial epicondyle.",
+       "rick": "Radial groove, radial nerve, wrist drop. The bone LITERALLY tells you. *burp* Read the bone."
+      },
+      {
+       "id": "bones-3-04",
+       "type": "mcq",
+       "q": "Which effect does PTH have on the kidney?",
+       "choices": [
+        "Less Ca2+ reabsorption, less phosphate excretion",
+        "More reabsorption of both Ca2+ and phosphate",
+        "Inhibits 1-alpha-hydroxylase, lowering calcitriol",
+        "More Ca2+ reabsorption, more phosphate excretion"
+       ],
+       "answer": 3,
+       "explain": "PTH increases Ca2+ reabsorption in the distal tubule and decreases phosphate reabsorption in the proximal tubule (phosphaturia). It also stimulates 1-alpha-hydroxylase, raising calcitriol. Net effect: blood Ca2+ up, phosphate down.",
+       "rick": "PTH keeps the calcium and dumps the phosphate. Picky. Like me at a bar."
+      },
+      {
+       "id": "bones-3-05",
+       "type": "mcq",
+       "q": "Calcitonin is secreted by which cells?",
+       "choices": [
+        "Parafollicular (C) cells of the thyroid",
+        "Chief cells of the parathyroid",
+        "Follicular cells of the thyroid",
+        "Osteoblasts"
+       ],
+       "answer": 0,
+       "explain": "Calcitonin comes from the parafollicular C cells of the thyroid (neural crest origin) and lowers blood Ca2+ by inhibiting osteoclasts. Parathyroid chief cells make PTH; thyroid follicular cells make T3 and T4.",
+       "rick": "C cells make Calcitonin. C for Calcium-lowering. I'm basically doing your homework at this point."
+      },
+      {
+       "id": "bones-3-06",
+       "type": "mcq",
+       "q": "A 68-year-old woman has a vertebral compression fracture. Serum Ca2+, phosphate, PTH and alkaline phosphatase are all normal. Most likely diagnosis?",
+       "choices": [
+        "Osteomalacia",
+        "Primary hyperparathyroidism",
+        "Osteoporosis",
+        "Paget disease of bone"
+       ],
+       "answer": 2,
+       "explain": "Osteoporosis reduces bone mass, but the remaining bone is normally mineralized, so labs are typically normal. Osteomalacia gives low phosphate with high ALP and PTH; primary hyperparathyroidism high Ca2+ and PTH; Paget disease a high ALP.",
+       "rick": "Normal labs, broken spine, postmenopausal. Osteoporosis. The labs are fine, she's not. *burp* Classic."
+      },
+      {
+       "id": "bones-3-07",
+       "type": "mcq",
+       "q": "A displaced femoral neck fracture risks avascular necrosis of the femoral head, mainly by disrupting which artery?",
+       "choices": [
+        "Obturator artery",
+        "Medial circumflex femoral artery",
+        "Superior gluteal artery",
+        "Popliteal artery"
+       ],
+       "answer": 1,
+       "explain": "Most blood to the femoral head comes from retinacular branches of the medial circumflex femoral artery running up the femoral neck. The small artery of the ligamentum teres (from the obturator artery) contributes little in adults.",
+       "rick": "Snap the neck of the femur, kill the head. Sounds like a mob movie. It's just plumbing."
+      },
+      {
+       "id": "bones-3-08",
+       "type": "mcq",
+       "q": "A fracture of the fibular neck causes foot drop by injuring which nerve?",
+       "choices": [
+        "Tibial nerve",
+        "Femoral nerve",
+        "Obturator nerve",
+        "Common fibular (peroneal) nerve"
+       ],
+       "answer": 3,
+       "explain": "The common fibular nerve wraps around the neck of the fibula just under the skin. Damage weakens dorsiflexion and eversion: foot drop and a high-stepping gait. The tibial nerve runs deep in the back of the leg and drives plantarflexion.",
+       "rick": "That nerve's wrapped around the fibula like a cheap scarf. Whack it and your foot flops. Physics, Morty-brain."
+      },
+      {
+       "id": "bones-3-09",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "carpals",
+       "q": "Click the group of bones that contains the scaphoid.",
+       "explain": "The 8 carpals sit in two rows between the forearm and the metacarpals: scaphoid, lunate, triquetrum, pisiform (proximal) and trapezium, trapezoid, capitate, hamate (distal).",
+       "rick": "Eight tiny pebbles in your wrist. The scaphoid's the one that breaks and then dies. Charming."
+      },
+      {
+       "id": "bones-3-10",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "patella",
+       "q": "Click the largest sesamoid bone in the body.",
+       "explain": "The patella is a sesamoid bone (a bone that develops inside a tendon), here the quadriceps tendon. It increases the leverage of the quadriceps for knee extension and protects the front of the knee.",
+       "rick": "Sesamoid: a bone grown inside a tendon, like a seed. The kneecap's the biggest. *burp* Plant that in your brain."
+      },
+      {
+       "id": "bones-3-11",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "scapula",
+       "q": "Click the bone that bears the glenoid cavity.",
+       "explain": "The glenoid cavity is the shallow socket on the lateral scapula that receives the head of the humerus at the shoulder joint. The scapula also bears the acromion and the coracoid process.",
+       "rick": "Shallow socket, huge range of motion, dislocates if you look at it wrong. Shoulder design by committee."
+      },
+      {
+       "id": "bones-3-12",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "sacrum",
+       "q": "Click the bone formed by 5 fused vertebrae.",
+       "explain": "The sacrum is a triangular bone of 5 fused sacral vertebrae. It sits between the hip bones at the sacroiliac joints and passes body weight from the spine to the pelvis.",
+       "rick": "Five vertebrae fused into one. Teamwork! Something you've never experienced."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "bones-4-L1",
+       "title": "RANKL: the remodeling switch",
+       "fact": "Osteoblast-lineage cells make RANKL, which binds RANK on osteoclast precursors (with M-CSF) to drive osteoclast formation; OPG is a decoy receptor for RANKL. PTH raises RANKL and lowers OPG; estrogen does the opposite, so menopause speeds resorption. Denosumab = anti-RANKL antibody; bisphosphonates cause osteoclast apoptosis.",
+       "rick": "Osteoclasts can't even switch on without a permission slip from osteoblasts. Bone bureaucracy. *burp* I hate it.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "bones-4-L2",
+       "title": "Read the labs",
+       "fact": "Pattern = Ca2+ / phosphate / ALP / PTH. Osteoporosis: all normal. Vitamin D-deficient osteomalacia: low-normal / low / high / high. Primary hyperparathyroidism: high / low / normal-high / high. Paget disease: normal / normal / very high / normal. Paget = chaotic osteoclast then osteoblast activity -> thick, weak 'mosaic' bone.",
+       "rick": "Four numbers, four diseases. Can't read a lab panel? Go be a *burp* vibes-based healer somewhere else.",
+       "diagram": "skeleton",
+       "part": "skull"
+      },
+      {
+       "id": "bones-4-L3",
+       "title": "Broken blueprints",
+       "fact": "Osteogenesis imperfecta: defective type I collagen (COL1A1/2) -> fractures, blue sclerae, hearing loss, bad teeth. Achondroplasia (autosomal dominant): activating FGFR3 mutation slows endochondral growth -> short limbs, relatively large head. Osteopetrosis: osteoclasts can't resorb -> dense, brittle bone, marrow failure.",
+       "rick": "One bad gene and the whole skeleton's a disaster. Like the multiverse version of you that's even dumber.",
+       "diagram": "skeleton",
+       "part": "femur"
+      },
+      {
+       "id": "bones-4-L4",
+       "title": "Bone tumors by address",
+       "fact": "Osteosarcoma: teens, METAPHYSIS around the knee, sunburst pattern and Codman triangle; risk with Rb mutations and Paget disease. Ewing sarcoma: children, DIAPHYSIS (or metadiaphysis) of long bones or pelvis, onion-skin periosteal reaction, t(11;22). Giant cell tumor: age 20-40, EPIPHYSIS around the knee, 'soap-bubble' X-ray.",
+       "rick": "Bone tumors pick neighborhoods like real estate agents. Metaphysis, diaphysis, epiphysis. Location, location, tumor.",
+       "diagram": "skeleton",
+       "part": "tibia"
+      }
+     ],
+     "questions": [
+      {
+       "id": "bones-4-01",
+       "type": "mcq",
+       "q": "Denosumab reduces fracture risk in osteoporosis by which mechanism?",
+       "choices": [
+        "Binds hydroxyapatite and induces osteoclast apoptosis",
+        "Recombinant PTH analog given intermittently",
+        "Monoclonal antibody that blocks RANKL",
+        "Selective estrogen receptor modulator in bone"
+       ],
+       "answer": 2,
+       "explain": "Denosumab binds RANKL (acting like OPG), so precursors can't become active osteoclasts and resorption falls. Bisphosphonates bind hydroxyapatite and induce osteoclast apoptosis; teriparatide is a PTH analog; raloxifene is a SERM.",
+       "rick": "Block the signal, no osteoclasts. Denosumab's the bouncer at osteoclast club. Ends in -mab: antibody, genius."
+      },
+      {
+       "id": "bones-4-02",
+       "type": "mcq",
+       "q": "Osteoclasts have essentially no PTH receptors, yet PTH increases bone resorption. Which mechanism best explains this?",
+       "choices": [
+        "Osteoblast-lineage cells raise RANKL and lower OPG",
+        "PTH binds calcitonin receptors on osteoclasts",
+        "Osteoblasts secrete more OPG, which activates RANK",
+        "PTH directly inhibits osteoclast apoptosis"
+       ],
+       "answer": 0,
+       "explain": "PTH binds PTH1R on osteoblast-lineage cells (osteoblasts and osteocytes), which increase RANKL and decrease OPG. More RANKL-RANK binding drives osteoclast formation and activity. OPG is a decoy that BLOCKS RANKL, so more OPG would reduce resorption.",
+       "rick": "PTH can't talk to osteoclasts, so it whispers to osteoblasts. Bone telephone. *burp* Very mature."
+      },
+      {
+       "id": "bones-4-03",
+       "type": "mcq",
+       "q": "A 70-year-old man has bone pain, a hat that no longer fits and hearing loss. Ca2+, phosphate and PTH are normal; ALP is very high. Diagnosis?",
+       "choices": [
+        "Osteomalacia",
+        "Primary hyperparathyroidism",
+        "Osteoporosis",
+        "Paget disease of bone"
+       ],
+       "answer": 3,
+       "explain": "Paget disease: localized, disordered remodeling (osteoclast overactivity, then chaotic osteoblast activity) makes thick but weak 'mosaic' bone. Isolated high ALP is typical. Skull enlargement can compress cranial nerves (hearing loss); osteosarcoma risk rises.",
+       "rick": "Hat doesn't fit, ALP through the roof, everything else normal. Paget. His skull's growing. Mine's just full."
+      },
+      {
+       "id": "bones-4-04",
+       "type": "mcq",
+       "q": "Which lab pattern fits osteomalacia caused by vitamin D deficiency?",
+       "choices": [
+        "High Ca2+, low phosphate, high PTH",
+        "Low phosphate, high PTH, high ALP, low-normal Ca2+",
+        "Ca2+, phosphate, ALP and PTH all normal",
+        "Isolated, very high ALP"
+       ],
+       "answer": 1,
+       "explain": "Low vitamin D -> less gut Ca2+ and phosphate absorption -> secondary hyperparathyroidism. PTH keeps Ca2+ near normal but wastes phosphate in urine; poor mineralization raises ALP. High Ca2+ with high PTH suggests PRIMARY hyperparathyroidism.",
+       "rick": "Vitamin D's gone, PTH panics, phosphate gets flushed. Hormonal dominoes. Watch them fall."
+      },
+      {
+       "id": "bones-4-05",
+       "type": "mcq",
+       "q": "A 6-year-old has had several fractures from minor falls, blue sclerae and discolored, fragile teeth. A defect in which protein is most likely?",
+       "choices": [
+        "Type I collagen",
+        "Type II collagen",
+        "Fibrillin-1",
+        "FGFR3"
+       ],
+       "answer": 0,
+       "explain": "Osteogenesis imperfecta usually comes from COL1A1/COL1A2 mutations that reduce or distort type I collagen, the main protein of bone, sclera and dentin (child abuse must still be excluded). Type II collagen is cartilage; fibrillin-1 is Marfan; FGFR3 is achondroplasia.",
+       "rick": "Bones like chalk, blue sclerae, crumbly teeth. Type I collagen. Bone's made of it. Respect it."
+      },
+      {
+       "id": "bones-4-06",
+       "type": "mcq",
+       "q": "Achondroplasia is best explained by which defect?",
+       "choices": [
+        "Loss of FGFR3 impairing intramembranous ossification",
+        "Type I collagen defect weakening osteoid",
+        "Activating FGFR3 mutation impairing endochondral ossification",
+        "Osteoclast failure from carbonic anhydrase II loss"
+       ],
+       "answer": 2,
+       "explain": "A gain-of-function FGFR3 mutation inhibits chondrocyte proliferation in growth plates, so endochondral bones (limbs) are short while the intramembranous skull vault is spared and the head looks large. Autosomal dominant; most cases are new mutations linked to older fathers.",
+       "rick": "The gene's stuck ON and tells growth plates to stop. An overachieving gene. The opposite of you."
+      },
+      {
+       "id": "bones-4-07",
+       "type": "mcq",
+       "q": "An infant has diffusely dense but brittle bones, anemia, thrombocytopenia, hepatosplenomegaly and vision loss. What is the core defect?",
+       "choices": [
+        "Osteoblasts cannot mineralize osteoid",
+        "Type I collagen is abnormal",
+        "PTH secretion is excessive",
+        "Osteoclasts cannot resorb bone"
+       ],
+       "answer": 3,
+       "explain": "Osteopetrosis: defective osteoclast acid secretion (e.g. carbonic anhydrase II mutations) means bone is never remodeled. It gets dense but brittle, crowds out marrow (cytopenias, extramedullary hematopoiesis) and narrows foramina (cranial nerve palsies).",
+       "rick": "No demolition crew, so bone piles up and crushes the marrow out. Hoarding, but with calcium."
+      },
+      {
+       "id": "bones-4-08",
+       "type": "mcq",
+       "q": "A 15-year-old boy has knee pain and a destructive lesion of the distal femoral metaphysis with a 'sunburst' pattern and Codman triangle. Diagnosis?",
+       "choices": [
+        "Ewing sarcoma",
+        "Osteosarcoma",
+        "Giant cell tumor",
+        "Osteochondroma"
+       ],
+       "answer": 1,
+       "explain": "Osteosarcoma is the most common primary malignant bone tumor of teens, classically in the metaphysis around the knee with sunburst and Codman triangle. Ewing sarcoma favors the diaphysis (onion-skin); giant cell tumor the epiphysis at age 20-40.",
+       "rick": "Teen, knee, metaphysis, sunburst. If you said Ewing, you get an onion-skin of shame. *burp*"
+      },
+      {
+       "id": "bones-4-09",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "tarsals",
+       "q": "Click the bone group containing the talus, a bone with no muscle attachments.",
+       "explain": "The 7 tarsals form the ankle and rear foot: talus, calcaneus, navicular, cuboid and three cuneiforms. The talus makes the ankle joint with the tibia and fibula and has no muscle attachments; the calcaneus is the heel bone.",
+       "rick": "Seven tarsals, eight carpals. Feet got one fewer. Evolution ran out of budget."
+      },
+      {
+       "id": "bones-4-10",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "radius",
+       "q": "Click the bone whose distal end breaks in a Colles fracture.",
+       "explain": "A Colles fracture is a distal radius fracture with dorsal displacement of the fragment ('dinner fork' deformity), classically after a fall on an outstretched hand in an older adult with osteoporosis.",
+       "rick": "Fall on your hand, radius snaps, wrist looks like a dinner fork. Bon appetit, genius."
+      },
+      {
+       "id": "bones-4-11",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "ulna",
+       "q": "Click the bone broken in a 'nightstick' fracture (forearm raised to block a blow).",
+       "explain": "A nightstick fracture is an isolated fracture of the ulnar shaft, which lies just under the skin along the medial (pinky) border of the forearm when it is raised to shield the face. The ulna's olecranon forms the point of the elbow.",
+       "rick": "Block a club with your forearm and the ulna takes the hit. Next time try ducking. Or a *burp* portal."
+      },
+      {
+       "id": "bones-4-12",
+       "type": "label",
+       "diagram": "skeleton",
+       "part": "metatarsals",
+       "q": "Click the bones where 'march' stress fractures classically occur.",
+       "explain": "The metatarsals are the 5 long bones of the forefoot. Repetitive loading (marching, running) causes stress fractures, classically of the 2nd metatarsal shaft; the base of the 5th metatarsal is another classic fracture site.",
+       "rick": "Soldiers march, metatarsals crack. Repetition breaks things. Like my patience with you."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "topic": "muscles",
+   "levels": [
+    {
+     "level": 1,
+     "lessons": [
+      {
+       "id": "muscles-1-L1",
+       "title": "Three kinds of muscle",
+       "fact": "SKELETAL muscle moves bones; it is striated (striped) and voluntary. CARDIAC muscle is found only in the heart; it is striated but involuntary. SMOOTH muscle forms the walls of hollow organs and blood vessels (stomach, intestines, bladder, arteries); it is not striated and is involuntary. You have more than 600 skeletal muscles.",
+       "rick": "Three muscle types and you're struggling with one. The thumb muscle for scrolling doesn't count, Morty-brain.",
+       "diagram": "muscles",
+       "part": "pectoralis_major"
+      },
+      {
+       "id": "muscles-1-L2",
+       "title": "Muscles only pull",
+       "fact": "A muscle can only pull: it contracts (shortens) and tugs on a bone through a tendon. It can't push, so muscles work in opposing pairs. The biceps brachii bends (flexes) the elbow; the triceps on the back of the arm straightens (extends) it. When one contracts, its partner relaxes.",
+       "rick": "Muscles can't push. Ever. Like you can't push yourself to study. At least they have an excuse.",
+       "diagram": "muscles",
+       "part": "biceps_brachii"
+      },
+      {
+       "id": "muscles-1-L3",
+       "title": "Famous muscles",
+       "fact": "Deltoid: caps the shoulder and lifts the arm out to the side. Pectoralis major: the big chest muscle. Rectus abdominis: the 'six-pack', bends the trunk forward. Quadriceps femoris: front of the thigh, straightens the knee. Gastrocnemius: the calf, points the foot down so you can stand on tiptoe.",
+       "rick": "Six-pack, pecs, quads. Your gym-bro vocabulary is now *burp* anatomically correct. Congrats, you're insufferable.",
+       "diagram": "muscles",
+       "part": "quadriceps_femoris"
+      },
+      {
+       "id": "muscles-1-L4",
+       "title": "Tendons and ligaments",
+       "fact": "Tendons join muscle to bone; ligaments join bone to bone. The calcaneal (Achilles) tendon is the thickest and strongest tendon: it joins the calf muscles to the heel bone. Muscles also make heat - shivering is rapid, involuntary muscle contraction that warms you up.",
+       "rick": "Tendon: muscle to bone. Ligament: bone to bone. Mix them up and Achilles comes back to kick you.",
+       "diagram": "muscles",
+       "part": "gastrocnemius"
+      }
+     ],
+     "questions": [
+      {
+       "id": "muscles-1-01",
+       "type": "mcq",
+       "q": "Which type of muscle is found only in the heart?",
+       "choices": [
+        "Skeletal muscle",
+        "Smooth muscle",
+        "Cardiac muscle",
+        "Voluntary striated muscle"
+       ],
+       "answer": 2,
+       "explain": "Cardiac muscle exists only in the heart wall (myocardium). It is striated like skeletal muscle but involuntary: it keeps beating on its own rhythm without you thinking about it.",
+       "rick": "Cardiac muscle. Beats about 100,000 times a day without your input. Thank God, honestly."
+      },
+      {
+       "id": "muscles-1-02",
+       "type": "mcq",
+       "q": "Which type of muscle can you control voluntarily?",
+       "choices": [
+        "Skeletal muscle",
+        "Cardiac muscle",
+        "Smooth muscle of the intestine",
+        "Smooth muscle of arteries"
+       ],
+       "answer": 0,
+       "explain": "Skeletal muscle is voluntary: you decide to move it, and motor nerves carry the command. Cardiac and smooth muscle are involuntary, run by the heart's own pacemaker, the autonomic nervous system and hormones.",
+       "rick": "Skeletal muscle obeys you. Apparently something has to."
+      },
+      {
+       "id": "muscles-1-03",
+       "type": "mcq",
+       "q": "What connects a muscle to a bone?",
+       "choices": [
+        "Ligament",
+        "Cartilage",
+        "Nerve",
+        "Tendon"
+       ],
+       "answer": 3,
+       "explain": "Tendons are tough cords of dense connective tissue joining muscle to bone. Ligaments connect bone to bone at joints; cartilage cushions joint surfaces; nerves carry signals.",
+       "rick": "Tendon: muscle to bone. Ligament: bone to bone. Two words. You can handle two words. Probably."
+      },
+      {
+       "id": "muscles-1-04",
+       "type": "mcq",
+       "q": "How do muscles move bones?",
+       "choices": [
+        "By lengthening and pushing them away",
+        "By contracting and pulling on them",
+        "By pumping fluid into the joints",
+        "By making the bones bend"
+       ],
+       "answer": 1,
+       "explain": "Muscles can only pull. They shorten (contract) and pull on bones through tendons. To move a joint back, an opposing muscle on the other side has to pull - which is why muscles work in pairs.",
+       "rick": "Pull. Only pull. Muscles are like your relationships: all take, no push."
+      },
+      {
+       "id": "muscles-1-05",
+       "type": "mcq",
+       "q": "Which muscle bends (flexes) the elbow?",
+       "choices": [
+        "Biceps brachii",
+        "Triceps brachii",
+        "Deltoid",
+        "Gastrocnemius"
+       ],
+       "answer": 0,
+       "explain": "The biceps brachii on the front of the upper arm flexes the elbow (and turns the palm up). Its antagonist, the triceps brachii on the back of the arm, extends the elbow.",
+       "rick": "Biceps flexes. The muscle gym bros kiss in mirrors. *burp* Now you know what they're kissing."
+      },
+      {
+       "id": "muscles-1-06",
+       "type": "mcq",
+       "q": "Where is smooth muscle found?",
+       "choices": [
+        "Attached to the bones of the arm",
+        "Only in the heart",
+        "In the tongue and lips",
+        "Walls of the stomach, intestines and blood vessels"
+       ],
+       "answer": 3,
+       "explain": "Smooth muscle forms the walls of hollow organs and tubes - stomach, intestines, bladder, uterus, airways and blood vessels - squeezing them slowly and automatically. The tongue and lips are skeletal muscle; the heart is cardiac muscle.",
+       "rick": "Smooth muscle squeezes your lunch along without asking. Your gut works harder than you do."
+      },
+      {
+       "id": "muscles-1-07",
+       "type": "mcq",
+       "q": "Which muscle forms the 'six-pack' on the front of the abdomen?",
+       "choices": [
+        "External oblique",
+        "Pectoralis major",
+        "Rectus abdominis",
+        "Trapezius"
+       ],
+       "answer": 2,
+       "explain": "The rectus abdominis runs vertically from the pubis up to the rib cartilages and sternum; bands of tendon crossing it make the 'six-pack' look. It bends the trunk forward, as in a sit-up. The external oblique covers the sides of the abdomen.",
+       "rick": "Everybody has a six-pack. Yours is just in witness protection under the *burp* snacks."
+      },
+      {
+       "id": "muscles-1-08",
+       "type": "mcq",
+       "q": "Which calf muscle lets you rise up onto your tiptoes?",
+       "choices": [
+        "Tibialis anterior",
+        "Gastrocnemius",
+        "Quadriceps femoris",
+        "Sartorius"
+       ],
+       "answer": 1,
+       "explain": "The gastrocnemius (with the deeper soleus) pulls on the heel through the calcaneal (Achilles) tendon, pointing the foot down (plantarflexion). The tibialis anterior on the shin does the opposite: it lifts the foot up.",
+       "rick": "Gastrocnemius. Ballet dancers, sprinters, and you reaching for the top shelf. Same muscle."
+      },
+      {
+       "id": "muscles-1-09",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "biceps_brachii",
+       "q": "Click the biceps brachii.",
+       "explain": "The biceps brachii lies on the front of the upper arm. It flexes the elbow and supinates the forearm (turns the palm up).",
+       "rick": "The 'gun show' muscle. Point at it. No, not yours. Yours is a cap gun."
+      },
+      {
+       "id": "muscles-1-10",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "pectoralis_major",
+       "q": "Click the pectoralis major (chest muscle).",
+       "explain": "The pectoralis major is the large fan-shaped chest muscle running from the clavicle and sternum to the humerus. It pulls the arm across the body (adduction) and rotates it inward.",
+       "rick": "Pecs. The bench-press muscle. It pulls your arm across your chest so your hand can shove stuff. *burp* Ironic."
+      },
+      {
+       "id": "muscles-1-11",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "quadriceps_femoris",
+       "q": "Click the quadriceps femoris on the front of the thigh.",
+       "explain": "The quadriceps femoris is four muscles (rectus femoris and three vasti) that join into one tendon over the patella. It extends (straightens) the knee.",
+       "rick": "Quad means four. Four muscles, one main job: straighten the knee. Even they can count."
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "lessons": [
+      {
+       "id": "muscles-2-L1",
+       "title": "Muscle, zoomed in",
+       "fact": "Whole muscle (wrapped in epimysium) -> fascicles, bundles of fibers (perimysium) -> muscle fibers, long multinucleated cells (endomysium) -> myofibrils -> sarcomeres, the repeating contractile units. The fiber's membrane is the sarcolemma; its specialized ER, the sarcoplasmic reticulum (SR), stores Ca2+.",
+       "rick": "Epi, peri, endo: outside, around, inside. Greek prefixes. The cheat codes you never bothered to learn.",
+       "diagram": "muscles",
+       "part": "deltoid"
+      },
+      {
+       "id": "muscles-2-L2",
+       "title": "The sarcomere",
+       "fact": "A sarcomere runs from one Z disc to the next. Thin filaments (actin) attach to the Z discs; thick filaments (myosin) sit in the middle. A band = length of the thick filaments; I band = thin filaments only; H zone = thick only. In contraction the filaments slide: the I band and H zone shrink, the A band stays the same.",
+       "rick": "The filaments don't shrink, genius. They just *burp* slide past each other. Sliding filament theory. Like your grades: down.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "muscles-2-L3",
+       "title": "From nerve to contraction",
+       "fact": "A motor neuron releases acetylcholine (ACh) at the neuromuscular junction -> the muscle fiber fires an action potential that runs down T-tubules -> the SR releases Ca2+ -> Ca2+ binds troponin -> tropomyosin shifts off actin's binding sites -> myosin heads bind actin and pull, powered by ATP.",
+       "rick": "Nerve, ACh, calcium, troponin, tropomyosin, myosin. Six steps. A Meeseeks could do it, and be happier about it.",
+       "diagram": "muscles",
+       "part": "biceps_brachii"
+      },
+      {
+       "id": "muscles-2-L4",
+       "title": "Movement words",
+       "fact": "Flexion decreases a joint angle; extension increases it. Abduction moves a limb away from the midline; adduction brings it back. The muscle doing the move is the agonist; the one opposing it is the antagonist. Deltoid abducts the arm; the adductors pull the thigh in; tibialis anterior lifts the foot (dorsiflexion).",
+       "rick": "AB-duct: take away. Your arm leaves the midline, like Morty leaves any room where I explain things.",
+       "diagram": "muscles",
+       "part": "tibialis_anterior"
+      }
+     ],
+     "questions": [
+      {
+       "id": "muscles-2-01",
+       "type": "mcq",
+       "q": "What is the basic contractile unit of a skeletal muscle fiber?",
+       "choices": [
+        "Fascicle",
+        "Sarcolemma",
+        "Motor end plate",
+        "Sarcomere"
+       ],
+       "answer": 3,
+       "explain": "The sarcomere, from Z disc to Z disc, is the repeating unit that actually shortens. Myofibrils are chains of sarcomeres; a fascicle is a bundle of fibers; the sarcolemma is the fiber's cell membrane.",
+       "rick": "Sarcomere. The little engine. Thousands in a row make a myofibril. Thousands of you couldn't make a thought."
+      },
+      {
+       "id": "muscles-2-02",
+       "type": "mcq",
+       "q": "Which ion released from the sarcoplasmic reticulum triggers skeletal muscle contraction?",
+       "choices": [
+        "Na+",
+        "Ca2+",
+        "K+",
+        "Cl-"
+       ],
+       "answer": 1,
+       "explain": "Depolarization makes the sarcoplasmic reticulum release Ca2+, which binds troponin and exposes binding sites on actin. Na+ entry creates the action potential, but Ca2+ is the direct trigger for contraction.",
+       "rick": "Calcium. Bones store it, muscles use it as an on-switch. The Swiss army ion."
+      },
+      {
+       "id": "muscles-2-03",
+       "type": "mcq",
+       "q": "Which neurotransmitter do motor neurons release at the neuromuscular junction?",
+       "choices": [
+        "Acetylcholine",
+        "Norepinephrine",
+        "Dopamine",
+        "GABA"
+       ],
+       "answer": 0,
+       "explain": "Motor neurons release acetylcholine, which binds nicotinic receptors on the motor end plate and depolarizes the muscle fiber. Acetylcholinesterase then breaks it down to end the signal.",
+       "rick": "ACh. Acetylcholine. If you said dopamine, that's just your phone addiction talking."
+      },
+      {
+       "id": "muscles-2-04",
+       "type": "mcq",
+       "q": "During contraction, which part of the sarcomere stays the SAME length?",
+       "choices": [
+        "I band",
+        "H zone",
+        "A band",
+        "Distance between Z discs"
+       ],
+       "answer": 2,
+       "explain": "The A band equals the length of the thick (myosin) filaments, which don't change length. As thin filaments slide toward the center, the I band and H zone narrow and the Z discs move closer together.",
+       "rick": "A band stays, I and H shrink. The filaments themselves never shrink. Neither does your ego."
+      },
+      {
+       "id": "muscles-2-05",
+       "type": "mcq",
+       "q": "To which protein does Ca2+ bind to start skeletal muscle contraction?",
+       "choices": [
+        "Troponin",
+        "Tropomyosin",
+        "Myosin",
+        "Calmodulin"
+       ],
+       "answer": 0,
+       "explain": "Ca2+ binds troponin C; the troponin complex then shifts tropomyosin, uncovering myosin-binding sites on actin. Calmodulin is the Ca2+-binding protein that does this job in smooth muscle instead.",
+       "rick": "Troponin. Tropomyosin's the curtain, troponin pulls the rope. *burp* Theater for idiots."
+      },
+      {
+       "id": "muscles-2-06",
+       "type": "mcq",
+       "q": "Which connective tissue layer surrounds a fascicle?",
+       "choices": [
+        "Epimysium",
+        "Endomysium",
+        "Periosteum",
+        "Perimysium"
+       ],
+       "answer": 3,
+       "explain": "Perimysium wraps each fascicle (bundle of fibers). Epimysium wraps the whole muscle; endomysium wraps each individual fiber. Periosteum covers bone.",
+       "rick": "Peri means around. Around the bundle. Greek's so easy even ancient Greek toddlers spoke it."
+      },
+      {
+       "id": "muscles-2-07",
+       "type": "mcq",
+       "q": "Raising your arm out to the side, away from the body's midline, is called:",
+       "choices": [
+        "Adduction",
+        "Abduction",
+        "Flexion",
+        "Pronation"
+       ],
+       "answer": 1,
+       "explain": "Abduction moves a limb away from the midline; adduction brings it back toward it. Flexion decreases the angle at a joint (like bending the elbow); pronation turns the palm down.",
+       "rick": "AB-duction: taken AWAY. Like when aliens abduct you. They'd bring you back, though. Too dumb to keep."
+      },
+      {
+       "id": "muscles-2-08",
+       "type": "mcq",
+       "q": "What does the quadriceps femoris do at the knee?",
+       "choices": [
+        "Flexes (bends) it",
+        "Abducts it",
+        "Extends (straightens) it",
+        "Rotates it medially"
+       ],
+       "answer": 2,
+       "explain": "All four parts of the quadriceps insert via the patella and patellar ligament onto the tibial tuberosity, so they extend the knee. The hamstrings on the back of the thigh flex it.",
+       "rick": "Quads straighten, hamstrings bend. Front kicks, back curls. I'm basically your personal trainer now."
+      },
+      {
+       "id": "muscles-2-09",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "deltoid",
+       "q": "Click the main muscle that abducts the arm at the shoulder.",
+       "explain": "The deltoid caps the shoulder, running from the clavicle, acromion and spine of the scapula to the humerus. Its middle fibers abduct the arm after the supraspinatus starts the movement.",
+       "rick": "Shoulder pad you're born with. Raise your arm like you know the answer. You don't, but practice."
+      },
+      {
+       "id": "muscles-2-10",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "adductors",
+       "q": "Click the muscle group that pulls the thigh toward the midline.",
+       "explain": "The adductors (adductor longus, brevis and magnus, plus gracilis and pectineus) fill the medial thigh and adduct the hip, pulling the legs together.",
+       "rick": "Adductors: squeeze your thighs together. The groin muscles you pull trying to do a split. *burp* Don't."
+      },
+      {
+       "id": "muscles-2-11",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "tibialis_anterior",
+       "q": "Click the muscle that lifts the foot upward (dorsiflexion).",
+       "explain": "The tibialis anterior runs down the front of the shin to the inner side of the foot. It dorsiflexes and inverts the foot, keeping your toes from catching the ground when you walk.",
+       "rick": "Shin muscle. Lifts your toes so you don't faceplant. Clearly yours needs work."
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "lessons": [
+      {
+       "id": "muscles-3-L1",
+       "title": "Fiber types and motor units",
+       "fact": "Motor unit = one motor neuron + all fibers it supplies. Small units give fine control (eye muscles); large ones give power. Type I (slow oxidative): red, rich in mitochondria and myoglobin, fatigue-resistant, posture. Type II (fast): more glycolytic, powerful, tire sooner. Small units are recruited first (size principle).",
+       "rick": "Type I: marathoner. Type II: sprinter who pukes after ten seconds. *burp* Guess which one you are.",
+       "diagram": "muscles",
+       "part": "gastrocnemius"
+      },
+      {
+       "id": "muscles-3-L2",
+       "title": "The cross-bridge cycle",
+       "fact": "In T-tubules, the dihydropyridine receptor (DHPR, a voltage sensor) is mechanically linked to the ryanodine receptor (RyR1), which releases SR Ca2+. Cycle: ATP binds myosin -> head lets go of actin; ATP hydrolysis cocks the head; head binds actin; Pi release -> power stroke; ADP leaves. No ATP = rigor. SERCA pumps Ca2+ back.",
+       "rick": "ATP is what makes myosin LET GO. No ATP, no release: rigor mortis. Corpses are just really bad at letting go.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "muscles-3-L3",
+       "title": "Length, frequency, force",
+       "fact": "Active tension peaks at an optimal sarcomere length, where thick and thin filaments overlap so the most myosin heads can bind; overstretched or overshortened muscle is weaker. Firing faster lets twitches summate before Ca2+ is pumped away; high frequency gives fused tetanus. Recruiting more motor units also adds force.",
+       "rick": "Too stretched or too squished, muscle's weak. Goldilocks with actin. Also you, mentally.",
+       "diagram": "muscles",
+       "part": "quadriceps_femoris"
+      },
+      {
+       "id": "muscles-3-L4",
+       "title": "When muscle breaks",
+       "fact": "Myasthenia gravis: antibodies to postsynaptic nicotinic ACh receptors -> weakness that worsens with use, ptosis, diplopia. Lambert-Eaton: antibodies to presynaptic voltage-gated Ca2+ channels -> weakness that eases with repeated effort; small cell lung cancer link. Duchenne: X-linked loss of dystrophin -> boys with Gowers sign.",
+       "rick": "MG gets worse the more you use it; Lambert-Eaton gets better. Like *burp* my hangovers versus my genius.",
+       "diagram": "",
+       "part": ""
+      }
+     ],
+     "questions": [
+      {
+       "id": "muscles-3-01",
+       "type": "mcq",
+       "q": "Compared with type II fibers, type I (slow oxidative) fibers have:",
+       "choices": [
+        "Fewer mitochondria; rely on glycolysis",
+        "Faster myosin ATPase; fatigue quickly",
+        "More mitochondria and myoglobin; resist fatigue",
+        "Larger motor units, recruited last"
+       ],
+       "answer": 2,
+       "explain": "Type I fibers are red from myoglobin and dense capillaries; their many mitochondria run aerobic metabolism, so they resist fatigue (posture muscles like soleus). Fast glycolytic (type IIx) fibers are pale, fast, powerful and tire quickly.",
+       "rick": "Myoglobin makes them red, like duck leg meat. *burp* Now I'm hungry. Focus."
+      },
+      {
+       "id": "muscles-3-02",
+       "type": "mcq",
+       "q": "As force demand slowly rises, which motor units are recruited first?",
+       "choices": [
+        "Small units with slow, fatigue-resistant fibers",
+        "Large units with fast, powerful fibers",
+        "All motor units at once",
+        "Whichever units lie closest to the skin"
+       ],
+       "answer": 0,
+       "explain": "Henneman's size principle: small motor neurons have the lowest threshold, so small, slow (type I) units fire first; larger, fast, powerful units join as force needs rise. This grades force smoothly.",
+       "rick": "Small guys first, big guns later. Same strategy I use on the Council of Ricks."
+      },
+      {
+       "id": "muscles-3-03",
+       "type": "mcq",
+       "q": "What causes rigor mortis?",
+       "choices": [
+        "Excess ATP locking myosin heads",
+        "No ATP, so myosin cannot detach from actin",
+        "Ca2+ pumped back into the SR too fast",
+        "ACh piling up at the end plate"
+       ],
+       "answer": 1,
+       "explain": "ATP binding is what releases myosin from actin. After death, ATP runs out while Ca2+ leaks from the SR, so cross-bridges form and stay locked, stiffening muscles until proteins break down.",
+       "rick": "Dead muscle can't let go because it's out of ATP. Clingy. Like Morty with my portal gun."
+      },
+      {
+       "id": "muscles-3-04",
+       "type": "mcq",
+       "q": "In skeletal muscle, which T-tubule protein is the voltage sensor mechanically linked to RyR1?",
+       "choices": [
+        "Nicotinic acetylcholine receptor",
+        "IP3 receptor",
+        "SERCA pump",
+        "Dihydropyridine receptor (L-type Ca2+ channel)"
+       ],
+       "answer": 3,
+       "explain": "The DHPR in the T-tubule membrane senses depolarization and changes shape, mechanically opening RyR1 on the adjacent SR to release Ca2+. Nicotinic receptors sit at the end plate; SERCA pumps Ca2+ back into the SR for relaxation.",
+       "rick": "DHPR flips, RyR1 opens, calcium floods out. A Rube Goldberg machine, but one that works."
+      },
+      {
+       "id": "muscles-3-05",
+       "type": "mcq",
+       "q": "High-frequency stimulation produces a smooth, sustained contraction (fused tetanus) because:",
+       "choices": [
+        "Ca2+ stays high, so twitches summate",
+        "Each stimulus recruits a new fiber type",
+        "The muscle runs out of ATP and locks",
+        "Acetylcholine release stops"
+       ],
+       "answer": 0,
+       "explain": "At high firing rates, the next action potential arrives before the SR has pumped Ca2+ back, so cytosolic Ca2+ stays high and twitches fuse into a stronger sustained contraction. This is unrelated to the disease tetanus (a toxin).",
+       "rick": "Fire fast enough and twitches merge. Summation. Like my burps merging into one *burp* continuous one."
+      },
+      {
+       "id": "muscles-3-06",
+       "type": "mcq",
+       "q": "At which sarcomere length does a skeletal muscle generate its greatest active tension?",
+       "choices": [
+        "Maximal stretch, filaments barely overlapping",
+        "Maximal shortening, filaments colliding",
+        "Length with optimal actin-myosin overlap",
+        "Tension does not depend on length"
+       ],
+       "answer": 2,
+       "explain": "Active tension depends on how many myosin heads can reach actin. At the optimal length (near normal resting length) overlap is ideal. Overstretching reduces overlap; overshortening makes filaments collide and interfere.",
+       "rick": "Goldilocks length. Not too long, not too short. The universe runs on porridge logic, apparently."
+      },
+      {
+       "id": "muscles-3-07",
+       "type": "mcq",
+       "q": "A 30-year-old woman has drooping eyelids and double vision that worsen through the day and improve with rest. Her antibodies most likely target:",
+       "choices": [
+        "Presynaptic voltage-gated Ca2+ channels",
+        "Postsynaptic nicotinic ACh receptors",
+        "Acetylcholinesterase",
+        "Muscarinic ACh receptors"
+       ],
+       "answer": 1,
+       "explain": "Myasthenia gravis: autoantibodies block and destroy nicotinic ACh receptors at the motor end plate, so weakness worsens with repeated use, often starting in eye muscles. It is associated with thymic abnormalities (thymoma, hyperplasia).",
+       "rick": "Eyes droop by evening, perk up after a nap. Antibodies eating ACh receptors. MG. Easy. *burp* Easy."
+      },
+      {
+       "id": "muscles-3-08",
+       "type": "mcq",
+       "q": "A 4-year-old boy pushes on his thighs with his hands to stand up and has enlarged calves. Which protein is most likely absent?",
+       "choices": [
+        "Titin",
+        "Troponin T",
+        "Myotonic dystrophy protein kinase",
+        "Dystrophin"
+       ],
+       "answer": 3,
+       "explain": "Duchenne muscular dystrophy: X-linked frameshift deletions abolish dystrophin, which anchors the cytoskeleton to the membrane. Fibers tear and are replaced by fat and fibrous tissue (calf pseudohypertrophy). Gowers sign = proximal weakness; CK is very high.",
+       "rick": "Gowers sign: climbing up your own legs to stand. Dystrophin's missing. Fake-big calves, real problem."
+      },
+      {
+       "id": "muscles-3-09",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "sternocleidomastoid",
+       "q": "Click the neck muscle that is fibrosed and shortened in congenital muscular torticollis (wry neck).",
+       "explain": "The sternocleidomastoid runs from the sternum and clavicle to the mastoid process. Alone it tilts the head to its own side and turns the face away; a short, fibrosed SCM in an infant holds the head that way (torticollis). Nerve: accessory (CN XI).",
+       "rick": "Sterno-cleido-mastoid. The name IS the directions: sternum, clavicle, mastoid. Lazy naming. Useful, though."
+      },
+      {
+       "id": "muscles-3-10",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "trapezius",
+       "q": "Click the muscle that shrugs (elevates) the shoulders.",
+       "explain": "The trapezius is a large flat muscle (the pair forms a diamond) from the skull and spine to the clavicle and scapula. Upper fibers elevate the scapula (shrug); it also retracts and rotates the scapula. Nerve: accessory (CN XI).",
+       "rick": "Trapezius: the shrug muscle. Your most-used muscle, judging by how you answer questions."
+      },
+      {
+       "id": "muscles-3-11",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "sartorius",
+       "q": "Click the longest muscle in the body.",
+       "explain": "The sartorius is a strap muscle running diagonally from the anterior superior iliac spine to the medial tibia. It flexes, abducts and laterally rotates the hip and flexes the knee ('tailor' sitting). Nerve: femoral.",
+       "rick": "Sartorius: the tailor's muscle. Longest muscle you've got, shortest attention span to match."
+      },
+      {
+       "id": "muscles-3-12",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "external_oblique",
+       "q": "Click the muscle whose aponeurosis forms the inguinal ligament.",
+       "explain": "The external oblique is the most superficial lateral abdominal muscle; its fibers run down and medially ('hands in pockets'). The lower edge of its aponeurosis, from the ASIS to the pubic tubercle, forms the inguinal ligament.",
+       "rick": "Hands-in-pockets fibers. Its lower edge becomes the inguinal ligament. Hernia country. Watch your step."
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "lessons": [
+      {
+       "id": "muscles-4-L1",
+       "title": "Smooth muscle switches",
+       "fact": "Smooth muscle has no troponin. Ca2+ (entering via L-type channels or released from SR by IP3) binds calmodulin -> activates myosin light-chain kinase (MLCK) -> phosphorylated myosin binds actin. Myosin light-chain phosphatase reverses it. NO -> guanylyl cyclase -> cGMP -> activates the phosphatase -> relaxation (vasodilation).",
+       "rick": "No troponin in smooth muscle. It's calmodulin and kinases. Different franchise, same calcium. *burp* Reboot energy.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "muscles-4-L2",
+       "title": "E-C coupling gone wrong",
+       "fact": "Skeletal: DHPR mechanically opens RyR1, so no extracellular Ca2+ is needed. Cardiac: Ca2+ entering via L-type channels triggers RyR2 (Ca2+-induced Ca2+ release). Malignant hyperthermia: usually RYR1 mutation; volatile anesthetics or succinylcholine -> massive Ca2+ release -> rigidity, high CO2, fever. Dantrolene blocks RyR1.",
+       "rick": "Anesthetic gas + bad RyR1 = patient becomes a space heater. Dantrolene shuts the gate. Anesthesiologists' favorite nightmare.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "muscles-4-L3",
+       "title": "Hacking the junction",
+       "fact": "Succinylcholine activates nicotinic receptors and keeps the end plate depolarized, so nearby Na+ channels stay inactivated (fasciculations, then paralysis). Rocuronium is a competitive, nondepolarizing blocker. Lambert-Eaton: antibodies to presynaptic P/Q-type Ca2+ channels; strength and reflexes improve briefly with exercise.",
+       "rick": "Succinylcholine kicks the door open and jams it. Rocuronium just stands in the doorway. Either way: no muscle party.",
+       "diagram": "",
+       "part": ""
+      },
+      {
+       "id": "muscles-4-L4",
+       "title": "Nerve injury -> weak muscle",
+       "fact": "Axillary (humeral surgical neck) -> deltoid: weak abduction past ~15 degrees. Musculocutaneous -> biceps: weak elbow flexion, supination. Median -> most forearm flexors. Obturator -> adductors. Fibular neck: common -> deep fibular -> tibialis anterior: foot drop. CN XI -> SCM, trapezius; a posterior triangle cut spares SCM.",
+       "rick": "Name the nerve, name the muscle, name the bone that snapped. Three-hit combo. Mortal Kombat for nerds.",
+       "diagram": "muscles",
+       "part": "deltoid"
+      }
+     ],
+     "questions": [
+      {
+       "id": "muscles-4-01",
+       "type": "mcq",
+       "q": "In smooth muscle, a rise in cytosolic Ca2+ triggers contraction mainly by binding:",
+       "choices": [
+        "Troponin C, which shifts tropomyosin",
+        "Myosin light-chain phosphatase, activating it",
+        "RyR1, which opens to the extracellular fluid",
+        "Calmodulin, which activates myosin light-chain kinase"
+       ],
+       "answer": 3,
+       "explain": "Smooth muscle lacks troponin. Ca2+-calmodulin activates MLCK, which phosphorylates the regulatory myosin light chain so cross-bridges cycle. Myosin light-chain phosphatase dephosphorylates it to relax the muscle.",
+       "rick": "Calmodulin, not troponin. Write it on your hand. Smooth muscle plays by different rules. Like me."
+      },
+      {
+       "id": "muscles-4-02",
+       "type": "mcq",
+       "q": "Nitric oxide relaxes vascular smooth muscle mainly by:",
+       "choices": [
+        "Raising cGMP, which activates myosin light-chain phosphatase",
+        "Raising IP3, which releases SR Ca2+",
+        "Activating MLCK via calmodulin",
+        "Blocking nicotinic ACh receptors"
+       ],
+       "answer": 0,
+       "explain": "NO diffuses into smooth muscle and activates soluble guanylyl cyclase. cGMP activates protein kinase G, which activates myosin light-chain phosphatase and lowers Ca2+, so myosin is dephosphorylated and the vessel dilates. IP3 and MLCK promote contraction.",
+       "rick": "NO -> cGMP -> relax. Same pathway nitroglycerin uses. Explosive AND a vasodilator. Love it."
+      },
+      {
+       "id": "muscles-4-03",
+       "type": "mcq",
+       "q": "During anesthesia with sevoflurane and succinylcholine, a patient develops rigidity, rising end-tidal CO2 and fever. Ca2+ floods out through:",
+       "choices": [
+        "Nicotinic ACh receptors of the motor end plate",
+        "IP3 receptors of smooth muscle SR",
+        "Ryanodine receptor (RyR1) of the sarcoplasmic reticulum",
+        "Presynaptic P/Q-type Ca2+ channels"
+       ],
+       "answer": 2,
+       "explain": "Malignant hyperthermia is usually an autosomal dominant RYR1 mutation. Triggers open the abnormal RyR1, flooding the cytosol with Ca2+: sustained contraction, hypermetabolism (CO2, heat), rhabdomyolysis and hyperkalemia. Dantrolene blocks RyR1 Ca2+ release.",
+       "rick": "Hot, stiff, hypercarbic. RyR1's leaking calcium like a cheap *burp* fusion reactor. Dantrolene, stat."
+      },
+      {
+       "id": "muscles-4-04",
+       "type": "mcq",
+       "q": "Removing extracellular Ca2+ quickly stops cardiac contraction, but skeletal muscle keeps contracting. Why?",
+       "choices": [
+        "Skeletal muscle uses calmodulin instead of troponin",
+        "Skeletal DHPR opens RyR1 mechanically, without Ca2+ influx",
+        "Cardiac muscle has no sarcoplasmic reticulum",
+        "Skeletal muscle stores contraction Ca2+ in mitochondria"
+       ],
+       "answer": 1,
+       "explain": "In skeletal muscle, a voltage-driven shape change of DHPR physically opens RyR1. Cardiac muscle needs Ca2+ influx through L-type channels to trigger RyR2 (Ca2+-induced Ca2+ release). Both use troponin, and cardiac muscle does have SR.",
+       "rick": "Skeletal muscle's hard-wired. The heart needs a calcium spark. That's why Ca2+ channel blockers hit the heart, not your biceps."
+      },
+      {
+       "id": "muscles-4-05",
+       "type": "mcq",
+       "q": "A 62-year-old smoker has proximal weakness that briefly improves with repeated effort, dry mouth and reduced reflexes. Antibodies most likely target:",
+       "choices": [
+        "Presynaptic P/Q-type voltage-gated Ca2+ channels",
+        "Postsynaptic nicotinic ACh receptors",
+        "Acetylcholinesterase",
+        "Muscle-specific kinase (MuSK)"
+       ],
+       "answer": 0,
+       "explain": "Lambert-Eaton syndrome: antibodies against presynaptic P/Q-type Ca2+ channels reduce ACh release. Repeated activation builds up presynaptic Ca2+, so strength improves briefly. Autonomic signs (dry mouth) are common; it is often paraneoplastic with small cell lung cancer.",
+       "rick": "Smoker, gets stronger with effort, dry mouth. Lambert-Eaton. Now go find the small cell cancer, genius."
+      },
+      {
+       "id": "muscles-4-06",
+       "type": "mcq",
+       "q": "Succinylcholine produces paralysis by:",
+       "choices": [
+        "Competitively blocking ACh receptors without depolarizing",
+        "Blocking ACh release from the nerve terminal",
+        "Blocking Ca2+ release through RyR1",
+        "Persistently depolarizing the end plate, inactivating Na+ channels"
+       ],
+       "answer": 3,
+       "explain": "Succinylcholine is a nicotinic agonist that acetylcholinesterase can't break down. The end plate stays depolarized: brief fasciculations, then flaccid paralysis as nearby Na+ channels stay inactivated. Rocuronium competes without depolarizing; botulinum toxin blocks ACh release.",
+       "rick": "Succinylcholine floors the gas till the engine floods. Twitch, twitch, *burp* nothing. Neat trick."
+      },
+      {
+       "id": "muscles-4-07",
+       "type": "mcq",
+       "q": "After a surgical neck fracture of the humerus, a patient cannot abduct the arm from about 15 to 90 degrees. Which nerve and muscle are affected?",
+       "choices": [
+        "Suprascapular nerve; supraspinatus",
+        "Radial nerve; triceps brachii",
+        "Axillary nerve; deltoid",
+        "Musculocutaneous nerve; biceps brachii"
+       ],
+       "answer": 2,
+       "explain": "The axillary nerve wraps around the surgical neck with the posterior circumflex humeral artery and supplies the deltoid and teres minor plus skin over the lateral shoulder. The supraspinatus (suprascapular nerve) starts the first ~15 degrees of abduction.",
+       "rick": "Surgical neck, axillary nerve, flat deltoid. Can't raise your hand. Not that you'd know the answer anyway."
+      },
+      {
+       "id": "muscles-4-08",
+       "type": "mcq",
+       "q": "During a lymph node biopsy in the posterior triangle of the neck, the accessory nerve (CN XI) is cut. The most likely deficit is:",
+       "choices": [
+        "Weak face-turning to the opposite side only (SCM)",
+        "Drooping shoulder and weak shrug (trapezius)",
+        "Winged scapula from serratus anterior palsy",
+        "Loss of elbow flexion (biceps brachii)"
+       ],
+       "answer": 1,
+       "explain": "In the posterior triangle, CN XI has already supplied the sternocleidomastoid and is heading to the trapezius, so injury there usually spares the SCM but weakens the trapezius: the shoulder droops and shrugging weakens. Serratus anterior is the long thoracic nerve.",
+       "rick": "One 'tiny' biopsy nick and the shoulder sags forever. Surgeons. *burp* Amateurs."
+      },
+      {
+       "id": "muscles-4-09",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "forearm_flexors",
+       "q": "Click the muscle group arising from the medial epicondyle, mostly supplied by the median nerve.",
+       "explain": "The superficial forearm flexors share a common origin on the medial epicondyle of the humerus; the group flexes the wrist and fingers. Most are median nerve; flexor carpi ulnaris and half of FDP are ulnar. Overuse causes golfer's elbow (medial epicondylitis).",
+       "rick": "Golfer's elbow lives here. A rich-guy injury. You'll never get it, don't worry."
+      },
+      {
+       "id": "muscles-4-10",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "biceps_brachii",
+       "q": "Click the muscle supplied by the musculocutaneous nerve that is the strongest forearm supinator.",
+       "explain": "The biceps brachii (musculocutaneous nerve, C5-C6) flexes the elbow and is the most powerful supinator, especially with the elbow bent. Its tendon inserts on the radial tuberosity; the biceps reflex tests C5-C6.",
+       "rick": "Biceps: flexor AND the strongest supinator. It's how you turn a screwdriver. Or open my *burp* flask."
+      },
+      {
+       "id": "muscles-4-11",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "tibialis_anterior",
+       "q": "Click the muscle whose paralysis causes foot drop after a fibular neck fracture.",
+       "explain": "The tibialis anterior is the main dorsiflexor of the foot, supplied by the deep fibular nerve (a branch of the common fibular nerve, which wraps around the fibular neck). Its paralysis causes foot drop and a high-stepping gait.",
+       "rick": "Fibular neck snaps, nerve dies, foot flops. Slap, slap, slap down the hallway. Very dignified."
+      },
+      {
+       "id": "muscles-4-12",
+       "type": "label",
+       "diagram": "muscles",
+       "part": "adductors",
+       "q": "Click the muscle group supplied mainly by the obturator nerve.",
+       "explain": "The obturator nerve (L2-L4) leaves the pelvis through the obturator canal to supply the medial-thigh adductors; injury weakens hip adduction. (The hamstring part of adductor magnus is supplied by the tibial part of the sciatic nerve.)",
+       "rick": "Obturator nerve, adductors, medial thigh. Lose it and your legs splay like a newborn giraffe."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "diagram": "skeleton",
+   "id": "skull",
+   "name": "Skull",
+   "desc": "Bony case of the head: cranial and facial bones joined by sutures, plus the movable mandible. Protects the brain and houses the eyes, inner ears and teeth.",
+   "rick": "A helmet you can't take off, protecting the most underused organ you own."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "mandible",
+   "name": "Mandible",
+   "desc": "The lower jaw, the largest and strongest facial bone. It holds the lower teeth and is the only skull bone with a freely movable joint (the temporomandibular joint).",
+   "rick": "Jaw bone. Used for chewing and for saying things I didn't ask about."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "clavicle",
+   "name": "Clavicle",
+   "desc": "The collarbone: an S-shaped strut from the sternum to the acromion of the scapula. Holds the arm out from the trunk; one of the most commonly fractured bones.",
+   "rick": "Collarbone. The coat hanger your arm dangles from. Snaps when you fall off stuff. Like you will."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "scapula",
+   "name": "Scapula",
+   "desc": "The flat, triangular shoulder blade on the back of the rib cage. Its glenoid cavity forms the shoulder joint with the humerus; it anchors the rotator cuff muscles.",
+   "rick": "Shoulder blade. Wings for people who never evolved actual wings. *burp* Sad."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "sternum",
+   "name": "Sternum",
+   "desc": "The flat breastbone in the front of the chest (manubrium, body, xiphoid process). The clavicles and the costal cartilages of ribs 1-7 attach to it.",
+   "rick": "Your chest's front door. CPR knocks on it. Hard."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "ribs",
+   "name": "Ribs",
+   "desc": "12 pairs of curved bones joined to the thoracic vertebrae. Pairs 1-7 are true ribs; 8-12 are false ribs, of which 11-12 float. With the sternum they form the rib cage around the heart and lungs.",
+   "rick": "A cage for your heart and lungs that flexes every time you breathe. A prison with a gym."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "humerus",
+   "name": "Humerus",
+   "desc": "The long bone of the upper arm, from shoulder to elbow. The axillary nerve wraps its surgical neck; the radial nerve runs in a groove on its shaft.",
+   "rick": "The 'funny bone' is your ulnar nerve, not a bone. 'Humerus' is just a pun. *burp* Hilarious."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "radius",
+   "name": "Radius",
+   "desc": "The lateral (thumb-side) forearm bone. It rotates around the ulna to turn the palm up and down; its distal end is the site of the classic Colles fracture.",
+   "rick": "Radius rolls around the ulna so you can flip your palm. Like flipping off physics."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "ulna",
+   "name": "Ulna",
+   "desc": "The medial (pinky-side) forearm bone. Its olecranon forms the point of the elbow, and its trochlear notch makes the hinge joint with the humerus.",
+   "rick": "Ulna: the elbow's pointy end. Bang it and your ulnar nerve screams. Good times."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "carpals",
+   "name": "Carpals",
+   "desc": "The 8 wrist bones in two rows: scaphoid, lunate, triquetrum, pisiform; trapezium, trapezoid, capitate, hamate. They form the floor of the carpal tunnel.",
+   "rick": "Eight pebbles in a bag of ligaments, and you type on them all day like they owe you money."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "metacarpals",
+   "name": "Metacarpals",
+   "desc": "The 5 long bones of the palm, numbered 1 (thumb) to 5 (little finger). Punching can break the neck of the 5th metacarpal (boxer's fracture).",
+   "rick": "Boxer's fracture: break your 5th metacarpal punching a wall. The wall wins. Always."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "phalanges_hand",
+   "name": "Phalanges (hand)",
+   "desc": "The 14 finger bones: two in the thumb (proximal, distal) and three in each other finger (proximal, middle, distal).",
+   "rick": "Fourteen finger bones. Count them. Use your fingers. That's what they're for."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "vertebral_column",
+   "name": "Vertebral column",
+   "desc": "The spine: 7 cervical, 12 thoracic and 5 lumbar vertebrae plus the sacrum and coccyx, cushioned by intervertebral discs. Supports the trunk and protects the spinal cord.",
+   "rick": "About 33 vertebrae stacked like *burp* poker chips, guarding your spinal cord. Mostly."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "pelvis",
+   "name": "Pelvis",
+   "desc": "Bony basin of the two hip bones (each a fused ilium, ischium and pubis) with the sacrum and coccyx. Carries weight to the legs and protects pelvic organs; its acetabulum holds the femoral head.",
+   "rick": "A bony bowl that keeps your guts in and your legs on. Engineering, baby."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "sacrum",
+   "name": "Sacrum",
+   "desc": "Triangular bone of 5 fused sacral vertebrae at the base of the spine. It joins the hip bones at the sacroiliac joints and passes body weight to the pelvis.",
+   "rick": "Five vertebrae that gave up their independence and fused. Strength in numbers."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "femur",
+   "name": "Femur",
+   "desc": "The thigh bone, longest and strongest in the body. Its head sits in the acetabulum (hip joint) and its condyles form the knee with the tibia. The femoral neck is a common fracture site in older adults.",
+   "rick": "Biggest bone you own. Snap it and you're not walking anywhere for a while, champ."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "patella",
+   "name": "Patella",
+   "desc": "The kneecap, the largest sesamoid bone, embedded in the quadriceps tendon. It improves the leverage of the quadriceps for knee extension and shields the knee joint.",
+   "rick": "A bone that grew inside a tendon. Like a pearl, but for your knee."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "tibia",
+   "name": "Tibia",
+   "desc": "The shin bone: the medial, weight-bearing bone of the leg. It forms the knee above and the ankle (with its medial malleolus) below; its front edge lies just under the skin.",
+   "rick": "Shin bone. You find it with the coffee table in the dark. Every time."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "fibula",
+   "name": "Fibula",
+   "desc": "The thin lateral bone of the leg. It bears little weight but anchors muscles and forms the lateral malleolus of the ankle. The common fibular nerve wraps around its neck.",
+   "rick": "Skinny and barely carries weight, but whack its neck and your foot flops. Underrated, like me."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "tarsals",
+   "name": "Tarsals",
+   "desc": "The 7 bones of the ankle and rear foot: talus, calcaneus, navicular, cuboid and three cuneiforms. The talus forms the ankle joint; the calcaneus is the heel.",
+   "rick": "Seven tarsals, and the calcaneus takes all the abuse. Heel bone. Achilles tendon's anchor."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "metatarsals",
+   "name": "Metatarsals",
+   "desc": "The 5 long bones of the forefoot between the tarsals and the toes. Classic sites of stress ('march') fractures and of fractures at the base of the 5th metatarsal.",
+   "rick": "Long foot bones. Run too much and they crack. Exercise: *burp* overrated."
+  },
+  {
+   "diagram": "skeleton",
+   "id": "phalanges_foot",
+   "name": "Phalanges (foot)",
+   "desc": "The 14 toe bones: two in the big toe (hallux) and three in each of the other toes.",
+   "rick": "Toe bones. Same count as fingers, way less useful. Unless you're a monkey. Are you?"
+  },
+  {
+   "diagram": "muscles",
+   "id": "sternocleidomastoid",
+   "name": "Sternocleidomastoid",
+   "desc": "Neck muscle from the sternum and clavicle to the mastoid process. One side tilts the head to the same side and turns the face to the opposite side; both flex the neck. Nerve: CN XI. Short in torticollis.",
+   "rick": "Turn your head to look at me. That's this muscle. Also the one that seizes up when you sleep weird."
+  },
+  {
+   "diagram": "muscles",
+   "id": "trapezius",
+   "name": "Trapezius",
+   "desc": "Large flat upper-back muscle (the pair forms a diamond) from the skull and spine to the clavicle and scapula. Elevates (shrugs), retracts and rotates the scapula. Nerve: CN XI.",
+   "rick": "Shrug muscle. Your default response to every question I ask."
+  },
+  {
+   "diagram": "muscles",
+   "id": "deltoid",
+   "name": "Deltoid",
+   "desc": "Triangular muscle capping the shoulder, from the clavicle, acromion and scapular spine to the humerus. Main abductor of the arm (beyond about 15 degrees). Nerve: axillary.",
+   "rick": "Shoulder cap. Shaped like a Greek delta, hence deltoid. Even the alphabet's smarter than you."
+  },
+  {
+   "diagram": "muscles",
+   "id": "pectoralis_major",
+   "name": "Pectoralis major",
+   "desc": "Fan-shaped chest muscle from the clavicle, sternum and costal cartilages to the humerus. Adducts and medially rotates the arm; its clavicular head helps flex it.",
+   "rick": "Pecs. Bros worship them. I just see a big flappy *burp* lever."
+  },
+  {
+   "diagram": "muscles",
+   "id": "biceps_brachii",
+   "name": "Biceps brachii",
+   "desc": "Two-headed muscle on the front of the upper arm, inserting on the radial tuberosity. Flexes the elbow and is the strongest supinator of the forearm. Nerve: musculocutaneous.",
+   "rick": "Two heads, one muscle. Two more heads than your whole study group combined."
+  },
+  {
+   "diagram": "muscles",
+   "id": "forearm_flexors",
+   "name": "Forearm flexors",
+   "desc": "Anterior forearm muscles; the superficial ones share a common origin on the medial epicondyle. They flex the wrist and fingers; mostly median nerve, partly ulnar. Overuse causes golfer's elbow.",
+   "rick": "Grip muscles. Hold a test tube, hold a flask. Mostly the flask."
+  },
+  {
+   "diagram": "muscles",
+   "id": "rectus_abdominis",
+   "name": "Rectus abdominis",
+   "desc": "Paired vertical muscle from the pubis to the xiphoid and costal cartilages 5-7, crossed by tendinous intersections (the six-pack). Flexes the trunk and compresses the abdomen.",
+   "rick": "Six-pack. Everyone's got one. Most are hiding under a layer of *burp* life choices."
+  },
+  {
+   "diagram": "muscles",
+   "id": "external_oblique",
+   "name": "External oblique",
+   "desc": "Most superficial lateral abdominal muscle; fibers run down and medially. Flexes and rotates the trunk; the lower edge of its aponeurosis forms the inguinal ligament.",
+   "rick": "Side abs. The twisting muscle. Also builds the inguinal ligament, aka hernia highway."
+  },
+  {
+   "diagram": "muscles",
+   "id": "quadriceps_femoris",
+   "name": "Quadriceps femoris",
+   "desc": "Four muscles on the front of the thigh (rectus femoris, vastus lateralis, medialis, intermedius) joining via the patella and patellar ligament. Extends the knee; rectus femoris also flexes the hip. Nerve: femoral.",
+   "rick": "Four heads, one tendon, one main job: kick. The knee-jerk reflex tests it. Tap, kick, done."
+  },
+  {
+   "diagram": "muscles",
+   "id": "adductors",
+   "name": "Adductors",
+   "desc": "Medial thigh muscle group (adductor longus, brevis, magnus, plus gracilis and pectineus). Pulls the thigh toward the midline. Nerve: mainly obturator.",
+   "rick": "Groin muscles. The ones you pull trying to look cool on a dance floor."
+  },
+  {
+   "diagram": "muscles",
+   "id": "sartorius",
+   "name": "Sartorius",
+   "desc": "Longest muscle in the body: a strap from the anterior superior iliac spine to the medial tibia. Flexes, abducts and laterally rotates the hip; flexes the knee. Nerve: femoral.",
+   "rick": "Tailor's muscle. Sit cross-legged and it's working. Unlike you."
+  },
+  {
+   "diagram": "muscles",
+   "id": "tibialis_anterior",
+   "name": "Tibialis anterior",
+   "desc": "Muscle on the front of the shin, inserting on the medial foot. Main dorsiflexor and an inverter of the foot. Nerve: deep fibular; its paralysis causes foot drop.",
+   "rick": "Lifts your toes so you don't trip. Foot drop is what happens when it quits. Slap, slap."
+  },
+  {
+   "diagram": "muscles",
+   "id": "gastrocnemius",
+   "name": "Gastrocnemius",
+   "desc": "Two-headed superficial calf muscle from the femoral condyles to the calcaneus via the calcaneal (Achilles) tendon. Plantarflexes the foot and helps flex the knee. Nerve: tibial.",
+   "rick": "Calf muscle. Tiptoes, jumping, running from your problems. Very versatile."
+  }
+ ]
+}
