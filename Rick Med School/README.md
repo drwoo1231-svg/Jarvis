@@ -64,12 +64,34 @@ diagrams: hover parts to learn them, press **L** to label everything, or press
 
 ## About the content
 
-COUNTS_PLACEHOLDER
+Ten body systems × four levels:
 
-The facts were written to match standard anatomy and physiology textbooks and
-then checked by a separate reviewer, question by question. It's a study aid,
-though, not a textbook and not medical advice. If something matters (an exam,
-a patient), check it in your course material.
+| System | Diagram(s) you click on |
+|---|---|
+| Cells | animal cell |
+| Bones | skeleton |
+| Muscles | major muscles (front) |
+| Nervous system | neuron, brain (left side) |
+| Heart & blood | heart (front section) |
+| Lungs | respiratory tree |
+| Digestion | digestive system |
+| Kidneys | nephron, organ map |
+| Hormones | organ map |
+| Immune system | organ map |
+
+That's **160 lessons**, **320 multiple-choice** and **132 click-the-part**
+questions, plus study notes for all **136 diagram parts**. Each part also has
+its own drill question in study mode.
+
+Every lesson and question was written to standard anatomy and physiology
+references. Then:
+- a separate reviewer checked every item for accuracy, one answer per
+  question, level fit and clue ambiguity, and fixed what it found;
+- a final pass across all topics caught contradictions and duplicates
+  between systems.
+
+It's still a study aid, not a textbook and not medical advice. If something
+matters (an exam, a patient), check it in your course material.
 
 ## What's in each tab
 
