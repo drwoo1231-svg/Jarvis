@@ -20,6 +20,7 @@ class QuizScene extends Scene {
   ArrayList<Question> missed = new ArrayList<Question>();
   float qT, answerT;
   float top;                           // where the answer area starts (below the question)
+  float escT = -9;                     // ESC must be pressed twice to abandon the quiz
   float timeLimit;
   int lastTick;
   DiagramView view = new DiagramView();
@@ -225,6 +226,12 @@ class QuizScene extends Scene {
     text("SCORE " + score, 1090, 20);
     fill(streak >= 3 ? #FF9A3C : C_DIM);
     text("STREAK " + streak + (streak >= 3 ? " !!" : ""), 1090, 40);
+    if (T - escT < 2) {
+      textFont(fMono);
+      textAlign(RIGHT, TOP);
+      fill(C_RED);
+      text("ESC AGAIN TO QUIT", 1090, 62);
+    }
     if (timeLimit > 0 && !answered) {
       float k = constrain(1 - qT / timeLimit, 0, 1);
       noStroke();
@@ -408,6 +415,14 @@ class QuizScene extends Scene {
     if (b.id.equals("next")) next();
     if (b.id.equals("hint")) useHint();
     if (b.id.equals("quit")) back();
+  }
+
+  void escape() {
+    if (T - escT < 2) back();
+    else {
+      escT = T;
+      sfx.play(sfx.click, 0.4);
+    }
   }
 
   void back() {

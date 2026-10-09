@@ -165,6 +165,6 @@ class ExploreScene extends Scene {
   }
 
   void back() {
-    go(new DifficultyScene());
+    go(studyFromLevel > 0 ? new TopicScene(studyFromLevel) : new DifficultyScene());
   }
 }

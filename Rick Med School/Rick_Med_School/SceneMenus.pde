@@ -69,6 +69,7 @@ class DifficultyScene extends Scene {
     hoverLv = h;
     for (int lv = 1; lv <= 4; lv++) lift[lv] += ((lv == hoverLv ? 1 : 0) - lift[lv]) * min(1, dt * 12);
     rick.idleCheck();
+    prebuildDiagrams();
   }
 
   void draw() {
@@ -160,12 +161,15 @@ class DifficultyScene extends Scene {
   }
 
   void clicked(Button b) {
-    if (b.id.equals("explore")) go(new ExploreScene(null));
+    if (b.id.equals("explore")) {
+      studyFromLevel = 0;
+      go(new ExploreScene(null));
+    }
     if (b.id.equals("review")) startReview(0);
   }
 
   void back() {
-    go(new IntroScene());
+    rick.say("There's no escape, genius. *burp* Pick a level.");
   }
 }
 
@@ -398,7 +402,10 @@ class TopicScene extends Scene {
 
   void clicked(Button b) {
     if (b.id.equals("back")) back();
-    if (b.id.equals("explore")) go(new ExploreScene(null));
+    if (b.id.equals("explore")) {
+      studyFromLevel = level;
+      go(new ExploreScene(null));
+    }
   }
 
   void back() {

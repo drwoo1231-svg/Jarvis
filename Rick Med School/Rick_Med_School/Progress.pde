@@ -12,11 +12,16 @@ class Progress {
 
   void load() {
     data = null;
+    java.io.File f = new java.io.File(file());
     try {
-      java.io.File f = new java.io.File(file());
       if (f.exists()) data = loadJSONObject(f.getAbsolutePath());
     } catch (Exception e) {
       println("Couldn't read progress (" + e.getMessage() + ") - starting fresh.");
+    }
+    if (data == null && f.exists()) {
+      // keep the unreadable file instead of overwriting it on the next save
+      java.io.File keep = new java.io.File(file() + ".broken-" + System.currentTimeMillis());
+      if (f.renameTo(keep)) println("Kept the unreadable progress file as " + keep.getName());
     }
     if (data == null) data = new JSONObject();
     if (!data.hasKey("best")) data.setJSONObject("best", new JSONObject());
@@ -26,10 +31,21 @@ class Progress {
     if (!data.hasKey("right")) data.setInt("right", 0);
   }
 
+  // write a temp file, then swap it in, so a crash mid-save can't leave half a file
   void save() {
     try {
-      saveJSONObject(data, file());
-      saveOk = true;
+      java.io.File tmp = new java.io.File(file() + ".tmp");
+      boolean ok = saveJSONObject(data, tmp.getAbsolutePath());
+      if (ok) {
+        java.nio.file.Path from = tmp.toPath(), to = new java.io.File(file()).toPath();
+        try {
+          java.nio.file.Files.move(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+        } catch (Exception atomicFailed) {
+          java.nio.file.Files.move(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+      }
+      if (!ok && saveOk) println("Couldn't save progress.");
+      saveOk = ok;
     } catch (Exception e) {
       if (saveOk) println("Couldn't save progress (" + e.getMessage() + ").");
       saveOk = false;

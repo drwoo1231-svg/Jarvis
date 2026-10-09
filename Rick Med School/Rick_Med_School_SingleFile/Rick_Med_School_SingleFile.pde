@@ -61,7 +61,7 @@ void draw() {
   dt = constrain((now - lastMs) / 1000.0, 0.0005, 0.05);
   lastMs = now;
   T += dt;
-  scene.update(dt);
+  if (transT < 0 || transSwapped) scene.update(dt);    // the scene being left freezes during the wipe
   rick.update(dt);
   scene.draw();
   drawTransition();
@@ -70,6 +70,12 @@ void draw() {
     textAlign(RIGHT, TOP);
     fill(C_DIM);
     text("MUTED (M)", W - 12, H - 24);
+  }
+  if (!progress.saveOk) {
+    textFont(fMono);
+    textAlign(LEFT, TOP);
+    fill(C_RED);
+    text("PROGRESS NOT SAVING - the sketch folder is read-only", 12, H - 22);
   }
 }
 
@@ -83,7 +89,10 @@ abstract class Scene {
   void clicked(Button b) {}
   void mouse() {}                       // a click that didn't hit a button
   void key(char k, int code) {}
-  void back() {}                        // ESC
+  void back() {}                        // BACK buttons
+  void escape() {                       // ESC (scenes can ask for a second press)
+    back();
+  }
 
   Button button(String id, String label, float x, float y, float w, float h) {
     Button b = new Button(id, label, x, y, w, h);
@@ -151,11 +160,35 @@ void mousePressed() {
   if (!scene.clickButtons()) scene.mouse();
 }
 
+// hovering and reading count as studying, not idling
+void mouseMoved() {
+  rick.clickSkip();
+}
+
+void mouseDragged() {
+  rick.clickSkip();
+}
+
+// build the diagram images a little at a time while nothing else is going on
+void prebuildDiagrams() {
+  if (transT >= 0) return;
+  for (String id : DIAGRAM_ORDER) {
+    Diagram d = diagram(id);
+    if (d != null && d.thumb == null) {
+      d.thumb();
+      return;
+    }
+  }
+}
+
+// which level's body-system grid the study mode was opened from (0 = the difficulty screen)
+int studyFromLevel = 0;
+
 void keyPressed() {
   rick.clickSkip();              // any input resets Rick's idle nagging
   if (key == ESC) {
     key = 0;                     // don't quit - go back instead
-    if (transT < 0) scene.back();
+    if (transT < 0) scene.escape();
     return;
   }
   if (transT >= 0) return;
@@ -7593,11 +7626,16 @@ class Progress {
 
   void load() {
     data = null;
+    java.io.File f = new java.io.File(file());
     try {
-      java.io.File f = new java.io.File(file());
       if (f.exists()) data = loadJSONObject(f.getAbsolutePath());
     } catch (Exception e) {
       println("Couldn't read progress (" + e.getMessage() + ") - starting fresh.");
+    }
+    if (data == null && f.exists()) {
+      // keep the unreadable file instead of overwriting it on the next save
+      java.io.File keep = new java.io.File(file() + ".broken-" + System.currentTimeMillis());
+      if (f.renameTo(keep)) println("Kept the unreadable progress file as " + keep.getName());
     }
     if (data == null) data = new JSONObject();
     if (!data.hasKey("best")) data.setJSONObject("best", new JSONObject());
@@ -7607,10 +7645,21 @@ class Progress {
     if (!data.hasKey("right")) data.setInt("right", 0);
   }
 
+  // write a temp file, then swap it in, so a crash mid-save can't leave half a file
   void save() {
     try {
-      saveJSONObject(data, file());
-      saveOk = true;
+      java.io.File tmp = new java.io.File(file() + ".tmp");
+      boolean ok = saveJSONObject(data, tmp.getAbsolutePath());
+      if (ok) {
+        java.nio.file.Path from = tmp.toPath(), to = new java.io.File(file()).toPath();
+        try {
+          java.nio.file.Files.move(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+        } catch (Exception atomicFailed) {
+          java.nio.file.Files.move(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+      }
+      if (!ok && saveOk) println("Couldn't save progress.");
+      saveOk = ok;
     } catch (Exception e) {
       if (saveOk) println("Couldn't save progress (" + e.getMessage() + ").");
       saveOk = false;
@@ -8445,7 +8494,7 @@ class ExploreScene extends Scene {
   }
 
   void back() {
-    go(new DifficultyScene());
+    go(studyFromLevel > 0 ? new TopicScene(studyFromLevel) : new DifficultyScene());
   }
 }
 
@@ -8483,7 +8532,8 @@ class IntroScene extends Scene {
   void update(float dt) {
     t += dt;
     portal.update(dt);
-    if (t > 0.3 && t < 0.35) sfx.play(sfx.portal, 0.8);
+    prebuildDiagrams();
+    if (t - dt <= 0.3 && t > 0.3) sfx.play(sfx.portal, 0.8);
     portal.target = t > 0.3 && t < 3.2 ? 1 : 0;
     // tumble out of the portal, land, stagger to the middle
     if (t < 1.3) {
@@ -8677,6 +8727,10 @@ class IntroScene extends Scene {
     if (code == ENTER || code == RETURN || k == '\n') {
       if (!leaving) finish();
     } else if (k == ' ') mouse();
+  }
+
+  void escape() {
+    if (!leaving) finish();
   }
 
   void back() {
@@ -8895,6 +8949,7 @@ class DifficultyScene extends Scene {
     hoverLv = h;
     for (int lv = 1; lv <= 4; lv++) lift[lv] += ((lv == hoverLv ? 1 : 0) - lift[lv]) * min(1, dt * 12);
     rick.idleCheck();
+    prebuildDiagrams();
   }
 
   void draw() {
@@ -8986,12 +9041,15 @@ class DifficultyScene extends Scene {
   }
 
   void clicked(Button b) {
-    if (b.id.equals("explore")) go(new ExploreScene(null));
+    if (b.id.equals("explore")) {
+      studyFromLevel = 0;
+      go(new ExploreScene(null));
+    }
     if (b.id.equals("review")) startReview(0);
   }
 
   void back() {
-    go(new IntroScene());
+    rick.say("There's no escape, genius. *burp* Pick a level.");
   }
 }
 
@@ -9224,7 +9282,10 @@ class TopicScene extends Scene {
 
   void clicked(Button b) {
     if (b.id.equals("back")) back();
-    if (b.id.equals("explore")) go(new ExploreScene(null));
+    if (b.id.equals("explore")) {
+      studyFromLevel = level;
+      go(new ExploreScene(null));
+    }
   }
 
   void back() {
@@ -9279,6 +9340,7 @@ class QuizScene extends Scene {
   ArrayList<Question> missed = new ArrayList<Question>();
   float qT, answerT;
   float top;                           // where the answer area starts (below the question)
+  float escT = -9;                     // ESC must be pressed twice to abandon the quiz
   float timeLimit;
   int lastTick;
   DiagramView view = new DiagramView();
@@ -9484,6 +9546,12 @@ class QuizScene extends Scene {
     text("SCORE " + score, 1090, 20);
     fill(streak >= 3 ? #FF9A3C : C_DIM);
     text("STREAK " + streak + (streak >= 3 ? " !!" : ""), 1090, 40);
+    if (T - escT < 2) {
+      textFont(fMono);
+      textAlign(RIGHT, TOP);
+      fill(C_RED);
+      text("ESC AGAIN TO QUIT", 1090, 62);
+    }
     if (timeLimit > 0 && !answered) {
       float k = constrain(1 - qT / timeLimit, 0, 1);
       noStroke();
@@ -9669,6 +9737,14 @@ class QuizScene extends Scene {
     if (b.id.equals("quit")) back();
   }
 
+  void escape() {
+    if (T - escT < 2) back();
+    else {
+      escT = T;
+      sfx.play(sfx.click, 0.4);
+    }
+  }
+
   void back() {
     if (topicKey.equals("explore")) go(new ExploreScene(qs.isEmpty() ? null : qs.get(0).diagram));
     else if (level == 0) go(new DifficultyScene());
@@ -9684,7 +9760,7 @@ class QuizScene extends Scene {
 
 class ResultScene extends Scene {
   QuizScene quiz;
-  int pct, grade;
+  int pct, grade, bonus;
   boolean newBest;
   float t;
 
@@ -9700,7 +9776,8 @@ class ResultScene extends Scene {
 
   void enter() {
     if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct);
-    progress.addXp(quiz.score / 20);
+    bonus = max(1, quiz.score / 20);
+    progress.addXp(bonus);
     progress.save();
     rick.dock = DOCK_CORNER;
     rick.boxW = 470;
@@ -9760,7 +9837,7 @@ class ResultScene extends Scene {
     fill(C_TEXT);
     text(quiz.right + " / " + quiz.qs.size() + " correct", x, y);
     fill(C_GOLD);
-    text(quiz.score + " points  (+" + max(1, quiz.score / 20) + " schmeckles)", x, y + 32);
+    text(quiz.score + " points  (+" + bonus + " schmeckles)", x, y + 32);
     fill(C_DIM);
     text("best streak " + quiz.bestStreak, x, y + 64);
     if (newBest) {

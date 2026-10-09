@@ -28,7 +28,8 @@ class IntroScene extends Scene {
   void update(float dt) {
     t += dt;
     portal.update(dt);
-    if (t > 0.3 && t < 0.35) sfx.play(sfx.portal, 0.8);
+    prebuildDiagrams();
+    if (t - dt <= 0.3 && t > 0.3) sfx.play(sfx.portal, 0.8);
     portal.target = t > 0.3 && t < 3.2 ? 1 : 0;
     // tumble out of the portal, land, stagger to the middle
     if (t < 1.3) {
@@ -222,6 +223,10 @@ class IntroScene extends Scene {
     if (code == ENTER || code == RETURN || k == '\n') {
       if (!leaving) finish();
     } else if (k == ' ') mouse();
+  }
+
+  void escape() {
+    if (!leaving) finish();
   }
 
   void back() {

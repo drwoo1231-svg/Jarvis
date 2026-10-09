@@ -2,7 +2,7 @@
 
 class ResultScene extends Scene {
   QuizScene quiz;
-  int pct, grade;
+  int pct, grade, bonus;
   boolean newBest;
   float t;
 
@@ -18,7 +18,8 @@ class ResultScene extends Scene {
 
   void enter() {
     if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct);
-    progress.addXp(quiz.score / 20);
+    bonus = max(1, quiz.score / 20);
+    progress.addXp(bonus);
     progress.save();
     rick.dock = DOCK_CORNER;
     rick.boxW = 470;
@@ -78,7 +79,7 @@ class ResultScene extends Scene {
     fill(C_TEXT);
     text(quiz.right + " / " + quiz.qs.size() + " correct", x, y);
     fill(C_GOLD);
-    text(quiz.score + " points  (+" + max(1, quiz.score / 20) + " schmeckles)", x, y + 32);
+    text(quiz.score + " points  (+" + bonus + " schmeckles)", x, y + 32);
     fill(C_DIM);
     text("best streak " + quiz.bestStreak, x, y + 64);
     if (newBest) {

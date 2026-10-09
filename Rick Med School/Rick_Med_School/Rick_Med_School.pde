@@ -52,7 +52,7 @@ void draw() {
   dt = constrain((now - lastMs) / 1000.0, 0.0005, 0.05);
   lastMs = now;
   T += dt;
-  scene.update(dt);
+  if (transT < 0 || transSwapped) scene.update(dt);    // the scene being left freezes during the wipe
   rick.update(dt);
   scene.draw();
   drawTransition();
@@ -61,6 +61,12 @@ void draw() {
     textAlign(RIGHT, TOP);
     fill(C_DIM);
     text("MUTED (M)", W - 12, H - 24);
+  }
+  if (!progress.saveOk) {
+    textFont(fMono);
+    textAlign(LEFT, TOP);
+    fill(C_RED);
+    text("PROGRESS NOT SAVING - the sketch folder is read-only", 12, H - 22);
   }
 }
 
@@ -74,7 +80,10 @@ abstract class Scene {
   void clicked(Button b) {}
   void mouse() {}                       // a click that didn't hit a button
   void key(char k, int code) {}
-  void back() {}                        // ESC
+  void back() {}                        // BACK buttons
+  void escape() {                       // ESC (scenes can ask for a second press)
+    back();
+  }
 
   Button button(String id, String label, float x, float y, float w, float h) {
     Button b = new Button(id, label, x, y, w, h);
@@ -142,11 +151,35 @@ void mousePressed() {
   if (!scene.clickButtons()) scene.mouse();
 }
 
+// hovering and reading count as studying, not idling
+void mouseMoved() {
+  rick.clickSkip();
+}
+
+void mouseDragged() {
+  rick.clickSkip();
+}
+
+// build the diagram images a little at a time while nothing else is going on
+void prebuildDiagrams() {
+  if (transT >= 0) return;
+  for (String id : DIAGRAM_ORDER) {
+    Diagram d = diagram(id);
+    if (d != null && d.thumb == null) {
+      d.thumb();
+      return;
+    }
+  }
+}
+
+// which level's body-system grid the study mode was opened from (0 = the difficulty screen)
+int studyFromLevel = 0;
+
 void keyPressed() {
   rick.clickSkip();              // any input resets Rick's idle nagging
   if (key == ESC) {
     key = 0;                     // don't quit - go back instead
-    if (transT < 0) scene.back();
+    if (transT < 0) scene.escape();
     return;
   }
   if (transT >= 0) return;
