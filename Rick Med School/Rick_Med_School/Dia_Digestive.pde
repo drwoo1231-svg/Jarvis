@@ -22,7 +22,7 @@ class DigestiveDiagram extends Diagram {
   final float[] ESO_C = { 316, 10, 318, 50, 326, 95, 342, 132, 366, 164 };
   final float[] DUO_C = { 314, 266, 286, 265, 258, 271, 238, 287, 229, 311, 238, 334, 266, 346, 300, 347, 326, 342, 340, 340 };
   // large intestine centreline: ascending (from the cecum) -> transverse -> descending -> sigmoid -> rectum
-  final float[] LI_C = { 132, 468, 128, 430, 124, 380, 124, 330, 133, 303, 158, 296, 186, 320, 214, 356, 252, 384, 300, 395, 360, 393, 412, 378, 448, 352, 470, 322, 487, 297, 507, 285, 525, 295, 533, 322, 531, 360, 524, 410, 516, 462, 506, 500, 482, 522, 440, 523, 400, 512, 362, 518, 332, 532, 314, 551, 306, 574, 304, 592 };
+  final float[] LI_C = { 132, 468, 128, 430, 124, 380, 124, 330, 133, 303, 158, 296, 186, 320, 214, 356, 252, 384, 300, 395, 360, 393, 412, 378, 448, 352, 470, 322, 487, 297, 507, 285, 525, 295, 533, 322, 531, 360, 524, 410, 516, 462, 508, 496, 486, 516, 448, 520, 408, 508, 374, 503, 346, 508, 327, 521, 316, 540, 310, 564, 308, 590 };
   final float[] CEC_C = { 112, 462, 132, 458, 152, 462, 168, 480, 162, 503, 140, 515, 116, 508, 104, 484 };
   final float[] APP_C = { 152, 508, 160, 528, 170, 547, 166, 561, 156, 558 };
 
@@ -45,17 +45,20 @@ class DigestiveDiagram extends Diagram {
     sHep = arcNear(li, 142, 297);        // hepatic flexure
     sSpl = arcNear(li, 512, 286);        // splenic flexure
     sSig = arcAtY(li, 470, false);       // pelvic brim: descending -> sigmoid
-    sRect = arcNear(li, 332, 532);       // rectosigmoid junction
+    sRect = arcNear(li, 318, 536);       // rectosigmoid junction (midline): the rectum runs straight down from here
 
-    add("liver", "Liver").poly(liver).anchor(170, 170);
+    // the liver's left lobe lies IN FRONT of the abdominal esophagus and the cardia:
+    // stomach and esophagus go first so the liver wins the clicks where it covers them
     add("pancreas", "Pancreas").poly(pan).anchor(400, 318);
-    add("stomach", "Stomach").poly(sto).anchor(440, 210);
+    add("stomach", "Stomach").poly(minus(sto, liver)).anchor(440, 210);   // minus the cardia hidden under the liver
+    // visible part only: the tube cut along the liver's upper edge (line through (306,106) and (346,124))
+    add("esophagus", "Esophagus").poly(clipAbove(tubePoly(sub(eso, 0, arcAtY(eso, 140, false)), 30), 306, 106, 346, 124)).anchor(320, 60);
+    add("liver", "Liver").poly(liver).anchor(170, 170);
     add("duodenum", "Duodenum").poly(tubePoly(sub(duo, 4, 999), 28)).anchor(231, 312);
     Part s = add("small_intestine", "Small Intestine");
     s.poly(150, 430, 200, 410, 300, 416, 400, 402, 470, 404, 496, 440, 496, 492, 460, 512, 360, 528, 300, 532, 240, 530, 190, 522, 168, 500, 150, 462);
     s.poly(tubePoly(sub(si, 0, 60), 28));
     s.anchor(310, 470);
-    add("esophagus", "Esophagus").poly(tubePoly(sub(eso, 0, len(eso) - 10), 30)).anchor(320, 60);
     add("gallbladder", "Gallbladder").poly(gb).anchor(212, 272);
     add("ascending_colon", "Ascending Colon").poly(tubePoly(sub(li, 0, sHep), 48)).anchor(124, 380);
     add("transverse_colon", "Transverse Colon").poly(tubePoly(sub(li, sHep, sSpl), 48)).anchor(300, 394);
@@ -64,6 +67,65 @@ class DigestiveDiagram extends Diagram {
     add("rectum", "Rectum").poly(tubePoly(sub(li, sRect, sEnd), 48)).anchor(312, 560);
     add("cecum", "Cecum").poly(scaled(cec, 136, 480, 1.08, 0, 0)).anchor(136, 484);
     add("appendix", "Appendix").poly(tubePoly(app, 20)).anchor(164, 540);
+  }
+
+  // outline a with the region covered by b cut away (one overlap; both outlines dense)
+  float[] minus(float[] a, float[] b) {
+    int n = a.length / 2, m = b.length / 2;
+    boolean[] ain = new boolean[n], bin = new boolean[m];
+    for (int i = 0; i < n; i++) ain[i] = insidePoly(b, a[i * 2], a[i * 2 + 1]);
+    for (int i = 0; i < m; i++) bin[i] = insidePoly(a, b[i * 2], b[i * 2 + 1]);
+    int enter = -1, exit = -1, bs = -1, be = -1, runsA = 0, runsB = 0;
+    for (int i = 0; i < n; i++) {
+      if (!ain[(i - 1 + n) % n] && ain[i]) { enter = i; runsA++; }
+      if (ain[(i - 1 + n) % n] && !ain[i]) exit = i;
+    }
+    for (int i = 0; i < m; i++) {
+      if (!bin[(i - 1 + m) % m] && bin[i]) { bs = i; runsB++; }
+      if (bin[i] && !bin[(i + 1) % m]) be = i;
+    }
+    if (runsA != 1 || runsB != 1) return a;
+    FloatList run = new FloatList();
+    for (int k = bs; ; k = (k + 1) % m) {
+      run.append(b[k * 2]);
+      run.append(b[k * 2 + 1]);
+      if (k == be) break;
+    }
+    float px = a[((enter - 1 + n) % n) * 2], py = a[((enter - 1 + n) % n) * 2 + 1];
+    boolean rev = dist(px, py, run.get(0), run.get(1)) > dist(px, py, run.get(run.size() - 2), run.get(run.size() - 1));
+    FloatList o = new FloatList();
+    for (int k = exit; k != enter; k = (k + 1) % n) {
+      o.append(a[k * 2]);
+      o.append(a[k * 2 + 1]);
+    }
+    int r = run.size() / 2;
+    for (int q = 0; q < r; q++) {
+      int idx = rev ? r - 1 - q : q;
+      o.append(run.get(idx * 2));
+      o.append(run.get(idx * 2 + 1));
+    }
+    return o.array();
+  }
+
+  // keep the part of polygon p lying above the line through (x0,y0)-(x1,y1) (one Sutherland-Hodgman pass)
+  float[] clipAbove(float[] p, float x0, float y0, float x1, float y1) {
+    FloatList o = new FloatList();
+    int n = p.length / 2;
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      float ax = p[i * 2], ay = p[i * 2 + 1], bx = p[j * 2], by = p[j * 2 + 1];
+      float da = (x1 - x0) * (ay - y0) - (y1 - y0) * (ax - x0), db = (x1 - x0) * (by - y0) - (y1 - y0) * (bx - x0);
+      if (da <= 0) {
+        o.append(ax);
+        o.append(ay);
+      }
+      if ((da < 0) != (db < 0) && da != db) {
+        float t = da / (da - db);
+        o.append(ax + (bx - ax) * t);
+        o.append(ay + (by - ay) * t);
+      }
+    }
+    return o.array();
   }
 
   // arc length where the path first crosses height y (rising = going up the page)
@@ -115,17 +177,6 @@ class DigestiveDiagram extends Diagram {
   }
 
   void drawArt(PGraphics g) {
-    // ---- liver
-    shaded(g, liver, LIV, LIV_SH, LIV_LT, 0.94, 2.8);
-    // falciform ligament + round ligament
-    g.noFill();
-    g.stroke(LIV_SH);
-    g.strokeWeight(2.4);
-    g.bezier(292, 98, 296, 140, 286, 180, 276, 210);
-    g.stroke(#E8C9A8);
-    g.strokeWeight(1.4);
-    g.bezier(294, 100, 298, 140, 288, 180, 278, 210);
-
     // ---- bile ducts (behind the duodenum) and pancreas
     g.stroke(D_INK);
     g.strokeWeight(8);
@@ -144,7 +195,7 @@ class DigestiveDiagram extends Diagram {
     g.strokeWeight(2.4);
     g.bezier(470, 294, 420, 306, 330, 316, 250, 320);
 
-    // ---- stomach + esophagus
+    // ---- stomach + esophagus (both pass behind the liver's left lobe)
     tube(g, eso, 26, ESO, ESO_SH, ESO_LT, true);
     cutEnd(g, eso, true, 26, ESO_SH);
     // longitudinal muscle lines on the esophagus
@@ -176,6 +227,17 @@ class DigestiveDiagram extends Diagram {
     g.strokeWeight(1.6);
     g.line(312, 253, 313, 280);
     g.line(321, 253, 323, 280);
+
+    // ---- liver: its left lobe covers the abdominal esophagus and the cardia
+    shaded(g, liver, LIV, LIV_SH, LIV_LT, 0.94, 2.8);
+    // falciform ligament + round ligament
+    g.noFill();
+    g.stroke(LIV_SH);
+    g.strokeWeight(2.4);
+    g.bezier(292, 98, 296, 140, 286, 180, 276, 210);
+    g.stroke(#E8C9A8);
+    g.strokeWeight(1.4);
+    g.bezier(294, 100, 298, 140, 288, 180, 278, 210);
 
     // ---- duodenum (C around the pancreatic head)
     tube(g, duo, 24, DUO, DUO_SH, DUO_LT, false);
@@ -238,11 +300,11 @@ class DigestiveDiagram extends Diagram {
     g.stroke(COL_SH);
     g.strokeWeight(2);
     g.noFill();
-    g.arc(320, 548, 24, 10, 0.1, PI - 0.3);
-    g.arc(310, 566, 22, 9, PI + 0.3, TWO_PI - 0.1);
+    g.arc(320, 553, 24, 9, 0.2, PI - 0.4);
+    g.arc(302, 568, 22, 8, 0.4, PI - 0.2);
     g.noStroke();
     g.fill(#8E4A36);
-    g.ellipse(304, 591, 12, 4);
+    g.ellipse(308, 590, 11, 4);
     // outlines (open at the top of the cecum so pouch and colon read as one)
     g.noFill();
     g.stroke(D_INK);
@@ -255,8 +317,8 @@ class DigestiveDiagram extends Diagram {
 
   float widthAt(float acc) {
     if (acc < sSig) return 42;
-    if (acc < sRect) return lerp(42, 32, constrain((acc - sSig) / 40, 0, 1));
-    if (acc < sEnd - 18) return lerp(32, 42, constrain((acc - sRect) / 22, 0, 1));   // rectal ampulla
+    if (acc < sRect) return lerp(42, 34, constrain((acc - sSig) / 40, 0, 1));
+    if (acc < sEnd - 18) return lerp(34, 42, constrain((acc - sRect) / 30, 0, 1));   // rectal ampulla
     return lerp(42, 14, constrain((acc - (sEnd - 18)) / 18, 0, 1));                 // anal canal
   }
 
@@ -269,7 +331,7 @@ class DigestiveDiagram extends Diagram {
       if (i > 0) acc += dist(p[i * 2 - 2], p[i * 2 - 1], p[i * 2], p[i * 2 + 1]);
       int a = max(i - 1, 0), b = min(i + 1, n - 1);
       float dx = p[b * 2] - p[a * 2], dy = p[b * 2 + 1] - p[a * 2 + 1], L = max(1e-4, sqrt(dx * dx + dy * dy));
-      float bulge = acc < sRect ? 2.2 * abs(sin((acc - 10) / 17 * PI)) : 0;
+      float bulge = 2.2 * abs(sin((acc - 10) / 17 * PI)) * constrain((sRect - acc) / 14, 0, 1);   // haustra fade out at the rectum
       float w = widthAt(acc) / 2 + bulge;
       keep(l, p[i * 2] - dy / L * w, p[i * 2 + 1] + dx / L * w, dx, dy);
       keep(r, p[i * 2] + dy / L * w, p[i * 2 + 1] - dx / L * w, dx, dy);

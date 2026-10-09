@@ -2,13 +2,14 @@
 // the axon leaves through the axon hillock, runs right under a chain of myelin
 // sheaths (Schwann cells, with nodes of Ranvier between them), curves down the
 // right side and splits into axon terminals (bottom). One terminal bouton forms
-// a synapse on a dendrite of a second (lavender) neuron; the circle in the
+// a synapse on the long dendrite of a second (lavender) neuron at the lower left,
+// whose dendrites, soma and nucleus count as the same parts; the circle in the
 // middle is that synapse magnified (vesicles, cleft, receptors).
 
 class NeuronDiagram extends Diagram {
   final float SX = 150, SY = 196;                 // soma centre
   final float ICX = 360, ICY = 360, IR = 100;     // synapse inset
-  final float AX_W = 9, MY_W = 28, GAP = 14, INIT = 34, TAIL = 40;
+  final float AX_W = 9, MY_W = 28, GAP = 14, INIT = 48, TAIL = 48;
   final int NERVE_DK = #C99A24, NISSL = #B98A2A, POST = #CDB8E8, POST_DK = #8E74B8;
   final int MY_DK = #D8C07A, SCHWANN = #9C88CF, NT = #E2563F, RECEPT = #47A99A;
 
@@ -27,9 +28,11 @@ class NeuronDiagram extends Diagram {
     build();
     Part d = add("dendrite", "Dendrites");
     for (int i = 0; i < dPts.size(); i++) d.poly(band(dPts.get(i), max(dWid.get(i)[0], dWid.get(i)[1]) + 10, dWid.get(i)[1] + 11));
+    // the second (postsynaptic) neuron's dendrites, soma and nucleus are the same structures
+    for (int i = 0; i < post.length; i++) d.poly(band(post[i], POST_SW[i] + 10, POST_EW[i] + 11));
     d.anchor(dPts.get(0)[dPts.get(0).length - 2], dPts.get(0)[dPts.get(0).length - 1]);
-    add("soma", "Soma (Cell Body)").poly(somaShape(4)).anchor(SX - 22, SY + 24);
-    add("nucleus", "Nucleus").poly(ell(SX - 6, SY - 3, 22, 20, 0, 24)).anchor(SX - 6, SY - 3);
+    add("soma", "Soma (Cell Body)").poly(somaShape(4)).poly(postSoma(4)).anchor(SX - 22, SY + 24);
+    add("nucleus", "Nucleus").poly(ell(SX - 6, SY - 3, 22, 20, 0, 24)).poly(ell(PSX + 1, PSY + 1, 14, 13, 0, 20)).anchor(SX - 6, SY - 3);
     add("axon_hillock", "Axon Hillock").poly(SX + 30, SY - 21, SX + 52, SY - 13, SX + 80, SY - 10, SX + 80, SY + 10, SX + 52, SY + 13, SX + 30, SY + 21).anchor(SX + 60, SY);
     Part a = add("axon", "Axon");
     a.poly(band(sub(1, INIT - 1), 22, 22)).poly(band(sub(axonLen - TAIL + 1, axonLen + 4), 22, 22));
@@ -83,16 +86,37 @@ class NeuronDiagram extends Diagram {
       crO(new float[] { ex + 10, ey + 24, ex + 28, ey + 36, ex + 44, ey + 46 }, 6)
     };
     bout = new float[][] { { JX + 9, JY - 3, 9 }, { ex - 26, ey + 70, 9 }, { ex + 8, ey + 74, 9 }, { ex + 48, ey + 49, 8.5 } };
-    // second neuron (partial): soma lower centre, one dendrite reaches the synapse
+    // second neuron (partial, lower left): a smaller multipolar cell whose longest dendrite reaches right to
+    // the synapse; side branches and tapering make it read as a dendrite, not an axon
     post = new float[][] {
-      crO(new float[] { 300, 540, 340, 532, 380, 530, JX - 6, JY + 4 }, 6),
-      crO(new float[] { 290, 522, 272, 494, 262, 472 }, 6),
-      crO(new float[] { 280, 532, 248, 530, 226, 518 }, 6),
-      crO(new float[] { 282, 552, 258, 566, 240, 580 }, 6),
-      crO(new float[] { 252, 528, 240, 548, 222, 556 }, 6),
-      crO(new float[] { 266, 484, 250, 470 }, 4),
-      crO(new float[] { 314, 556, 334, 572, 352, 580 }, 6)
+      crO(new float[] { 226, 516, 272, 517, 318, 521, 362, 525, 398, 527, JX - 6, JY + 4 }, 6),
+      crO(new float[] { 300, 519, 306, 502, 316, 488 }, 6),
+      crO(new float[] { 352, 524, 360, 541, 373, 554 }, 6),
+      crO(new float[] { 198, 496, 190, 472, 184, 448 }, 6),
+      crO(new float[] { 190, 472, 204, 456, 220, 446 }, 6),
+      crO(new float[] { 184, 505, 156, 491, 128, 484 }, 6),
+      crO(new float[] { 156, 491, 147, 472, 142, 455 }, 6),
+      crO(new float[] { 178, 526, 146, 532, 110, 528 }, 6),
+      crO(new float[] { 146, 532, 128, 548, 114, 560 }, 6),
+      crO(new float[] { 192, 535, 168, 556, 146, 574 }, 6),
+      crO(new float[] { 210, 545, 216, 562, 213, 580 }, 6)
     };
+  }
+
+  final float[] POST_SW = { 10, 5, 5, 9, 5, 8, 4.5, 8, 4, 7, 7 };
+  final float[] POST_EW = { 6, 2.5, 2.5, 4, 2.5, 3.5, 2.2, 3, 2, 3, 3 };
+  final float PSX = 205, PSY = 520;                      // second neuron's soma centre
+
+  float[] postSoma(float grow) {
+    float[] ang = { 0, 40, 80, 120, 160, 200, 240, 280, 320 };
+    float[] rad = { 27, 22, 26, 22, 27, 23, 27, 22, 25 };
+    float[] p = new float[ang.length * 2];
+    for (int i = 0; i < ang.length; i++) {
+      float a = radians(ang[i]);
+      p[i * 2] = PSX + cos(a) * (rad[i] + grow);
+      p[i * 2 + 1] = PSY + sin(a) * (rad[i] + grow) * 0.9;
+    }
+    return crC(p, 4);
   }
 
   void branch(float x, float y, float a, float len, float w0, float w1, int depth, float seed) {
@@ -315,14 +339,20 @@ class NeuronDiagram extends Diagram {
   }
 
   void drawPostNeuron(PGraphics g) {
-    float[] sw = { 11, 7, 6, 6, 4.5, 3.5, 6 };
-    float[] ew = { 7, 3.5, 3, 3, 2.5, 2, 4 };
+    // soft shadow
+    g.pushMatrix();
+    g.translate(4, 6);
+    for (int i = 0; i < post.length; i++) taper(g, post[i], POST_SW[i], POST_EW[i], 3, g.color(0, 0, 0, 18));
+    g.noStroke();
+    g.fill(0, 0, 0, 18);
+    shp(g, postSoma(1));
+    g.popMatrix();
     for (int pass = 0; pass < 3; pass++) {
       int col = pass == 0 ? D_INK : pass == 1 ? POST : g.color(255, 255, 255, 80);
       float add = pass == 0 ? 4.4 : 0;
       for (int i = 0; i < post.length; i++) {
-        if (pass < 2) taper(g, post[i], sw[i], ew[i], add, col);
-        else taper(g, shift(post[i], -0.6, -1), sw[i] * 0.3, ew[i] * 0.3, 0, col);
+        if (pass < 2) taper(g, post[i], POST_SW[i], POST_EW[i], add, col);
+        else taper(g, shift(post[i], -0.6, -1), POST_SW[i] * 0.3, POST_EW[i] * 0.3, 0, col);
       }
       g.noStroke();
       if (pass < 2) {
@@ -331,17 +361,23 @@ class NeuronDiagram extends Diagram {
           g.stroke(D_INK);
           g.strokeWeight(add);
         }
-        shp(g, crC(new float[] { 300, 516, 318, 528, 316, 548, 296, 560, 274, 552, 266, 532, 278, 516 }, 4));
+        shp(g, postSoma(0));
         g.noStroke();
         // spine head facing the bouton
         g.ellipse(JX - 4, JY + 4, 13 + add, 13 + add);
       }
     }
+    // soma shading, nucleus + nucleolus
     g.noStroke();
+    g.fill(lerpColor(POST, #FFFFFF, 0.35));
+    shp(g, ell(PSX - 9, PSY - 9, 13, 7, -0.4, 20));
+    g.stroke(D_INK);
+    g.strokeWeight(1.8);
     g.fill(POST_DK);
-    g.ellipse(292, 537, 20, 18);
+    g.ellipse(PSX + 1, PSY + 1, 22, 20);
+    g.noStroke();
     g.fill(#5B4790);
-    g.ellipse(295, 539, 7, 7);
+    g.ellipse(PSX + 4, PSY + 3, 7, 7);
   }
 
   void drawCallout(PGraphics g) {

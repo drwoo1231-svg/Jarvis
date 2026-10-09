@@ -83,6 +83,8 @@ class Rick {
     if (!showing) return;
     int before = typed();
     age += dt;
+    // corner box: let it go once he's said it and you've had time to read it
+    if (dock == DOCK_CORNER && age > text.length() / cps + 7 + text.length() / 25.0) showing = false;
     int now = typed();
     // sounds as the text appears: a soft blip per word, a real burp at *burp*
     for (int i = max(before, lastSoundChar + 1); i < now; i++) {

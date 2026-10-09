@@ -52,7 +52,7 @@ class NephronDiagram extends Diagram {
 
     add("bowmans_capsule", "Bowman's Capsule").poly(ring(GX, GY, R_CAPS + 4, R_GLOM + 1, 32)).anchor(GX - 50, GY + 30);
     add("glomerulus", "Glomerulus").ellipse(GX, GY, R_GLOM + 3, R_GLOM + 3).anchor(GX - 4, GY + 4);
-    add("proximal_tubule", "Proximal Convoluted Tubule").poly(tubePoly(sub(pct, 22, 9999), 32)).anchor(246, 292);
+    add("proximal_tubule", "Proximal Tubule").poly(tubePoly(sub(pct, 22, 9999), 32)).anchor(246, 292);
     add("descending_limb", "Descending Limb of Henle").poly(tubePoly(sub(desc, 6, sDescTurn), 28)).anchor(348, 450);
     add("ascending_limb", "Ascending Limb of Henle").poly(tubePoly(sub(dist, 0, sAscEnd), 30)).anchor(389, 360);
     add("distal_tubule", "Distal Convoluted Tubule").poly(tubePoly(sub(dist, sMdEnd, 9999), 30)).anchor(420, 84);

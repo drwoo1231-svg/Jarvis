@@ -33,9 +33,10 @@ class BrainDiagram extends Diagram {
     add("parietal_lobe", "Parietal Lobe").poly(cp(parietalP)).anchor(410, 142);
     add("temporal_lobe", "Temporal Lobe").poly(cp(temporalP)).anchor(236, 352);
     add("occipital_lobe", "Occipital Lobe").poly(cp(occipitalP)).anchor(510, 268);
-    float[] a = mid(PRE_S, CEN, 0.42);
+    // the three neighbouring landmarks get anchors staggered top / middle / lower so their tags don't stack
+    float[] a = mid(PRE_S, CEN, 0.28);
     add("precentral_gyrus", "Precentral Gyrus").poly(cp(preP)).anchor(a[0], a[1]);
-    float[] b = mid(POST_S, CEN, 0.42);
+    float[] b = mid(POST_S, CEN, 0.66);
     add("postcentral_gyrus", "Postcentral Gyrus").poly(cp(postP)).anchor(b[0], b[1]);
     add("broca_area", "Broca's Area").poly(cp(brocaP)).anchor(184, 248);
     add("wernicke_area", "Wernicke's Area").poly(cp(wernP)).anchor(350, 288);
@@ -223,25 +224,31 @@ class BrainDiagram extends Diagram {
     g.strokeWeight(2.6);
     g.fill(C_CBL);
     shp(g, cblP);
-    // folia: thin leaves sweeping front-to-back, converging toward the anterior tip
-    int iA = nearest(cblP, 370, 414), iB = nearest(cblP, 542, 318);
-    float[] top = resample(arcF(cblP, iA, iB), 70), bot = resample(rev(arcF(cblP, iB, iA)), 70);
-    for (float f = 0.16; f < 0.97; f += 0.075) {
-      boolean fissure = abs(f - 0.46) < 0.03;    // the horizontal fissure
+    // folia: thin leaves converging toward the anterior tip (the peduncle side) and fanning out to meet the
+    // posterior margin, the horizontal fissure the deepest of them
+    int iA = nearest(cblP, 370, 414), iB = nearest(cblP, 542, 318), iC = nearest(cblP, 548, 424);
+    float[] top = resample(arcF(cblP, iA, iB), 70), bot = resample(rev(arcF(cblP, iC, iA)), 70);
+    float[] back = resample(arcF(cblP, iB, iC), 40);
+    for (float f = 0.12; f < 0.95; f += 0.075) {
+      boolean fissure = abs(f - 0.42) < 0.03;    // the horizontal fissure
       float[] ln = new float[140], hi = new float[140];
+      int bi = constrain(round(f * 39), 0, 39);
       for (int i = 0; i < 70; i++) {
-        ln[i * 2] = lerp(top[i * 2], bot[i * 2], f);
-        ln[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f);
-        hi[i * 2] = lerp(top[i * 2], bot[i * 2], f - 0.022);
-        hi[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f - 0.022);
+        float t = i / 69.0, e = t * t * (3 - 2 * t);
+        float cx = lerp(top[138], bot[138], f), cy = lerp(top[139], bot[139], f);
+        float ex = (back[bi * 2] - cx) * e, ey = (back[bi * 2 + 1] - cy) * e;
+        ln[i * 2] = lerp(top[i * 2], bot[i * 2], f) + ex;
+        ln[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f) + ey;
+        hi[i * 2] = lerp(top[i * 2], bot[i * 2], f - 0.022) + ex;
+        hi[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f - 0.022) + ey;
       }
       g.noFill();
       g.stroke(255, 255, 255, 85);
       g.strokeWeight(1.3);
-      pl(g, seg(hi, 3, 66));
+      pl(g, seg(hi, 3, 65));
       g.stroke(fissure ? lerpColor(C_CBL_DK, D_INK, 0.45) : C_CBL_DK);
       g.strokeWeight(fissure ? 2.6 : 1.4);
-      pl(g, seg(ln, 3, 66));
+      pl(g, seg(ln, 3, 65));
     }
     rim(g, cblP, 10, 70, 60);
     g.noFill();

@@ -53,7 +53,7 @@ class LungsDiagram extends Diagram {
     grow(390, 318, radians(-62), 58, 11, 0, 3, ll, 3);
     grow(394, 326, radians(52), 70, 11, 0, 3, ll, 5);
 
-    add("right_lung", "Right Lung").poly(rl).anchor(140, 250);
+    add("right_lung", "Right Lung").poly(rl).anchor(100, 232);   // plain upper-lobe tissue, clear of the bronchiole hulls
     add("left_lung", "Left Lung").poly(ll).anchor(470, 300);
     add("diaphragm", "Diaphragm").poly(dia).anchor(96, 504);
     add("cardiac_notch", "Cardiac Notch")
@@ -70,7 +70,8 @@ class LungsDiagram extends Diagram {
     add("right_main_bronchus", "Right Main Bronchus").poly(tubePoly(sub(rmb, 4, 999), W_RMB + 6)).anchor(272, 292);
     add("left_main_bronchus", "Left Main Bronchus").poly(tubePoly(sub(lmb, 4, 999), W_LMB + 6)).anchor(352, 286);
     add("carina", "Carina").ellipse(carX, carY - 6, 15, 13);
-    add("alveoli", "Alveoli").ellipse(BUB_X, BUB_Y, BUB_R + 2, BUB_R + 2);
+    // the magnified bubble + the ringed spot in the lung it magnifies (a bronchiole tip ending in alveoli)
+    add("alveoli", "Alveoli").ellipse(BUB_X, BUB_Y, BUB_R + 2, BUB_R + 2).ellipse(470, 205, 13, 13).anchor(BUB_X, BUB_Y);
   }
 
   // recursive airway branching; each child is shortened until it stays inside the lung

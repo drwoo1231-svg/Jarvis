@@ -1101,9 +1101,10 @@ class BrainDiagram extends Diagram {
     add("parietal_lobe", "Parietal Lobe").poly(cp(parietalP)).anchor(410, 142);
     add("temporal_lobe", "Temporal Lobe").poly(cp(temporalP)).anchor(236, 352);
     add("occipital_lobe", "Occipital Lobe").poly(cp(occipitalP)).anchor(510, 268);
-    float[] a = mid(PRE_S, CEN, 0.42);
+    // the three neighbouring landmarks get anchors staggered top / middle / lower so their tags don't stack
+    float[] a = mid(PRE_S, CEN, 0.28);
     add("precentral_gyrus", "Precentral Gyrus").poly(cp(preP)).anchor(a[0], a[1]);
-    float[] b = mid(POST_S, CEN, 0.42);
+    float[] b = mid(POST_S, CEN, 0.66);
     add("postcentral_gyrus", "Postcentral Gyrus").poly(cp(postP)).anchor(b[0], b[1]);
     add("broca_area", "Broca's Area").poly(cp(brocaP)).anchor(184, 248);
     add("wernicke_area", "Wernicke's Area").poly(cp(wernP)).anchor(350, 288);
@@ -1291,25 +1292,31 @@ class BrainDiagram extends Diagram {
     g.strokeWeight(2.6);
     g.fill(C_CBL);
     shp(g, cblP);
-    // folia: thin leaves sweeping front-to-back, converging toward the anterior tip
-    int iA = nearest(cblP, 370, 414), iB = nearest(cblP, 542, 318);
-    float[] top = resample(arcF(cblP, iA, iB), 70), bot = resample(rev(arcF(cblP, iB, iA)), 70);
-    for (float f = 0.16; f < 0.97; f += 0.075) {
-      boolean fissure = abs(f - 0.46) < 0.03;    // the horizontal fissure
+    // folia: thin leaves converging toward the anterior tip (the peduncle side) and fanning out to meet the
+    // posterior margin, the horizontal fissure the deepest of them
+    int iA = nearest(cblP, 370, 414), iB = nearest(cblP, 542, 318), iC = nearest(cblP, 548, 424);
+    float[] top = resample(arcF(cblP, iA, iB), 70), bot = resample(rev(arcF(cblP, iC, iA)), 70);
+    float[] back = resample(arcF(cblP, iB, iC), 40);
+    for (float f = 0.12; f < 0.95; f += 0.075) {
+      boolean fissure = abs(f - 0.42) < 0.03;    // the horizontal fissure
       float[] ln = new float[140], hi = new float[140];
+      int bi = constrain(round(f * 39), 0, 39);
       for (int i = 0; i < 70; i++) {
-        ln[i * 2] = lerp(top[i * 2], bot[i * 2], f);
-        ln[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f);
-        hi[i * 2] = lerp(top[i * 2], bot[i * 2], f - 0.022);
-        hi[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f - 0.022);
+        float t = i / 69.0, e = t * t * (3 - 2 * t);
+        float cx = lerp(top[138], bot[138], f), cy = lerp(top[139], bot[139], f);
+        float ex = (back[bi * 2] - cx) * e, ey = (back[bi * 2 + 1] - cy) * e;
+        ln[i * 2] = lerp(top[i * 2], bot[i * 2], f) + ex;
+        ln[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f) + ey;
+        hi[i * 2] = lerp(top[i * 2], bot[i * 2], f - 0.022) + ex;
+        hi[i * 2 + 1] = lerp(top[i * 2 + 1], bot[i * 2 + 1], f - 0.022) + ey;
       }
       g.noFill();
       g.stroke(255, 255, 255, 85);
       g.strokeWeight(1.3);
-      pl(g, seg(hi, 3, 66));
+      pl(g, seg(hi, 3, 65));
       g.stroke(fissure ? lerpColor(C_CBL_DK, D_INK, 0.45) : C_CBL_DK);
       g.strokeWeight(fissure ? 2.6 : 1.4);
-      pl(g, seg(ln, 3, 66));
+      pl(g, seg(ln, 3, 65));
     }
     rim(g, cblP, 10, 70, 60);
     g.noFill();
@@ -1694,7 +1701,7 @@ class CellDiagram extends Diagram {
   final float NX = 248, NY = 272, NRX = 94, NRY = 84, NA = -0.12;   // nucleus
   final float GX = 446, GY = 262, GA = -0.10;              // golgi centre + tilt
   final float SX = 430, SY = 432;                          // smooth ER centre
-  final float CEX = 372, CEY = 136;                        // centrosome
+  final float CEX = 358, CEY = 178;                        // centrosome (juxtanuclear, between nucleus and Golgi)
 
   final int MEM = #F4C49C, MEM_HEAD = #E3895F, MEM_TAIL = #E9B08A;
   final int NUC_IN = #CDC2EC, NUC_ENV = #7462B2, CHROM = #A595D6, NUCLEOLUS = #57438F;
@@ -1709,14 +1716,14 @@ class CellDiagram extends Diagram {
   float[][] rer = new float[3][];          // rough ER centre lines
   float[] rerW = { 11, 12, 11 };
   float[][] serTubes;                      // smooth ER tube centre lines
-  float[][] mitos = { { 158, 138, 50, 23, -0.42 }, { 462, 362, 42, 20, 0.22 }, { 262, 499, 48, 22, 0.06 }, { 123, 428, 40, 20, 1.02 } };
+  float[][] mitos = { { 166, 147, 50, 23, -0.42 }, { 462, 362, 42, 20, 0.22 }, { 262, 499, 48, 22, 0.06 }, { 123, 428, 40, 20, 1.02 } };
   float[][] lysos = { { 268, 104, 17 }, { 366, 503, 15 }, { 184, 474, 15 } };
-  float[][] polys = { { 338, 74, 0.1 }, { 384, 332, 0.6 }, { 300, 452, 0.15 }, { 84, 300, 1.4 }, { 458, 162, -0.7 } };
+  float[][] polys = { { 338, 74, 0.1 }, { 384, 332, 0.6 }, { 300, 452, 0.15 }, { 126, 206, 0.35 }, { 458, 162, -0.7 } };
 
   CellDiagram() {
     super("cell", "Animal Cell");
     build();
-    add("cytoplasm", "Cytoplasm").poly(outline(13, 120)).anchor(392, 470);
+    add("cytoplasm", "Cytoplasm").poly(outline(13, 120)).anchor(390, 118);
     add("cell_membrane", "Cell Membrane").poly(ring(-7, 19, 120)).anchor(CX + memX(-0.25, 6), CY + memY(-0.25, 6));
     add("nucleus", "Nucleus").poly(ell(NX, NY, NRX + 3, NRY + 3, NA, 36)).anchor(NX - 40, NY + 30);
     add("rough_er", "Rough ER").poly(rerHit()).anchor(NX + cos(2.35) * (NRX + 38), NY + sin(2.35) * (NRY + 38));
@@ -1927,7 +1934,7 @@ class CellDiagram extends Diagram {
     g.stroke(#9CC9DD);
     g.strokeWeight(1.1);
     float[][] fil = { { 70, 210, 110, 240, 136, 300 }, { 372, 318, 400, 330, 420, 318 }, { 220, 440, 200, 470, 216, 510 },
-      { 410, 96, 436, 116, 470, 112 }, { 330, 180, 350, 196, 352, 214 }, { 70, 360, 76, 396 }, { 438, 492, 466, 484, 490, 466 } };
+      { 410, 96, 436, 116, 470, 112 }, { 318, 128, 340, 120, 356, 132 }, { 70, 360, 76, 396 }, { 438, 492, 466, 484, 490, 466 } };
     for (float[] f : fil) pl(g, crO(f, 6));
     // bilayer: tails between two rows of heads
     int n = 330;
@@ -2339,7 +2346,7 @@ class DigestiveDiagram extends Diagram {
   final float[] ESO_C = { 316, 10, 318, 50, 326, 95, 342, 132, 366, 164 };
   final float[] DUO_C = { 314, 266, 286, 265, 258, 271, 238, 287, 229, 311, 238, 334, 266, 346, 300, 347, 326, 342, 340, 340 };
   // large intestine centreline: ascending (from the cecum) -> transverse -> descending -> sigmoid -> rectum
-  final float[] LI_C = { 132, 468, 128, 430, 124, 380, 124, 330, 133, 303, 158, 296, 186, 320, 214, 356, 252, 384, 300, 395, 360, 393, 412, 378, 448, 352, 470, 322, 487, 297, 507, 285, 525, 295, 533, 322, 531, 360, 524, 410, 516, 462, 506, 500, 482, 522, 440, 523, 400, 512, 362, 518, 332, 532, 314, 551, 306, 574, 304, 592 };
+  final float[] LI_C = { 132, 468, 128, 430, 124, 380, 124, 330, 133, 303, 158, 296, 186, 320, 214, 356, 252, 384, 300, 395, 360, 393, 412, 378, 448, 352, 470, 322, 487, 297, 507, 285, 525, 295, 533, 322, 531, 360, 524, 410, 516, 462, 508, 496, 486, 516, 448, 520, 408, 508, 374, 503, 346, 508, 327, 521, 316, 540, 310, 564, 308, 590 };
   final float[] CEC_C = { 112, 462, 132, 458, 152, 462, 168, 480, 162, 503, 140, 515, 116, 508, 104, 484 };
   final float[] APP_C = { 152, 508, 160, 528, 170, 547, 166, 561, 156, 558 };
 
@@ -2362,17 +2369,20 @@ class DigestiveDiagram extends Diagram {
     sHep = arcNear(li, 142, 297);        // hepatic flexure
     sSpl = arcNear(li, 512, 286);        // splenic flexure
     sSig = arcAtY(li, 470, false);       // pelvic brim: descending -> sigmoid
-    sRect = arcNear(li, 332, 532);       // rectosigmoid junction
+    sRect = arcNear(li, 318, 536);       // rectosigmoid junction (midline): the rectum runs straight down from here
 
-    add("liver", "Liver").poly(liver).anchor(170, 170);
+    // the liver's left lobe lies IN FRONT of the abdominal esophagus and the cardia:
+    // stomach and esophagus go first so the liver wins the clicks where it covers them
     add("pancreas", "Pancreas").poly(pan).anchor(400, 318);
-    add("stomach", "Stomach").poly(sto).anchor(440, 210);
+    add("stomach", "Stomach").poly(minus(sto, liver)).anchor(440, 210);   // minus the cardia hidden under the liver
+    // visible part only: the tube cut along the liver's upper edge (line through (306,106) and (346,124))
+    add("esophagus", "Esophagus").poly(clipAbove(tubePoly(sub(eso, 0, arcAtY(eso, 140, false)), 30), 306, 106, 346, 124)).anchor(320, 60);
+    add("liver", "Liver").poly(liver).anchor(170, 170);
     add("duodenum", "Duodenum").poly(tubePoly(sub(duo, 4, 999), 28)).anchor(231, 312);
     Part s = add("small_intestine", "Small Intestine");
     s.poly(150, 430, 200, 410, 300, 416, 400, 402, 470, 404, 496, 440, 496, 492, 460, 512, 360, 528, 300, 532, 240, 530, 190, 522, 168, 500, 150, 462);
     s.poly(tubePoly(sub(si, 0, 60), 28));
     s.anchor(310, 470);
-    add("esophagus", "Esophagus").poly(tubePoly(sub(eso, 0, len(eso) - 10), 30)).anchor(320, 60);
     add("gallbladder", "Gallbladder").poly(gb).anchor(212, 272);
     add("ascending_colon", "Ascending Colon").poly(tubePoly(sub(li, 0, sHep), 48)).anchor(124, 380);
     add("transverse_colon", "Transverse Colon").poly(tubePoly(sub(li, sHep, sSpl), 48)).anchor(300, 394);
@@ -2381,6 +2391,65 @@ class DigestiveDiagram extends Diagram {
     add("rectum", "Rectum").poly(tubePoly(sub(li, sRect, sEnd), 48)).anchor(312, 560);
     add("cecum", "Cecum").poly(scaled(cec, 136, 480, 1.08, 0, 0)).anchor(136, 484);
     add("appendix", "Appendix").poly(tubePoly(app, 20)).anchor(164, 540);
+  }
+
+  // outline a with the region covered by b cut away (one overlap; both outlines dense)
+  float[] minus(float[] a, float[] b) {
+    int n = a.length / 2, m = b.length / 2;
+    boolean[] ain = new boolean[n], bin = new boolean[m];
+    for (int i = 0; i < n; i++) ain[i] = insidePoly(b, a[i * 2], a[i * 2 + 1]);
+    for (int i = 0; i < m; i++) bin[i] = insidePoly(a, b[i * 2], b[i * 2 + 1]);
+    int enter = -1, exit = -1, bs = -1, be = -1, runsA = 0, runsB = 0;
+    for (int i = 0; i < n; i++) {
+      if (!ain[(i - 1 + n) % n] && ain[i]) { enter = i; runsA++; }
+      if (ain[(i - 1 + n) % n] && !ain[i]) exit = i;
+    }
+    for (int i = 0; i < m; i++) {
+      if (!bin[(i - 1 + m) % m] && bin[i]) { bs = i; runsB++; }
+      if (bin[i] && !bin[(i + 1) % m]) be = i;
+    }
+    if (runsA != 1 || runsB != 1) return a;
+    FloatList run = new FloatList();
+    for (int k = bs; ; k = (k + 1) % m) {
+      run.append(b[k * 2]);
+      run.append(b[k * 2 + 1]);
+      if (k == be) break;
+    }
+    float px = a[((enter - 1 + n) % n) * 2], py = a[((enter - 1 + n) % n) * 2 + 1];
+    boolean rev = dist(px, py, run.get(0), run.get(1)) > dist(px, py, run.get(run.size() - 2), run.get(run.size() - 1));
+    FloatList o = new FloatList();
+    for (int k = exit; k != enter; k = (k + 1) % n) {
+      o.append(a[k * 2]);
+      o.append(a[k * 2 + 1]);
+    }
+    int r = run.size() / 2;
+    for (int q = 0; q < r; q++) {
+      int idx = rev ? r - 1 - q : q;
+      o.append(run.get(idx * 2));
+      o.append(run.get(idx * 2 + 1));
+    }
+    return o.array();
+  }
+
+  // keep the part of polygon p lying above the line through (x0,y0)-(x1,y1) (one Sutherland-Hodgman pass)
+  float[] clipAbove(float[] p, float x0, float y0, float x1, float y1) {
+    FloatList o = new FloatList();
+    int n = p.length / 2;
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      float ax = p[i * 2], ay = p[i * 2 + 1], bx = p[j * 2], by = p[j * 2 + 1];
+      float da = (x1 - x0) * (ay - y0) - (y1 - y0) * (ax - x0), db = (x1 - x0) * (by - y0) - (y1 - y0) * (bx - x0);
+      if (da <= 0) {
+        o.append(ax);
+        o.append(ay);
+      }
+      if ((da < 0) != (db < 0) && da != db) {
+        float t = da / (da - db);
+        o.append(ax + (bx - ax) * t);
+        o.append(ay + (by - ay) * t);
+      }
+    }
+    return o.array();
   }
 
   // arc length where the path first crosses height y (rising = going up the page)
@@ -2432,17 +2501,6 @@ class DigestiveDiagram extends Diagram {
   }
 
   void drawArt(PGraphics g) {
-    // ---- liver
-    shaded(g, liver, LIV, LIV_SH, LIV_LT, 0.94, 2.8);
-    // falciform ligament + round ligament
-    g.noFill();
-    g.stroke(LIV_SH);
-    g.strokeWeight(2.4);
-    g.bezier(292, 98, 296, 140, 286, 180, 276, 210);
-    g.stroke(#E8C9A8);
-    g.strokeWeight(1.4);
-    g.bezier(294, 100, 298, 140, 288, 180, 278, 210);
-
     // ---- bile ducts (behind the duodenum) and pancreas
     g.stroke(D_INK);
     g.strokeWeight(8);
@@ -2461,7 +2519,7 @@ class DigestiveDiagram extends Diagram {
     g.strokeWeight(2.4);
     g.bezier(470, 294, 420, 306, 330, 316, 250, 320);
 
-    // ---- stomach + esophagus
+    // ---- stomach + esophagus (both pass behind the liver's left lobe)
     tube(g, eso, 26, ESO, ESO_SH, ESO_LT, true);
     cutEnd(g, eso, true, 26, ESO_SH);
     // longitudinal muscle lines on the esophagus
@@ -2493,6 +2551,17 @@ class DigestiveDiagram extends Diagram {
     g.strokeWeight(1.6);
     g.line(312, 253, 313, 280);
     g.line(321, 253, 323, 280);
+
+    // ---- liver: its left lobe covers the abdominal esophagus and the cardia
+    shaded(g, liver, LIV, LIV_SH, LIV_LT, 0.94, 2.8);
+    // falciform ligament + round ligament
+    g.noFill();
+    g.stroke(LIV_SH);
+    g.strokeWeight(2.4);
+    g.bezier(292, 98, 296, 140, 286, 180, 276, 210);
+    g.stroke(#E8C9A8);
+    g.strokeWeight(1.4);
+    g.bezier(294, 100, 298, 140, 288, 180, 278, 210);
 
     // ---- duodenum (C around the pancreatic head)
     tube(g, duo, 24, DUO, DUO_SH, DUO_LT, false);
@@ -2555,11 +2624,11 @@ class DigestiveDiagram extends Diagram {
     g.stroke(COL_SH);
     g.strokeWeight(2);
     g.noFill();
-    g.arc(320, 548, 24, 10, 0.1, PI - 0.3);
-    g.arc(310, 566, 22, 9, PI + 0.3, TWO_PI - 0.1);
+    g.arc(320, 553, 24, 9, 0.2, PI - 0.4);
+    g.arc(302, 568, 22, 8, 0.4, PI - 0.2);
     g.noStroke();
     g.fill(#8E4A36);
-    g.ellipse(304, 591, 12, 4);
+    g.ellipse(308, 590, 11, 4);
     // outlines (open at the top of the cecum so pouch and colon read as one)
     g.noFill();
     g.stroke(D_INK);
@@ -2572,8 +2641,8 @@ class DigestiveDiagram extends Diagram {
 
   float widthAt(float acc) {
     if (acc < sSig) return 42;
-    if (acc < sRect) return lerp(42, 32, constrain((acc - sSig) / 40, 0, 1));
-    if (acc < sEnd - 18) return lerp(32, 42, constrain((acc - sRect) / 22, 0, 1));   // rectal ampulla
+    if (acc < sRect) return lerp(42, 34, constrain((acc - sSig) / 40, 0, 1));
+    if (acc < sEnd - 18) return lerp(34, 42, constrain((acc - sRect) / 30, 0, 1));   // rectal ampulla
     return lerp(42, 14, constrain((acc - (sEnd - 18)) / 18, 0, 1));                 // anal canal
   }
 
@@ -2586,7 +2655,7 @@ class DigestiveDiagram extends Diagram {
       if (i > 0) acc += dist(p[i * 2 - 2], p[i * 2 - 1], p[i * 2], p[i * 2 + 1]);
       int a = max(i - 1, 0), b = min(i + 1, n - 1);
       float dx = p[b * 2] - p[a * 2], dy = p[b * 2 + 1] - p[a * 2 + 1], L = max(1e-4, sqrt(dx * dx + dy * dy));
-      float bulge = acc < sRect ? 2.2 * abs(sin((acc - 10) / 17 * PI)) : 0;
+      float bulge = 2.2 * abs(sin((acc - 10) / 17 * PI)) * constrain((sRect - acc) / 14, 0, 1);   // haustra fade out at the rectum
       float w = widthAt(acc) / 2 + bulge;
       keep(l, p[i * 2] - dy / L * w, p[i * 2 + 1] + dx / L * w, dx, dy);
       keep(r, p[i * 2] + dy / L * w, p[i * 2 + 1] - dx / L * w, dx, dy);
@@ -3035,7 +3104,7 @@ class HeartDiagram extends Diagram {
     // ---- vessels behind the heart
     tube(g, rpa2, W_PA2, BB, BB_SH, VEIN_LT, true);
     tube(g, rpa, W_PA, BB, BB_SH, VEIN_LT, true);
-    cutEnd(g, rpa, true, W_PA, BB_SH);
+    cutEnd(g, rpa, false, W_PA, BB_SH);   // open end at the right lung hilum (its start is hidden under the trunk)
     cutEnd(g, rpa2, false, W_PA2, BB_SH);
     tube(g, pvr1, W_PV, RB, RB_SH, ART_LT, true);
     tube(g, pvr2, W_PV, RB, RB_SH, ART_LT, true);
@@ -3505,7 +3574,7 @@ class LungsDiagram extends Diagram {
     grow(390, 318, radians(-62), 58, 11, 0, 3, ll, 3);
     grow(394, 326, radians(52), 70, 11, 0, 3, ll, 5);
 
-    add("right_lung", "Right Lung").poly(rl).anchor(140, 250);
+    add("right_lung", "Right Lung").poly(rl).anchor(100, 232);   // plain upper-lobe tissue, clear of the bronchiole hulls
     add("left_lung", "Left Lung").poly(ll).anchor(470, 300);
     add("diaphragm", "Diaphragm").poly(dia).anchor(96, 504);
     add("cardiac_notch", "Cardiac Notch")
@@ -3522,7 +3591,8 @@ class LungsDiagram extends Diagram {
     add("right_main_bronchus", "Right Main Bronchus").poly(tubePoly(sub(rmb, 4, 999), W_RMB + 6)).anchor(272, 292);
     add("left_main_bronchus", "Left Main Bronchus").poly(tubePoly(sub(lmb, 4, 999), W_LMB + 6)).anchor(352, 286);
     add("carina", "Carina").ellipse(carX, carY - 6, 15, 13);
-    add("alveoli", "Alveoli").ellipse(BUB_X, BUB_Y, BUB_R + 2, BUB_R + 2);
+    // the magnified bubble + the ringed spot in the lung it magnifies (a bronchiole tip ending in alveoli)
+    add("alveoli", "Alveoli").ellipse(BUB_X, BUB_Y, BUB_R + 2, BUB_R + 2).ellipse(470, 205, 13, 13).anchor(BUB_X, BUB_Y);
   }
 
   // recursive airway branching; each child is shortened until it stays inside the lung
@@ -4087,6 +4157,7 @@ class LungsDiagram extends Diagram {
 // ones stand out. Each muscle's outline is both its art and its hit polygon.
 
 class MusclesDiagram extends Diagram {
+  final float FIT_K = 1, FIT_DY = 7;   // centre the figure vertically
   final int BASE = #8C3A36, BASE_SH = #7A302D;           // deep layer seen in the grooves
   final int FILL = #D4A196, FILL_FIB = #B5837A;          // unlabelled muscles
   final int FIB = #9C3B35, FIB_LT = #EE9A8E;             // fibre lines / sheen
@@ -4118,6 +4189,7 @@ class MusclesDiagram extends Diagram {
     add("sartorius", "Sartorius").poly(sartL).poly(mir(sartL)).anchor(262, 360);
     add("tibialis_anterior", "Tibialis Anterior").poly(taL).poly(mir(taL)).anchor(264, 490);
     add("gastrocnemius", "Gastrocnemius").poly(gmedL).poly(glatL).poly(mir(gmedL)).poly(mir(glatL)).anchor(292, 488);
+    fitParts();
   }
 
   // =============================================================== geometry (viewer's left; mirrored for the right)
@@ -4134,13 +4206,16 @@ class MusclesDiagram extends Diagram {
     addPts(b, P(new float[] { 15, 92, 14, 75, 15, 55, 17, 36, 17, 26 }, F_UA));
     // torso, leg, foot (absolute)
     addPts(b, new float[] { 229, 166, 227, 182, 228, 202, 231, 226, 235, 250, 236, 270, 233, 290, 226, 308,
-      220, 330, 219, 360, 224, 390, 233, 415, 241, 436, 243, 452, 240, 470, 237, 490, 240, 512, 249, 532, 255, 546,
-      251, 558, 249, 572, 251, 581, 256, 586, 263, 589, 271, 590, 280, 590, 287, 587, 291, 579, 291, 563, 287, 547,
-      289, 530, 295, 510, 297, 488, 293, 466, 290, 452, 291, 430, 294, 405, 297, 380, 298, 366, 300, 358 });
+      220, 330, 219, 360, 224, 390, 233, 415, 241, 436, 243, 452, 240, 470, 237, 490, 240, 512, 249, 532 });
+    addPts(b, reversePts(footOutline()));
+    addPts(b, new float[] { 289, 530, 295, 510, 297, 488, 293, 466, 290, 452, 291, 430, 294, 405, 297, 380, 298, 366, 300, 358 });
     body = symClosed(b.array());
     handL = P(new float[] { -9, -2, -13, 8, -18, 16, -24, 26, -26, 31, -22, 32, -14, 26, -12, 36, -12, 50, -11, 58, -7, 60, -4, 52,
       -2, 62, 2, 63, 4, 54, 6, 61, 10, 60, 10, 50, 13, 52, 15, 48, 13, 36, 11, 20, 9, -2 }, F_HD);
-    footL = new float[] { 256, 545, 251, 558, 249, 572, 251, 581, 256, 586, 263, 589, 271, 590, 280, 590, 287, 587, 291, 579, 291, 563, 287, 545 };
+    FloatList fl = new FloatList();
+    addPts(fl, footOutline());
+    addPts(fl, new float[] { 257, 544.6, 270, 544.2, 282, 544.6 });     // across the front of the ankle
+    footL = fl.array();
 
     clavL = cr(new float[] { 297, 122, 281, 123, 263, 121, 245, 119, 228, 120, 214, 124 }, 4);
 
@@ -4191,8 +4266,34 @@ class MusclesDiagram extends Diagram {
     bones.add(ellPts(268, 443, 8.5, 10.5));                                                                          // patella
   }
 
-  // =============================================================== art
+  // ---- final placement in the 600 box: art and hit shapes get the same scale/offset (about the centre)
+  void fitParts() {
+    for (Part p : parts) {
+      for (int i = 0; i < p.shapes.size(); i++) {
+        float[] a = p.shapes.get(i), q = new float[a.length];      // copy: the art still uses the original arrays
+        for (int j = 0; j < a.length; j += 2) {
+          q[j] = 300 + (a[j] - 300) * FIT_K;
+          q[j + 1] = 300 + (a[j + 1] - 300) * FIT_K + FIT_DY;
+        }
+        p.shapes.set(i, q);
+      }
+      if (p.ax >= 0) {
+        p.ax = 300 + (p.ax - 300) * FIT_K;
+        p.ay = 300 + (p.ay - 300) * FIT_K + FIT_DY;
+      }
+    }
+  }
+
   void drawArt(PGraphics g) {
+    g.pushMatrix();
+    g.translate(300 * (1 - FIT_K), 300 * (1 - FIT_K) + FIT_DY);
+    g.scale(FIT_K);
+    drawFigure(g);
+    g.popMatrix();
+  }
+
+  // =============================================================== art
+  void drawFigure(PGraphics g) {
     // body base (deep layer)
     g.stroke(D_INK);
     g.strokeWeight(2.6);
@@ -4204,9 +4305,10 @@ class MusclesDiagram extends Diagram {
       skin(g, side(footL, s));
       g.stroke(D_SKIN_SH);
       g.strokeWeight(1.1);
-      float[] tx = { 257, 264, 271, 279 };
-      float[] ty = { 580, 583, 584, 583 };
-      for (int k = 0; k < 4; k++) g.line(s == 0 ? tx[k] : DIA - tx[k], ty[k], s == 0 ? tx[k] - 0.3 : DIA - tx[k] + 0.3, ty[k] + 5.5);
+      for (int k = 0; k < 4; k++) {                                                          // toe clefts
+        float cx = (TOE[k][0] + TOE[k][2] + TOE[k + 1][0] - TOE[k + 1][2]) / 2, cy = (TOE[k][1] + TOE[k + 1][1]) / 2;
+        g.line(s == 0 ? cx : DIA - cx, cy - 3.4, s == 0 ? cx : DIA - cx, cy - 0.4);
+      }
     }
     skin(g, earL);
     skin(g, mir(earL));
@@ -4296,6 +4398,24 @@ class MusclesDiagram extends Diagram {
     }
   }
 
+  // toes of the viewer's-left foot seen from the front (big toe medial): { cx, cy, r }, little toe first
+  final float[][] TOE = { { 254.9, 567.4, 3.4 }, { 261.9, 569.6, 3.7 }, { 269.4, 571.0, 4.0 }, { 277.4, 571.5, 4.3 }, { 288.2, 569.5, 6.4 } };
+
+  // front view of a foot (wider than tall): medial ankle -> medial border -> round toe tips -> lateral border -> lateral ankle
+  float[] footOutline() {
+    FloatList q = new FloatList();
+    addPts(q, new float[] { 289, 545, 291.5, 551, 294, 557.5, 295.5, 564 });
+    for (int k = TOE.length - 1; k >= 0; k--) {
+      for (int i = 0; i <= 4; i++) {
+        float a = PI * i / 4;                         // 0 -> PI: medial side of the toe, round its tip, to the lateral side
+        q.append(TOE[k][0] + cos(a) * TOE[k][2]);
+        q.append(TOE[k][1] + sin(a) * TOE[k][2] * 0.62);
+      }
+    }
+    addPts(q, new float[] { 249.5, 563, 247.5, 557, 248.5, 550.5, 250.5, 545 });
+    return q.array();
+  }
+
   // =============================================================== drawing helpers
   void muscle(PGraphics g, float[] p, int c, float sw) {
     g.noStroke();
@@ -4379,6 +4499,15 @@ class MusclesDiagram extends Diagram {
   }
 
   // =============================================================== geometry helpers (local to this class)
+  float[] reversePts(float[] p) {
+    float[] q = new float[p.length];
+    for (int i = 0; i < p.length; i += 2) {
+      q[i] = p[p.length - 2 - i];
+      q[i + 1] = p[p.length - 1 - i];
+    }
+    return q;
+  }
+
   void addPts(FloatList l, float[] p) {
     for (float v : p) l.append(v);
   }
@@ -4594,7 +4723,7 @@ class NephronDiagram extends Diagram {
 
     add("bowmans_capsule", "Bowman's Capsule").poly(ring(GX, GY, R_CAPS + 4, R_GLOM + 1, 32)).anchor(GX - 50, GY + 30);
     add("glomerulus", "Glomerulus").ellipse(GX, GY, R_GLOM + 3, R_GLOM + 3).anchor(GX - 4, GY + 4);
-    add("proximal_tubule", "Proximal Convoluted Tubule").poly(tubePoly(sub(pct, 22, 9999), 32)).anchor(246, 292);
+    add("proximal_tubule", "Proximal Tubule").poly(tubePoly(sub(pct, 22, 9999), 32)).anchor(246, 292);
     add("descending_limb", "Descending Limb of Henle").poly(tubePoly(sub(desc, 6, sDescTurn), 28)).anchor(348, 450);
     add("ascending_limb", "Ascending Limb of Henle").poly(tubePoly(sub(dist, 0, sAscEnd), 30)).anchor(389, 360);
     add("distal_tubule", "Distal Convoluted Tubule").poly(tubePoly(sub(dist, sMdEnd, 9999), 30)).anchor(420, 84);
@@ -5155,13 +5284,14 @@ class NephronDiagram extends Diagram {
 // the axon leaves through the axon hillock, runs right under a chain of myelin
 // sheaths (Schwann cells, with nodes of Ranvier between them), curves down the
 // right side and splits into axon terminals (bottom). One terminal bouton forms
-// a synapse on a dendrite of a second (lavender) neuron; the circle in the
+// a synapse on the long dendrite of a second (lavender) neuron at the lower left,
+// whose dendrites, soma and nucleus count as the same parts; the circle in the
 // middle is that synapse magnified (vesicles, cleft, receptors).
 
 class NeuronDiagram extends Diagram {
   final float SX = 150, SY = 196;                 // soma centre
   final float ICX = 360, ICY = 360, IR = 100;     // synapse inset
-  final float AX_W = 9, MY_W = 28, GAP = 14, INIT = 34, TAIL = 40;
+  final float AX_W = 9, MY_W = 28, GAP = 14, INIT = 48, TAIL = 48;
   final int NERVE_DK = #C99A24, NISSL = #B98A2A, POST = #CDB8E8, POST_DK = #8E74B8;
   final int MY_DK = #D8C07A, SCHWANN = #9C88CF, NT = #E2563F, RECEPT = #47A99A;
 
@@ -5180,9 +5310,11 @@ class NeuronDiagram extends Diagram {
     build();
     Part d = add("dendrite", "Dendrites");
     for (int i = 0; i < dPts.size(); i++) d.poly(band(dPts.get(i), max(dWid.get(i)[0], dWid.get(i)[1]) + 10, dWid.get(i)[1] + 11));
+    // the second (postsynaptic) neuron's dendrites, soma and nucleus are the same structures
+    for (int i = 0; i < post.length; i++) d.poly(band(post[i], POST_SW[i] + 10, POST_EW[i] + 11));
     d.anchor(dPts.get(0)[dPts.get(0).length - 2], dPts.get(0)[dPts.get(0).length - 1]);
-    add("soma", "Soma (Cell Body)").poly(somaShape(4)).anchor(SX - 22, SY + 24);
-    add("nucleus", "Nucleus").poly(ell(SX - 6, SY - 3, 22, 20, 0, 24)).anchor(SX - 6, SY - 3);
+    add("soma", "Soma (Cell Body)").poly(somaShape(4)).poly(postSoma(4)).anchor(SX - 22, SY + 24);
+    add("nucleus", "Nucleus").poly(ell(SX - 6, SY - 3, 22, 20, 0, 24)).poly(ell(PSX + 1, PSY + 1, 14, 13, 0, 20)).anchor(SX - 6, SY - 3);
     add("axon_hillock", "Axon Hillock").poly(SX + 30, SY - 21, SX + 52, SY - 13, SX + 80, SY - 10, SX + 80, SY + 10, SX + 52, SY + 13, SX + 30, SY + 21).anchor(SX + 60, SY);
     Part a = add("axon", "Axon");
     a.poly(band(sub(1, INIT - 1), 22, 22)).poly(band(sub(axonLen - TAIL + 1, axonLen + 4), 22, 22));
@@ -5236,16 +5368,37 @@ class NeuronDiagram extends Diagram {
       crO(new float[] { ex + 10, ey + 24, ex + 28, ey + 36, ex + 44, ey + 46 }, 6)
     };
     bout = new float[][] { { JX + 9, JY - 3, 9 }, { ex - 26, ey + 70, 9 }, { ex + 8, ey + 74, 9 }, { ex + 48, ey + 49, 8.5 } };
-    // second neuron (partial): soma lower centre, one dendrite reaches the synapse
+    // second neuron (partial, lower left): a smaller multipolar cell whose longest dendrite reaches right to
+    // the synapse; side branches and tapering make it read as a dendrite, not an axon
     post = new float[][] {
-      crO(new float[] { 300, 540, 340, 532, 380, 530, JX - 6, JY + 4 }, 6),
-      crO(new float[] { 290, 522, 272, 494, 262, 472 }, 6),
-      crO(new float[] { 280, 532, 248, 530, 226, 518 }, 6),
-      crO(new float[] { 282, 552, 258, 566, 240, 580 }, 6),
-      crO(new float[] { 252, 528, 240, 548, 222, 556 }, 6),
-      crO(new float[] { 266, 484, 250, 470 }, 4),
-      crO(new float[] { 314, 556, 334, 572, 352, 580 }, 6)
+      crO(new float[] { 226, 516, 272, 517, 318, 521, 362, 525, 398, 527, JX - 6, JY + 4 }, 6),
+      crO(new float[] { 300, 519, 306, 502, 316, 488 }, 6),
+      crO(new float[] { 352, 524, 360, 541, 373, 554 }, 6),
+      crO(new float[] { 198, 496, 190, 472, 184, 448 }, 6),
+      crO(new float[] { 190, 472, 204, 456, 220, 446 }, 6),
+      crO(new float[] { 184, 505, 156, 491, 128, 484 }, 6),
+      crO(new float[] { 156, 491, 147, 472, 142, 455 }, 6),
+      crO(new float[] { 178, 526, 146, 532, 110, 528 }, 6),
+      crO(new float[] { 146, 532, 128, 548, 114, 560 }, 6),
+      crO(new float[] { 192, 535, 168, 556, 146, 574 }, 6),
+      crO(new float[] { 210, 545, 216, 562, 213, 580 }, 6)
     };
+  }
+
+  final float[] POST_SW = { 10, 5, 5, 9, 5, 8, 4.5, 8, 4, 7, 7 };
+  final float[] POST_EW = { 6, 2.5, 2.5, 4, 2.5, 3.5, 2.2, 3, 2, 3, 3 };
+  final float PSX = 205, PSY = 520;                      // second neuron's soma centre
+
+  float[] postSoma(float grow) {
+    float[] ang = { 0, 40, 80, 120, 160, 200, 240, 280, 320 };
+    float[] rad = { 27, 22, 26, 22, 27, 23, 27, 22, 25 };
+    float[] p = new float[ang.length * 2];
+    for (int i = 0; i < ang.length; i++) {
+      float a = radians(ang[i]);
+      p[i * 2] = PSX + cos(a) * (rad[i] + grow);
+      p[i * 2 + 1] = PSY + sin(a) * (rad[i] + grow) * 0.9;
+    }
+    return crC(p, 4);
   }
 
   void branch(float x, float y, float a, float len, float w0, float w1, int depth, float seed) {
@@ -5468,14 +5621,20 @@ class NeuronDiagram extends Diagram {
   }
 
   void drawPostNeuron(PGraphics g) {
-    float[] sw = { 11, 7, 6, 6, 4.5, 3.5, 6 };
-    float[] ew = { 7, 3.5, 3, 3, 2.5, 2, 4 };
+    // soft shadow
+    g.pushMatrix();
+    g.translate(4, 6);
+    for (int i = 0; i < post.length; i++) taper(g, post[i], POST_SW[i], POST_EW[i], 3, g.color(0, 0, 0, 18));
+    g.noStroke();
+    g.fill(0, 0, 0, 18);
+    shp(g, postSoma(1));
+    g.popMatrix();
     for (int pass = 0; pass < 3; pass++) {
       int col = pass == 0 ? D_INK : pass == 1 ? POST : g.color(255, 255, 255, 80);
       float add = pass == 0 ? 4.4 : 0;
       for (int i = 0; i < post.length; i++) {
-        if (pass < 2) taper(g, post[i], sw[i], ew[i], add, col);
-        else taper(g, shift(post[i], -0.6, -1), sw[i] * 0.3, ew[i] * 0.3, 0, col);
+        if (pass < 2) taper(g, post[i], POST_SW[i], POST_EW[i], add, col);
+        else taper(g, shift(post[i], -0.6, -1), POST_SW[i] * 0.3, POST_EW[i] * 0.3, 0, col);
       }
       g.noStroke();
       if (pass < 2) {
@@ -5484,17 +5643,23 @@ class NeuronDiagram extends Diagram {
           g.stroke(D_INK);
           g.strokeWeight(add);
         }
-        shp(g, crC(new float[] { 300, 516, 318, 528, 316, 548, 296, 560, 274, 552, 266, 532, 278, 516 }, 4));
+        shp(g, postSoma(0));
         g.noStroke();
         // spine head facing the bouton
         g.ellipse(JX - 4, JY + 4, 13 + add, 13 + add);
       }
     }
+    // soma shading, nucleus + nucleolus
     g.noStroke();
+    g.fill(lerpColor(POST, #FFFFFF, 0.35));
+    shp(g, ell(PSX - 9, PSY - 9, 13, 7, -0.4, 20));
+    g.stroke(D_INK);
+    g.strokeWeight(1.8);
     g.fill(POST_DK);
-    g.ellipse(292, 537, 20, 18);
+    g.ellipse(PSX + 1, PSY + 1, 22, 20);
+    g.noStroke();
     g.fill(#5B4790);
-    g.ellipse(295, 539, 7, 7);
+    g.ellipse(PSX + 4, PSY + 3, 7, 7);
   }
 
   void drawCallout(PGraphics g) {
@@ -5774,7 +5939,7 @@ class OrganMapDiagram extends Diagram {
   final int THYMUS = #EFBE86, SPLEEN = #8A3A5C, PANCREAS = #F2CC6B, BLADDER = #F3DCA2, AIRWAY = #DCE6EA;
 
   float[] body, brain, lungR, lungL, heart, liver, stomach, spleen, pancreas, duodC, duod, colonC, colon, smallMass, bladder;
-  float[] kidneyR, kidneyL, adrenalR, adrenalL, thyroid, thymus, appendix, appC;
+  float[] kidneyR, kidneyL, adrenalR, adrenalL, thyroid, thymus, appendix, appC, rectC, rectum;
 
   OrganMapDiagram() {
     super("organ_map", "Organ Map");
@@ -5783,7 +5948,7 @@ class OrganMapDiagram extends Diagram {
     add("liver", "Liver").poly(liver).anchor(256, 350);
     add("stomach", "Stomach").poly(stomach).anchor(362, 356);
     add("small_intestine", "Small Intestine").poly(smallMass).poly(duod).anchor(300, 488);
-    add("large_intestine", "Large Intestine").poly(colon).poly(appendix).anchor(247, 478);
+    add("large_intestine", "Large Intestine").poly(colon).poly(appendix).poly(rectum).anchor(247, 478);
     add("kidneys", "Kidneys").poly(kidneyR).poly(kidneyL);
     add("brain", "Brain").poly(brain).anchor(300, 50);
     add("heart", "Heart").poly(heart).anchor(318, 278);
@@ -5791,7 +5956,7 @@ class OrganMapDiagram extends Diagram {
     add("pancreas", "Pancreas").poly(pancreas).anchor(330, 401);
     add("thymus", "Thymus").poly(thymus);
     add("thyroid", "Thyroid Gland").poly(thyroid).anchor(300, 159);
-    add("adrenal_glands", "Adrenal Glands").poly(ellPts(213, 411, 12, 9, 0)).poly(ellPts(388, 403, 12, 9, 0));
+    add("adrenal_glands", "Adrenal Glands").poly(ellPts(213, 393, 12, 9, 0)).poly(ellPts(388, 385, 12, 9, 0));
     add("bladder", "Urinary Bladder").poly(bladder);
     add("pituitary", "Pituitary Gland").ellipse(300, 96, 11, 10);
     add("lymph_nodes", "Lymph Nodes").ellipse(280, 131, 9, 14).ellipse(320, 131, 9, 14).ellipse(209, 221, 12, 12).ellipse(391, 221, 12, 12)
@@ -5829,12 +5994,14 @@ class OrganMapDiagram extends Diagram {
     colon = band(colonC, 24, 16);
     appC = cr(new float[] { 244, 520, 240, 532, 236, 541, 240, 547 }, 3);
     appendix = band(appC, 9, 8);
+    rectC = cr(new float[] { 305, 540, 303, 556, 301.5, 572, 301, 584, 301, 592 }, 3);
+    rectum = band(rectC, 15, 14);
     smallMass = new float[] { 262, 456, 285, 452, 300, 457, 318, 452, 340, 456, 344, 472, 343, 492, 338, 512, 322, 520, 300, 518, 280, 522,
       262, 515, 258, 496, 259, 474 };
-    kidneyR = new float[] { 212, 417, 220, 418, 224, 426, 222, 434, 225, 442, 223, 452, 214, 459, 205, 456, 200, 444, 199, 430, 203, 420 };
-    kidneyL = mir(new float[] { 212, 409, 220, 410, 224, 418, 222, 426, 225, 434, 223, 444, 214, 451, 205, 448, 200, 436, 199, 422, 203, 412 });
-    adrenalR = new float[] { 204, 418, 210, 405, 216, 402, 222, 410, 222, 418, 213, 415 };
-    adrenalL = new float[] { 377, 410, 381, 400, 389, 395, 396, 400, 398, 410, 389, 407 };
+    kidneyR = new float[] { 212, 399, 220, 400, 224, 408, 222, 416, 225, 424, 223, 434, 214, 441, 205, 438, 200, 426, 199, 412, 203, 402 };
+    kidneyL = mir(new float[] { 212, 391, 220, 392, 224, 400, 222, 408, 225, 416, 223, 426, 214, 433, 205, 430, 200, 418, 199, 404, 203, 394 });
+    adrenalR = new float[] { 204, 400, 210, 387, 216, 384, 222, 392, 222, 400, 213, 397 };
+    adrenalL = new float[] { 377, 392, 381, 382, 389, 377, 396, 382, 398, 392, 389, 389 };
     bladder = new float[] { 300, 547, 312, 549, 321, 556, 322, 566, 316, 575, 306, 579, 294, 579, 284, 575, 278, 566, 279, 556, 288, 549 };
   }
 
@@ -5864,15 +6031,15 @@ class OrganMapDiagram extends Diagram {
     g.noFill();
     g.stroke(#C9A23A);
     g.strokeWeight(2.4);
-    g.bezier(222, 438, 236, 470, 262, 520, 286, 556);
-    g.bezier(378, 430, 364, 470, 338, 520, 314, 556);
-    // kidneys + adrenals (behind the gut)
+    g.bezier(222, 420, 238, 462, 262, 520, 286, 556);
+    g.bezier(378, 412, 362, 462, 338, 520, 314, 556);
+    // kidneys (T12-L3, hilum at the transpyloric level) + adrenals, behind the gut
     organ(g, kidneyR, D_KIDNEY, 2);
     organ(g, kidneyL, D_KIDNEY, 2);
     g.noStroke();
     g.fill(#E7B7A8);
-    blob(g, new float[] { 218, 430, 223, 432, 223, 440, 218, 441 });
-    blob(g, mir(new float[] { 218, 422, 223, 424, 223, 432, 218, 433 }));
+    blob(g, new float[] { 218, 412, 223, 414, 223, 422, 218, 423 });
+    blob(g, mir(new float[] { 218, 404, 223, 406, 223, 414, 218, 415 }));
     organ(g, adrenalR, D_GLAND, 1.6);
     organ(g, adrenalL, D_GLAND, 1.6);
     // lungs
@@ -6005,6 +6172,7 @@ class OrganMapDiagram extends Diagram {
     sp.append(507);
     tube(g, sp.array(), 9, D_GUT);
     // large intestine frame (haustra)
+    tube(g, rectC, 12, lerpColor(D_COLON, #000000, 0.06));          // rectum: under the sigmoid's end, behind the bladder
     tube(g, colonC, 22, D_COLON);
     tube(g, appC, 6.5, D_COLON);
     g.stroke(#B56A50);
@@ -6269,6 +6437,7 @@ class OrganMapDiagram extends Diagram {
 // artwork and the clickable polygons always share exactly the same points.
 
 class SkeletonDiagram extends Diagram {
+  final float FIT_K = 0.97, FIT_DY = -1.5;   // even ~20-unit top/bottom margins
   final int CART = #D9E5E7, CART_SH = #B7CBD0;   // cartilage / discs
   final int HOLE = #43373D;                      // orbits, foramina
 
@@ -6330,6 +6499,7 @@ class SkeletonDiagram extends Diagram {
     add("tarsals", "Tarsals").poly(tarsHit).poly(mir(tarsHit));
     add("metatarsals", "Metatarsals").poly(mtHit).poly(mir(mtHit));
     add("phalanges_foot", "Phalanges (Foot)").poly(phfHit).poly(mir(phfHit));
+    fitParts();
   }
 
   // =============================================================== geometry
@@ -6353,10 +6523,10 @@ class SkeletonDiagram extends Diagram {
     coracL = new float[] { 236, 129, 243, 133, 241, 140, 234, 146, 227, 148, 225, 143, 231, 139, 233, 134 };
 
     // ---- ribs: lateral apex (dx, y), front end of the bone (dx, y), cartilage end (dx, y), dx from the midline
-    float[] aDx = { 36, 48, 56, 61, 64, 66, 67, 66, 64, 61, 55, 47 };
-    float[] aY = { 127, 136, 147, 158, 170, 182, 194, 206, 218, 229, 240, 250 };
-    float[] cDx = { 24, 30, 35, 38, 40, 42, 43, 46, 51, 55, 51, 42 };
-    float[] cY = { 139, 152, 165, 178, 191, 204, 217, 230, 241, 251, 259, 264 };
+    float[] aDx = { 36, 48, 56, 61, 64, 66, 67, 66, 64, 61, 57, 50 };
+    float[] aY = { 127, 136, 147, 158, 170, 182, 194, 206, 218, 229, 238, 246 };
+    float[] cDx = { 24, 30, 35, 38, 40, 42, 43, 46, 51, 55, 54, 46 };
+    float[] cY = { 139, 152, 165, 178, 191, 204, 217, 230, 241, 251, 255, 256 };
     float[] sDx = { 12, 12, 11, 11, 11, 10, 9, 29, 39, 47 };
     float[] sY = { 136, 149, 161, 173, 184, 195, 205, 220, 231, 242 };
     for (int i = 0; i < 12; i++) {
@@ -6417,23 +6587,49 @@ class SkeletonDiagram extends Diagram {
     for (float[] m : phf) phfL.add(P(stick(m[0], m[1], m[2], m[3], m[4], m[5]), F_FOOT));
 
     // ---- pelvis
-    hipL = new float[] { 280, 270, 271, 260, 258, 255, 245, 257, 234, 264, 227, 276, 224, 289, 227, 296, 229, 302, 235, 310, 237, 324,
+    hipL = new float[] { 280, 272, 271, 265, 258, 262, 245, 263, 234, 269, 227, 280, 224, 291, 227, 297, 229, 302, 235, 310, 237, 324,
       240, 338, 243, 350, 249, 358, 257, 360, 264, 357, 273, 351, 285, 346, 296, 343, 297, 327, 288, 323, 276, 321, 266, 316, 264, 305,
       269, 293, 277, 284, 281, 277 };
-    iliacFossaL = new float[] { 277, 272, 262, 262, 248, 263, 238, 271, 233, 284, 238, 296, 250, 303, 263, 305, 268, 293, 276, 282 };
+    iliacFossaL = new float[] { 277, 274, 262, 268, 248, 268, 238, 275, 234, 286, 238, 296, 250, 303, 263, 305, 268, 293, 276, 283 };
     obturatorL = ell(266, 339, 11, 7, 0.95);
-    symphysis = new float[] { 296, 326, 304, 326, 304, 343, 296, 343 };
-    sacrum = new float[] { 275, 283, 288, 280, 300, 279, 312, 280, 325, 283, 323, 293, 317, 306, 309, 318, 303, 327, 297, 327, 291, 318,
-      283, 306, 277, 293 };
-    coccyx = new float[] { 296, 327, 304, 327, 303, 333, 301, 338, 299, 338, 297, 333 };
+    symphysis = new float[] { 296, 328, 304, 328, 304, 343, 296, 343 };
+    sacrum = new float[] { 275, 283, 288, 280, 300, 279, 312, 280, 325, 283, 323, 291, 317, 301, 309, 310, 303, 317, 297, 317, 291, 310,
+      283, 301, 277, 291 };
+    coccyx = new float[] { 296.8, 316.5, 303.2, 316.5, 302.8, 319.5, 301.4, 322, 298.6, 322, 297.2, 319.5 };
   }
 
   float[] sternumHit() {
     return sym(new float[] { 300, 127, 290, 125, 284, 130, 286, 140, 289, 149, 287, 165, 287, 190, 289, 205, 294, 210, 297, 223, 300, 224 });
   }
 
-  // =============================================================== art
+  // ---- final placement in the 600 box: art and hit shapes get the same scale/offset (about the centre)
+  void fitParts() {
+    for (Part p : parts) {
+      for (int i = 0; i < p.shapes.size(); i++) {
+        float[] a = p.shapes.get(i), q = new float[a.length];      // copy: the art still uses the original arrays
+        for (int j = 0; j < a.length; j += 2) {
+          q[j] = 300 + (a[j] - 300) * FIT_K;
+          q[j + 1] = 300 + (a[j + 1] - 300) * FIT_K + FIT_DY;
+        }
+        p.shapes.set(i, q);
+      }
+      if (p.ax >= 0) {
+        p.ax = 300 + (p.ax - 300) * FIT_K;
+        p.ay = 300 + (p.ay - 300) * FIT_K + FIT_DY;
+      }
+    }
+  }
+
   void drawArt(PGraphics g) {
+    g.pushMatrix();
+    g.translate(300 * (1 - FIT_K), 300 * (1 - FIT_K) + FIT_DY);
+    g.scale(FIT_K);
+    drawFigure(g);
+    g.popMatrix();
+  }
+
+  // =============================================================== art
+  void drawFigure(PGraphics g) {
     // scapulae (behind the rib cage)
     for (int s = 0; s < 2; s++) {
       bone(g, side(scapL, s), lerpColor(D_BONE, D_BONE_SH, 0.2), D_BONE_SH, 2, 3);
@@ -6464,14 +6660,14 @@ class SkeletonDiagram extends Diagram {
     g.noStroke();
     g.fill(HOLE);
     for (int k = 0; k < 4; k++) {
-      float y = 289 + k * 8.5, dx = 9.5 - k * 1.6, r = 2.6 - k * 0.3;
+      float y = 288 + k * 6.8, dx = 9.3 - k * 1.7, r = 2.5 - k * 0.3;
       g.ellipse(300 - dx, y, r * 2, r * 1.6);
       g.ellipse(300 + dx, y, r * 2, r * 1.6);
     }
     g.stroke(D_BONE_SH);
     g.strokeWeight(1.2);
-    for (int k = 0; k < 4; k++) {
-      float y = 293.5 + k * 8.5, dx = 8 - k * 1.6;
+    for (int k = 0; k < 3; k++) {
+      float y = 291.5 + k * 6.8, dx = 8 - k * 1.8;
       g.line(300 - dx, y, 300 + dx, y);
     }
     for (int s = 0; s < 2; s++) {
@@ -7567,6 +7763,8 @@ class Rick {
     if (!showing) return;
     int before = typed();
     age += dt;
+    // corner box: let it go once he's said it and you've had time to read it
+    if (dock == DOCK_CORNER && age > text.length() / cps + 7 + text.length() / 25.0) showing = false;
     int now = typed();
     // sounds as the text appears: a soft blip per word, a real burp at *burp*
     for (int i = max(before, lastSoundChar + 1); i < now; i++) {
@@ -8957,6 +9155,7 @@ class TopicScene extends Scene {
         imageMode(CORNER);
       }
       textFont(fBodyB);
+      if (textWidth(t.title) > w - 16) textSize(22 * (w - 16) / textWidth(t.title));
       fill(C_TEXT);
       text(t.title, x + w / 2, y + 140);
       int b = progress.best(k, level);

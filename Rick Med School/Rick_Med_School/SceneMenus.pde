@@ -329,6 +329,7 @@ class TopicScene extends Scene {
         imageMode(CORNER);
       }
       textFont(fBodyB);
+      if (textWidth(t.title) > w - 16) textSize(22 * (w - 16) / textWidth(t.title));
       fill(C_TEXT);
       text(t.title, x + w / 2, y + 140);
       int b = progress.best(k, level);

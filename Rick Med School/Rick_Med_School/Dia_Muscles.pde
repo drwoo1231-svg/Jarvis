@@ -4,6 +4,7 @@
 // ones stand out. Each muscle's outline is both its art and its hit polygon.
 
 class MusclesDiagram extends Diagram {
+  final float FIT_K = 1, FIT_DY = 7;   // centre the figure vertically
   final int BASE = #8C3A36, BASE_SH = #7A302D;           // deep layer seen in the grooves
   final int FILL = #D4A196, FILL_FIB = #B5837A;          // unlabelled muscles
   final int FIB = #9C3B35, FIB_LT = #EE9A8E;             // fibre lines / sheen
@@ -35,6 +36,7 @@ class MusclesDiagram extends Diagram {
     add("sartorius", "Sartorius").poly(sartL).poly(mir(sartL)).anchor(262, 360);
     add("tibialis_anterior", "Tibialis Anterior").poly(taL).poly(mir(taL)).anchor(264, 490);
     add("gastrocnemius", "Gastrocnemius").poly(gmedL).poly(glatL).poly(mir(gmedL)).poly(mir(glatL)).anchor(292, 488);
+    fitParts();
   }
 
   // =============================================================== geometry (viewer's left; mirrored for the right)
@@ -51,13 +53,16 @@ class MusclesDiagram extends Diagram {
     addPts(b, P(new float[] { 15, 92, 14, 75, 15, 55, 17, 36, 17, 26 }, F_UA));
     // torso, leg, foot (absolute)
     addPts(b, new float[] { 229, 166, 227, 182, 228, 202, 231, 226, 235, 250, 236, 270, 233, 290, 226, 308,
-      220, 330, 219, 360, 224, 390, 233, 415, 241, 436, 243, 452, 240, 470, 237, 490, 240, 512, 249, 532, 255, 546,
-      251, 558, 249, 572, 251, 581, 256, 586, 263, 589, 271, 590, 280, 590, 287, 587, 291, 579, 291, 563, 287, 547,
-      289, 530, 295, 510, 297, 488, 293, 466, 290, 452, 291, 430, 294, 405, 297, 380, 298, 366, 300, 358 });
+      220, 330, 219, 360, 224, 390, 233, 415, 241, 436, 243, 452, 240, 470, 237, 490, 240, 512, 249, 532 });
+    addPts(b, reversePts(footOutline()));
+    addPts(b, new float[] { 289, 530, 295, 510, 297, 488, 293, 466, 290, 452, 291, 430, 294, 405, 297, 380, 298, 366, 300, 358 });
     body = symClosed(b.array());
     handL = P(new float[] { -9, -2, -13, 8, -18, 16, -24, 26, -26, 31, -22, 32, -14, 26, -12, 36, -12, 50, -11, 58, -7, 60, -4, 52,
       -2, 62, 2, 63, 4, 54, 6, 61, 10, 60, 10, 50, 13, 52, 15, 48, 13, 36, 11, 20, 9, -2 }, F_HD);
-    footL = new float[] { 256, 545, 251, 558, 249, 572, 251, 581, 256, 586, 263, 589, 271, 590, 280, 590, 287, 587, 291, 579, 291, 563, 287, 545 };
+    FloatList fl = new FloatList();
+    addPts(fl, footOutline());
+    addPts(fl, new float[] { 257, 544.6, 270, 544.2, 282, 544.6 });     // across the front of the ankle
+    footL = fl.array();
 
     clavL = cr(new float[] { 297, 122, 281, 123, 263, 121, 245, 119, 228, 120, 214, 124 }, 4);
 
@@ -108,8 +113,34 @@ class MusclesDiagram extends Diagram {
     bones.add(ellPts(268, 443, 8.5, 10.5));                                                                          // patella
   }
 
-  // =============================================================== art
+  // ---- final placement in the 600 box: art and hit shapes get the same scale/offset (about the centre)
+  void fitParts() {
+    for (Part p : parts) {
+      for (int i = 0; i < p.shapes.size(); i++) {
+        float[] a = p.shapes.get(i), q = new float[a.length];      // copy: the art still uses the original arrays
+        for (int j = 0; j < a.length; j += 2) {
+          q[j] = 300 + (a[j] - 300) * FIT_K;
+          q[j + 1] = 300 + (a[j + 1] - 300) * FIT_K + FIT_DY;
+        }
+        p.shapes.set(i, q);
+      }
+      if (p.ax >= 0) {
+        p.ax = 300 + (p.ax - 300) * FIT_K;
+        p.ay = 300 + (p.ay - 300) * FIT_K + FIT_DY;
+      }
+    }
+  }
+
   void drawArt(PGraphics g) {
+    g.pushMatrix();
+    g.translate(300 * (1 - FIT_K), 300 * (1 - FIT_K) + FIT_DY);
+    g.scale(FIT_K);
+    drawFigure(g);
+    g.popMatrix();
+  }
+
+  // =============================================================== art
+  void drawFigure(PGraphics g) {
     // body base (deep layer)
     g.stroke(D_INK);
     g.strokeWeight(2.6);
@@ -121,9 +152,10 @@ class MusclesDiagram extends Diagram {
       skin(g, side(footL, s));
       g.stroke(D_SKIN_SH);
       g.strokeWeight(1.1);
-      float[] tx = { 257, 264, 271, 279 };
-      float[] ty = { 580, 583, 584, 583 };
-      for (int k = 0; k < 4; k++) g.line(s == 0 ? tx[k] : DIA - tx[k], ty[k], s == 0 ? tx[k] - 0.3 : DIA - tx[k] + 0.3, ty[k] + 5.5);
+      for (int k = 0; k < 4; k++) {                                                          // toe clefts
+        float cx = (TOE[k][0] + TOE[k][2] + TOE[k + 1][0] - TOE[k + 1][2]) / 2, cy = (TOE[k][1] + TOE[k + 1][1]) / 2;
+        g.line(s == 0 ? cx : DIA - cx, cy - 3.4, s == 0 ? cx : DIA - cx, cy - 0.4);
+      }
     }
     skin(g, earL);
     skin(g, mir(earL));
@@ -213,6 +245,24 @@ class MusclesDiagram extends Diagram {
     }
   }
 
+  // toes of the viewer's-left foot seen from the front (big toe medial): { cx, cy, r }, little toe first
+  final float[][] TOE = { { 254.9, 567.4, 3.4 }, { 261.9, 569.6, 3.7 }, { 269.4, 571.0, 4.0 }, { 277.4, 571.5, 4.3 }, { 288.2, 569.5, 6.4 } };
+
+  // front view of a foot (wider than tall): medial ankle -> medial border -> round toe tips -> lateral border -> lateral ankle
+  float[] footOutline() {
+    FloatList q = new FloatList();
+    addPts(q, new float[] { 289, 545, 291.5, 551, 294, 557.5, 295.5, 564 });
+    for (int k = TOE.length - 1; k >= 0; k--) {
+      for (int i = 0; i <= 4; i++) {
+        float a = PI * i / 4;                         // 0 -> PI: medial side of the toe, round its tip, to the lateral side
+        q.append(TOE[k][0] + cos(a) * TOE[k][2]);
+        q.append(TOE[k][1] + sin(a) * TOE[k][2] * 0.62);
+      }
+    }
+    addPts(q, new float[] { 249.5, 563, 247.5, 557, 248.5, 550.5, 250.5, 545 });
+    return q.array();
+  }
+
   // =============================================================== drawing helpers
   void muscle(PGraphics g, float[] p, int c, float sw) {
     g.noStroke();
@@ -296,6 +346,15 @@ class MusclesDiagram extends Diagram {
   }
 
   // =============================================================== geometry helpers (local to this class)
+  float[] reversePts(float[] p) {
+    float[] q = new float[p.length];
+    for (int i = 0; i < p.length; i += 2) {
+      q[i] = p[p.length - 2 - i];
+      q[i + 1] = p[p.length - 1 - i];
+    }
+    return q;
+  }
+
   void addPts(FloatList l, float[] p) {
     for (float v : p) l.append(v);
   }

@@ -115,7 +115,7 @@ class HeartDiagram extends Diagram {
     // ---- vessels behind the heart
     tube(g, rpa2, W_PA2, BB, BB_SH, VEIN_LT, true);
     tube(g, rpa, W_PA, BB, BB_SH, VEIN_LT, true);
-    cutEnd(g, rpa, true, W_PA, BB_SH);
+    cutEnd(g, rpa, false, W_PA, BB_SH);   // open end at the right lung hilum (its start is hidden under the trunk)
     cutEnd(g, rpa2, false, W_PA2, BB_SH);
     tube(g, pvr1, W_PV, RB, RB_SH, ART_LT, true);
     tube(g, pvr2, W_PV, RB, RB_SH, ART_LT, true);

@@ -10,7 +10,7 @@ class CellDiagram extends Diagram {
   final float NX = 248, NY = 272, NRX = 94, NRY = 84, NA = -0.12;   // nucleus
   final float GX = 446, GY = 262, GA = -0.10;              // golgi centre + tilt
   final float SX = 430, SY = 432;                          // smooth ER centre
-  final float CEX = 372, CEY = 136;                        // centrosome
+  final float CEX = 358, CEY = 178;                        // centrosome (juxtanuclear, between nucleus and Golgi)
 
   final int MEM = #F4C49C, MEM_HEAD = #E3895F, MEM_TAIL = #E9B08A;
   final int NUC_IN = #CDC2EC, NUC_ENV = #7462B2, CHROM = #A595D6, NUCLEOLUS = #57438F;
@@ -25,14 +25,14 @@ class CellDiagram extends Diagram {
   float[][] rer = new float[3][];          // rough ER centre lines
   float[] rerW = { 11, 12, 11 };
   float[][] serTubes;                      // smooth ER tube centre lines
-  float[][] mitos = { { 158, 138, 50, 23, -0.42 }, { 462, 362, 42, 20, 0.22 }, { 262, 499, 48, 22, 0.06 }, { 123, 428, 40, 20, 1.02 } };
+  float[][] mitos = { { 166, 147, 50, 23, -0.42 }, { 462, 362, 42, 20, 0.22 }, { 262, 499, 48, 22, 0.06 }, { 123, 428, 40, 20, 1.02 } };
   float[][] lysos = { { 268, 104, 17 }, { 366, 503, 15 }, { 184, 474, 15 } };
-  float[][] polys = { { 338, 74, 0.1 }, { 384, 332, 0.6 }, { 300, 452, 0.15 }, { 84, 300, 1.4 }, { 458, 162, -0.7 } };
+  float[][] polys = { { 338, 74, 0.1 }, { 384, 332, 0.6 }, { 300, 452, 0.15 }, { 126, 206, 0.35 }, { 458, 162, -0.7 } };
 
   CellDiagram() {
     super("cell", "Animal Cell");
     build();
-    add("cytoplasm", "Cytoplasm").poly(outline(13, 120)).anchor(392, 470);
+    add("cytoplasm", "Cytoplasm").poly(outline(13, 120)).anchor(390, 118);
     add("cell_membrane", "Cell Membrane").poly(ring(-7, 19, 120)).anchor(CX + memX(-0.25, 6), CY + memY(-0.25, 6));
     add("nucleus", "Nucleus").poly(ell(NX, NY, NRX + 3, NRY + 3, NA, 36)).anchor(NX - 40, NY + 30);
     add("rough_er", "Rough ER").poly(rerHit()).anchor(NX + cos(2.35) * (NRX + 38), NY + sin(2.35) * (NRY + 38));
@@ -243,7 +243,7 @@ class CellDiagram extends Diagram {
     g.stroke(#9CC9DD);
     g.strokeWeight(1.1);
     float[][] fil = { { 70, 210, 110, 240, 136, 300 }, { 372, 318, 400, 330, 420, 318 }, { 220, 440, 200, 470, 216, 510 },
-      { 410, 96, 436, 116, 470, 112 }, { 330, 180, 350, 196, 352, 214 }, { 70, 360, 76, 396 }, { 438, 492, 466, 484, 490, 466 } };
+      { 410, 96, 436, 116, 470, 112 }, { 318, 128, 340, 120, 356, 132 }, { 70, 360, 76, 396 }, { 438, 492, 466, 484, 490, 466 } };
     for (float[] f : fil) pl(g, crO(f, 6));
     // bilayer: tails between two rows of heads
     int n = 330;

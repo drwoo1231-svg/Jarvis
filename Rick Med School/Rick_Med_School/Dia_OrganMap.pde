@@ -7,7 +7,7 @@ class OrganMapDiagram extends Diagram {
   final int THYMUS = #EFBE86, SPLEEN = #8A3A5C, PANCREAS = #F2CC6B, BLADDER = #F3DCA2, AIRWAY = #DCE6EA;
 
   float[] body, brain, lungR, lungL, heart, liver, stomach, spleen, pancreas, duodC, duod, colonC, colon, smallMass, bladder;
-  float[] kidneyR, kidneyL, adrenalR, adrenalL, thyroid, thymus, appendix, appC;
+  float[] kidneyR, kidneyL, adrenalR, adrenalL, thyroid, thymus, appendix, appC, rectC, rectum;
 
   OrganMapDiagram() {
     super("organ_map", "Organ Map");
@@ -16,7 +16,7 @@ class OrganMapDiagram extends Diagram {
     add("liver", "Liver").poly(liver).anchor(256, 350);
     add("stomach", "Stomach").poly(stomach).anchor(362, 356);
     add("small_intestine", "Small Intestine").poly(smallMass).poly(duod).anchor(300, 488);
-    add("large_intestine", "Large Intestine").poly(colon).poly(appendix).anchor(247, 478);
+    add("large_intestine", "Large Intestine").poly(colon).poly(appendix).poly(rectum).anchor(247, 478);
     add("kidneys", "Kidneys").poly(kidneyR).poly(kidneyL);
     add("brain", "Brain").poly(brain).anchor(300, 50);
     add("heart", "Heart").poly(heart).anchor(318, 278);
@@ -24,7 +24,7 @@ class OrganMapDiagram extends Diagram {
     add("pancreas", "Pancreas").poly(pancreas).anchor(330, 401);
     add("thymus", "Thymus").poly(thymus);
     add("thyroid", "Thyroid Gland").poly(thyroid).anchor(300, 159);
-    add("adrenal_glands", "Adrenal Glands").poly(ellPts(213, 411, 12, 9, 0)).poly(ellPts(388, 403, 12, 9, 0));
+    add("adrenal_glands", "Adrenal Glands").poly(ellPts(213, 393, 12, 9, 0)).poly(ellPts(388, 385, 12, 9, 0));
     add("bladder", "Urinary Bladder").poly(bladder);
     add("pituitary", "Pituitary Gland").ellipse(300, 96, 11, 10);
     add("lymph_nodes", "Lymph Nodes").ellipse(280, 131, 9, 14).ellipse(320, 131, 9, 14).ellipse(209, 221, 12, 12).ellipse(391, 221, 12, 12)
@@ -62,12 +62,14 @@ class OrganMapDiagram extends Diagram {
     colon = band(colonC, 24, 16);
     appC = cr(new float[] { 244, 520, 240, 532, 236, 541, 240, 547 }, 3);
     appendix = band(appC, 9, 8);
+    rectC = cr(new float[] { 305, 540, 303, 556, 301.5, 572, 301, 584, 301, 592 }, 3);
+    rectum = band(rectC, 15, 14);
     smallMass = new float[] { 262, 456, 285, 452, 300, 457, 318, 452, 340, 456, 344, 472, 343, 492, 338, 512, 322, 520, 300, 518, 280, 522,
       262, 515, 258, 496, 259, 474 };
-    kidneyR = new float[] { 212, 417, 220, 418, 224, 426, 222, 434, 225, 442, 223, 452, 214, 459, 205, 456, 200, 444, 199, 430, 203, 420 };
-    kidneyL = mir(new float[] { 212, 409, 220, 410, 224, 418, 222, 426, 225, 434, 223, 444, 214, 451, 205, 448, 200, 436, 199, 422, 203, 412 });
-    adrenalR = new float[] { 204, 418, 210, 405, 216, 402, 222, 410, 222, 418, 213, 415 };
-    adrenalL = new float[] { 377, 410, 381, 400, 389, 395, 396, 400, 398, 410, 389, 407 };
+    kidneyR = new float[] { 212, 399, 220, 400, 224, 408, 222, 416, 225, 424, 223, 434, 214, 441, 205, 438, 200, 426, 199, 412, 203, 402 };
+    kidneyL = mir(new float[] { 212, 391, 220, 392, 224, 400, 222, 408, 225, 416, 223, 426, 214, 433, 205, 430, 200, 418, 199, 404, 203, 394 });
+    adrenalR = new float[] { 204, 400, 210, 387, 216, 384, 222, 392, 222, 400, 213, 397 };
+    adrenalL = new float[] { 377, 392, 381, 382, 389, 377, 396, 382, 398, 392, 389, 389 };
     bladder = new float[] { 300, 547, 312, 549, 321, 556, 322, 566, 316, 575, 306, 579, 294, 579, 284, 575, 278, 566, 279, 556, 288, 549 };
   }
 
@@ -97,15 +99,15 @@ class OrganMapDiagram extends Diagram {
     g.noFill();
     g.stroke(#C9A23A);
     g.strokeWeight(2.4);
-    g.bezier(222, 438, 236, 470, 262, 520, 286, 556);
-    g.bezier(378, 430, 364, 470, 338, 520, 314, 556);
-    // kidneys + adrenals (behind the gut)
+    g.bezier(222, 420, 238, 462, 262, 520, 286, 556);
+    g.bezier(378, 412, 362, 462, 338, 520, 314, 556);
+    // kidneys (T12-L3, hilum at the transpyloric level) + adrenals, behind the gut
     organ(g, kidneyR, D_KIDNEY, 2);
     organ(g, kidneyL, D_KIDNEY, 2);
     g.noStroke();
     g.fill(#E7B7A8);
-    blob(g, new float[] { 218, 430, 223, 432, 223, 440, 218, 441 });
-    blob(g, mir(new float[] { 218, 422, 223, 424, 223, 432, 218, 433 }));
+    blob(g, new float[] { 218, 412, 223, 414, 223, 422, 218, 423 });
+    blob(g, mir(new float[] { 218, 404, 223, 406, 223, 414, 218, 415 }));
     organ(g, adrenalR, D_GLAND, 1.6);
     organ(g, adrenalL, D_GLAND, 1.6);
     // lungs
@@ -238,6 +240,7 @@ class OrganMapDiagram extends Diagram {
     sp.append(507);
     tube(g, sp.array(), 9, D_GUT);
     // large intestine frame (haustra)
+    tube(g, rectC, 12, lerpColor(D_COLON, #000000, 0.06));          // rectum: under the sigmoid's end, behind the bladder
     tube(g, colonC, 22, D_COLON);
     tube(g, appC, 6.5, D_COLON);
     g.stroke(#B56A50);

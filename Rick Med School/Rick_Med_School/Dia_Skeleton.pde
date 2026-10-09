@@ -4,6 +4,7 @@
 // artwork and the clickable polygons always share exactly the same points.
 
 class SkeletonDiagram extends Diagram {
+  final float FIT_K = 0.97, FIT_DY = -1.5;   // even ~20-unit top/bottom margins
   final int CART = #D9E5E7, CART_SH = #B7CBD0;   // cartilage / discs
   final int HOLE = #43373D;                      // orbits, foramina
 
@@ -65,6 +66,7 @@ class SkeletonDiagram extends Diagram {
     add("tarsals", "Tarsals").poly(tarsHit).poly(mir(tarsHit));
     add("metatarsals", "Metatarsals").poly(mtHit).poly(mir(mtHit));
     add("phalanges_foot", "Phalanges (Foot)").poly(phfHit).poly(mir(phfHit));
+    fitParts();
   }
 
   // =============================================================== geometry
@@ -88,10 +90,10 @@ class SkeletonDiagram extends Diagram {
     coracL = new float[] { 236, 129, 243, 133, 241, 140, 234, 146, 227, 148, 225, 143, 231, 139, 233, 134 };
 
     // ---- ribs: lateral apex (dx, y), front end of the bone (dx, y), cartilage end (dx, y), dx from the midline
-    float[] aDx = { 36, 48, 56, 61, 64, 66, 67, 66, 64, 61, 55, 47 };
-    float[] aY = { 127, 136, 147, 158, 170, 182, 194, 206, 218, 229, 240, 250 };
-    float[] cDx = { 24, 30, 35, 38, 40, 42, 43, 46, 51, 55, 51, 42 };
-    float[] cY = { 139, 152, 165, 178, 191, 204, 217, 230, 241, 251, 259, 264 };
+    float[] aDx = { 36, 48, 56, 61, 64, 66, 67, 66, 64, 61, 57, 50 };
+    float[] aY = { 127, 136, 147, 158, 170, 182, 194, 206, 218, 229, 238, 246 };
+    float[] cDx = { 24, 30, 35, 38, 40, 42, 43, 46, 51, 55, 54, 46 };
+    float[] cY = { 139, 152, 165, 178, 191, 204, 217, 230, 241, 251, 255, 256 };
     float[] sDx = { 12, 12, 11, 11, 11, 10, 9, 29, 39, 47 };
     float[] sY = { 136, 149, 161, 173, 184, 195, 205, 220, 231, 242 };
     for (int i = 0; i < 12; i++) {
@@ -152,23 +154,49 @@ class SkeletonDiagram extends Diagram {
     for (float[] m : phf) phfL.add(P(stick(m[0], m[1], m[2], m[3], m[4], m[5]), F_FOOT));
 
     // ---- pelvis
-    hipL = new float[] { 280, 270, 271, 260, 258, 255, 245, 257, 234, 264, 227, 276, 224, 289, 227, 296, 229, 302, 235, 310, 237, 324,
+    hipL = new float[] { 280, 272, 271, 265, 258, 262, 245, 263, 234, 269, 227, 280, 224, 291, 227, 297, 229, 302, 235, 310, 237, 324,
       240, 338, 243, 350, 249, 358, 257, 360, 264, 357, 273, 351, 285, 346, 296, 343, 297, 327, 288, 323, 276, 321, 266, 316, 264, 305,
       269, 293, 277, 284, 281, 277 };
-    iliacFossaL = new float[] { 277, 272, 262, 262, 248, 263, 238, 271, 233, 284, 238, 296, 250, 303, 263, 305, 268, 293, 276, 282 };
+    iliacFossaL = new float[] { 277, 274, 262, 268, 248, 268, 238, 275, 234, 286, 238, 296, 250, 303, 263, 305, 268, 293, 276, 283 };
     obturatorL = ell(266, 339, 11, 7, 0.95);
-    symphysis = new float[] { 296, 326, 304, 326, 304, 343, 296, 343 };
-    sacrum = new float[] { 275, 283, 288, 280, 300, 279, 312, 280, 325, 283, 323, 293, 317, 306, 309, 318, 303, 327, 297, 327, 291, 318,
-      283, 306, 277, 293 };
-    coccyx = new float[] { 296, 327, 304, 327, 303, 333, 301, 338, 299, 338, 297, 333 };
+    symphysis = new float[] { 296, 328, 304, 328, 304, 343, 296, 343 };
+    sacrum = new float[] { 275, 283, 288, 280, 300, 279, 312, 280, 325, 283, 323, 291, 317, 301, 309, 310, 303, 317, 297, 317, 291, 310,
+      283, 301, 277, 291 };
+    coccyx = new float[] { 296.8, 316.5, 303.2, 316.5, 302.8, 319.5, 301.4, 322, 298.6, 322, 297.2, 319.5 };
   }
 
   float[] sternumHit() {
     return sym(new float[] { 300, 127, 290, 125, 284, 130, 286, 140, 289, 149, 287, 165, 287, 190, 289, 205, 294, 210, 297, 223, 300, 224 });
   }
 
-  // =============================================================== art
+  // ---- final placement in the 600 box: art and hit shapes get the same scale/offset (about the centre)
+  void fitParts() {
+    for (Part p : parts) {
+      for (int i = 0; i < p.shapes.size(); i++) {
+        float[] a = p.shapes.get(i), q = new float[a.length];      // copy: the art still uses the original arrays
+        for (int j = 0; j < a.length; j += 2) {
+          q[j] = 300 + (a[j] - 300) * FIT_K;
+          q[j + 1] = 300 + (a[j + 1] - 300) * FIT_K + FIT_DY;
+        }
+        p.shapes.set(i, q);
+      }
+      if (p.ax >= 0) {
+        p.ax = 300 + (p.ax - 300) * FIT_K;
+        p.ay = 300 + (p.ay - 300) * FIT_K + FIT_DY;
+      }
+    }
+  }
+
   void drawArt(PGraphics g) {
+    g.pushMatrix();
+    g.translate(300 * (1 - FIT_K), 300 * (1 - FIT_K) + FIT_DY);
+    g.scale(FIT_K);
+    drawFigure(g);
+    g.popMatrix();
+  }
+
+  // =============================================================== art
+  void drawFigure(PGraphics g) {
     // scapulae (behind the rib cage)
     for (int s = 0; s < 2; s++) {
       bone(g, side(scapL, s), lerpColor(D_BONE, D_BONE_SH, 0.2), D_BONE_SH, 2, 3);
@@ -199,14 +227,14 @@ class SkeletonDiagram extends Diagram {
     g.noStroke();
     g.fill(HOLE);
     for (int k = 0; k < 4; k++) {
-      float y = 289 + k * 8.5, dx = 9.5 - k * 1.6, r = 2.6 - k * 0.3;
+      float y = 288 + k * 6.8, dx = 9.3 - k * 1.7, r = 2.5 - k * 0.3;
       g.ellipse(300 - dx, y, r * 2, r * 1.6);
       g.ellipse(300 + dx, y, r * 2, r * 1.6);
     }
     g.stroke(D_BONE_SH);
     g.strokeWeight(1.2);
-    for (int k = 0; k < 4; k++) {
-      float y = 293.5 + k * 8.5, dx = 8 - k * 1.6;
+    for (int k = 0; k < 3; k++) {
+      float y = 291.5 + k * 6.8, dx = 8 - k * 1.8;
       g.line(300 - dx, y, 300 + dx, y);
     }
     for (int s = 0; s < 2; s++) {
