@@ -136,6 +136,8 @@ class DifficultyScene extends Scene {
       if (progress.best(k, lv) >= 0) done++;
     }
     fill(C_GOLD);
+    stroke(#8A6A10);
+    strokeWeight(1.5);
     star(x + 40, y + h - 46, 12, 5.4);
     textFont(fBodyB);
     textAlign(LEFT, CENTER);
@@ -267,9 +269,9 @@ class TopicScene extends Scene {
   }
 
   float[] cell(int i) {
-    float w = 186, h = 220, gap = 12;
+    float w = 186, h = 206, gap = 12;
     int col = i % 6, row = i / 6;
-    return new float[] { 54 + col * (w + gap), 118 + row * (h + 16), w, h };
+    return new float[] { 54 + col * (w + gap), 106 + row * (h + 14), w, h };
   }
 
   String keyAt(int i) {
@@ -337,7 +339,7 @@ class TopicScene extends Scene {
       fill(C_TEXT);
       text(t.title, x + w / 2, y + 140);
       int b = progress.best(k, level);
-      drawStars(x + w / 2 - 23, y + 198, progress.stars(k, level), 18);
+      drawStars(x + w / 2 - 23, y + 190, progress.stars(k, level), 18);
       textFont(fSmall);
       fill(C_DIM);
       textAlign(CENTER, TOP);
@@ -371,7 +373,7 @@ class TopicScene extends Scene {
       text("RANDOM MIX", x + w / 2, y + 140);
       textFont(fSmall);
       fill(C_DIM);
-      text("12 from every system", x + w / 2, y + 168);
+      text("12 random, all systems", x + w / 2, y + 168);
     } else {
       int n = progress.mistakes(level).size();
       textFont(fTitle);
@@ -384,7 +386,7 @@ class TopicScene extends Scene {
       text("MISTAKES", x + w / 2, y + 140);
       textFont(fSmall);
       fill(C_DIM);
-      text(n > 0 ? "fix them, they vanish" : "none yet at this level", x + w / 2, y + 168);
+      text(n > 0 ? "right twice = gone" : "none yet at this level", x + w / 2, y + 168);
     }
   }
 

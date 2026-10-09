@@ -69,6 +69,7 @@ class ExploreScene extends Scene {
 
   void update(float dt) {
     view.update();
+    if (rick.showing && (view.mouseIn() || view.labelsOn)) rick.quiet();   // his corner box sits on the board's lower right
     Part s = view.hover != null ? view.hover : pinned;
     if (s != shown) {
       shown = s;

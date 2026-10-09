@@ -17,7 +17,7 @@ class ResultScene extends Scene {
   }
 
   void enter() {
-    if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct);
+    if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct) && pct > 0;
     bonus = max(1, quiz.score / 20);
     progress.addXp(bonus);
     progress.save();
@@ -79,7 +79,7 @@ class ResultScene extends Scene {
     fill(C_TEXT);
     text(quiz.right + " / " + quiz.qs.size() + " correct", x, y);
     fill(C_GOLD);
-    text(quiz.score + " points  (+" + bonus + " schmeckles)", x, y + 32);
+    text(quiz.score + " points  (+" + (quiz.xpEarned + bonus) + " schmeckles)", x, y + 32);
     fill(C_DIM);
     text("best streak " + quiz.bestStreak, x, y + 64);
     if (newBest) {
@@ -99,7 +99,7 @@ class ResultScene extends Scene {
     for (Question q : quiz.missed) {
       String qt = q.q, at = "-> " + q.answerText();
       float h1 = textBlockHeight(qt, pw - 48, 20), h2 = textBlockHeight(at, pw - 48, 20);
-      if (cy + h1 + h2 > py + ph - 40) {
+      if (cy + h1 + h2 > py + ph - (quiz.review ? 96 : 40)) {
         fill(C_DIM);
         text("... and " + (quiz.missed.size() - shown) + " more in your REVIEW pile", px + 24, cy);
         break;
@@ -110,7 +110,13 @@ class ResultScene extends Scene {
       cy += textBlock(at, px + 24, cy, pw - 48, 20) + 10;
       shown++;
     }
-    if (quiz.missed.isEmpty()) {
+    if (quiz.review) {
+      textFont(fBody);
+      fill(C_DIM);
+      float ry = quiz.missed.isEmpty() ? cy : py + ph - 70;
+      textBlock("Out of the pile for good: " + quiz.cleared + ".  Moved up a box: " + quiz.climbing
+        + " (one more right answer in a later review and they're gone).", px + 24, ry, pw - 48, 28);
+    } else if (quiz.missed.isEmpty()) {
       textFont(fBody);
       fill(C_DIM);
       textBlock("Everything right. Either you studied, or the multiverse glitched. Try the next level before I check the logs.", px + 24, cy, pw - 48, 30);

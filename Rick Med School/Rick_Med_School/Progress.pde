@@ -89,13 +89,21 @@ class Progress {
   }
 
   // right answer: in review it climbs a box; at box 2 it's learned and leaves the deck
-  void hit(String qid, boolean review) {
+  boolean inPile(String qid) {
+    return data.getJSONObject("mistakes").hasKey(qid);
+  }
+
+  // true when this answer took the question out of the pile
+  boolean hit(String qid, boolean review) {
     JSONObject m = data.getJSONObject("mistakes");
-    if (!m.hasKey(qid)) return;
-    if (!review) return;
+    if (!m.hasKey(qid) || !review) return false;
     int box = m.getInt(qid) + 1;
-    if (box >= 2) m.remove(qid);
-    else m.setInt(qid, box);
+    if (box >= 2) {
+      m.remove(qid);
+      return true;
+    }
+    m.setInt(qid, box);
+    return false;
   }
 
   ArrayList<Question> mistakes(int level) {

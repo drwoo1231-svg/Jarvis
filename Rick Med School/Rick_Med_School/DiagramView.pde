@@ -86,11 +86,15 @@ class DiagramView {
 
   // a name tag next to the part, with a leader line
   void tag(Part p, String text, int c) {
+    tag(p, text, c, false);
+  }
+
+  void tag(Part p, String text, int c, boolean below) {
     float[] a = p.anchorPt();
     float ax = x + a[0] * s(), ay = y + a[1] * s();
     textFont(fBodyB);
     float tw = textWidth(text) + 22;
-    float tx = constrain(ax - tw / 2, x - 10, x + size + 10 - tw), ty = ay - 58;
+    float tx = constrain(ax - tw / 2, x - 10, x + size + 10 - tw), ty = below ? ay + 26 : ay - 58;
     if (ty < y - 6) ty = ay + 26;
     stroke(c);
     strokeWeight(2.5);

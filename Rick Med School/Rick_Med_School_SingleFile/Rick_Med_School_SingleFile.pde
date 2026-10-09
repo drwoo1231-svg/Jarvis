@@ -7418,11 +7418,15 @@ class DiagramView {
 
   // a name tag next to the part, with a leader line
   void tag(Part p, String text, int c) {
+    tag(p, text, c, false);
+  }
+
+  void tag(Part p, String text, int c, boolean below) {
     float[] a = p.anchorPt();
     float ax = x + a[0] * s(), ay = y + a[1] * s();
     textFont(fBodyB);
     float tw = textWidth(text) + 22;
-    float tx = constrain(ax - tw / 2, x - 10, x + size + 10 - tw), ty = ay - 58;
+    float tx = constrain(ax - tw / 2, x - 10, x + size + 10 - tw), ty = below ? ay + 26 : ay - 58;
     if (ty < y - 6) ty = ay + 26;
     stroke(c);
     strokeWeight(2.5);
@@ -7793,13 +7797,21 @@ class Progress {
   }
 
   // right answer: in review it climbs a box; at box 2 it's learned and leaves the deck
-  void hit(String qid, boolean review) {
+  boolean inPile(String qid) {
+    return data.getJSONObject("mistakes").hasKey(qid);
+  }
+
+  // true when this answer took the question out of the pile
+  boolean hit(String qid, boolean review) {
     JSONObject m = data.getJSONObject("mistakes");
-    if (!m.hasKey(qid)) return;
-    if (!review) return;
+    if (!m.hasKey(qid) || !review) return false;
     int box = m.getInt(qid) + 1;
-    if (box >= 2) m.remove(qid);
-    else m.setInt(qid, box);
+    if (box >= 2) {
+      m.remove(qid);
+      return true;
+    }
+    m.setInt(qid, box);
+    return false;
   }
 
   ArrayList<Question> mistakes(int level) {
@@ -8488,6 +8500,7 @@ class ExploreScene extends Scene {
 
   void update(float dt) {
     view.update();
+    if (rick.showing && (view.mouseIn() || view.labelsOn)) rick.quiet();   // his corner box sits on the board's lower right
     Part s = view.hover != null ? view.hover : pinned;
     if (s != shown) {
       shown = s;
@@ -8878,7 +8891,7 @@ class LessonScene extends Scene {
     cardT += dt;
     view.update();
     for (Button b : buttons) {
-      if (b.id.equals("prev")) b.enabled = idx > 0;
+      if (b.id.equals("prev")) b.label = idx > 0 ? "< BACK" : "< TOPICS";
       if (b.id.equals("next")) b.label = idx >= lv.lessons.size() - 1 ? "QUIZ TIME >" : "NEXT >";
     }
     rick.idleCheck();
@@ -8896,7 +8909,7 @@ class LessonScene extends Scene {
       view.draw();
       Part p = view.pulse != null ? view.d.part(view.pulse) : null;
       if (p != null) view.tag(p, partName(view.d.id, p.id), C_GOLD);
-      else if (view.hover != null) view.tag(view.hover, partName(view.d.id, view.hover.id), C_BLUE);
+      if (view.hover != null && view.hover != p) view.tag(view.hover, partName(view.d.id, view.hover.id), C_BLUE);
       textFont(fSmall);
       fill(C_DIM);
       textAlign(LEFT, TOP);
@@ -8949,7 +8962,10 @@ class LessonScene extends Scene {
   }
 
   void clicked(Button b) {
-    if (b.id.equals("prev") && idx > 0) show(idx - 1);
+    if (b.id.equals("prev")) {
+      if (idx > 0) show(idx - 1);
+      else back();
+    }
     if (b.id.equals("next")) next();
     if (b.id.equals("quiz")) startQuiz();
   }
@@ -9106,6 +9122,8 @@ class DifficultyScene extends Scene {
       if (progress.best(k, lv) >= 0) done++;
     }
     fill(C_GOLD);
+    stroke(#8A6A10);
+    strokeWeight(1.5);
     star(x + 40, y + h - 46, 12, 5.4);
     textFont(fBodyB);
     textAlign(LEFT, CENTER);
@@ -9237,9 +9255,9 @@ class TopicScene extends Scene {
   }
 
   float[] cell(int i) {
-    float w = 186, h = 220, gap = 12;
+    float w = 186, h = 206, gap = 12;
     int col = i % 6, row = i / 6;
-    return new float[] { 54 + col * (w + gap), 118 + row * (h + 16), w, h };
+    return new float[] { 54 + col * (w + gap), 106 + row * (h + 14), w, h };
   }
 
   String keyAt(int i) {
@@ -9307,7 +9325,7 @@ class TopicScene extends Scene {
       fill(C_TEXT);
       text(t.title, x + w / 2, y + 140);
       int b = progress.best(k, level);
-      drawStars(x + w / 2 - 23, y + 198, progress.stars(k, level), 18);
+      drawStars(x + w / 2 - 23, y + 190, progress.stars(k, level), 18);
       textFont(fSmall);
       fill(C_DIM);
       textAlign(CENTER, TOP);
@@ -9341,7 +9359,7 @@ class TopicScene extends Scene {
       text("RANDOM MIX", x + w / 2, y + 140);
       textFont(fSmall);
       fill(C_DIM);
-      text("12 from every system", x + w / 2, y + 168);
+      text("12 random, all systems", x + w / 2, y + 168);
     } else {
       int n = progress.mistakes(level).size();
       textFont(fTitle);
@@ -9354,7 +9372,7 @@ class TopicScene extends Scene {
       text("MISTAKES", x + w / 2, y + 140);
       textFont(fSmall);
       fill(C_DIM);
-      text(n > 0 ? "fix them, they vanish" : "none yet at this level", x + w / 2, y + 168);
+      text(n > 0 ? "right twice = gone" : "none yet at this level", x + w / 2, y + 168);
     }
   }
 
@@ -9427,6 +9445,8 @@ class QuizScene extends Scene {
   boolean answered, wasRight, hinted, timedOut;
   float hintX, hintY;                  // label hint circle (diagram units)
   int score, streak, bestStreak, right, gained;
+  int xpEarned;                        // schmeckles from the answers themselves
+  int cleared, climbing;               // review: questions that left the pile / moved up a box
   ArrayList<Question> missed = new ArrayList<Question>();
   float qT, answerT;
   float top;                           // where the answer area starts (below the question)
@@ -9530,7 +9550,10 @@ class QuizScene extends Scene {
       if (timeLimit > 0) gained += (int) max(0, timeLimit - qT) * 4;
       score += gained;
       progress.addXp(max(1, gained / 10));
-      progress.hit(q.id, review);
+      xpEarned += max(1, gained / 10);
+      boolean inPile = progress.inPile(q.id);
+      if (progress.hit(q.id, review)) cleared++;
+      else if (review && inPile) climbing++;
       if (streak == 3 || streak == 5 || streak == 8) {
         sfx.play(sfx.streak, 0.6);
         rick.say(STREAK[streak == 3 ? 0 : streak == 5 ? 1 : 2]);
@@ -9696,7 +9719,7 @@ class QuizScene extends Scene {
       text("" + (s + 1), x + 32, y + h / 2 - 1);
       textFont(fBody);
       fill(C_TEXT, a);
-      ArrayList<String> ls = wrapText(q.choices[order[s]], w - 90);
+      ArrayList<String> ls = wrapText(q.choices[order[s]], w - 140);
       float ty = y + h / 2 - ls.size() * 14;
       textAlign(LEFT, TOP);
       for (int i = 0; i < ls.size(); i++) text(ls.get(i), x + 66, ty + i * 28);
@@ -9722,7 +9745,15 @@ class QuizScene extends Scene {
     }
     if (answered) {
       Part ans = view.d.part(q.part);
-      if (clicked != null && clicked != ans) view.tag(clicked, partName(q.diagram, clicked.id), C_RED);
+      if (clicked != null && clicked != ans) {
+        // a neighbouring part's tag would sit under the answer's, so drop it below
+        boolean near = false;
+        if (ans != null) {
+          float[] a1 = ans.anchorPt(), a2 = clicked.anchorPt();
+          near = abs(a1[1] - a2[1]) * view.s() < 44 && abs(a1[0] - a2[0]) * view.s() < 220;
+        }
+        view.tag(clicked, partName(q.diagram, clicked.id), C_RED, near);
+      }
       if (ans != null) view.tag(ans, partName(q.diagram, q.part), C_GREEN);
     }
     textFont(fSmall);
@@ -9865,7 +9896,7 @@ class ResultScene extends Scene {
   }
 
   void enter() {
-    if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct);
+    if (realTopic()) newBest = progress.record(quiz.topicKey, quiz.level, pct) && pct > 0;
     bonus = max(1, quiz.score / 20);
     progress.addXp(bonus);
     progress.save();
@@ -9927,7 +9958,7 @@ class ResultScene extends Scene {
     fill(C_TEXT);
     text(quiz.right + " / " + quiz.qs.size() + " correct", x, y);
     fill(C_GOLD);
-    text(quiz.score + " points  (+" + bonus + " schmeckles)", x, y + 32);
+    text(quiz.score + " points  (+" + (quiz.xpEarned + bonus) + " schmeckles)", x, y + 32);
     fill(C_DIM);
     text("best streak " + quiz.bestStreak, x, y + 64);
     if (newBest) {
@@ -9947,7 +9978,7 @@ class ResultScene extends Scene {
     for (Question q : quiz.missed) {
       String qt = q.q, at = "-> " + q.answerText();
       float h1 = textBlockHeight(qt, pw - 48, 20), h2 = textBlockHeight(at, pw - 48, 20);
-      if (cy + h1 + h2 > py + ph - 40) {
+      if (cy + h1 + h2 > py + ph - (quiz.review ? 96 : 40)) {
         fill(C_DIM);
         text("... and " + (quiz.missed.size() - shown) + " more in your REVIEW pile", px + 24, cy);
         break;
@@ -9958,7 +9989,13 @@ class ResultScene extends Scene {
       cy += textBlock(at, px + 24, cy, pw - 48, 20) + 10;
       shown++;
     }
-    if (quiz.missed.isEmpty()) {
+    if (quiz.review) {
+      textFont(fBody);
+      fill(C_DIM);
+      float ry = quiz.missed.isEmpty() ? cy : py + ph - 70;
+      textBlock("Out of the pile for good: " + quiz.cleared + ".  Moved up a box: " + quiz.climbing
+        + " (one more right answer in a later review and they're gone).", px + 24, ry, pw - 48, 28);
+    } else if (quiz.missed.isEmpty()) {
       textFont(fBody);
       fill(C_DIM);
       textBlock("Everything right. Either you studied, or the multiverse glitched. Try the next level before I check the logs.", px + 24, cy, pw - 48, 30);
@@ -10347,11 +10384,12 @@ class Button {
     textAlign(CENTER, CENTER);
     fill(enabled ? C_TEXT : C_DIM);
     float cy = y - lift + h / 2 - (sub != null ? 11 : 2);
-    text(label, x + w / 2, cy);
+    float lx = x + w / 2 + (hotkey != null && showKey && hotkey.trim().length() > 0 ? 9 : 0);
+    text(label, lx, cy);
     if (sub != null) {
       textFont(fSmall);
       fill(enabled ? C_DIM : #55617A);
-      text(sub, x + w / 2, cy + 26);
+      text(sub, lx, cy + 26);
     }
     if (hotkey != null && showKey && hotkey.trim().length() > 0) {
       textFont(fMono);

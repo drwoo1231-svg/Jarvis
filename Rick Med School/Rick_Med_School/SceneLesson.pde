@@ -44,7 +44,7 @@ class LessonScene extends Scene {
     cardT += dt;
     view.update();
     for (Button b : buttons) {
-      if (b.id.equals("prev")) b.enabled = idx > 0;
+      if (b.id.equals("prev")) b.label = idx > 0 ? "< BACK" : "< TOPICS";
       if (b.id.equals("next")) b.label = idx >= lv.lessons.size() - 1 ? "QUIZ TIME >" : "NEXT >";
     }
     rick.idleCheck();
@@ -62,7 +62,7 @@ class LessonScene extends Scene {
       view.draw();
       Part p = view.pulse != null ? view.d.part(view.pulse) : null;
       if (p != null) view.tag(p, partName(view.d.id, p.id), C_GOLD);
-      else if (view.hover != null) view.tag(view.hover, partName(view.d.id, view.hover.id), C_BLUE);
+      if (view.hover != null && view.hover != p) view.tag(view.hover, partName(view.d.id, view.hover.id), C_BLUE);
       textFont(fSmall);
       fill(C_DIM);
       textAlign(LEFT, TOP);
@@ -115,7 +115,10 @@ class LessonScene extends Scene {
   }
 
   void clicked(Button b) {
-    if (b.id.equals("prev") && idx > 0) show(idx - 1);
+    if (b.id.equals("prev")) {
+      if (idx > 0) show(idx - 1);
+      else back();
+    }
     if (b.id.equals("next")) next();
     if (b.id.equals("quiz")) startQuiz();
   }

@@ -17,6 +17,8 @@ class QuizScene extends Scene {
   boolean answered, wasRight, hinted, timedOut;
   float hintX, hintY;                  // label hint circle (diagram units)
   int score, streak, bestStreak, right, gained;
+  int xpEarned;                        // schmeckles from the answers themselves
+  int cleared, climbing;               // review: questions that left the pile / moved up a box
   ArrayList<Question> missed = new ArrayList<Question>();
   float qT, answerT;
   float top;                           // where the answer area starts (below the question)
@@ -120,7 +122,10 @@ class QuizScene extends Scene {
       if (timeLimit > 0) gained += (int) max(0, timeLimit - qT) * 4;
       score += gained;
       progress.addXp(max(1, gained / 10));
-      progress.hit(q.id, review);
+      xpEarned += max(1, gained / 10);
+      boolean inPile = progress.inPile(q.id);
+      if (progress.hit(q.id, review)) cleared++;
+      else if (review && inPile) climbing++;
       if (streak == 3 || streak == 5 || streak == 8) {
         sfx.play(sfx.streak, 0.6);
         rick.say(STREAK[streak == 3 ? 0 : streak == 5 ? 1 : 2]);
@@ -286,7 +291,7 @@ class QuizScene extends Scene {
       text("" + (s + 1), x + 32, y + h / 2 - 1);
       textFont(fBody);
       fill(C_TEXT, a);
-      ArrayList<String> ls = wrapText(q.choices[order[s]], w - 90);
+      ArrayList<String> ls = wrapText(q.choices[order[s]], w - 140);
       float ty = y + h / 2 - ls.size() * 14;
       textAlign(LEFT, TOP);
       for (int i = 0; i < ls.size(); i++) text(ls.get(i), x + 66, ty + i * 28);
@@ -312,7 +317,15 @@ class QuizScene extends Scene {
     }
     if (answered) {
       Part ans = view.d.part(q.part);
-      if (clicked != null && clicked != ans) view.tag(clicked, partName(q.diagram, clicked.id), C_RED);
+      if (clicked != null && clicked != ans) {
+        // a neighbouring part's tag would sit under the answer's, so drop it below
+        boolean near = false;
+        if (ans != null) {
+          float[] a1 = ans.anchorPt(), a2 = clicked.anchorPt();
+          near = abs(a1[1] - a2[1]) * view.s() < 44 && abs(a1[0] - a2[0]) * view.s() < 220;
+        }
+        view.tag(clicked, partName(q.diagram, clicked.id), C_RED, near);
+      }
       if (ans != null) view.tag(ans, partName(q.diagram, q.part), C_GREEN);
     }
     textFont(fSmall);

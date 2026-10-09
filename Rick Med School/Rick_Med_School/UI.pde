@@ -132,11 +132,12 @@ class Button {
     textAlign(CENTER, CENTER);
     fill(enabled ? C_TEXT : C_DIM);
     float cy = y - lift + h / 2 - (sub != null ? 11 : 2);
-    text(label, x + w / 2, cy);
+    float lx = x + w / 2 + (hotkey != null && showKey && hotkey.trim().length() > 0 ? 9 : 0);
+    text(label, lx, cy);
     if (sub != null) {
       textFont(fSmall);
       fill(enabled ? C_DIM : #55617A);
-      text(sub, x + w / 2, cy + 26);
+      text(sub, lx, cy + 26);
     }
     if (hotkey != null && showKey && hotkey.trim().length() > 0) {
       textFont(fMono);
