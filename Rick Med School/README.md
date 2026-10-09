@@ -5,6 +5,8 @@ sarcastic genius scientist) portals into a lecture hall, insults you, and then
 actually teaches you anatomy and physiology, from "this is a bone" all the way
 up to board-exam style questions.
 
+![Rick Med School: the drunk intro, the difficulty screen, a heart lesson and a click-the-part question](preview.png)
+
 - No libraries and no `data` folder: every drawing and sound is made in code.
 - Your progress is saved next to the sketch in `rick_med_progress.json`.
 
